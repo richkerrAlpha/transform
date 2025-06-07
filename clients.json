@@ -14,5 +14,13 @@
     "City": "Calgary",
     "Province": "AB",
     "PostalCode": "T2P 2Z3"
+  },
+  {
+    "Client": "Test Corp",
+    "Street": "233 Wacker",
+    "Street2": "Unit 15",
+    "City": "Windsor",
+    "Province": "ON",
+    "PostalCode": "OND 123"
   }
 ]
