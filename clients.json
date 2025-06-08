@@ -344,6 +344,11 @@
   },
   {
     "Client": "Bronte Construction",
+    "Street": "1234 Bronte Street",
+    "Street2": "TEST RK",
+    "City": "London",
+    "Province": "ON",
+    "PostalCode": "L4K 3N8",
     "Country": "Canada"
   },
   {
