@@ -1,32 +1,5 @@
 [
   {
-    "Client": "Acme Corp",
-    "Street": "123 Elm St",
-    "Street2": "Bldg A",
-    "City": "Toronto",
-    "Province": "ON",
-    "PostalCode": "M4B 1B3",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Beta LLC",
-    "Street": "456 Oak Ave",
-    "Street2": "Suite 101",
-    "City": "Calgary",
-    "Province": "AB",
-    "PostalCode": "T2P 2Z3",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Test Corp",
-    "Street": "233 Wacker",
-    "Street2": "Unit 15",
-    "City": "Windsor",
-    "Province": "ON",
-    "PostalCode": "OND 123",
-    "Country": "Canada"
-  },
-  {
     "Client": "3A Stainless Fabrication Inc",
     "Country": "Canada"
   },
