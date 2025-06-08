@@ -2125,7 +2125,7 @@
   },
   {
     "Client": "another Test corp",
-    "Street": "",
+    "Street": "123 Elm Street",
     "Street2": "",
     "City": "",
     "Province": "",
