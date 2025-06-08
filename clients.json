@@ -2115,195 +2115,6 @@
     "Country": "Canada"
   },
   {
-    "Client": "Troy Life & Fire Safety",
-    "Street": "",
-    "Street2": "",
-    "City": "",
-    "Province": "",
-    "PostalCode": "",
-    "Country": "Canada"
-  },
-  {
-    "Client": "UCC Group Inc.",
-    "Street": "262 Galaxy Blvd",
-    "Street2": "",
-    "City": "Toronto",
-    "Province": "ON",
-    "PostalCode": "M9W 5R8",
-    "Country": "Canada"
-  },
-  {
-    "Client": "University Plumbing",
-    "Street": "3655 Keele St",
-    "Street2": "",
-    "City": "Toronto",
-    "Province": "ON",
-    "PostalCode": "M3J 1M8",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Upfield",
-    "Street": "141 Belfield Rd",
-    "Street2": "",
-    "City": "Etobicoke",
-    "Province": "ON",
-    "PostalCode": "M9W 1G8",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Valley Mechanical Inc",
-    "Street": "1317 Cardiff Blvd",
-    "Street2": "",
-    "City": "Mississauga",
-    "Province": "ON",
-    "PostalCode": "L5S 1R1",
-    "Country": "Canada"
-  },
-  {
-    "Client": "VCNA",
-    "Street": "400 Waverly",
-    "Street2": "",
-    "City": "South Bowmanville",
-    "Province": "ON",
-    "PostalCode": "L1C 3K3",
-    "Country": "Canada"
-  },
-  {
-    "Client": "VECTOR RESTORATION",
-    "Street": "",
-    "Street2": "",
-    "City": "",
-    "Province": "",
-    "PostalCode": "",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Vecycle",
-    "Street": "340 Catherine Street",
-    "Street2": "",
-    "City": "Ottawa",
-    "Province": "ON",
-    "PostalCode": "K1R 5T5",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Venture Metal Works",
-    "Street": "115 Belfield Road",
-    "Street2": "",
-    "City": "Toronto",
-    "Province": "ON",
-    "PostalCode": "M9W 1G7",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Viking Fire Protection",
-    "Street": "140 Fernstaff Court",
-    "Street2": "Unit 3",
-    "City": "Concord",
-    "Province": "ON",
-    "PostalCode": "L4K 3L8",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Walker Industries",
-    "Street": "7963 Wellington County Rd",
-    "Street2": 109,
-    "City": "Arthur",
-    "Province": "ON",
-    "PostalCode": "N0G 1A0",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Water Workz",
-    "Street": "Po Box 40046",
-    "Street2": "",
-    "City": "Oakridges",
-    "Province": "ON",
-    "PostalCode": "L4E 0H9",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Welding, Fabrication & Heat Transfer Products Inc.",
-    "Street": "",
-    "Street2": "",
-    "City": "",
-    "Province": "",
-    "PostalCode": "",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Wessuc Inc.",
-    "Street": "1693 Colborne Street",
-    "Street2": "",
-    "City": "Brantford",
-    "Province": "ON",
-    "PostalCode": "N3T 5L4",
-    "Country": "Canada"
-  },
-  {
-    "Client": "WJ Construction",
-    "Street": "7235 Bellshire Gate",
-    "Street2": "PO Box 88056",
-    "City": "Mississauga",
-    "Province": "ON",
-    "PostalCode": "L5N 8M1",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Wm. Groves",
-    "Street": "PO Box 47589",
-    "Street2": "",
-    "City": "Hamilton",
-    "Province": "ON",
-    "PostalCode": "L8H 7S7",
-    "Country": "Canada"
-  },
-  {
-    "Client": "W.S. Nicholls",
-    "Street": "48 Cowansview Rd",
-    "Street2": "",
-    "City": "Cambridge",
-    "Province": "ON",
-    "PostalCode": "N1R 7N3",
-    "Country": "Canada"
-  },
-  {
-    "Client": "WSP Canada Inc.",
-    "Street": "100 Commerce Valley Drive West",
-    "Street2": "",
-    "City": "West Thornhill",
-    "Province": "ON",
-    "PostalCode": "L3T 0A1",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Xradar",
-    "Street": "",
-    "Street2": "",
-    "City": "",
-    "Province": "",
-    "PostalCode": "",
-    "Country": "Canada"
-  },
-  {
-    "Client": "York Region",
-    "Street": "17250 Yonge Street",
-    "Street2": "",
-    "City": "Newmarket",
-    "Province": "ON",
-    "PostalCode": "L3Y 6Z1",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Zimcoat",
-    "Street": "160 Wilkinson Road",
-    "Street2": "Unit 27",
-    "City": "Brampton",
-    "Province": "ON",
-    "PostalCode": "L6T 4M3",
-    "Country": "Canada"
-  },
-  {
     "Client": "Midwest Manufacuring",
     "Street": "2900 S Wabash",
     "Street2": "",
@@ -2311,5 +2122,14 @@
     "Province": "IL",
     "PostalCode": 60616,
     "Country": "USA"
+  },
+  {
+    "Client": "another Test corp",
+    "Street": "",
+    "Street2": "",
+    "City": "",
+    "Province": "",
+    "PostalCode": "",
+    "Country": ""
   }
 ]
