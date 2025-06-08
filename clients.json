@@ -2126,7 +2126,7 @@
   {
     "Client": "another Test corp",
     "Street": "123 Elm Street",
-    "Street2": "",
+    "Street2": "2nd Floor",
     "City": "",
     "Province": "",
     "PostalCode": "",
