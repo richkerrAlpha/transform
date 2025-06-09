@@ -9,6 +9,15 @@
     "Country": "Canada"
   },
   {
+    "Client": "A.G. Simpson Automotive",
+    "Street": "200 Yorkland Blvd.",
+    "Street2": "Suite 800",
+    "City": "Toronto",
+    "Province": "ON",
+    "PostalCode": "M2J 5C1",
+    "Country": "Canada"
+  },
+  {
     "Client": "A1 Plumbing, Pumps & Water Treatment Inc.",
     "Street": "224 North Murray St",
     "Street2": "",
@@ -60,15 +69,6 @@
     "City": "Toronto",
     "Province": "ON",
     "PostalCode": "M3A 3P9",
-    "Country": "Canada"
-  },
-  {
-    "Client": "A.G. Simpson Automotive",
-    "Street": "200 Yorkland Blvd.",
-    "Street2": "Suite 800",
-    "City": "Toronto",
-    "Province": "ON",
-    "PostalCode": "M2J 5C1",
     "Country": "Canada"
   },
   {
@@ -126,6 +126,15 @@
     "Country": "Canada"
   },
   {
+    "Client": "Aqua Tech",
+    "Street": "331 Rodinea Road",
+    "Street2": "",
+    "City": "Maple",
+    "Province": "ON",
+    "PostalCode": "L6A 4P5",
+    "Country": "Canada"
+  },
+  {
     "Client": "Aquablast",
     "Street": "77 Orchard Road",
     "Street2": "",
@@ -141,15 +150,6 @@
     "City": "Scarborough",
     "Province": "ON",
     "PostalCode": "M1P 2E3",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Aqua Tech",
-    "Street": "331 Rodinea Road",
-    "Street2": "",
-    "City": "Maple",
-    "Province": "ON",
-    "PostalCode": "L6A 4P5",
     "Country": "Canada"
   },
   {
@@ -216,6 +216,15 @@
     "Country": "Canada"
   },
   {
+    "Client": "B Phillips",
+    "Street": "6 Cardico Drive",
+    "Street2": "Unit #3",
+    "City": "Stouffville",
+    "Province": "ON",
+    "PostalCode": "L4A 2G5",
+    "Country": "Canada"
+  },
+  {
     "Client": "Backflow Specialties",
     "Street": "211 Carnwith Drive W",
     "Street2": "",
@@ -225,21 +234,21 @@
     "Country": "Canada"
   },
   {
-    "Client": "Barclay Construction",
-    "Street": "55 Morley Street",
-    "Street2": "",
-    "City": "Hamilton",
-    "Province": "ON",
-    "PostalCode": "L8H 3R8",
-    "Country": "Canada"
-  },
-  {
     "Client": "Bar-Quip Construction Limited",
     "Street": "255 Spinnaker Way",
     "Street2": "#10",
     "City": "Concord",
     "Province": "ON",
     "PostalCode": "L4K 4J1",
+    "Country": "Canada"
+  },
+  {
+    "Client": "Barclay Construction",
+    "Street": "55 Morley Street",
+    "Street2": "",
+    "City": "Hamilton",
+    "Province": "ON",
+    "PostalCode": "L8H 3R8",
     "Country": "Canada"
   },
   {
@@ -279,15 +288,6 @@
     "Country": "Canada"
   },
   {
-    "Client": "Black Creek Mechanical Ltd",
-    "Street": "48 Galaxy Blvd",
-    "Street2": "#413",
-    "City": "Toronto",
-    "Province": "ON",
-    "PostalCode": "M9W 6C8",
-    "Country": "Canada"
-  },
-  {
     "Client": "Black & McDonald Limited",
     "Street": "2460 Don Reid Drive",
     "Street2": "",
@@ -297,12 +297,12 @@
     "Country": "Canada"
   },
   {
-    "Client": "B Phillips",
-    "Street": "6 Cardico Drive",
-    "Street2": "Unit #3",
-    "City": "Stouffville",
+    "Client": "Black Creek Mechanical Ltd",
+    "Street": "48 Galaxy Blvd",
+    "Street2": "#413",
+    "City": "Toronto",
     "Province": "ON",
-    "PostalCode": "L4A 2G5",
+    "PostalCode": "M9W 6C8",
     "Country": "Canada"
   },
   {
@@ -378,6 +378,15 @@
     "Country": "Canada"
   },
   {
+    "Client": "Can-Am Instruments Ltd",
+    "Street": "2851 Brighton Road",
+    "Street2": "",
+    "City": "Oakville",
+    "Province": "ON",
+    "PostalCode": "L6H 6C0",
+    "Country": "Canada"
+  },
+  {
     "Client": "Canada Candy",
     "Street": "740 Division Street",
     "Street2": "Building # 5",
@@ -438,15 +447,6 @@
     "City": "Kingston",
     "Province": "ON",
     "PostalCode": "K7P 0E9",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Can-Am Instruments Ltd",
-    "Street": "2851 Brighton Road",
-    "Street2": "",
-    "City": "Oakville",
-    "Province": "ON",
-    "PostalCode": "L6H 6C0",
     "Country": "Canada"
   },
   {
@@ -558,12 +558,30 @@
     "Country": "Canada"
   },
   {
+    "Client": "City of Toronto - Booth",
+    "Street": "50 Booth Ave Toronto ON",
+    "Street2": "",
+    "City": "Toronto",
+    "Province": "ON",
+    "PostalCode": "",
+    "Country": "Canada"
+  },
+  {
     "Client": "City of Toronto - West",
     "Street": "441 Kipling Avenue",
     "Street2": "",
     "City": "Toronto",
     "Province": "ON",
     "PostalCode": "M8Z 5E7",
+    "Country": "Canada"
+  },
+  {
+    "Client": "City Of Toronto Humber Treatment Plant",
+    "Street": "130 The Queensway",
+    "Street2": "",
+    "City": "Toronto",
+    "Province": "ON",
+    "PostalCode": "M8Y 1H9",
     "Country": "Canada"
   },
   {
@@ -585,30 +603,12 @@
     "Country": "Canada"
   },
   {
-    "Client": "City Of Toronto Humber Treatment Plant",
-    "Street": "130 The Queensway",
-    "Street2": "",
-    "City": "Toronto",
-    "Province": "ON",
-    "PostalCode": "M8Y 1H9",
-    "Country": "Canada"
-  },
-  {
     "Client": "City of Toronto-North Toronto Treatment Plant , Toronto Water",
     "Street": "21 Redway Road",
     "Street2": "",
     "City": "Toronto",
     "Province": "ON",
     "PostalCode": "M4H 1P6",
-    "Country": "Canada"
-  },
-  {
-    "Client": "City of Toronto - Booth",
-    "Street": "50 Booth Ave Toronto ON",
-    "Street2": "",
-    "City": "Toronto",
-    "Province": "ON",
-    "PostalCode": "",
     "Country": "Canada"
   },
   {
@@ -945,6 +945,15 @@
     "Country": "Canada"
   },
   {
+    "Client": "Go Transit - Union Station",
+    "Street": "97 Front Street",
+    "Street2": "",
+    "City": "Toronto",
+    "Province": "ON",
+    "PostalCode": "M5J 1E6",
+    "Country": "Canada"
+  },
+  {
     "Client": "Golder Associates",
     "Street": "6925 Century Avenue",
     "Street2": "",
@@ -960,15 +969,6 @@
     "City": "Kingston",
     "Province": "ON",
     "PostalCode": "K7K 2L5",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Go Transit - Union Station",
-    "Street": "97 Front Street",
-    "Street2": "",
-    "City": "Toronto",
-    "Province": "ON",
-    "PostalCode": "M5J 1E6",
     "Country": "Canada"
   },
   {
@@ -999,6 +999,15 @@
     "Country": "Canada"
   },
   {
+    "Client": "H&R Industrial Services Inc.",
+    "Street": "111 Gregson Court",
+    "Street2": "#1",
+    "City": "Fergus",
+    "Province": "ON",
+    "PostalCode": "N1M 2W4",
+    "Country": "Canada"
+  },
+  {
     "Client": "Halton Conservation",
     "Street": "2596 Britannia Road W",
     "Street2": "",
@@ -1014,15 +1023,6 @@
     "City": "Stouffville",
     "Province": "ON",
     "PostalCode": "L4A 8C1",
-    "Country": "Canada"
-  },
-  {
-    "Client": "H&R Industrial Services Inc.",
-    "Street": "111 Gregson Court",
-    "Street2": "#1",
-    "City": "Fergus",
-    "Province": "ON",
-    "PostalCode": "N1M 2W4",
     "Country": "Canada"
   },
   {
@@ -1089,21 +1089,21 @@
     "Country": "Canada"
   },
   {
-    "Client": "JD Collins Fire Protection",
-    "Street": "101 Innovation Drive",
-    "Street2": "",
-    "City": "Woodbridge",
-    "Province": "ON",
-    "PostalCode": "L4H 0S3",
-    "Country": "Canada"
-  },
-  {
     "Client": "J&J Millwright",
     "Street": "8546 Concession Rd 3",
     "Street2": "",
     "City": "Listowel",
     "Province": "ON",
     "PostalCode": "N4W 3G8",
+    "Country": "Canada"
+  },
+  {
+    "Client": "JD Collins Fire Protection",
+    "Street": "101 Innovation Drive",
+    "Street2": "",
+    "City": "Woodbridge",
+    "Province": "ON",
+    "PostalCode": "L4H 0S3",
     "Country": "Canada"
   },
   {
@@ -1122,6 +1122,15 @@
     "City": "Toronto",
     "Province": "ON",
     "PostalCode": "M8Z 4B7",
+    "Country": "Canada"
+  },
+  {
+    "Client": "K & S Plumbing",
+    "Street": "1140 Bellamy N",
+    "Street2": "",
+    "City": "Scarborough",
+    "Province": "ON",
+    "PostalCode": "M1H 1H4",
     "Country": "Canada"
   },
   {
@@ -1158,15 +1167,6 @@
     "City": "Bath",
     "Province": "ON",
     "PostalCode": "K0H 1G0",
-    "Country": "Canada"
-  },
-  {
-    "Client": "K & S Plumbing",
-    "Street": "1140 Bellamy N",
-    "Street2": "",
-    "City": "Scarborough",
-    "Province": "ON",
-    "PostalCode": "M1H 1H4",
     "Country": "Canada"
   },
   {
@@ -1836,15 +1836,6 @@
     "Country": "Canada"
   },
   {
-    "Client": "Thermo Fisher Scientific",
-    "Street": "110 Consumers Drive",
-    "Street2": "",
-    "City": "Whitby",
-    "Province": "ON",
-    "PostalCode": "L1N 5T3",
-    "Country": "Canada"
-  },
-  {
     "Client": "The Tin Knockers Industrial",
     "Street": "500 Wenthworth Street East",
     "Street2": "Unit #15",
@@ -1860,6 +1851,15 @@
     "City": "Brantford",
     "Province": "ON",
     "PostalCode": "N3T 5M1",
+    "Country": "Canada"
+  },
+  {
+    "Client": "Thermo Fisher Scientific",
+    "Street": "110 Consumers Drive",
+    "Street2": "",
+    "City": "Whitby",
+    "Province": "ON",
+    "PostalCode": "L1N 5T3",
     "Country": "Canada"
   },
   {
@@ -2025,6 +2025,15 @@
     "Country": "Canada"
   },
   {
+    "Client": "W.S. Nicholls",
+    "Street": "48 Cowansview Road",
+    "Street2": "",
+    "City": "Cambridge",
+    "Province": "ON",
+    "PostalCode": "N1R 7N3",
+    "Country": "Canada"
+  },
+  {
     "Client": "Walker Industries",
     "Street": "7963 Wellington County Rd 109",
     "Street2": "",
@@ -2070,15 +2079,6 @@
     "Country": "Canada"
   },
   {
-    "Client": "W.S. Nicholls",
-    "Street": "48 Cowansview Road",
-    "Street2": "",
-    "City": "Cambridge",
-    "Province": "ON",
-    "PostalCode": "N1R 7N3",
-    "Country": "Canada"
-  },
-  {
     "Client": "WSP Canada Inc.",
     "Street": "100 Commerce Valley Drive West",
     "Street2": "",
@@ -2112,24 +2112,6 @@
     "City": "Brampton",
     "Province": "ON",
     "PostalCode": "L6T 4M3",
-    "Country": "Canada"
-  },
-  {
-    "Client": "Midwest Manufacuring",
-    "Street": "2900 S Wabash",
-    "Street2": "",
-    "City": "Chicago",
-    "Province": "IL",
-    "PostalCode": 60616,
-    "Country": "USA"
-  },
-  {
-    "Client": "another Test corp",
-    "Street": "123 Elm Street",
-    "Street2": "2nd Floor",
-    "City": "Toronto ",
-    "Province": "ON",
-    "PostalCode": "L3T 0A1",
     "Country": "Canada"
   }
 ]
