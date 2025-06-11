@@ -1,7 +1,7 @@
 [
   {
     "Group #": 1,
-    "ALLOY INFO": "304 / 304L |Welded|A249|1/8 - 1 (incl)",
+    "ALLOY INFO": "304 / 304L | Welded | A249 | 1/8 - 1 (incl)",
     "Alloy": "304 / 304L",
     "Type": "Welded",
     "Main ASTM Spec": "A249",
@@ -14,7 +14,7 @@
   },
   {
     "Group #": 1,
-    "ALLOY INFO": "304 / 304L |Welded|A249|1 - 2 (incl)",
+    "ALLOY INFO": "304 / 304L | Welded | A249 | 1 - 2 (incl)",
     "Alloy": "304 / 304L",
     "Type": "Welded",
     "Main ASTM Spec": "A249",
@@ -27,7 +27,7 @@
   },
   {
     "Group #": 1,
-    "ALLOY INFO": "304 / 304L |Welded|A249|2 - 3 (incl)",
+    "ALLOY INFO": "304 / 304L | Welded | A249 | 2 - 3 (incl)",
     "Alloy": "304 / 304L",
     "Type": "Welded",
     "Main ASTM Spec": "A249",
@@ -40,7 +40,7 @@
   },
   {
     "Group #": 1,
-    "ALLOY INFO": "316 / 316L|Welded|A249|1/8 - 1 (incl)",
+    "ALLOY INFO": "316 / 316L | Welded | A249 | 1/8 - 1 (incl)",
     "Alloy": "316 / 316L",
     "Type": "Welded",
     "Main ASTM Spec": "A249",
@@ -53,7 +53,7 @@
   },
   {
     "Group #": 1,
-    "ALLOY INFO": "316 / 316L|Welded|A249|1 - 2 (incl)",
+    "ALLOY INFO": "316 / 316L | Welded | A249 | 1 - 2 (incl)",
     "Alloy": "316 / 316L",
     "Type": "Welded",
     "Main ASTM Spec": "A249",
@@ -66,7 +66,7 @@
   },
   {
     "Group #": 1,
-    "ALLOY INFO": "316 / 316L|Welded|A249|2 - 3 (incl)",
+    "ALLOY INFO": "316 / 316L | Welded | A249 | 2 - 3 (incl)",
     "Alloy": "316 / 316L",
     "Type": "Welded",
     "Main ASTM Spec": "A249",
@@ -79,7 +79,7 @@
   },
   {
     "Group #": 2,
-    "ALLOY INFO": "304 / 304L|Seamless|A269 / A213|3/32 - 3/16 (excl)",
+    "ALLOY INFO": "304 / 304L | Seamless | A269 / A213 | 3/32 - 3/16 (excl)",
     "Alloy": "304 / 304L",
     "Type": "Seamless",
     "Main ASTM Spec": "A269 / A213",
@@ -92,7 +92,7 @@
   },
   {
     "Group #": 2,
-    "ALLOY INFO": "316 / 316L|Seamless|A269 / A213|3/16 - 1/4 (excl)",
+    "ALLOY INFO": "316 / 316L | Seamless | A269 / A213 | 3/16 - 1/4 (excl)",
     "Alloy": "316 / 316L",
     "Type": "Seamless",
     "Main ASTM Spec": "A269 / A213",
@@ -105,7 +105,7 @@
   },
   {
     "Group #": 2,
-    "ALLOY INFO": "316L 2.5Mo|Seamless|A269 / A213|1/4 - 1 (incl)",
+    "ALLOY INFO": "316L 2.5Mo | Seamless | A269 / A213 | 1/4 - 1 (incl)",
     "Alloy": "316L 2.5Mo",
     "Type": "Seamless",
     "Main ASTM Spec": "A269 / A213",
@@ -118,7 +118,7 @@
   },
   {
     "Group #": 2,
-    "ALLOY INFO": "316H|Seamless|A269 / A213|1 - 1 1/2 (incl)",
+    "ALLOY INFO": "316H | Seamless | A269 / A213 | 1 - 1 1/2 (incl)",
     "Alloy": "316H",
     "Type": "Seamless",
     "Main ASTM Spec": "A269 / A213",
@@ -131,7 +131,7 @@
   },
   {
     "Group #": 2,
-    "ALLOY INFO": "317 / 317L|Seamless|A269 / A213|1 1/2 - 2 (excl)",
+    "ALLOY INFO": "317 / 317L | Seamless | A269 / A213 | 1 1/2 - 2 (excl)",
     "Alloy": "317 / 317L",
     "Type": "Seamless",
     "Main ASTM Spec": "A269 / A213",
@@ -144,7 +144,7 @@
   },
   {
     "Group #": 2,
-    "ALLOY INFO": "A254 (6Mo)|Seamless|A269 / A213|2' - 2 1/2 (excl)",
+    "ALLOY INFO": "A254 (6Mo) | Seamless | A269 / A213 | 2' - 2 1/2 (excl)",
     "Alloy": "A254 (6Mo)",
     "Type": "Seamless",
     "Main ASTM Spec": "A269 / A213",
@@ -157,20 +157,20 @@
   },
   {
     "Group #": 2,
-    "ALLOY INFO": "904L|Seamless|A269 / A213|Missing",
+    "ALLOY INFO": "904L | Seamless | A269 / A213 | Missing Info",
     "Alloy": "904L",
     "Type": "Seamless",
     "Main ASTM Spec": "A269 / A213",
     "Tolerance Spec": "A632 A1016",
-    "OD Range (in.)": "Missing",
-    "OD Tolerance Plus": "Missing",
-    "OD Tolerance Minus": "Missing",
-    "Wall Tolerance Plus(Avg Wall)": "Missing",
-    "Wall Tolerance Minus (Avg Wall)": "Missing"
+    "OD Range (in.)": "Missing Info",
+    "OD Tolerance Plus": "Missing Info",
+    "OD Tolerance Minus": "Missing Info",
+    "Wall Tolerance Plus(Avg Wall)": "Missing Info",
+    "Wall Tolerance Minus (Avg Wall)": "Missing Info"
   },
   {
     "Group #": 3,
-    "ALLOY INFO": "2205|Seamless|A789|Up to 1/2 (excl)",
+    "ALLOY INFO": "2205 | Seamless | A789 | Up to 1/2 (excl)",
     "Alloy": 2205,
     "Type": "Seamless",
     "Main ASTM Spec": "A789",
@@ -183,7 +183,7 @@
   },
   {
     "Group #": 3,
-    "ALLOY INFO": "2205|Seamless|A789|1/2 - 1 1/2 (excl)",
+    "ALLOY INFO": "2205 | Seamless | A789 | 1/2 - 1 1/2 (excl)",
     "Alloy": 2205,
     "Type": "Seamless",
     "Main ASTM Spec": "A789",
@@ -191,12 +191,12 @@
     "OD Range (in.)": "1/2 - 1 1/2 (excl)",
     "OD Tolerance Plus": 0.005,
     "OD Tolerance Minus": -0.005,
-    "Wall Tolerance Plus(Avg Wall)": 0.1,
+    "Wall Tolerance Plus(Avg Wall)": "`",
     "Wall Tolerance Minus (Avg Wall)": -0.1
   },
   {
     "Group #": 3,
-    "ALLOY INFO": "2205|Seamless|A789|1 1/2 - 3 1/2 (excl)",
+    "ALLOY INFO": "2205 | Seamless | A789 | 1 1/2 - 3 1/2 (excl)",
     "Alloy": 2205,
     "Type": "Seamless",
     "Main ASTM Spec": "A789",
@@ -209,7 +209,7 @@
   },
   {
     "Group #": 4,
-    "ALLOY INFO": "2507|Seamless|A789|Up to 1/2 (excl)",
+    "ALLOY INFO": "2507 | Seamless | A789 | Up to 1/2 (excl)",
     "Alloy": 2507,
     "Type": "Seamless",
     "Main ASTM Spec": "A789",
@@ -222,7 +222,7 @@
   },
   {
     "Group #": 4,
-    "ALLOY INFO": "2507|Seamless|A789|1/2 - 1 1/2 (excl)",
+    "ALLOY INFO": "2507 | Seamless | A789 | 1/2 - 1 1/2 (excl)",
     "Alloy": 2507,
     "Type": "Seamless",
     "Main ASTM Spec": "A789",
@@ -235,7 +235,7 @@
   },
   {
     "Group #": 4,
-    "ALLOY INFO": "2507|Seamless|A789|1 1/2 - 3 1/2 (excl)",
+    "ALLOY INFO": "2507 | Seamless | A789 | 1 1/2 - 3 1/2 (excl)",
     "Alloy": 2507,
     "Type": "Seamless",
     "Main ASTM Spec": "A789",
@@ -248,7 +248,7 @@
   },
   {
     "Group #": 5,
-    "ALLOY INFO": "400|Seamless|B165|Up to 0.400 (incl)",
+    "ALLOY INFO": "400 | Seamless | B165 | Up to 0.400 (incl)",
     "Alloy": 400,
     "Type": "Seamless",
     "Main ASTM Spec": "B165",
@@ -261,7 +261,7 @@
   },
   {
     "Group #": 5,
-    "ALLOY INFO": "400|Seamless|B165|Over 0.400 - 5/8 (excl)",
+    "ALLOY INFO": "400 | Seamless | B165 | Over 0.400 - 5/8 (excl)",
     "Alloy": 400,
     "Type": "Seamless",
     "Main ASTM Spec": "B165",
@@ -274,7 +274,7 @@
   },
   {
     "Group #": 5,
-    "ALLOY INFO": "400|Seamless|B165|5/8 - 1 1/2 (incl)",
+    "ALLOY INFO": "400 | Seamless | B165 | 5/8 - 1 1/2 (incl)",
     "Alloy": 400,
     "Type": "Seamless",
     "Main ASTM Spec": "B165",
@@ -287,7 +287,7 @@
   },
   {
     "Group #": 5,
-    "ALLOY INFO": "400|Seamless|B165|Over 1 1/2 - 3 (incl)",
+    "ALLOY INFO": "400 | Seamless | B165 | Over 1 1/2 - 3 (incl)",
     "Alloy": 400,
     "Type": "Seamless",
     "Main ASTM Spec": "B165",
@@ -300,7 +300,7 @@
   },
   {
     "Group #": 6,
-    "ALLOY INFO": "625|Seamless|B444|Up to 0.400 (incl)",
+    "ALLOY INFO": "625 | Seamless | B444 | Up to 0.400 (incl)",
     "Alloy": 625,
     "Type": "Seamless",
     "Main ASTM Spec": "B444",
@@ -313,7 +313,7 @@
   },
   {
     "Group #": 6,
-    "ALLOY INFO": "625|Seamless|B444|Over 0.400 - 5/8 (excl)",
+    "ALLOY INFO": "625 | Seamless | B444 | Over 0.400 - 5/8 (excl)",
     "Alloy": 625,
     "Type": "Seamless",
     "Main ASTM Spec": "B444",
@@ -326,7 +326,7 @@
   },
   {
     "Group #": 6,
-    "ALLOY INFO": "625|Seamless|B444|5/8 - 1 1/2 (incl)",
+    "ALLOY INFO": "625 | Seamless | B444 | 5/8 - 1 1/2 (incl)",
     "Alloy": 625,
     "Type": "Seamless",
     "Main ASTM Spec": "B444",
@@ -339,7 +339,7 @@
   },
   {
     "Group #": 6,
-    "ALLOY INFO": "625|Seamless|B444|Over 1 1/2 - 3 (incl)",
+    "ALLOY INFO": "625 | Seamless | B444 | Over 1 1/2 - 3 (incl)",
     "Alloy": 625,
     "Type": "Seamless",
     "Main ASTM Spec": "B444",
@@ -352,7 +352,7 @@
   },
   {
     "Group #": 7,
-    "ALLOY INFO": "C276|Seamless|B622|Up to 0.400 (incl)",
+    "ALLOY INFO": "C276 | Seamless | B622 | Up to 0.400 (incl)",
     "Alloy": "C276",
     "Type": "Seamless",
     "Main ASTM Spec": "B622",
@@ -365,7 +365,7 @@
   },
   {
     "Group #": 7,
-    "ALLOY INFO": "C276|Seamless|B622|Over 0.400 - 5/8 (excl)",
+    "ALLOY INFO": "C276 | Seamless | B622 | Over 0.400 - 5/8 (excl)",
     "Alloy": "C276",
     "Type": "Seamless",
     "Main ASTM Spec": "B622",
@@ -378,7 +378,7 @@
   },
   {
     "Group #": 7,
-    "ALLOY INFO": "C276|Seamless|B622|5/8 - 1 1/2 (incl)",
+    "ALLOY INFO": "C276 | Seamless | B622 | 5/8 - 1 1/2 (incl)",
     "Alloy": "C276",
     "Type": "Seamless",
     "Main ASTM Spec": "B622",
@@ -391,7 +391,7 @@
   },
   {
     "Group #": 7,
-    "ALLOY INFO": "C276|Seamless|B622|Over 1 1/2 - 3 (incl)",
+    "ALLOY INFO": "C276 | Seamless | B622 | Over 1 1/2 - 3 (incl)",
     "Alloy": "C276",
     "Type": "Seamless",
     "Main ASTM Spec": "B622",
@@ -404,7 +404,7 @@
   },
   {
     "Group #": 8,
-    "ALLOY INFO": "Alloy 20 (80)|Seamless|B729|Up to 0.400 (incl)",
+    "ALLOY INFO": "Alloy 20 (80) | Seamless | B729 | Up to 0.400 (incl)",
     "Alloy": "Alloy 20 (80)",
     "Type": "Seamless",
     "Main ASTM Spec": "B729",
@@ -417,7 +417,7 @@
   },
   {
     "Group #": 8,
-    "ALLOY INFO": "Alloy 20 (80)|Seamless|B729|Over 0.400 - 5/8 (excl)",
+    "ALLOY INFO": "Alloy 20 (80) | Seamless | B729 | Over 0.400 - 5/8 (excl)",
     "Alloy": "Alloy 20 (80)",
     "Type": "Seamless",
     "Main ASTM Spec": "B729",
@@ -430,7 +430,7 @@
   },
   {
     "Group #": 8,
-    "ALLOY INFO": "Alloy 20 (80)|Seamless|B729|5/8 - 1 1/2 (incl)",
+    "ALLOY INFO": "Alloy 20 (80) | Seamless | B729 | 5/8 - 1 1/2 (incl)",
     "Alloy": "Alloy 20 (80)",
     "Type": "Seamless",
     "Main ASTM Spec": "B729",
@@ -443,7 +443,7 @@
   },
   {
     "Group #": 8,
-    "ALLOY INFO": "Alloy 20 (80)|Seamless|B729|Over 1 1/2 - 3 (incl)",
+    "ALLOY INFO": "Alloy 20 (80) | Seamless | B729 | Over 1 1/2 - 3 (incl)",
     "Alloy": "Alloy 20 (80)",
     "Type": "Seamless",
     "Main ASTM Spec": "B729",
@@ -456,7 +456,7 @@
   },
   {
     "Group #": 9,
-    "ALLOY INFO": "600|Seamless|B163 / B167|Up to 0.400 (incl)",
+    "ALLOY INFO": "600 | Seamless | B163 / B167 | Up to 0.400 (incl)",
     "Alloy": 600,
     "Type": "Seamless",
     "Main ASTM Spec": "B163 / B167",
@@ -469,7 +469,7 @@
   },
   {
     "Group #": 9,
-    "ALLOY INFO": "600|Seamless|B163 / B167|Over 0.400 - 5/8 (excl)",
+    "ALLOY INFO": "600 | Seamless | B163 / B167 | Over 0.400 - 5/8 (excl)",
     "Alloy": 600,
     "Type": "Seamless",
     "Main ASTM Spec": "B163 / B167",
@@ -482,7 +482,7 @@
   },
   {
     "Group #": 9,
-    "ALLOY INFO": "600|Seamless|B163 / B167|5/8 - 1 1/2 (incl)",
+    "ALLOY INFO": "600 | Seamless | B163 / B167 | 5/8 - 1 1/2 (incl)",
     "Alloy": 600,
     "Type": "Seamless",
     "Main ASTM Spec": "B163 / B167",
@@ -495,7 +495,7 @@
   },
   {
     "Group #": 9,
-    "ALLOY INFO": "600|Seamless|B163 / B167|Over 1 1/2 - 3 (incl)",
+    "ALLOY INFO": "600 | Seamless | B163 / B167 | Over 1 1/2 - 3 (incl)",
     "Alloy": 600,
     "Type": "Seamless",
     "Main ASTM Spec": "B163 / B167",
@@ -508,7 +508,7 @@
   },
   {
     "Group #": 10,
-    "ALLOY INFO": "6061-T6|B210 (Drawn Tube)|Up to 1/2\"",
+    "ALLOY INFO": "6061-T6 |  | B210 (Drawn Tube) | Up to 1/2\"",
     "Alloy": "6061-T6",
     "Type": "",
     "Main ASTM Spec": "B210 (Drawn Tube)",
@@ -521,7 +521,7 @@
   },
   {
     "Group #": 10,
-    "ALLOY INFO": "6061-T6|B210 / B241 (Extruded)|>1/2\" ? 1\"",
+    "ALLOY INFO": "6061-T6 |  | B210 / B241 (Extruded) | >1/2\" ? 1\"",
     "Alloy": "6061-T6",
     "Type": "",
     "Main ASTM Spec": "B210 / B241 (Extruded)",
@@ -534,7 +534,7 @@
   },
   {
     "Group #": 10,
-    "ALLOY INFO": "6061-T6|B210 / B241 (Extruded)|>1\" ? 1 1/2\"",
+    "ALLOY INFO": "6061-T6 |  | B210 / B241 (Extruded) | >1\" ? 1 1/2\"",
     "Alloy": "6061-T6",
     "Type": "",
     "Main ASTM Spec": "B210 / B241 (Extruded)",
@@ -547,7 +547,7 @@
   },
   {
     "Group #": 10,
-    "ALLOY INFO": "6061-T6|B210 / B241 (Extruded)|>1 1/2\" ? 2\"",
+    "ALLOY INFO": "6061-T6 |  | B210 / B241 (Extruded) | >1 1/2\" ? 2\"",
     "Alloy": "6061-T6",
     "Type": "",
     "Main ASTM Spec": "B210 / B241 (Extruded)",
@@ -560,7 +560,7 @@
   },
   {
     "Group #": 10,
-    "ALLOY INFO": "6061-T6|B241 (Extruded Tube)|>2\" ? 3\"",
+    "ALLOY INFO": "6061-T6 |  | B241 (Extruded Tube) | >2\" ? 3\"",
     "Alloy": "6061-T6",
     "Type": "",
     "Main ASTM Spec": "B241 (Extruded Tube)",
@@ -573,7 +573,7 @@
   },
   {
     "Group #": 10,
-    "ALLOY INFO": "6061-T6|B241 (Extruded Tube)|>3\"",
+    "ALLOY INFO": "6061-T6 |  | B241 (Extruded Tube) | >3\"",
     "Alloy": "6061-T6",
     "Type": "",
     "Main ASTM Spec": "B241 (Extruded Tube)",
@@ -586,7 +586,7 @@
   },
   {
     "Group #": 11,
-    "ALLOY INFO": "Copper|B75 / B280|?2\"",
+    "ALLOY INFO": "Copper |  | B75 / B280 | ?2\"",
     "Alloy": "Copper",
     "Type": "",
     "Main ASTM Spec": "B75 / B280",
@@ -599,7 +599,7 @@
   },
   {
     "Group #": 12,
-    "ALLOY INFO": "825|Seamless|B163 |Up to 0.400\" (incl)",
+    "ALLOY INFO": "825 | Seamless | B163 | Up to 0.400\" (incl)",
     "Alloy": 825,
     "Type": "Seamless",
     "Main ASTM Spec": "B163",
@@ -612,7 +612,7 @@
   },
   {
     "Group #": 12,
-    "ALLOY INFO": "825|Seamless|B163 |Over 0.400\" - 5/8\" (excl)",
+    "ALLOY INFO": "825 | Seamless | B163 | Over 0.400\" - 5/8\" (excl)",
     "Alloy": 825,
     "Type": "Seamless",
     "Main ASTM Spec": "B163",
@@ -625,7 +625,7 @@
   },
   {
     "Group #": 12,
-    "ALLOY INFO": "825|Seamless|B163 |5/8\" - 1 1/2\" (incl)",
+    "ALLOY INFO": "825 | Seamless | B163 | 5/8\" - 1 1/2\" (incl)",
     "Alloy": 825,
     "Type": "Seamless",
     "Main ASTM Spec": "B163",
@@ -638,7 +638,7 @@
   },
   {
     "Group #": 12,
-    "ALLOY INFO": "825|Seamless|B163 |Over 1 1/2\" - 3\" (incl)",
+    "ALLOY INFO": "825 | Seamless | B163 | Over 1 1/2\" - 3\" (incl)",
     "Alloy": 825,
     "Type": "Seamless",
     "Main ASTM Spec": "B163",
