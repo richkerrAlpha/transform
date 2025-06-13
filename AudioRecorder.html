@@ -1,41 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Audio Recorder</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 20px; }
+    button { margin: 10px; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <h2>Record Audio</h2>
+  <button onclick="startRecording()">🎙 Start</button>
+  <button onclick="stopRecording()">⏹ Stop</button><br><br>
+  <audio id="player" controls></audio>
 
-<table>
-  <thead>
-    <tr><th>Field</th><th>Value</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>Client</td><td>{formdata.Client}</td></tr>
-    <tr><td>Project ID</td><td>{formdata.ProjectID}</td></tr>
-    <tr><td>Street</td><td>{formdata.Street}</td></tr>
-    <tr><td>City</td><td>{formdata.City}</td></tr>
-    <tr><td>Province</td><td>{formdata.Province}</td></tr>
-    <tr><td>Postal Code</td><td>{formdata.PostalCode}</td></tr>
-    <tr><td>Country</td><td>{formdata.Country}</td></tr>
-  </tbody>
-</table>
+  <script>
+    let recorder, stream, chunks = [];
 
-<table>
-  <thead>
-    <tr><th>Report Recipients</th></tr>
-  </thead>
-  <tbody>
-    <!--start of data group: formdata.CustomerEmailArray -->
-    {formdata.CustomerEmailArray}
-    <tr><td>{ReportRecipients}</td></tr>
-    {/formdata.CustomerEmailArray}
-    <!--end of data group-->
-  </tbody>
-</table>
+    function startRecording() {
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(s => {
+        stream = s;
+        recorder = new MediaRecorder(stream);
+        chunks = [];
 
-<table>
-  <thead>
-    <tr><th>Photo</th></tr>
-  </thead>
-  <tbody>
-    <!--start of data group: formdata.ClientSuppliedPhotoArray -->
-    {formdata.ClientSuppliedPhotoArray}
-    <tr><td>{ClientSuppliedPhoto}</td></tr>
-    {/formdata.ClientSuppliedPhotoArray}
-    <!--end of data group-->
-  </tbody>
-</table>
+        recorder.ondataavailable = e => chunks.push(e.data);
+        recorder.onstop = () => {
+          const blob = new Blob(chunks, { type: 'audio/webm' });
+          const url = URL.createObjectURL(blob);
+          document.getElementById("player").src = url;
+
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "recording.webm";
+          link.textContent = "⬇ Download Recording";
+          document.body.appendChild(link);
+        };
+
+        recorder.start();
+      }).catch(err => {
+        alert("Microphone access denied or unavailable.");
+      });
+    }
+
+    function stopRecording() {
+      if (recorder && recorder.state === "recording") {
+        recorder.stop();
+        stream.getTracks().forEach(track => track.stop());
+      }
+    }
+  </script>
+</body>
+</html>
