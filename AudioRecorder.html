@@ -1,0 +1,41 @@
+
+<table>
+  <thead>
+    <tr><th>Field</th><th>Value</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Client</td><td>{formdata.Client}</td></tr>
+    <tr><td>Project ID</td><td>{formdata.ProjectID}</td></tr>
+    <tr><td>Street</td><td>{formdata.Street}</td></tr>
+    <tr><td>City</td><td>{formdata.City}</td></tr>
+    <tr><td>Province</td><td>{formdata.Province}</td></tr>
+    <tr><td>Postal Code</td><td>{formdata.PostalCode}</td></tr>
+    <tr><td>Country</td><td>{formdata.Country}</td></tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr><th>Report Recipients</th></tr>
+  </thead>
+  <tbody>
+    <!--start of data group: formdata.CustomerEmailArray -->
+    {formdata.CustomerEmailArray}
+    <tr><td>{ReportRecipients}</td></tr>
+    {/formdata.CustomerEmailArray}
+    <!--end of data group-->
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr><th>Photo</th></tr>
+  </thead>
+  <tbody>
+    <!--start of data group: formdata.ClientSuppliedPhotoArray -->
+    {formdata.ClientSuppliedPhotoArray}
+    <tr><td>{ClientSuppliedPhoto}</td></tr>
+    {/formdata.ClientSuppliedPhotoArray}
+    <!--end of data group-->
+  </tbody>
+</table>
