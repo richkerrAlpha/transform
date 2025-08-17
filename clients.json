@@ -2113,5 +2113,14 @@
     "Province": "ON",
     "PostalCode": "L6T 4M3",
     "Country": "Canada"
+  },
+  {
+    "Client": "University of Guelph",
+    "Street": "50 Stone Road",
+    "Street2": "",
+    "City": "Guelph",
+    "Province": "ON",
+    "PostalCode": "N1G 2W1",
+    "Country": "Canada"
   }
 ]
