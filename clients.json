@@ -257,7 +257,7 @@
     "Province": "ON",
     "PostalCode": "L1M 2G3",
     "Country": "Canada",
-    "Client Code": "BAR"
+    "Client Code": "BKS"
   },
   {
     "Client": "Bar-Quip Construction Limited",
@@ -267,7 +267,7 @@
     "Province": "ON",
     "PostalCode": "L4K 4J1",
     "Country": "Canada",
-    "Client Code": "BAC"
+    "Client Code": "BRQ"
   },
   {
     "Client": "Barclay Construction",
@@ -277,7 +277,7 @@
     "Province": "ON",
     "PostalCode": "L8H 3R8",
     "Country": "Canada",
-    "Client Code": "BDA"
+    "Client Code": "BAC"
   },
   {
     "Client": "BDA Inc",
@@ -287,7 +287,7 @@
     "Province": "ON",
     "PostalCode": "M8W 3Z8",
     "Country": "Canada",
-    "Client Code": "BES"
+    "Client Code": "BDA"
   },
   {
     "Client": "Best Choice Plumbing & Drains",
@@ -297,7 +297,7 @@
     "Province": "ON",
     "PostalCode": "M1T 3J5",
     "Country": "Canada",
-    "Client Code": "BIR"
+    "Client Code": "BCP"
   },
   {
     "Client": "Bird Construction",
@@ -307,7 +307,7 @@
     "Province": "ON",
     "PostalCode": "L4W O6C",
     "Country": "Canada",
-    "Client Code": "BIC"
+    "Client Code": "BIR"
   },
   {
     "Client": "Birla Carbon",
@@ -317,7 +317,7 @@
     "Province": "ON",
     "PostalCode": "L8H 3L5",
     "Country": "Canada",
-    "Client Code": "BMD"
+    "Client Code": "BLC"
   },
   {
     "Client": "Black & McDonald Limited",
@@ -327,7 +327,7 @@
     "Province": "ON",
     "PostalCode": "K1H 1E1",
     "Country": "Canada",
-    "Client Code": "BLC"
+    "Client Code": "BAM"
   },
   {
     "Client": "Black Creek Mechanical Ltd",
@@ -337,17 +337,7 @@
     "Province": "ON",
     "PostalCode": "M9W 6C8",
     "Country": "Canada",
-    "Client Code": "BRE"
-  },
-  {
-    "Client": "Bre-Ex Limited",
-    "Street": "247 Exeter Road",
-    "Street2": "",
-    "City": "London",
-    "Province": "ON",
-    "PostalCode": "N6L 1A5",
-    "Country": "Canada",
-    "Client Code": "BRH"
+    "Client Code": "BCM"
   },
   {
     "Client": "Brennan Paving",
@@ -357,7 +347,7 @@
     "Province": "ON",
     "PostalCode": "L6C 2S3",
     "Country": "Canada",
-    "Client Code": "BCC"
+    "Client Code": "BRE"
   },
   {
     "Client": "Brian Hayes",
@@ -367,7 +357,7 @@
     "Province": "ON",
     "PostalCode": "L1H 5J9",
     "Country": "Canada",
-    "Client Code": "BRC"
+    "Client Code": "BRH"
   },
   {
     "Client": "Bridgecheck Canada",
@@ -377,7 +367,7 @@
     "Province": "ON",
     "PostalCode": "L4K 3N8",
     "Country": "Canada",
-    "Client Code": "BRO"
+    "Client Code": "BCK"
   },
   {
     "Client": "Bridgecon Construction Ltd",
@@ -387,7 +377,7 @@
     "Province": "ON",
     "PostalCode": "L4K 4N7",
     "Country": "Canada",
-    "Client Code": "CAM"
+    "Client Code": "BCC"
   },
   {
     "Client": "Bronte Construction",
@@ -397,7 +387,7 @@
     "Province": "ON",
     "PostalCode": "L7L 6C4",
     "Country": "Canada",
-    "Client Code": "CSC"
+    "Client Code": "BRC"
   },
   {
     "Client": "Cambium",
@@ -407,17 +397,7 @@
     "Province": "ON",
     "PostalCode": "K9J 6Z3",
     "Country": "Canada",
-    "Client Code": "PAR"
-  },
-  {
-    "Client": "Campbell Soup Company of Canada",
-    "Street": "60 Birmingham Street",
-    "Street2": "",
-    "City": "Toronto",
-    "Province": "ON",
-    "PostalCode": "M8V 2B8",
-    "Country": "Canada",
-    "Client Code": "CAN"
+    "Client Code": "CMB"
   },
   {
     "Client": "Can-Am Instruments Ltd",
@@ -427,7 +407,7 @@
     "Province": "ON",
     "PostalCode": "L6H 6C0",
     "Country": "Canada",
-    "Client Code": "CDA"
+    "Client Code": "CAN"
   },
   {
     "Client": "Canada Candy",
@@ -437,7 +417,7 @@
     "Province": "ON",
     "PostalCode": "K9A 4S3",
     "Country": "Canada",
-    "Client Code": 165
+    "Client Code": "CCL"
   },
   {
     "Client": "Canada Parks, Quebec Waterways Field Unit",
@@ -447,7 +427,7 @@
     "Province": "QC",
     "PostalCode": "",
     "Country": "Canada",
-    "Client Code": 166
+    "Client Code": "PKS"
   },
   {
     "Client": "Canada Tank Solutions Inc.",
@@ -457,7 +437,7 @@
     "Province": "ON",
     "PostalCode": "L5T 1G5",
     "Country": "Canada",
-    "Client Code": 167
+    "Client Code": "CTS"
   },
   {
     "Client": "Canadian General Tower",
@@ -467,7 +447,7 @@
     "Province": "ON",
     "PostalCode": "N1R 5T6",
     "Country": "Canada",
-    "Client Code": 168
+    "Client Code": "CGT"
   },
   {
     "Client": "Canadian Millwright Services",
@@ -477,7 +457,7 @@
     "Province": "ON",
     "PostalCode": "M1V 1V3",
     "Country": "Canada",
-    "Client Code": 169
+    "Client Code": "CMS"
   },
   {
     "Client": "Canadian National Railway Company",
@@ -487,7 +467,7 @@
     "Province": "ON",
     "PostalCode": "L4K 1B9",
     "Country": "Canada",
-    "Client Code": 170
+    "Client Code": "CNR"
   },
   {
     "Client": "Canadian Royal Milk",
@@ -497,7 +477,7 @@
     "Province": "ON",
     "PostalCode": "K7P 0E9",
     "Country": "Canada",
-    "Client Code": 171
+    "Client Code": "CRM"
   },
   {
     "Client": "Capcrete",
@@ -507,7 +487,7 @@
     "Province": "ON",
     "PostalCode": "L4H 0J2",
     "Country": "Canada",
-    "Client Code": 172
+    "Client Code": "CAP"
   },
   {
     "Client": "Cardinal Power",
@@ -517,7 +497,7 @@
     "Province": "ON",
     "PostalCode": "K0E 1E0",
     "Country": "Canada",
-    "Client Code": 173
+    "Client Code": "CDP"
   },
   {
     "Client": "Cargill Limited",
@@ -527,7 +507,7 @@
     "Province": "ON",
     "PostalCode": "N4S 1T5",
     "Country": "Canada",
-    "Client Code": 174
+    "Client Code": "CAL"
   },
   {
     "Client": "Castec",
@@ -537,7 +517,7 @@
     "Province": "ON",
     "PostalCode": "P3Y 1L2",
     "Country": "Canada",
-    "Client Code": 175
+    "Client Code": "CAS"
   },
   {
     "Client": "Catalent Pharma Solutions",
@@ -547,7 +527,7 @@
     "Province": "ON",
     "PostalCode": "N7G 3H8",
     "Country": "Canada",
-    "Client Code": 176
+    "Client Code": "CPS"
   },
   {
     "Client": "Central Drain",
@@ -557,7 +537,7 @@
     "Province": "ON",
     "PostalCode": "L1H 8W5",
     "Country": "Canada",
-    "Client Code": 177
+    "Client Code": "CDL"
   },
   {
     "Client": "Century Construction Group",
@@ -567,7 +547,7 @@
     "Province": "ON",
     "PostalCode": "L5T 1R8",
     "Country": "Canada",
-    "Client Code": 178
+    "Client Code": "CCG"
   },
   {
     "Client": "Christal Mechanical",
@@ -577,7 +557,7 @@
     "Province": "ON",
     "PostalCode": "L4K 4K5",
     "Country": "Canada",
-    "Client Code": 179
+    "Client Code": "CML"
   },
   {
     "Client": "Cima Canada Inc.",
@@ -587,7 +567,7 @@
     "Province": "ON",
     "PostalCode": "N2H 6R2",
     "Country": "Canada",
-    "Client Code": 180
+    "Client Code": "CCI"
   },
   {
     "Client": "CIMCO Refrigeration",
@@ -597,7 +577,7 @@
     "Province": "ON",
     "PostalCode": "L7L 6M3",
     "Country": "Canada",
-    "Client Code": 181
+    "Client Code": "CIM"
   },
   {
     "Client": "City of Barrie",
@@ -607,7 +587,7 @@
     "Province": "ON",
     "PostalCode": "L4M 0T5",
     "Country": "Canada",
-    "Client Code": 182
+    "Client Code": "CBA"
   },
   {
     "Client": "City of Ottawa",
@@ -617,7 +597,7 @@
     "Province": "ON",
     "PostalCode": "",
     "Country": "Canada",
-    "Client Code": 183
+    "Client Code": "COT"
   },
   {
     "Client": "City of Toronto - Booth",
@@ -627,7 +607,7 @@
     "Province": "ON",
     "PostalCode": "",
     "Country": "Canada",
-    "Client Code": 184
+    "Client Code": "CTB"
   },
   {
     "Client": "City of Toronto - West",
@@ -637,7 +617,7 @@
     "Province": "ON",
     "PostalCode": "M8Z 5E7",
     "Country": "Canada",
-    "Client Code": 185
+    "Client Code": "CTW"
   },
   {
     "Client": "City Of Toronto Humber Treatment Plant",
@@ -647,7 +627,7 @@
     "Province": "ON",
     "PostalCode": "M8Y 1H9",
     "Country": "Canada",
-    "Client Code": 186
+    "Client Code": "HTP"
   },
   {
     "Client": "City of Toronto-Alness",
@@ -657,7 +637,7 @@
     "Province": "ON",
     "PostalCode": "",
     "Country": "Canada",
-    "Client Code": 187
+    "Client Code": "CTA"
   },
   {
     "Client": "City of Toronto-Ashbridges Bay Treatment Plant",
@@ -667,7 +647,7 @@
     "Province": "ON",
     "PostalCode": "M4M 3M9",
     "Country": "Canada",
-    "Client Code": 188
+    "Client Code": "ASH"
   },
   {
     "Client": "City of Toronto-North Toronto Treatment Plant , Toronto Water",
@@ -677,7 +657,7 @@
     "Province": "ON",
     "PostalCode": "M4H 1P6",
     "Country": "Canada",
-    "Client Code": 189
+    "Client Code": "NTT"
   },
   {
     "Client": "Clayton Sales and Service Ltd",
