@@ -716,8 +716,8 @@
   },
   {
     "Group #": 12,
-    "ALLOY INFO": "400|Seamless|B165|From 0.4000 to 0.6250",
-    "Alloy": 400,
+    "ALLOY INFO": "4400|Seamless|B165|From 0.4000 to 0.6250",
+    "Alloy": 4400,
     "Type": "Seamless",
     "Main ASTM Spec": "B165",
     "Tolerance Spec": "B829",
@@ -729,8 +729,8 @@
   },
   {
     "Group #": 12,
-    "ALLOY INFO": "400|Seamless|B165|From 0.6251 to 1.5000",
-    "Alloy": 400,
+    "ALLOY INFO": "4400|Seamless|B165|From 0.6251 to 1.5000",
+    "Alloy": 4400,
     "Type": "Seamless",
     "Main ASTM Spec": "B165",
     "Tolerance Spec": "B829",
@@ -742,8 +742,8 @@
   },
   {
     "Group #": 12,
-    "ALLOY INFO": "400|Seamless|B165|From 1.5001 to 3.0000",
-    "Alloy": 400,
+    "ALLOY INFO": "4400|Seamless|B165|From 1.5001 to 3.0000",
+    "Alloy": 4400,
     "Type": "Seamless",
     "Main ASTM Spec": "B165",
     "Tolerance Spec": "B829",
