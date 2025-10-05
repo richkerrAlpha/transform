@@ -1,43 +1,125 @@
 [
-  "Ayesha Akram",
-  "Jeremiah Beauchamp",
-  "Cameron Beckles",
-  "MacKenzie L. Branton-Brunette",
-  "Leighann Burke",
-  "Ashley Cahalan",
-  "Johan Canchica",
-  "Mark Dixon",
-  "Caitlyn Farrow",
-  "Michael Knapp",
-  "Joshua Madriaga",
-  "Amanda Martin",
-  "Sarah Masotti",
-  "Brandon Middaugh",
-  "Ilhan Mohamed",
-  "Tim Morrison",
-  "Farouk Musa",
-  "Kia Ottier",
-  "Riley Perdue",
-  "Michael Perikleous",
-  "Ethan Pinto",
-  "Mackenzie Pittman",
-  "Jesse Pustai",
-  "Makhai Robinson",
-  "Zuhaib Shahzada",
-  "Reilly Sheppard",
-  "Faris Siddiqui",
-  "Ibrahim Sitta",
-  "Cora Thoma",
-  "Jacqueline Warnock",
-  "Camryn Wood",
-  "Jacob E. Zorob-Murphy",
-  "Mohamed Nur",
-  "Camryn Armitage",
-  "Scott Mellon",
-  "Issac Durant",
-  "Rebecca Ghatti",
-  "Shoaib Shahzada",
-  "Temp Employee",
-  "Harry Macey",
-  "Steven Pichelli"
+  {
+    "Staff": "Ayesha Akram"
+  },
+  {
+    "Staff": "Jeremiah Beauchamp"
+  },
+  {
+    "Staff": "Cameron Beckles"
+  },
+  {
+    "Staff": "MacKenzie L. Branton-Brunette"
+  },
+  {
+    "Staff": "Leighann Burke"
+  },
+  {
+    "Staff": "Ashley Cahalan"
+  },
+  {
+    "Staff": "Johan Canchica"
+  },
+  {
+    "Staff": "Mark Dixon"
+  },
+  {
+    "Staff": "Caitlyn Farrow"
+  },
+  {
+    "Staff": "Michael Knapp"
+  },
+  {
+    "Staff": "Joshua Madriaga"
+  },
+  {
+    "Staff": "Amanda Martin"
+  },
+  {
+    "Staff": "Sarah Masotti"
+  },
+  {
+    "Staff": "Brandon Middaugh"
+  },
+  {
+    "Staff": "Ilhan Mohamed"
+  },
+  {
+    "Staff": "Tim Morrison"
+  },
+  {
+    "Staff": "Farouk Musa"
+  },
+  {
+    "Staff": "Kia Ottier"
+  },
+  {
+    "Staff": "Riley Perdue"
+  },
+  {
+    "Staff": "Michael Perikleous"
+  },
+  {
+    "Staff": "Ethan Pinto"
+  },
+  {
+    "Staff": "Mackenzie Pittman"
+  },
+  {
+    "Staff": "Jesse Pustai"
+  },
+  {
+    "Staff": "Makhai Robinson"
+  },
+  {
+    "Staff": "Zuhaib Shahzada"
+  },
+  {
+    "Staff": "Reilly Sheppard"
+  },
+  {
+    "Staff": "Faris Siddiqui"
+  },
+  {
+    "Staff": "Ibrahim Sitta"
+  },
+  {
+    "Staff": "Cora Thoma"
+  },
+  {
+    "Staff": "Jacqueline Warnock"
+  },
+  {
+    "Staff": "Camryn Wood"
+  },
+  {
+    "Staff": "Jacob E. Zorob-Murphy"
+  },
+  {
+    "Staff": "Mohamed Nur"
+  },
+  {
+    "Staff": "Camryn Armitage"
+  },
+  {
+    "Staff": "Scott Mellon"
+  },
+  {
+    "Staff": "Issac Durant"
+  },
+  {
+    "Staff": "Rebecca Ghatti"
+  },
+  {
+    "Staff": "Shoaib Shahzada "
+  },
+  {
+    "Staff": "Temp Employee"
+  },
+  {
+    "Staff": "Harry Macey"
+  },
+  {
+    "Staff": "Steven Pichelli"
+  }
 ]
