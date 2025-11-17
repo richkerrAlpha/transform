@@ -2348,5 +2348,15 @@
     "PostalCode": "M1J 3J8",
     "Country": "DWA",
     "Client Code": ""
+  },
+  {
+    "Client": "ASCO Construction Ltd",
+    "Street": "8-2283 Argentina Road, Mississauga, ON L5N 5Z2",
+    "Street2": "",
+    "City": "",
+    "Province": "",
+    "PostalCode": "",
+    "Country": "",
+    "Client Code": ""
   }
 ]
