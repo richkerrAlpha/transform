@@ -52,7 +52,7 @@
     "Main ASTM Spec": "A249",
     "Tolerance Spec": "A249",
     "OD Range (in.)": "From 0.1250 to 1.0000",
-    "ODRangeLow": "",
+    "ODRangeLow": 0.125,
     "ODRangeHigh": "",
     "OD Tolerance Plus": 0.005,
     "OD Tolerance Minus": -0.005,
