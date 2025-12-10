@@ -1275,7 +1275,7 @@
     "ODRangeLow": 4.764,
     "ODRangeHigh": 6.35,
     "OD Tolerance Plus": 0.1,
-    "OD Tolerance Minus": -0.1016,
+    "OD Tolerance Minus": -0.1,
     "Wall Tolerance Plus(Avg Wall)": 0.1,
     "Wall Tolerance Minus (Avg Wall)": 0.1
   },
