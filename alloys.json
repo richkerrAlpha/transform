@@ -288,6 +288,22 @@
     "Wall Tolerance Minus (Avg Wall)": -0.1
   },
   {
+    "Group #": 4,
+    "ALLOY INFO": "316 / 316L|Seamless|A269 / A213|From 2.0001 to 2.5000",
+    "Alloy": "316 / 316L",
+    "Type": "Seamless",
+    "MeasurementType": "Imperial",
+    "Main ASTM Spec": "A269 / A213",
+    "Tolerance Spec": "A632 A1016",
+    "OD Range (in.)": "From 2.0001 to 2.5000",
+    "ODRangeLow": 2.0001,
+    "ODRangeHigh": 2.5,
+    "OD Tolerance Plus": 0.01,
+    "OD Tolerance Minus": -0.01,
+    "Wall Tolerance Plus(Avg Wall)": 0.1,
+    "Wall Tolerance Minus (Avg Wall)": -0.1
+  },
+  {
     "Group #": 5,
     "ALLOY INFO": "316L 2.5Mo|Seamless|A269 / A213|From 0.0625 to 0.1875",
     "Alloy": "316L 2.5Mo",
