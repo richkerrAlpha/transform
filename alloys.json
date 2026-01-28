@@ -299,7 +299,7 @@
     "ODRangeLow": 2.5,
     "ODRangeHigh": 2.9999,
     "OD Tolerance Plus": 0.012,
-    "OD Tolerance Minus": -0.01,
+    "OD Tolerance Minus": -0.012,
     "Wall Tolerance Plus(Avg Wall)": 0.1,
     "Wall Tolerance Minus (Avg Wall)": -0.1
   },
@@ -314,8 +314,8 @@
     "OD Range (in.)": "From 3.0000 to 4.0000",
     "ODRangeLow": 3,
     "ODRangeHigh": 4,
-    "OD Tolerance Plus": 0.01,
-    "OD Tolerance Minus": -0.01,
+    "OD Tolerance Plus": 0.015,
+    "OD Tolerance Minus": -0.015,
     "Wall Tolerance Plus(Avg Wall)": 0.1,
     "Wall Tolerance Minus (Avg Wall)": -0.1
   },
