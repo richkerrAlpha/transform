@@ -183,7 +183,7 @@
     "MeasurementType": "Imperial",
     "Main ASTM Spec": "A269 / A213",
     "Tolerance Spec": "A632 A1016",
-    "OD Range (in.)": "From 2.0001 to 2.5000",
+    "OD Range (in.)": "From 2.0001 to 2.4999",
     "ODRangeLow": 2.0001,
     "ODRangeHigh": 2.5,
     "OD Tolerance Plus": 0.01,
