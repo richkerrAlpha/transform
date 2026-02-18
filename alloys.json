@@ -185,7 +185,7 @@
     "Tolerance Spec": "A632 A1016",
     "OD Range (in.)": "From 2.0001 to 2.4999",
     "ODRangeLow": 2.0001,
-    "ODRangeHigh": 2.5,
+    "ODRangeHigh": 2.4999,
     "OD Tolerance Plus": 0.01,
     "OD Tolerance Minus": -0.01,
     "Wall Tolerance Plus(Avg Wall)": 0.1,
