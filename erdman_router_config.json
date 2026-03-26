@@ -76,7 +76,7 @@
     {"section": 11, "label": "OP 220 Sign Daily Log Sheet", "type": "Daily Log", "visible": "true"},
     {"section": 12, "label": "OP 240 Over Inspection", "type": "Sign-Off", "visible": "true"},
     {"section": 13, "label": "OP 260 Shipping", "type": "Standard Operation", "visible": "true"},
-    {"section": 14, "label": "OP Test by Rich", "type": "Sign-Off", "visible": "false"},
+    {"section": 14, "label": "", "type": "Sign-Off", "visible": "false"},
     {"section": 15, "label": "", "type": "Standard Operation", "visible": "false"},
     {"section": 16, "label": "", "type": "Standard Operation", "visible": "false"},
     {"section": 17, "label": "", "type": "Standard Operation", "visible": "false"},
