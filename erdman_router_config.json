@@ -1,4 +1,5 @@
 {
+  "config_list": ["2040A_Howmet", "2753_LSG_Howmet", "2753_Round_Howmet"],
   "2040A_Howmet": {
     "customer": "Howmet Whitehall/Hampton",
     "job_number": "2040A",
