@@ -7,9 +7,9 @@
     "staging_area": "Campbell Grinder"
   },
   "2040A_Howmet_sections": [
-    {"section": 1, "label": "OP 5 Receiving Inspection", "type": "Standard Operation", "visible": "true"},
+    {"section": 1, "label": "OP 5 Receiving Inspection", "type": "Daily Log", "visible": "true"},
     {"section": 2, "label": "OP 10 Gauge Inspection", "type": "Sign-Off", "visible": "true"},
-    {"section": 3, "label": "OP 20 Trailing Edge Grind", "type": "Standard Operation", "visible": "true"},
+    {"section": 3, "label": "OP 20 Trailing Edge Grind", "type": "Sign-Off", "visible": "true"},
     {"section": 4, "label": "OP 30 Clean", "type": "Standard Operation", "visible": "true"},
     {"section": 5, "label": "OP 40 TE Grind Inspection", "type": "Standard Operation", "visible": "true"},
     {"section": 6, "label": "OP 43 TE Grind First Piece Inspection", "type": "First Piece Inspection", "visible": "true"},
