@@ -2368,5 +2368,15 @@
     "PostalCode": "K2C 2B5",
     "Country": "RVA",
     "Client Code": ""
+  },
+  {
+    "Client": "Diligent Construction Inc.",
+    "Street": "",
+    "Street2": "",
+    "City": "",
+    "Province": "",
+    "PostalCode": "",
+    "Country": "",
+    "Client Code": ""
   }
 ]
