@@ -653,7 +653,7 @@
     "OD Tolerance Plus": 0.003,
     "OD Tolerance Minus": 0,
     "Wall Tolerance Plus(Avg Wall)": 0.1,
-    "Wall Tolerance Minus (Avg Wall)": 0
+    "Wall Tolerance Minus (Avg Wall)": -0.1
   },
   {
     "Group #": 8,
@@ -669,7 +669,7 @@
     "OD Tolerance Plus": 0.004,
     "OD Tolerance Minus": -0.004,
     "Wall Tolerance Plus(Avg Wall)": 0.1,
-    "Wall Tolerance Minus (Avg Wall)": 0
+    "Wall Tolerance Minus (Avg Wall)": -0.1
   },
   {
     "Group #": 8,
