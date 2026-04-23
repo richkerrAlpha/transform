@@ -18,7 +18,7 @@
     {"section": 3, "label": "OP 20 Trailing Edge Grind", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 4, "label": "OP 30 Clean", "type": "Standard Operation", "visible": "true", "machine_number": "true", "sub_type": ""},
     {"section": 5, "label": "OP 40 TE Grind Inspection", "type": "Standard Operation", "visible": "true", "machine_number": "true", "sub_type": ""},
-    {"section": 6, "label": "OP 43 TE Grind First Piece Inspection", "type": "Standard Form-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 6, "label": "OP 43 TE Grind First Piece Inspection", "type": "Standard Form-Tip Hole Repair", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 7, "label": "OP 45 Sign Daily Log Sheet", "type": "Daily Log", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 8, "label": "OP 47 Quality Inspection", "type": "Standard Operation", "visible": "true", "machine_number": "true", "sub_type": ""},
     {"section": 9, "label": "OP 50 Shipping", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
