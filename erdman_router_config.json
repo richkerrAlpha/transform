@@ -173,7 +173,7 @@
   "4035AD_info": {
     "customer": "Unison Industries-Dayton",
     "job_number": "4035AD",
-    "customer_job_number": "[Cust Job #]",
+    "customer_job_number": "",
     "customer_part_number": "2847M17G01",
     "tbm": "[TBM #]",
     "staging_area": "WIRE EDM",
