@@ -1,5 +1,5 @@
 {
-  "config_list": ["2040A_Howmet", "2753_LSG_Howmet", "2753_Round_Howmet", "4150_PCC", "4518_CPP", "4035AD"],
+  "config_list": ["2040A_Howmet", "2753_LSG_Howmet", "2753_Round_Howmet", "4150_PCC", "4518_CPP"],
   "2040A_Howmet_info": {
     "customer": "Howmet Whitehall/Hampton",
     "job_number": "2040A",
@@ -169,39 +169,5 @@
     {"section": 18, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 19, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 20, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
-  ],
-  "4035AD_info": {
-    "customer": "Unison Industries-Dayton",
-    "job_number": "4035AD",
-    "customer_job_number": "[Cust Job #]",
-    "customer_part_number": "2847M17G01",
-    "tbm": "[TBM #]",
-    "staging_area": "WIRE EDM",
-    "lot_number": "",
-    "due_date": "",
-    "metallography_date": "",
-    "expedite": ""
-  },
-  "4035AD_sections": [
-    {"section": 1, "label": "OP 20 WEDM GAUGE INSPECTION", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 2, "label": "OP 40 WEDM PARAMETER CHECK", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 3, "label": "OP 60 WEDM VERIFY INITIAL SETUP", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 4, "label": "OP 80 WEDM ROOT, TIP AND LE ANGEL WING PROCEDURES", "type": "Standard Operation", "visible": "true", "machine_number": "true", "sub_type": ""},
-    {"section": 5, "label": "OP 100 WEDM ROOT, TIP AND LE ANGEL WING INSPECTION", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 6, "label": "OP 120 WEDM ROOT AND LE ANGEL WING FIRST PIECE INSPECTION", "type": "First Piece Inspection", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 7, "label": "OP 140 TIP/SAIL GATE/CONVEX PLATFORM PROCEDURES", "type": "Standard Operation", "visible": "true", "machine_number": "true", "sub_type": ""},
-    {"section": 8, "label": "OP 160 TIP/SAIL GATE/CONVEX PLATFORM INSPECTION", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 9, "label": "OP 180 TIP/SAIL GATE/CONVEX PLATFORM FIRST PIECE INSPECTION", "type": "First Piece Inspection", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 10, "label": "OP 200 EDM GAUGE INSPECTION", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 11, "label": "OP 220 EDM PARAMETER CHECK", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 12, "label": "OP 240 EDM VERIFY INITIAL SETUP", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 13, "label": "OP 260 FEEDER HOLE PROCEDURES", "type": "Standard Operation", "visible": "true", "machine_number": "true", "sub_type": ""},
-    {"section": 14, "label": "OP 280 FEEDER HOLE INSPECTION", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 15, "label": "OP 300 FEEDER HOLE FIRST PIECE INSPECTION", "type": "First Piece Inspection", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 16, "label": "OP 320 CLEANING", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 17, "label": "OP 340 SHANK POCKET PROCEDURES", "type": "Standard Operation", "visible": "true", "machine_number": "true", "sub_type": ""},
-    {"section": 18, "label": "OP 360 SHANK POCKET INSPECTION", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 19, "label": "OP 380 SHANK POCKET FIRST PIECE INSPECTION", "type": "First Piece Inspection", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 20, "label": "OP 400 TIP PLENUM PRE-INSPECTION", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""}
   ]
 }
