@@ -1,5 +1,5 @@
 {
-  "config_list": ["2040A_Howmet", "2753_LSG_Howmet", "2753_Round_Howmet", "4150_PCC", "4518_CPP", "4496AO"],
+  "config_list": ["2040A_Howmet", "2753_LSG_Howmet", "2753_Round_Howmet", "4150_PCC", "4518_CPP", "4496AO (4530)"],
   "2040A_Howmet_info": {
     "customer": "Howmet Whitehall/Hampton",
     "job_number": "2040A",
@@ -170,7 +170,7 @@
     {"section": 19, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 20, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
-  "4496AO_info": {
+  "4496AO (4530)_info": {
     "customer": "CPP EUCLID",
     "job_number": "4496AO",
     "customer_job_number": "4530, 4540, 4522",
@@ -182,7 +182,7 @@
     "metallography_date": "",
     "expedite": ""
   },
-  "4496AO_sections": [
+  "4496AO (4530)_sections": [
     {"section": 1, "label": "OP 20 GAUGE INSPECTION", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 2, "label": "OP 40 PARAMETER CHECK", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 3, "label": "OP 60 VERIFY INITIAL SETUP", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
