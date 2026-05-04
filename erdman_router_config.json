@@ -1,5 +1,5 @@
 {
-  "config_list": ["2040A_Howmet", "2753_LSG_Howmet", "2753_Round_Howmet", "4150_PCC", "4518_CPP"],
+  "config_list": ["2040A_Howmet", "2753_LSG_Howmet", "2753_Round_Howmet", "4150_PCC", "4518_CPP", "4496AO"],
   "2040A_Howmet_info": {
     "customer": "Howmet Whitehall/Hampton",
     "job_number": "2040A",
@@ -169,5 +169,39 @@
     {"section": 18, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 19, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 20, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+  ],
+  "4496AO_info": {
+    "customer": "CPP EUCLID",
+    "job_number": "4496AO",
+    "customer_job_number": "4530, 4540, 4522",
+    "customer_part_number": "2825M10G01",
+    "tbm": "[TBM #]",
+    "staging_area": "WEDM",
+    "lot_number": "",
+    "due_date": "",
+    "metallography_date": "",
+    "expedite": ""
+  },
+  "4496AO_sections": [
+    {"section": 1, "label": "OP 20 GAUGE INSPECTION", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 2, "label": "OP 40 PARAMETER CHECK", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 3, "label": "OP 60 VERIFY INITIAL SETUP", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 4, "label": "OP 80 WEDM TIP, ROOT, AND LE ANGEL WING PROCEDURES", "type": "Standard Operation", "visible": "true", "machine_number": "true", "sub_type": ""},
+    {"section": 5, "label": "OP WEDM TIP, ROOT, AND ANGEL WING INSPECTION", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 6, "label": "OP 120 WEDM TIP, ROOT AND LE ANGEL WING FIRST PIECE INSPECTION", "type": "First Piece Inspection", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 7, "label": "OP 140 GAUGE INSPECTION", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 8, "label": "OP 160 PARAMETER CHECK", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 9, "label": "OP 180 VERIFY INITIAL SETUP", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 10, "label": "OP 200 SHANK POCKET LOCATION", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 11, "label": "OP 220 SHANK POCKET PROCEDURES", "type": "Standard Operation", "visible": "true", "machine_number": "true", "sub_type": ""},
+    {"section": 12, "label": "OP 240 SHANK POCKET INSPECTION", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 13, "label": "OP 260 SHANK POCKET FIRST PIECE INSPECTION", "type": "First Piece Inspection", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 14, "label": "OP 280 CLEANING", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 15, "label": "OP 400 FEEDER HOLE PROCEDURES", "type": "Standard Operation", "visible": "true", "machine_number": "true", "sub_type": ""},
+    {"section": 16, "label": "OP 420 FEEDER HOLE INSPECTION", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 17, "label": "OP 440 FEEDER HOLE FIRST PIECE INSPECTION", "type": "First Piece Inspection", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 18, "label": "OP 460 FINAL VISUAL INSPECTION", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 19, "label": "OP", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 20, "label": "", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""}
   ]
 }
