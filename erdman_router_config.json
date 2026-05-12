@@ -214,7 +214,7 @@
     {"section": 7, "label": "OP 175 Cleaning", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 8, "label": "OP 200 Sign Daily Log Sheet", "type": "Daily Log", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 9, "label": "OP 225 Vendor Control Router", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 10, "label": "OP 250 Final Inspection / Gauge Inspection", "type": "Shipping-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": "Parts Holes"},
+    {"section": 10, "label": "OP 250 Final Inspection / Gauge Inspection", "type": "Standard Form-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": "Parts Holes"},
     {"section": 11, "label": "OP 275 Shipping", "type": "Shipping-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": "Parts Holes"},
     {"section": 12, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 13, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
