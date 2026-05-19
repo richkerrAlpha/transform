@@ -96,6 +96,22 @@
     "Wall Tolerance Minus (Avg Wall)": -0.1
   },
   {
+    "Group #": 2,
+    "ALLOY INFO": "316 / 316L|Welded|A249|From 2.0001 to 3.0000",
+    "Alloy": "316 / 316L",
+    "Type": "Welded",
+    "MeasurementType": "Imperial",
+    "Main ASTM Spec": "A249",
+    "Tolerance Spec": "A249",
+    "OD Range (in.)": "From 2.0001 to 3.0000",
+    "ODRangeLow": 2.0001,
+    "ODRangeHigh": 3,
+    "OD Tolerance Plus": 0.01,
+    "OD Tolerance Minus": -0.01,
+    "Wall Tolerance Plus(Avg Wall)": 0.1,
+    "Wall Tolerance Minus (Avg Wall)": -0.1
+  },
+  {
     "Group #": 3,
     "ALLOY INFO": "304 / 304L|Seamless|A269 / A213|From 0.0625 to 0.1875",
     "Alloy": "304 / 304L",
