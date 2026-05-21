@@ -1,5 +1,5 @@
 {
-  "config_list": ["2040A (8131)", "2040A (8781)", "2040A (8967)", "2040A (1576)", "2040B (8132)", "2040B (8782)", "2040B (8968)", "2040B (1577)", "2753_LSG_Howmet", "2753_Round_Howmet", "4035AD", "4150_PCC", "4189", "4197", "4318", "4485AO (4522)", "4485AO (4541)", "4485AO (4506)", "4496AO (4540)", "4496AO (4530)", "4496AO (4522)", "4518_CPP"],
+  "config_list": ["2040A (8131)", "2040A (8781)", "2040A (8967)", "2040A (1576)", "2040B (8132)", "2040B (8782)", "2040B (8968)", "2040B (1577)", "2753 LSG", "2753_Round_Howmet", "4035AD", "4150_PCC", "4189", "4197", "4318", "4485AO (4522)", "4485AO (4541)", "4485AO (4506)", "4496AO (4540)", "4496AO (4530)", "4496AO (4522)", "4518_CPP"],
   "2040A (8131)_info": {
     "customer": "Howmet Whitehall/Hampton",
     "job_number": "2040A",
@@ -512,7 +512,7 @@
     {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
-  "2753_LSG_Howmet_info": {
+  "2753 LSG_info": {
     "customer": "Howmet Whitehall/Hampton",
     "job_number": "2040B",
     "customer_job_number": "1577",
@@ -524,7 +524,7 @@
     "metallography_date": "",
     "expedite": ""
   },
-  "2753_LSG_Howmet_sections": [
+  "2753 LSG_sections": [
     {"section": 1, "label": "OP 10 GAGE INSPECTION", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 2, "label": "OP 20 TRAILING EDGE GRIND", "type": "Standard Operation", "visible": "true", "machine_number": "true", "sub_type": ""},
     {"section": 3, "label": "OP 30 CLEAN", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
