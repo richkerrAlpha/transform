@@ -729,7 +729,7 @@
     {"section": 10, "label": "OP 225 VENDOR CONTROL ROUTER", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": "Parts Holes"},
     {"section": 11, "label": "OP 250 FINAL INSPECTION / GAUGE INSPECTION", "type": "Shipping-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": "Parts Holes"},
     {"section": 12, "label": "OP 275 SHIPPING", "type": "Shipping-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 13, "label": "TEST", "type": "Shipping-Tip Hole Repair", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 13, "label": "TEST", "type": "Shipping-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 14, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 15, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 16, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
