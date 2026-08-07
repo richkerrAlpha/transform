@@ -97,6 +97,9 @@ const CONFIG = {
   // to host publicly (e.g. GitHub Pages) for iframe embedding. All data arrives
   // from the live API on load; nothing renders without a working proxyUrl.
   autoRefreshOnLoad: true,
+  // Show the "Load JSON export" file-loader button (manual/demo fallback).
+  // Off for the client-facing embed; set true if you ever need to demo from a file.
+  showJsonLoader: false,
   // The API reports the filler's EMAIL (__metadata_person), not the display name.
   // Map emails -> display names here so live data matches the historical inspector names.
   // Unmapped emails fall back to the capitalized email prefix, then the form's Inspector field.
@@ -220,7 +223,7 @@ function render(){
   if(!rows.length){
     setStatus(CONFIG.api.proxyUrl
       ? "Loading live data from Alpha TransForm\u2026"
-      : "No data source configured. Set CONFIG.api.proxyUrl (see PAC_TransForm_Proxy.gs) or load a TransForm JSON export.");
+      : "No data source configured. Set CONFIG.api.proxyUrl (see PAC_TransForm_Proxy.gs).");
   } else { setStatus(""); }
 
   /* KPIs */
@@ -433,6 +436,9 @@ $("btnReset").addEventListener("click", ()=>{ buildFilters(); render(); });
 for(const id of ["fFrom","fTo","fMill","fInsp","fAlloy","fReason","fDisp","fType"])
   $(id).addEventListener("change", render);
 
+if(!CONFIG.showJsonLoader){
+  document.querySelector('button[onclick*="fileIn"]').style.display = "none";
+}
 buildFilters(); render();
 if(CONFIG.autoRefreshOnLoad && CONFIG.api.proxyUrl){
   refreshFromApi(false);
