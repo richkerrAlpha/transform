@@ -189,9 +189,19 @@ const DATA = [];
     <div class="card c7 c8"><h3>Vendor / Mill Performance <small>top by inspected footage</small></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
     <div class="card c4"><h3>Alloy — True Rejected <small>held footage</small></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
     <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
-      <label class="switch" title="When on, clicking a chart bar or pie slice narrows this list to those submissions">
-        <input type="checkbox" id="linkToggle"><span class="slider"></span><span>Chart click filters list</span>
-      </label></h3><div class="tscroll"><table>
+      <span style="display:flex;align-items:center;gap:16px">
+        <div class="msel" id="expSel">
+          <button type="button" class="msel-btn" id="expBtn" style="min-width:0;padding-right:24px">&#8681; Export</button>
+          <div class="msel-panel" id="expPanel" style="left:auto;right:0;min-width:190px">
+            <div class="ms-opt" data-fmt="xlsx">Excel workbook (.xlsx)</div>
+            <div class="ms-opt" data-fmt="csv">CSV (.csv)</div>
+            <div class="ms-opt" data-fmt="json">JSON (.json)</div>
+          </div>
+        </div>
+        <label class="switch" title="When on, clicking a chart bar or pie slice narrows this list to those submissions">
+          <input type="checkbox" id="linkToggle"><span class="slider"></span><span>Chart click filters list</span>
+        </label>
+      </span></h3><div class="tscroll"><table>
       <thead><tr><th>Date</th><th>Mill</th><th>Alloy</th><th>PO #</th><th>Heat</th><th>Inspector</th><th>Type</th>
       <th style="text-align:right">Received (ft)</th><th style="text-align:right">Inspected (ft)</th>
       <th style="text-align:right">Rejected (ft)</th><th>Disposition</th><th>Primary Reason</th></tr></thead>
@@ -255,6 +265,7 @@ $("millBtn").addEventListener("click", ()=>{
 });
 document.addEventListener("click", (e)=>{
   if(!$("millSel").contains(e.target)) $("millPanel").style.display = "none";
+  if(!$("expSel").contains(e.target)) $("expPanel").style.display = "none";
 });
 function inScope(r){
   const f=$("fFrom").value, t=$("fTo").value;
@@ -463,6 +474,133 @@ function renderTable(){
   }).join("");
 }
 $("linkToggle").addEventListener("change", ()=>{ if(!$("linkToggle").checked) chartSel = null; renderTable(); });
+
+/* ---------- export (XLSX / CSV / JSON) ---------- */
+const EXPORT_COLS = [
+  ["Date", r=>r.date], ["Mill", r=>r.mill], ["Alloy", r=>r.alloy], ["PO Number", r=>r.po],
+  ["Heat", r=>r.heat], ["Inspector", r=>r.inspector], ["Type", r=>r.type],
+  ["Footage Received", r=>r.fRecv], ["Footage Inspected", r=>r.fInsp],
+  ["Footage Borescoped", r=>r.fBore], ["Footage Rejected", r=>r.fRej],
+  ["Footage Approved", r=>r.fAppr], ["True Rejected (Held)", r=>r.tRej],
+  ["Pieces Inspected", r=>r.pcsInsp], ["Pieces Accepted", r=>r.pcsAcc], ["Pieces Rejected", r=>r.pcsRej],
+  ["Disposition", r=>r.disp], ["Primary Rejection Reason", r=>r.reason], ["Instance ID", r=>r.id]
+];
+function exportScope(){ return chartSel ? scopeRows.filter(matchSel) : scopeRows; }
+function dlBlob(name, blob){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+}
+function buildCsv(rowsIn){
+  const esc = v => { v = (v===null||v===undefined) ? "" : String(v);
+    return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v; };
+  const lines = [ EXPORT_COLS.map(c=>esc(c[0])).join(",") ];
+  for(const r of rowsIn) lines.push(EXPORT_COLS.map(c=>esc(c[1](r))).join(","));
+  return "\uFEFF" + lines.join("\r\n");   // BOM so Excel opens UTF-8 correctly
+}
+/* --- minimal XLSX writer: OOXML parts in a store-only ZIP, no libraries --- */
+function crc32(bytes){
+  let t = crc32.t;
+  if(!t){ t = crc32.t = new Int32Array(256);
+    for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c = (c&1)? (0xEDB88320 ^ (c>>>1)) : (c>>>1); t[n]=c; } }
+  let c = -1;
+  for(let i=0;i<bytes.length;i++) c = t[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ -1) >>> 0;
+}
+function zipStore(files){   // files: [name, Uint8Array]
+  const enc = new TextEncoder(); const chunks = []; const central = []; let offset = 0;
+  const u16 = v => new Uint8Array([v&255, (v>>8)&255]);
+  const u32 = v => new Uint8Array([v&255, (v>>8)&255, (v>>16)&255, (v>>24)&255]);
+  for(const [name, data] of files){
+    const n = enc.encode(name), crc = crc32(data);
+    const hdr = [new Uint8Array([0x50,0x4B,3,4]), u16(20), u16(0), u16(0), u16(0), u16(0),
+                 u32(crc), u32(data.length), u32(data.length), u16(n.length), u16(0)];
+    central.push({n, crc, size: data.length, offset});
+    for(const p of hdr) chunks.push(p);
+    chunks.push(n, data);
+    offset += 30 + n.length + data.length;
+  }
+  const cdStart = offset; let cdSize = 0;
+  for(const f of central){
+    const rec = [new Uint8Array([0x50,0x4B,1,2]), u16(20), u16(20), u16(0), u16(0), u16(0), u16(0),
+                 u32(f.crc), u32(f.size), u32(f.size), u16(f.n.length), u16(0), u16(0),
+                 u16(0), u16(0), u32(0), u32(f.offset)];
+    for(const p of rec) chunks.push(p);
+    chunks.push(f.n);
+    cdSize += 46 + f.n.length;
+  }
+  const end = [new Uint8Array([0x50,0x4B,5,6]), u16(0), u16(0), u16(central.length), u16(central.length),
+               u32(cdSize), u32(cdStart), u16(0)];
+  for(const p of end) chunks.push(p);
+  let total = 0; for(const c of chunks) total += c.length;
+  const out = new Uint8Array(total); let pos = 0;
+  for(const c of chunks){ out.set(c, pos); pos += c.length; }
+  return out;
+}
+function colLetter(i){ let sfx = ""; i++; while(i>0){ const m=(i-1)%26; sfx=String.fromCharCode(65+m)+sfx; i=Math.floor((i-1)/26); } return sfx; }
+function xmlEsc(v){ return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function buildXlsxBytes(rowsIn){
+  const enc = new TextEncoder();
+  let sheet = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>';
+  const rowXml = (vals, rIdx, forceText) => {
+    let x = `<row r="${rIdx}">`;
+    vals.forEach((v, cI)=>{
+      const ref = colLetter(cI) + rIdx;
+      if(!forceText && typeof v === "number" && isFinite(v)){
+        x += `<c r="${ref}"><v>${v}</v></c>`;
+      } else if(v !== "" && v !== null && v !== undefined){
+        x += `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xmlEsc(v)}</t></is></c>`;
+      }
+    });
+    return x + "</row>";
+  };
+  sheet += rowXml(EXPORT_COLS.map(c=>c[0]), 1, true);
+  rowsIn.forEach((r, i)=>{ sheet += rowXml(EXPORT_COLS.map(c=>c[1](r)), i+2, false); });
+  sheet += "</sheetData></worksheet>";
+  const files = [
+    ["[Content_Types].xml", enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+      '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+      '<Default Extension="xml" ContentType="application/xml"/>' +
+      '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+      '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>')],
+    ["_rels/.rels", enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>')],
+    ["xl/workbook.xml", enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' +
+      'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
+      '<sheets><sheet name="Submissions" sheetId="1" r:id="rId1"/></sheets></workbook>')],
+    ["xl/_rels/workbook.xml.rels", enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+      '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>')],
+    ["xl/worksheets/sheet1.xml", enc.encode(sheet)]
+  ];
+  return zipStore(files);
+}
+function doExport(fmt){
+  const R = exportScope();
+  if(!R.length) return alert("Nothing to export — the current scope has no submissions.");
+  const stamp = new Date().toISOString().slice(0,10);
+  const base = "PAC_Submissions_" + stamp + (chartSel ? "_selection" : "");
+  if(fmt === "csv"){
+    dlBlob(base + ".csv", new Blob([buildCsv(R)], {type:"text/csv;charset=utf-8"}));
+  } else if(fmt === "json"){
+    dlBlob(base + ".json", new Blob([JSON.stringify(R, null, 2)], {type:"application/json"}));
+  } else if(fmt === "xlsx"){
+    dlBlob(base + ".xlsx", new Blob([buildXlsxBytes(R)],
+      {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
+  }
+  $("expPanel").style.display = "none";
+}
+$("expBtn").addEventListener("click", ()=>{
+  const p = $("expPanel");
+  p.style.display = p.style.display === "block" ? "none" : "block";
+});
+document.querySelectorAll("#expPanel .ms-opt").forEach(el=>
+  el.addEventListener("click", ()=>doExport(el.dataset.fmt)));
 
 /* ---------- data loading ---------- */
 function num(x){ const v=parseFloat(x); return isFinite(v)?v:0; }
