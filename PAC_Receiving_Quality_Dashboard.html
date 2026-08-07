@@ -111,6 +111,13 @@ const CONFIG = {
   // Map emails -> display names here so live data matches the historical inspector names.
   // Unmapped emails fall back to the capitalized email prefix, then the form's Inspector field.
   userMap: { "jesus@pacstainless.com": "Jesus Gonzalez" },
+  // Mill names are normalized for grouping (trimmed, case-insensitive, dash spacing
+  // standardized) so "Alleima" / "ALLEIMA" count as one mill. Grouping key is UPPERCASE;
+  // add entries here for brand-correct display casing. Unlisted mills display uppercase.
+  millNames: { "ALLEIMA":"Alleima", "RATHGIBSON":"RathGibson", "TUBACEX":"Tubacex",
+               "TUBACEX - SALEM":"Tubacex - Salem",
+               "TUBACEX - SCHOELLER BLECKMANN":"Tubacex - Schoeller Bleckmann",
+               "HANDY":"Handy", "GAVIN":"Gavin", "OSCAR":"Oscar", "EXCELINOX":"Excelinox" },
   // PAC submission browser cross-link: {id} is replaced with wrapper_forminstanceid.
   submissionBrowserUrl: ""   // e.g. "PAC_Submission_Browser.html?id={id}"
 };
@@ -398,6 +405,11 @@ $("linkToggle").addEventListener("change", ()=>{ if(!$("linkToggle").checked) ch
 /* ---------- data loading ---------- */
 function num(x){ const v=parseFloat(x); return isFinite(v)?v:0; }
 function titleCase(s){ return s? s.charAt(0).toUpperCase()+s.slice(1).toLowerCase() : ""; }
+function normMill(name){
+  if(!name) return "";
+  const key = String(name).trim().replace(/\s+/g," ").replace(/\s*-\s*/g," - ").toUpperCase();
+  return CONFIG.millNames[key] || key;
+}
 function transformInstance(inst){
   // Accepts all three shapes: live API flat records (__metadata_* + top-level fields),
   // nested {formdata:{...}} exports, and wrapper_/formdata_ flattened exports.
@@ -429,7 +441,7 @@ function transformInstance(inst){
   const disp = fd.HoldRelease||"";
   return { id: meta.id, date:(meta.completed||fd.Date||"").slice(0,10),
     created: meta.created, inspector,
-    mill:(fd.MillName||"").trim(), alloy:fd.Alloy||"", type:fd.InspectionType||"",
+    mill: normMill(fd.MillName), alloy:fd.Alloy||"", type:fd.InspectionType||"",
     po:fd.PONumber||"", heat:fd.Heat||"", disp, reason:fd.PrimaryRejectionReason||"",
     pcsInsp:num(fd.PiecesInspected), pcsAcc:num(fd.PiecesAccepted), pcsRej:rejP,
     fRecv:qty, fInsp, fBore: recvP>0? qty*bore/recvP:0, fRej,
