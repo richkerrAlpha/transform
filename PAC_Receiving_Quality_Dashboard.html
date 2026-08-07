@@ -43,12 +43,15 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .filters .reset{background:var(--steel);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer}
 .filters .reset:hover{background:var(--steel2)}
 .wrap{max-width:1440px;margin:0 auto;padding:22px 28px 60px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px}
-.kpi{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;border-top:4px solid var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:12px;margin-bottom:22px}
+@media(max-width:1200px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:560px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;border-top:4px solid var(--accent);transition:transform .18s ease,box-shadow .18s ease;cursor:default}
+.kpi:hover{transform:translateY(-4px) scale(1.04);box-shadow:0 10px 24px rgba(27,73,101,.25);z-index:2;position:relative}
 .kpi.alert{border-top-color:var(--red)}
 .kpi.good{border-top-color:var(--green)}
 .kpi h4{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.kpi .v{font-size:26px;font-weight:800;color:var(--steel)}
+.kpi .v{font-size:clamp(15px,1.5vw,24px);font-weight:800;color:var(--steel);white-space:nowrap}
 .kpi .u{font-size:12px;color:var(--muted);font-weight:600;margin-left:3px}
 .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
 .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
@@ -111,13 +114,8 @@ const CONFIG = {
   // Map emails -> display names here so live data matches the historical inspector names.
   // Unmapped emails fall back to the capitalized email prefix, then the form's Inspector field.
   userMap: { "jesus@pacstainless.com": "Jesus Gonzalez" },
-  // Mill names are normalized for grouping (trimmed, case-insensitive, dash spacing
-  // standardized) so "Alleima" / "ALLEIMA" count as one mill. Grouping key is UPPERCASE;
-  // add entries here for brand-correct display casing. Unlisted mills display uppercase.
-  millNames: { "ALLEIMA":"Alleima", "RATHGIBSON":"RathGibson", "TUBACEX":"Tubacex",
-               "TUBACEX - SALEM":"Tubacex - Salem",
-               "TUBACEX - SCHOELLER BLECKMANN":"Tubacex - Schoeller Bleckmann",
-               "HANDY":"Handy", "GAVIN":"Gavin", "OSCAR":"Oscar", "EXCELINOX":"Excelinox" },
+  // Mill names are normalized: trimmed, whitespace collapsed, dash spacing
+  // standardized, and displayed in UPPERCASE so case variants count as one mill.
   // PAC submission browser cross-link: {id} is replaced with wrapper_forminstanceid.
   submissionBrowserUrl: ""   // e.g. "PAC_Submission_Browser.html?id={id}"
 };
@@ -407,8 +405,7 @@ function num(x){ const v=parseFloat(x); return isFinite(v)?v:0; }
 function titleCase(s){ return s? s.charAt(0).toUpperCase()+s.slice(1).toLowerCase() : ""; }
 function normMill(name){
   if(!name) return "";
-  const key = String(name).trim().replace(/\s+/g," ").replace(/\s*-\s*/g," - ").toUpperCase();
-  return CONFIG.millNames[key] || key;
+  return String(name).trim().replace(/\s+/g," ").replace(/\s*-\s*/g," - ").toUpperCase();
 }
 function transformInstance(inst){
   // Accepts all three shapes: live API flat records (__metadata_* + top-level fields),
