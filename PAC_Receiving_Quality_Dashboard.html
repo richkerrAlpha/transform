@@ -72,6 +72,10 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .card h3{font-size:14px;font-weight:800;color:var(--steel);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .card h3 small{font-weight:600;color:var(--muted);font-size:11px}
 .c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}
+.dlbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.seg{display:inline-flex;border:1px solid #CBD5DD;border-radius:8px;overflow:hidden;flex:none}
+.seg button{border:none;background:#fff;color:var(--muted);font-size:12px;font-weight:700;padding:7px 10px;cursor:pointer;transition:.15s}
+.seg button.on{background:var(--steel);color:#fff}
 .tgtspin{width:56px;border:1px solid #CBD5DD;border-radius:6px;padding:2px 5px;font-size:11px;font-weight:700;color:var(--ink);background:#fff}
 .pngbtn{border:1px solid #CBD5DD;background:#fff;color:var(--muted);border-radius:7px;font-size:12px;padding:3px 9px;cursor:pointer;transition:.15s;flex:none}
 .pngbtn:hover{background:var(--steel);color:#fff;border-color:var(--steel)}
@@ -180,8 +184,32 @@ const DATA = [];
 </header>
 
 <div class="filters">
-  <label>From <input type="date" id="fFrom"></label>
-  <label>To <input type="date" id="fTo"></label>
+  <label>Date Range
+    <div style="display:flex;gap:8px;align-items:center">
+      <div class="seg" id="dateSeg">
+        <button type="button" data-mode="custom" class="on">Dates</button>
+        <button type="button" data-mode="period">Period</button>
+      </div>
+      <span id="customDates" style="display:flex;gap:6px;align-items:center">
+        <span class="dlbl">From:</span> <input type="date" id="fFrom">
+        <span class="dlbl">To:</span> <input type="date" id="fTo">
+      </span>
+      <span id="periodBox" style="display:none;gap:6px;align-items:center">
+        <select id="fPeriod">
+          <option value="thisweek">This Week</option>
+          <option value="lastweek">Last Week</option>
+          <option value="thismonth">This Month</option>
+          <option value="lastmonth">Last Month</option>
+          <option value="thisquarter">This Quarter</option>
+          <option value="lastquarter">Last Quarter</option>
+          <option value="ytd">YTD</option>
+          <option value="lastx">Last X Months</option>
+          <option value="all" selected>All Time</option>
+        </select>
+        <input type="number" id="fMonthsX" class="tgtspin" min="1" max="60" step="1" value="6" style="display:none" title="How many months back">
+      </span>
+    </div>
+  </label>
   <label>Mill
     <div class="msel" id="millSel">
       <button type="button" class="msel-btn" id="millBtn">All</button>
@@ -276,9 +304,50 @@ function buildFilters(){
   buildMillSelect(uniq("mill")); fillSelect("fInsp", uniq("inspector"));
   fillSelect("fAlloy", uniq("alloy")); fillSelect("fReason", uniq("reason"));
   fillSelect("fDisp", uniq("disp")); fillSelect("fType", uniq("type"));
-  const ds = rows.map(r=>r.date).filter(Boolean).sort();
+  setDatesFromPeriod();   // honors the active mode: custom -> data extents, period -> preset
+}
+
+/* ---------- date period presets ---------- */
+let dateMode = "custom";
+function ymd(d){ const p=n=>String(n).padStart(2,"0"); return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate()); }
+function periodRange(key){
+  const now = new Date(), y = now.getFullYear(), m = now.getMonth();
+  const monday = d => { const x = new Date(d); const wd = (x.getDay()+6)%7; x.setDate(x.getDate()-wd); return x; };
+  switch(key){
+    case "thisweek":    { const a = monday(now); const b = new Date(a); b.setDate(a.getDate()+6); return [a,b]; }
+    case "lastweek":    { const a = monday(now); a.setDate(a.getDate()-7); const b = new Date(a); b.setDate(a.getDate()+6); return [a,b]; }
+    case "thismonth":   return [new Date(y,m,1),   new Date(y,m+1,0)];
+    case "lastmonth":   return [new Date(y,m-1,1), new Date(y,m,0)];
+    case "thisquarter": { const q = Math.floor(m/3)*3;   return [new Date(y,q,1), new Date(y,q+3,0)]; }
+    case "lastquarter": { const q = Math.floor(m/3)*3-3; return [new Date(y,q,1), new Date(y,q+3,0)]; }
+    case "ytd":         return [new Date(y,0,1), now];
+    case "lastx":       { const n = Math.max(1, parseInt($("fMonthsX").value,10)||6);
+                          const a = new Date(now); a.setMonth(a.getMonth()-n); return [a,now]; }
+    case "all":         return null;
+  }
+  return null;
+}
+function setDatesFromPeriod(){
+  if(dateMode === "period"){
+    const r = periodRange($("fPeriod").value);
+    if(r){ $("fFrom").value = ymd(r[0]); $("fTo").value = ymd(r[1]); return; }
+  }
+  const ds = rows.map(r=>r.date).filter(Boolean).sort();   // custom default / All Time
   $("fFrom").value = ds[0]||""; $("fTo").value = ds[ds.length-1]||"";
 }
+function applyPeriod(){ setDatesFromPeriod(); chartSel = null; render(); }
+document.querySelectorAll("#dateSeg button").forEach(b => b.addEventListener("click", ()=>{
+  dateMode = b.dataset.mode;
+  document.querySelectorAll("#dateSeg button").forEach(x => x.classList.toggle("on", x === b));
+  $("customDates").style.display = dateMode === "custom" ? "flex" : "none";
+  $("periodBox").style.display  = dateMode === "period" ? "flex" : "none";
+  applyPeriod();
+}));
+$("fPeriod").addEventListener("change", ()=>{
+  $("fMonthsX").style.display = $("fPeriod").value === "lastx" ? "inline-block" : "none";
+  applyPeriod();
+});
+$("fMonthsX").addEventListener("change", applyPeriod);
 $("millBtn").addEventListener("click", ()=>{
   const p = $("millPanel");
   p.style.display = p.style.display === "block" ? "none" : "block";
