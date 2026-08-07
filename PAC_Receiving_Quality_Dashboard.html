@@ -72,6 +72,8 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .card h3{font-size:14px;font-weight:800;color:var(--steel);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .card h3 small{font-weight:600;color:var(--muted);font-size:11px}
 .c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}
+.pngbtn{border:1px solid #CBD5DD;background:#fff;color:var(--muted);border-radius:7px;font-size:12px;padding:3px 9px;cursor:pointer;transition:.15s;flex:none}
+.pngbtn:hover{background:var(--steel);color:#fff;border-color:var(--steel)}
 .chartbox{position:relative;height:300px}
 .chartbox.tall{height:380px}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
@@ -190,14 +192,17 @@ const DATA = [];
 </div>
 
 <div class="wrap">
+  <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+    <button class="pngbtn" id="kpiPng" title="Download the KPI cards as a PNG image">&#8681; PNG</button>
+  </div>
   <div class="kpis" id="kpis"></div>
   <div class="grid">
-    <div class="card c8"><h3>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
-    <div class="card c4"><h3>Rejection Reasons <small>held footage</small></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
-    <div class="card c6"><h3>Monthly Rejection Rate</h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
-    <div class="card c6"><h3>Inspector Performance</h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
-    <div class="card c7 c8"><h3>Vendor / Mill Performance <small>top by inspected footage</small></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
-    <div class="card c4"><h3>Alloy — True Rejected <small>held footage</small></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
+    <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
+    <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
+    <div class="card c6"><h3><span>Monthly Rejection Rate</span><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
+    <div class="card c6"><h3><span>Inspector Performance</span><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Performance" data-title="Inspector Performance" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
+    <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small>top by inspected footage</small></span><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Download as PNG">&#8681;</button></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
+    <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Download as PNG">&#8681;</button></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
     <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
       <span style="display:flex;align-items:center;gap:16px">
         <div class="msel" id="expSel">
@@ -654,6 +659,75 @@ $("expBtn").addEventListener("click", ()=>{
 });
 document.querySelectorAll("#expPanel .ms-opt").forEach(el=>
   el.addEventListener("click", ()=>doExport(el.dataset.fmt)));
+
+/* ---------- per-tile PNG export ---------- */
+function stampDate(){ return new Date().toISOString().slice(0,10); }
+function cssVar(name, fallback){
+  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return v || fallback;
+}
+function exportChartPng(id, name, title){
+  const c = charts[id]; if(!c) return;
+  const src = c.canvas;
+  const dpr = (src.width / (src.clientWidth || src.width)) || 1;
+  const pad = Math.round(20 * dpr), titleH = Math.round(34 * dpr);
+  const out = document.createElement("canvas");
+  out.width = src.width + pad * 2; out.height = src.height + titleH + pad * 2;
+  const g = out.getContext("2d");
+  g.fillStyle = "#FFFFFF"; g.fillRect(0, 0, out.width, out.height);
+  g.fillStyle = cssVar("--steel", "#1B4965");
+  g.font = "700 " + Math.round(15 * dpr) + "px Arial";
+  g.fillText(title, pad, pad + Math.round(14 * dpr));
+  g.fillStyle = cssVar("--muted", "#6C7A89");
+  g.font = Math.round(10 * dpr) + "px Arial";
+  g.fillText(CONFIG.clientName + " \u00b7 " + stampDate(), out.width - g.measureText(CONFIG.clientName + " \u00b7 " + stampDate()).width - pad, pad + Math.round(14 * dpr));
+  g.drawImage(src, pad, titleH + pad);
+  out.toBlob(b => dlBlob("PAC_" + name + "_" + stampDate() + ".png", b), "image/png");
+}
+function roundRect(g, x, y, w, h, r){
+  g.beginPath();
+  g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+function exportKpisPng(){
+  const cards = [...document.querySelectorAll(".kpi")];
+  if(!cards.length) return;
+  const S = 2;                                   // render scale for crispness
+  const W = 226 * S, H = 112 * S, GAP = 14 * S, PAD = 22 * S, R = 12 * S;
+  const out = document.createElement("canvas");
+  out.width = PAD * 2 + cards.length * W + (cards.length - 1) * GAP;
+  out.height = PAD * 2 + H;
+  const g = out.getContext("2d");
+  g.fillStyle = cssVar("--bg", "#F1F5F8"); g.fillRect(0, 0, out.width, out.height);
+  cards.forEach((card, i) => {
+    const x = PAD + i * (W + GAP), y = PAD;
+    roundRect(g, x, y, W, H, R); g.fillStyle = "#FFFFFF"; g.fill();
+    // top accent border matching the live card (accent / red / green)
+    g.save(); roundRect(g, x, y, W, H, R); g.clip();
+    g.fillStyle = getComputedStyle(card).borderTopColor || cssVar("--accent", "#62B6CB");
+    g.fillRect(x, y, W, 4 * S); g.restore();
+    const label = (card.querySelector("h4") || {}).textContent || "";
+    const vEl = card.querySelector(".v");
+    const value = vEl ? vEl.childNodes[0].textContent : "";
+    const unit = (card.querySelector(".u") || {}).textContent || "";
+    g.fillStyle = cssVar("--muted", "#6C7A89");
+    g.font = "700 " + 11 * S + "px Arial";
+    g.fillText(label.toUpperCase(), x + 16 * S, y + 30 * S);
+    g.fillStyle = cssVar("--steel", "#1B4965");
+    g.font = "800 " + 26 * S + "px Arial";
+    g.fillText(value, x + 16 * S, y + H - 20 * S);
+    const valueW = g.measureText(value).width;   // measured while the value font is active
+    if(unit){
+      g.fillStyle = cssVar("--muted", "#6C7A89");
+      g.font = "600 " + 12 * S + "px Arial";
+      g.fillText(unit, x + 16 * S + valueW + 6 * S, y + H - 20 * S);
+    }
+  });
+  out.toBlob(b => dlBlob("PAC_KPIs_" + stampDate() + ".png", b), "image/png");
+}
+document.querySelectorAll(".pngbtn[data-chart]").forEach(btn =>
+  btn.addEventListener("click", () => exportChartPng(btn.dataset.chart, btn.dataset.name, btn.dataset.title)));
+$("kpiPng").addEventListener("click", exportKpisPng);
 
 /* ---------- data loading ---------- */
 function num(x){ const v=parseFloat(x); return isFinite(v)?v:0; }
