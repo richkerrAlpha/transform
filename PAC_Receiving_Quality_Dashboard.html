@@ -116,7 +116,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "2.4",
+  version: "2.5",
   updated: "Aug 7, 2026",
   // Default quality target: monthly rejection rate above this fraction is flagged red
   // on the Monthly Rejection Rate chart and drives the Rejection Rate KPI card color.
@@ -205,7 +205,12 @@ const DATA = [];
           <option value="lastmonth">Last Month</option>
           <option value="thisquarter">This Quarter</option>
           <option value="lastquarter">Last Quarter</option>
-          <option value="ytd">YTD</option>
+          <option value="thisyear">This Year</option>
+          <option value="lastyear">Last Year</option>
+          <option value="ytd">Year to Date</option>
+          <option value="last7">Last 7 Days</option>
+          <option value="last30">Last 30 Days</option>
+          <option value="last90">Last 90 Days</option>
           <option value="lastx">Last X Months</option>
           <option value="all" selected>All Time</option>
         </select>
@@ -326,7 +331,12 @@ function periodRange(key){
     case "lastmonth":   return [new Date(y,m-1,1), new Date(y,m,0)];
     case "thisquarter": { const q = Math.floor(m/3)*3;   return [new Date(y,q,1), new Date(y,q+3,0)]; }
     case "lastquarter": { const q = Math.floor(m/3)*3-3; return [new Date(y,q,1), new Date(y,q+3,0)]; }
+    case "thisyear":    return [new Date(y,0,1),   new Date(y,11,31)];
+    case "lastyear":    return [new Date(y-1,0,1), new Date(y-1,11,31)];
     case "ytd":         return [new Date(y,0,1), now];
+    case "last7":  { const a = new Date(now); a.setDate(a.getDate()-6);  return [a,now]; }
+    case "last30": { const a = new Date(now); a.setDate(a.getDate()-29); return [a,now]; }
+    case "last90": { const a = new Date(now); a.setDate(a.getDate()-89); return [a,now]; }
     case "lastx":       { const n = Math.max(1, parseInt($("fMonthsX").value,10)||6);
                           const a = new Date(now); a.setMonth(a.getMonth()-n); return [a,now]; }
     case "all":         return null;
