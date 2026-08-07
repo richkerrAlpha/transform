@@ -32,8 +32,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
 header{background:linear-gradient(135deg,var(--steel) 0%,var(--steel2) 100%);color:#fff;padding:22px 28px;display:flex;flex-wrap:wrap;align-items:center;gap:16px;}
 .logocard{background:#fff;border-radius:10px;padding:8px 14px;display:flex;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .logocard img{height:54px;display:block}
-.htitle{font-size:30px;font-weight:800;color:#fff;letter-spacing:.4px;line-height:1.1}
-.htitle em{font-style:normal;color:var(--accent)}
+.htitle{font-size:30px;font-weight:800;color:var(--accent);letter-spacing:.4px;line-height:1.1}
 header .sub{font-size:13px;opacity:.85;margin-top:3px}
 .verline{font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.5px;margin-top:2px}
 .hdr-sel{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:5px 8px;font-size:12px;cursor:pointer}
@@ -49,8 +48,9 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .filters input,.filters select{border:1px solid #CBD5DD;border-radius:8px;padding:7px 9px;font-size:13px;background:#fff;color:var(--ink);min-width:120px}
 .msel{position:relative}
 .msel-btn{border:1px solid #CBD5DD;border-radius:8px;padding:7px 26px 7px 9px;font-size:13px;background:#fff url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236C7A89'/%3E%3C/svg%3E") no-repeat right 9px center;color:var(--ink);min-width:140px;text-align:left;cursor:pointer;white-space:nowrap}
-.msel-panel{display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #CBD5DD;border-radius:8px;box-shadow:0 8px 22px rgba(27,73,101,.18);max-height:280px;overflow:auto;padding:6px;z-index:80;min-width:230px}
-.msel-panel .ms-opt{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink);text-transform:none;letter-spacing:0;padding:6px 9px;border-radius:6px;cursor:pointer}
+.msel-panel{display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #CBD5DD;border-radius:8px;box-shadow:0 8px 22px rgba(27,73,101,.18);max-height:300px;overflow-y:auto;overflow-x:hidden;padding:6px;z-index:80;min-width:230px;width:max-content;max-width:420px}
+.msel-panel .ms-opt{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink);text-transform:none;letter-spacing:0;padding:6px 8px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.msel-panel .ms-opt input[type=checkbox]{margin:0;flex:none;width:15px;height:15px;min-width:0;padding:0;border:none;accent-color:var(--steel)}
 .msel-panel .ms-opt:hover{background:#EDF4F8}
 .msel-panel label.ms-all{border-bottom:1px solid #E6ECF0;margin-bottom:4px;padding-bottom:8px}
 .filters .reset{background:var(--steel);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer}
@@ -72,6 +72,18 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .card h3{font-size:14px;font-weight:800;color:var(--steel);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .card h3 small{font-weight:600;color:var(--muted);font-size:11px}
 .c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}
+.demo-hi{outline:3px solid var(--accent);outline-offset:4px;border-radius:14px;transition:outline .3s}
+#demoCap{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:26px;max-width:820px;background:rgba(15,25,35,.92);color:#fff;font-size:16px;font-weight:600;line-height:1.45;padding:14px 22px;border-radius:12px;z-index:900;box-shadow:0 10px 30px rgba(0,0,0,.35);text-align:center}
+#demoStart{position:fixed;inset:0;background:rgba(10,20,30,.72);z-index:950;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+#demoStart button{font-size:20px;font-weight:800;padding:16px 34px;border:none;border-radius:12px;background:var(--steel);color:#fff;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.4)}
+#demoStart button:hover{background:var(--steel2)}
+#demoStart .note{color:#DDE6EE;font-size:14px;font-weight:600}
+#thead th.sth{cursor:pointer;user-select:none;white-space:nowrap}
+#thead th.sth:hover{color:var(--accent)}
+#thead th.sth .arr{font-size:9px;margin-left:3px;opacity:.9}
+#thead .frow th{padding:3px 6px 6px;background:transparent}
+#thead .frow input{width:100%;min-width:52px;box-sizing:border-box;border:1px solid #CBD5DD;border-radius:5px;padding:3px 6px;font-size:11px;font-weight:500;color:var(--ink);background:#fff}
+#thead .frow input::placeholder{color:#B4BEC7;font-weight:400}
 .perdates{align-self:flex-end;padding-bottom:9px;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
 .dategroup{display:flex;gap:14px;align-items:flex-end;border:1px solid #B7C6D0;border-radius:10px;padding:7px 12px 8px;background:#F7FAFC}
 .seg{display:inline-flex;border:1px solid #CBD5DD;border-radius:8px;overflow:hidden;flex:none}
@@ -116,7 +128,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "2.5",
+  version: "2.6",
   updated: "Aug 7, 2026",
   // Default quality target: monthly rejection rate above this fraction is flagged red
   // on the Monthly Rejection Rate chart and drives the Rejection Rate KPI card color.
@@ -161,7 +173,7 @@ const DATA = [];
   <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
     <div class="logocard"><img src="data:image/png;base64,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" alt="PAC Stainless Ltd. — 50 Years"></div>
     <div>
-      <div class="htitle">Receiving <em>Quality</em> Dashboard</div>
+      <div class="htitle">Receiving Quality Dashboard</div>
       <div class="sub" id="subTitle"></div>
       <div class="verline" id="verLine"></div>
     </div>
@@ -227,9 +239,24 @@ const DATA = [];
       <div class="msel-panel" id="millPanel"></div>
     </div>
   </label>
-  <label>Inspector <select id="fInsp"></select></label>
-  <label>Alloy <select id="fAlloy"></select></label>
-  <label>Rejection Reason <select id="fReason"></select></label>
+  <label>Inspector
+    <div class="msel" id="inspSel">
+      <button type="button" class="msel-btn" id="inspBtn">All</button>
+      <div class="msel-panel" id="inspPanel"></div>
+    </div>
+  </label>
+  <label>Alloy
+    <div class="msel" id="alloySel">
+      <button type="button" class="msel-btn" id="alloyBtn">All</button>
+      <div class="msel-panel" id="alloyPanel"></div>
+    </div>
+  </label>
+  <label>Rejection Reason
+    <div class="msel" id="reasonSel">
+      <button type="button" class="msel-btn" id="reasonBtn">All</button>
+      <div class="msel-panel" id="reasonPanel"></div>
+    </div>
+  </label>
   <label>Disposition <select id="fDisp"></select></label>
   <label>Type <select id="fType"></select></label>
   <button class="reset" id="btnReset">Reset</button>
@@ -261,9 +288,7 @@ const DATA = [];
           <input type="checkbox" id="linkToggle"><span class="slider"></span><span>Chart click filters list</span>
         </label>
       </span></h3><div class="tscroll"><table>
-      <thead><tr><th>Date</th><th>Mill</th><th>Alloy</th><th>PO #</th><th>Heat</th><th>Inspector</th><th>Type</th>
-      <th style="text-align:right">Received (ft)</th><th style="text-align:right">Inspected (ft)</th>
-      <th style="text-align:right">Rejected (ft)</th><th>Disposition</th><th>Primary Reason</th></tr></thead>
+      <thead id="thead"></thead>
       <tbody id="tbody"></tbody></table></div></div>
   </div>
 </div>
@@ -274,6 +299,13 @@ const DATA = [];
 const B = CONFIG.brand;
 const $ = id => document.getElementById(id);
 const fmt = n => n.toLocaleString("en-US",{maximumFractionDigits:0});
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function dLabel(iso){                     // "2026-08-03" -> "Aug 3, 2026" ; "2026-08" -> "Aug 2026"
+  const p = String(iso||"").split("-");
+  if(p.length===3) return MON[+p[1]-1] + " " + (+p[2]) + ", " + p[0];
+  if(p.length===2) return MON[+p[1]-1] + " " + p[0];
+  return iso || "";
+}
 const pct = n => (100*n).toFixed(1)+"%";
 let rows = DATA.slice();
 let charts = {};
@@ -287,33 +319,47 @@ function fillSelect(id, values){
   const s = $(id); s.innerHTML = "";
   ["All", ...values].forEach(v => { const o=document.createElement("option"); o.value=o.textContent=v; s.appendChild(o); });
 }
-let millChoice = new Set();   // empty = All
-function updateMillBtn(){
-  $("millBtn").textContent = millChoice.size===0 ? "All"
-    : (millChoice.size===1 ? [...millChoice][0] : millChoice.size + " mills");
+/* Excel-style checkbox multi-selects (mill, inspector, alloy, reason) */
+const MSEL = {
+  mill:   { btn:"millBtn",   panel:"millPanel",   sel:"millSel",   field:"mill",      noun:"mills",      choice:new Set(), values:[] },
+  insp:   { btn:"inspBtn",   panel:"inspPanel",   sel:"inspSel",   field:"inspector", noun:"inspectors", choice:new Set(), values:[] },
+  alloy:  { btn:"alloyBtn",  panel:"alloyPanel",  sel:"alloySel",  field:"alloy",     noun:"alloys",     choice:new Set(), values:[] },
+  reason: { btn:"reasonBtn", panel:"reasonPanel", sel:"reasonSel", field:"reason",    noun:"reasons",    choice:new Set(), values:[] }
+};
+function msUpdateBtn(m){
+  $(m.btn).textContent =
+    m.choice.size===m.values.length ? "All" :
+    m.choice.size===0 ? "None" :
+    m.choice.size===1 ? [...m.choice][0] : m.choice.size + " " + m.noun;
 }
-function buildMillSelect(values){
-  const p = $("millPanel");
-  millChoice.clear();
-  p.innerHTML = '<label class="ms-opt ms-all"><input type="checkbox" id="msAll" checked> All mills</label>' +
-    values.map(v=>`<label class="ms-opt"><input type="checkbox" class="msChk" value="${v}"> ${v}</label>`).join("");
-  $("msAll").addEventListener("change", ()=>{
-    millChoice.clear();
-    p.querySelectorAll(".msChk").forEach(c=>c.checked=false);
-    $("msAll").checked = true;
-    updateMillBtn(); chartSel = null; render();
+function msSyncAll(m){
+  const box = document.querySelector("#"+m.panel+" .msAllChk");
+  const all = m.choice.size === m.values.length;
+  box.checked = all;
+  box.indeterminate = !all && m.choice.size > 0;
+}
+function buildMulti(key, values){
+  const m = MSEL[key], p = $(m.panel);
+  m.values = values.slice();
+  m.choice = new Set(values);   // start with everything ticked
+  p.innerHTML = '<label class="ms-opt ms-all"><input type="checkbox" class="msAllChk" checked> All ' + m.noun + '</label>' +
+    values.map(v=>`<label class="ms-opt"><input type="checkbox" class="msChk" value="${v}" checked> ${v}</label>`).join("");
+  p.querySelector(".msAllChk").addEventListener("change", (e)=>{
+    const on = e.target.checked;
+    m.choice = on ? new Set(m.values) : new Set();
+    p.querySelectorAll(".msChk").forEach(c=>c.checked=on);
+    msSyncAll(m); msUpdateBtn(m); chartSel = null; render();
   });
   p.querySelectorAll(".msChk").forEach(c=>c.addEventListener("change", ()=>{
-    if(c.checked) millChoice.add(c.value); else millChoice.delete(c.value);
-    $("msAll").checked = (millChoice.size===0);
-    updateMillBtn(); chartSel = null; render();
+    if(c.checked) m.choice.add(c.value); else m.choice.delete(c.value);
+    msSyncAll(m); msUpdateBtn(m); chartSel = null; render();
   }));
-  updateMillBtn();
+  msSyncAll(m); msUpdateBtn(m);
 }
 function buildFilters(){
   const uniq = k => [...new Set(rows.map(r=>r[k]).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-  buildMillSelect(uniq("mill")); fillSelect("fInsp", uniq("inspector"));
-  fillSelect("fAlloy", uniq("alloy")); fillSelect("fReason", uniq("reason"));
+  buildMulti("mill", uniq("mill"));  buildMulti("insp", uniq("inspector"));
+  buildMulti("alloy", uniq("alloy")); buildMulti("reason", uniq("reason"));
   fillSelect("fDisp", uniq("disp")); fillSelect("fType", uniq("type"));
   setDatesFromPeriod();   // honors the active mode: custom -> data extents, period -> preset
 }
@@ -372,21 +418,28 @@ $("fPeriod").addEventListener("change", ()=>{
   applyPeriod();
 });
 $("fMonthsX").addEventListener("change", applyPeriod);
-$("millBtn").addEventListener("click", ()=>{
-  const p = $("millPanel");
-  p.style.display = p.style.display === "block" ? "none" : "block";
-});
+for(const key in MSEL){
+  const m = MSEL[key];
+  $(m.btn).addEventListener("click", ()=>{
+    const p = $(m.panel), open = p.style.display === "block";
+    for(const k2 in MSEL) $(MSEL[k2].panel).style.display = "none";   // one panel at a time
+    p.style.display = open ? "none" : "block";
+  });
+}
 document.addEventListener("click", (e)=>{
-  if(!$("millSel").contains(e.target)) $("millPanel").style.display = "none";
+  for(const key in MSEL)
+    if(!$(MSEL[key].sel).contains(e.target)) $(MSEL[key].panel).style.display = "none";
   if(!$("expSel").contains(e.target)) $("expPanel").style.display = "none";
 });
 function inScope(r){
   const f=$("fFrom").value, t=$("fTo").value;
   if(f && r.date < f) return false;
   if(t && r.date > t) return false;
-  if(millChoice.size && !millChoice.has(r.mill)) return false;
-  for(const [id,k] of [["fInsp","inspector"],["fAlloy","alloy"],
-                       ["fReason","reason"],["fDisp","disp"],["fType","type"]]){
+  for(const key in MSEL){
+    const m = MSEL[key];
+    if(m.choice.size !== m.values.length && !m.choice.has(r[m.field])) return false;
+  }
+  for(const [id,k] of [["fDisp","disp"],["fType","type"]]){
     const v=$(id).value; if(v!=="All" && r[k]!==v) return false;
   }
   return true;
@@ -410,6 +463,44 @@ function groupSum(arr, keyFn, fields){
 function mkChart(id, cfg){ if(charts[id]) charts[id].destroy(); charts[id]=new Chart($(id), cfg); }
 Chart.defaults.font.family = "'Segoe UI',Roboto,Arial,sans-serif";
 Chart.defaults.color = "#4A5A68";
+
+/* Data labels on chart elements when there are 10 or fewer segments.
+   Hover tooltips are untouched and work in both modes. */
+const valueLabels = {
+  id: "valueLabels",
+  afterDatasetsDraw(c){
+    const n = (c.data.labels || []).length;
+    if(n > 10) return;
+    const ctx = c.ctx;
+    const ink = getComputedStyle(document.documentElement).getPropertyValue("--ink").trim() || "#222";
+    ctx.save();
+    ctx.font = "700 10px 'Segoe UI',Roboto,Arial,sans-serif";
+    c.data.datasets.forEach((ds, di)=>{
+      if(ds.label === "Target") return;                    // skip the dashed threshold line
+      const meta = c.getDatasetMeta(di);
+      if(meta.hidden) return;
+      const horiz = c.options.indexAxis === "y";
+      meta.data.forEach((el, i)=>{
+        const v = ds.data[i];
+        if(v == null || v === 0) return;                   // don't stamp zeros
+        const txt = /rate/i.test(ds.label||"") ? (100*v).toFixed(1)+"%" : fmt(v);
+        if(meta.type === "doughnut" || meta.type === "pie"){
+          const p = el.tooltipPosition();
+          ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+          ctx.fillText(txt, p.x, p.y);
+        } else if(horiz){
+          ctx.fillStyle = ink; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+          ctx.fillText(txt, el.x + 5, el.y);
+        } else {
+          ctx.fillStyle = ink; ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+          ctx.fillText(txt, el.x, Math.max(el.y - 4, 12));
+        }
+      });
+    });
+    ctx.restore();
+  }
+};
+Chart.register(valueLabels);
 
 function setStatus(msg){
   let el = $("statusBar");
@@ -445,9 +536,12 @@ function render(){
 
   /* weekly */
   const wk = [...groupSum(S, r=>weekStart(r.date), ["fInsp","fRej"])].sort((a,b)=>a[0].localeCompare(b[0]));
-  $("wkNote").textContent = wk.length? wk[0][0]+" → "+wk[wk.length-1][0] : "";
+  /* show the selected range, not the week buckets it happened to land in */
+  const rf = $("fFrom").value, rt = $("fTo").value;
+  $("wkNote").textContent = (rf && rt) ? dLabel(rf)+" → "+dLabel(rt)
+    : (wk.length? dLabel(wk[0][0])+" → "+dLabel(wk[wk.length-1][0]) : "");
   mkChart("chWeekly", { type:"bar",
-    data:{ labels: wk.map(w=>w[0].slice(5)),
+    data:{ labels: wk.map(w=>dLabel(w[0])),
       datasets:[
         { type:"line", label:"Rejected (ft)", data:wk.map(w=>w[1].fRej), borderColor:B.red,
           backgroundColor:B.red, tension:.3, pointRadius:2, yAxisID:"y" },
@@ -462,7 +556,7 @@ function render(){
   const mo = [...groupSum(S, r=>monthStart(r.date), ["fInsp","fRej"])].sort((a,b)=>a[0].localeCompare(b[0]));
   const moRates = mo.map(m=>m[1].fInsp? m[1].fRej/m[1].fInsp:0);
   mkChart("chMonthly", { type:"bar",
-    data:{ labels: mo.map(m=>m[0]),
+    data:{ labels: mo.map(m=>dLabel(m[0])),
       datasets:[
         { type:"line", label:"Target", data:mo.map(()=>TGT),
           borderColor:B.red, borderWidth:1.5, borderDash:[6,5], pointRadius:0, fill:false },
@@ -569,13 +663,90 @@ function matchSel(r){
 function selLabel(){
   if(!chartSel) return "";
   const names = { week:"Week of ", month:"Month ", reason:"Reason: ", inspector:"Inspector: ", mill:"Mill: ", alloy:"Alloy: " };
-  return (names[chartSel.kind]||"") + chartSel.value;
+  const v = (chartSel.kind==="week" || chartSel.kind==="month") ? dLabel(chartSel.value) : chartSel.value;
+  return (names[chartSel.kind]||"") + v;
 }
 function clearSel(){ chartSel = null; renderTable(); }
+/* ---------- Excel-style per-column sort + filter for the list ---------- */
+const TCOLS = [
+  { key:"date",      label:"Date",           num:false, get:r=>dLabel(r.date), raw:r=>r.date||"" },
+  { key:"mill",      label:"Mill",           num:false, get:r=>r.mill||"" },
+  { key:"alloy",     label:"Alloy",          num:false, get:r=>r.alloy||"" },
+  { key:"po",        label:"PO #",           num:false, get:r=>r.po||"" },
+  { key:"heat",      label:"Heat",           num:false, get:r=>r.heat||"" },
+  { key:"inspector", label:"Inspector",      num:false, get:r=>r.inspector||"" },
+  { key:"type",      label:"Type",           num:false, get:r=>r.type||"" },
+  { key:"fRecv",     label:"Received (ft)",  num:true,  get:r=>r.fRecv||0 },
+  { key:"fInsp",     label:"Inspected (ft)", num:true,  get:r=>r.fInsp||0 },
+  { key:"fRej",      label:"Rejected (ft)",  num:true,  get:r=>r.fRej||0 },
+  { key:"rejRate",   label:"Reject %",       num:true,  rate:true, get:r=>(r.fInsp>0 ? r.fRej/r.fInsp : 0) },
+  { key:"disp",      label:"Disposition",    num:false, get:r=>r.disp||"" },
+  { key:"reason",    label:"Primary Reason", num:false, get:r=>r.reason||"" }
+];
+let tSort = { key:null, dir:-1 };      // null = default newest-first
+let tFilt = {};                        // key -> filter text
+function buildThead(){
+  const h = TCOLS.map(c=>{
+    const arr = tSort.key===c.key ? `<span class="arr">${tSort.dir===1?"\u25b2":"\u25bc"}</span>` : "";
+    return `<th class="sth" data-key="${c.key}"${c.num?' style="text-align:right"':''}>${c.label}${arr}</th>`;
+  }).join("");
+  const f = TCOLS.map(c=>{
+    const v = (tFilt[c.key]||"").replace(/"/g,"&quot;");
+    const ph = c.num ? "&gt; &lt; =" : "filter";
+    return `<th><input data-fkey="${c.key}" value="${v}" placeholder="${ph}" title="${c.num?'Filter: a number to match, or >5000, <=100 etc.':'Type to filter (contains)'}"></th>`;
+  }).join("");
+  $("thead").innerHTML = `<tr>${h}</tr><tr class="frow">${f}</tr>`;
+  $("thead").querySelectorAll("th.sth").forEach(th=>th.addEventListener("click", ()=>{
+    const k = th.dataset.key;
+    if(tSort.key===k) tSort.dir = -tSort.dir; else { tSort.key = k; tSort.dir = 1; }
+    buildThead(); renderTable();
+  }));
+  $("thead").querySelectorAll(".frow input").forEach(inp=>{
+    inp.addEventListener("input", ()=>{ tFilt[inp.dataset.fkey] = inp.value; renderTable(); });
+  });
+}
+function passTableFilters(r){
+  for(const c of TCOLS){
+    const f = (tFilt[c.key]||"").trim();
+    if(!f) continue;
+    if(c.num){
+      const v = c.rate ? 100*c.get(r) : c.get(r);
+      const m = /^(>=|<=|>|<|=)?\s*(-?\d+\.?\d*)$/.exec(f);
+      if(m){
+        const n = parseFloat(m[2]), op = m[1]||"=";
+        if(op===">"  && !(v >  n)) return false;
+        if(op==="<"  && !(v <  n)) return false;
+        if(op===">=" && !(v >= n)) return false;
+        if(op==="<=" && !(v <= n)) return false;
+        if(op==="="  && Math.round(v)!==Math.round(n)) return false;
+      } else if(!fmt(v).toLowerCase().includes(f.toLowerCase())) return false;
+    } else {
+      const hay = (String(c.get(r)) + " " + (c.raw? c.raw(r):"")).toLowerCase();
+      if(!hay.includes(f.toLowerCase())) return false;
+    }
+  }
+  return true;
+}
+function tableView(){
+  let F = chartSel ? scopeRows.filter(matchSel) : scopeRows.slice();
+  F = F.filter(passTableFilters);
+  if(tSort.key){
+    const c = TCOLS.find(x=>x.key===tSort.key), d = tSort.dir;
+    F.sort((a,b)=>{
+      const va = c.raw? c.raw(a) : c.get(a), vb = c.raw? c.raw(b) : c.get(b);
+      return c.num ? d*(va-vb) : d*String(va).localeCompare(String(vb));
+    });
+  } else {
+    F.sort((a,b)=>(b.created||"").localeCompare(a.created||""));
+  }
+  return F;
+}
 function renderTable(){
-  const F = chartSel ? scopeRows.filter(matchSel) : scopeRows;
-  const T = F.slice().sort((a,b)=>(b.created||"").localeCompare(a.created||"")).slice(0,50);
-  $("tblNote").textContent = `showing ${T.length} of ${fmt(F.length)} \u2014 newest first`;
+  const F = tableView();
+  const T = F.slice(0,50);
+  const active = Object.values(tFilt).some(v=>(v||"").trim());
+  $("tblNote").textContent = `showing ${T.length} of ${fmt(F.length)}` +
+    (tSort.key ? "" : " \u2014 newest first") + (active ? " \u00b7 column filters on" : "");
   const chip = $("selChip");
   if(chartSel){
     chip.style.display = "inline-flex";
@@ -584,10 +755,11 @@ function renderTable(){
   $("tbody").innerHTML = T.map(r=>{
     const link = CONFIG.submissionBrowserUrl ? ` onclick="window.open('${CONFIG.submissionBrowserUrl.replace("{id}", encodeURIComponent(r.id))}','_blank')" style="cursor:pointer"` : "";
     const rowcls = r.disp==="Hold" ? "rowhold" : (r.disp==="Release" ? "rowrelease" : "");
-    return `<tr class="${rowcls}"${link}><td>${r.date||""}</td><td>${r.mill||""}</td><td>${r.alloy||""}</td>
+    return `<tr class="${rowcls}"${link}><td style="white-space:nowrap">${dLabel(r.date)}</td><td>${r.mill||""}</td><td>${r.alloy||""}</td>
       <td>${r.po||""}</td><td>${r.heat||""}</td><td>${r.inspector||""}</td><td>${r.type||""}</td>
       <td style="text-align:right">${fmt(r.fRecv)}</td><td style="text-align:right">${fmt(r.fInsp)}</td>
       <td style="text-align:right;color:${r.fRej? "var(--red)":"inherit"}">${fmt(r.fRej)}</td>
+      <td style="text-align:right;font-weight:600;color:${(r.fInsp>0 && r.fRej/r.fInsp>rateTarget)? "var(--red)":"inherit"}">${r.fInsp>0? (100*r.fRej/r.fInsp).toFixed(1)+"%" : "\u2014"}</td>
       <td><span class="pill ${r.disp==="Hold"?"hold":"release"}">${r.disp||""}</span></td>
       <td>${r.reason||""}</td></tr>`;
   }).join("");
@@ -599,7 +771,18 @@ const THEMES = {
   steel:  { label:"PAC Theme",       steel:"#1B4965", steel2:"#2C6E8F", accent:"#62B6CB", bg:"#F1F5F8", card:"#FFFFFF", ink:"#212529", muted:"#6C7A89" },
   slate:  { label:"Slate & Emerald", steel:"#3D484D", steel2:"#54646B", accent:"#26A554", bg:"#F2F4F4", card:"#FFFFFF", ink:"#22282B", muted:"#6F7E86" },
   navy:   { label:"Navy & Gold",     steel:"#14213D", steel2:"#2A3E66", accent:"#E9C46A", bg:"#F5F4F0", card:"#FFFFFF", ink:"#1B2430", muted:"#6E7887" },
-  claret: { label:"Claret & Gold",   steel:"#6D1A2E", steel2:"#8C2F44", accent:"#C9A227", bg:"#F6F3F2", card:"#FFFFFF", ink:"#2A2226", muted:"#7C6E73" }
+  claret: { label:"Claret & Gold",   steel:"#6D1A2E", steel2:"#8C2F44", accent:"#C9A227", bg:"#F6F3F2", card:"#FFFFFF", ink:"#2A2226", muted:"#7C6E73" },
+  gold:   { label:"Black & Gold",        steel:"#1A1A1A", steel2:"#3A3A3A", accent:"#CFB53B", bg:"#F4F2EC", card:"#FFFFFF", ink:"#1A1A1A", muted:"#6E6A5E" },
+  salmon: { label:"Pink & Green", steel:"#4E8A38", steel2:"#6AA653", accent:"#F4A0A6", bg:"#F3F8F0", card:"#FFFFFF", ink:"#2E3A2B", muted:"#7F9479" },
+  purple: { label:"Purple & Gold",           steel:"#4B2E83", steel2:"#6A4BA6", accent:"#D4AF37", bg:"#F5F3F8", card:"#FFFFFF", ink:"#241A38", muted:"#77708A" },
+  maroon: { label:"Maroon & Off White",      steel:"#5E1224", steel2:"#7E2438", accent:"#C7B8A5", bg:"#F7F4EF", card:"#FFFDF8", ink:"#2E1B21", muted:"#83717A" },
+  blueor: { label:"Blue & Orange",           steel:"#1D5FA8", steel2:"#3B7BC4", accent:"#F28C28", bg:"#F1F5F9", card:"#FFFFFF", ink:"#1C2A3A", muted:"#6D7C8D" },
+  redblk: { label:"Red & Black",             steel:"#B01018", steel2:"#D22B33", accent:"#1F1F1F", bg:"#F6F2F1", card:"#FFFFFF", ink:"#1F1F1F", muted:"#7C6F70" },
+  astros: { label:"Astros",   steel:"#002D62", steel2:"#1A4A8A", accent:"#EB6E1F", bg:"#F2F4F8", card:"#FFFFFF", ink:"#14213A", muted:"#68738A" },
+  rockets:{ label:"Rockets",  steel:"#CE1141", steel2:"#E23A63", accent:"#C4CED4", bg:"#F7F2F3", card:"#FFFFFF", ink:"#26191D", muted:"#84707A" },
+  texans: { label:"Texans",   steel:"#03202F", steel2:"#1B3D50", accent:"#A71930", bg:"#F1F4F6", card:"#FFFFFF", ink:"#0E1B23", muted:"#66757F" },
+  dynamo: { label:"Dynamo FC",steel:"#E86100", steel2:"#F57F26", accent:"#1F1F1F", bg:"#FBF5F0", card:"#FFFFFF", ink:"#2B2015", muted:"#8C7B6C" },
+  comets: { label:"Comets",   steel:"#002B5C", steel2:"#1D4B85", accent:"#E31837", bg:"#F2F4F8", card:"#FFFFFF", ink:"#131E33", muted:"#6A7488" }
 };
 const FONTS = { s:"90%", m:"100%", l:"112%" };
 function applyTheme(key, redraw){
@@ -664,7 +847,7 @@ const EXPORT_COLS = [
   ["Pieces Inspected", r=>r.pcsInsp], ["Pieces Accepted", r=>r.pcsAcc], ["Pieces Rejected", r=>r.pcsRej],
   ["Disposition", r=>r.disp], ["Primary Rejection Reason", r=>r.reason], ["Instance ID", r=>r.id]
 ];
-function exportScope(){ return chartSel ? scopeRows.filter(matchSel) : scopeRows; }
+function exportScope(){ return tableView(); }   // exports exactly what the list shows (uncapped)
 function dlBlob(name, blob){
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = name;
@@ -956,14 +1139,122 @@ async function refreshFromApi(interactive){
   }finally{ $("btnApi").innerHTML = "&#8635; Refresh from API"; }
 }
 $("btnApi").addEventListener("click", ()=>refreshFromApi(true));
-$("btnReset").addEventListener("click", ()=>{ chartSel = null; buildFilters(); render(); });
-for(const id of ["fFrom","fTo","fInsp","fAlloy","fReason","fDisp","fType"])
+$("btnReset").addEventListener("click", ()=>{ chartSel = null; tSort = {key:null, dir:-1}; tFilt = {}; buildThead(); buildFilters(); render(); });
+for(const id of ["fFrom","fTo","fDisp","fType"])
   $(id).addEventListener("change", ()=>{ chartSel = null; render(); });
 
 if(!CONFIG.showJsonLoader){
   document.querySelector('button[onclick*="fileIn"]').style.display = "none";
 }
-buildFilters(); render();
+
+/* ================= Guided narrated demo (open with ?demo=1) =================
+   The July 2026 spike investigation: anomaly -> suspect submissions -> export.
+   Narration uses the browser's speech synthesis; captions mirror the audio. */
+let demoStop = false;
+function pickVoice(){
+  const vs = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  const score = v=>{
+    const n = v.name||"", l = v.lang||"";
+    if(!/^en/i.test(l)) return -1;
+    let sc = 0;
+    if(/premium|enhanced|natural|neural/i.test(n)) sc += 9;      // downloaded high-quality voices
+    if(/\bAva\b/i.test(n)) sc += 6;
+    if(/google us english/i.test(n)) sc += 6;                     // Chrome's good default
+    if(/samantha/i.test(n)) sc += 5;
+    if(/allison|susan|zoe|joelle|evan|nathan|tom/i.test(n)) sc += 4;
+    if(/en-US/i.test(l)) sc += 2;
+    if(/compact|fred|albert|kathy|ralph|junior|whisper|zarvox|trinoids|boing|bells|bubbles|cellos|organ|jester|bad news|good news|wobble|eloquence|flo|grandma|grandpa|rocko|sandy|shelley/i.test(n)) sc -= 20;
+    return sc;
+  };
+  return vs.filter(v=>score(v)>=0).sort((a,b)=>score(b)-score(a))[0] || null;
+}
+function ensureVoices(){
+  return new Promise(res=>{
+    if(!window.speechSynthesis || speechSynthesis.getVoices().length){ res(); return; }
+    const t = setTimeout(res, 1500);
+    speechSynthesis.onvoiceschanged = ()=>{ clearTimeout(t); res(); };
+  });
+}
+function demoSay(text){
+  const cap = $("demoCap"); cap.style.display = "block"; cap.textContent = text;
+  return new Promise(res=>{
+    if(!window.speechSynthesis){ setTimeout(res, Math.max(2600, text.length*60)); return; }
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 1.0; u.pitch = 1.0;
+    const v = pickVoice();
+    if(v) u.voice = v;
+    u.onend = ()=>setTimeout(res, 350); u.onerror = ()=>res();
+    speechSynthesis.speak(u);
+  });
+}
+function demoHi(id){
+  document.querySelectorAll(".demo-hi").forEach(e=>e.classList.remove("demo-hi"));
+  const el = typeof id==="string" ? $(id) : id;
+  if(el){ el.classList.add("demo-hi"); el.scrollIntoView({behavior:"smooth", block:"center"}); }
+}
+function demoClearHi(){ document.querySelectorAll(".demo-hi").forEach(e=>e.classList.remove("demo-hi")); }
+async function runDemo(){
+  const chartCard = id => $(id).closest(".card");
+  const seg2 = ()=>document.querySelectorAll("#dateSeg button");
+  const steps = [
+    { do:()=>{ window.scrollTo({top:0, behavior:"smooth"}); },
+      say:"Welcome to the PAC Stainless Receiving Quality Dashboard. Everything you see is live production data, pulled directly from Alpha TransForm." },
+    { do:()=>demoHi(document.querySelector(".kpis")),
+      say:"Eight key metrics summarize receiving quality, and every chart and figure updates instantly as we filter." },
+    { do:()=>{ demoHi(document.querySelector(".dategroup")); seg2()[1].click();
+               $("fPeriod").value = "thisyear"; $("fPeriod").dispatchEvent(new Event("change")); },
+      say:"Filtering is built for how quality teams actually work. Switching the date range to period mode gives one click access to presets like this week, last quarter, or year to date. Here, we select this year, and the entire dashboard recalculates." },
+    { do:()=>{ demoHi($("millSel"));
+               $("millPanel").style.display = "block";
+               const boxes = $("millPanel").querySelectorAll(".msChk");
+               if(boxes[0]) boxes[0].click(); if(boxes[1]) boxes[1].click(); },
+      say:"Every major filter is an Excel style checkbox list. Untick a couple of mills, and they drop out of every chart and metric instantly. Inspector, alloy, and rejection reason work exactly the same way." },
+    { do:()=>{ const all = $("millPanel").querySelector(".msAllChk"); if(all && !all.checked) all.click();
+               $("millPanel").style.display = "none";
+               $("fPeriod").value = "all"; $("fPeriod").dispatchEvent(new Event("change")); },
+      say:"Let's restore all mills and all time, because today we are investigating an anomaly." },
+    { do:()=>demoHi(chartCard("chMonthly")),
+      say:"The monthly rejection rate chart flags any month above the five percent quality target in red. July twenty twenty six stands out dramatically, at over twenty percent. Is quality really five times worse, or is something off in the data?" },
+    { do:()=>{ const b = document.querySelector('.pngbtn[data-chart="chMonthly"]'); demoHi(chartCard("chMonthly")); if(b) b.click(); },
+      say:"Before we dig in, notice that any tile exports as a presentation ready image in one click, stamped with the PAC name and date. That chart just landed in the downloads folder, ready for a quality meeting deck." },
+    { do:()=>{ $("linkToggle").checked = true; chartSel = {kind:"month", value:"2026-07"}; renderTable();
+               demoHi(document.querySelector(".tscroll").closest(".card")); },
+      say:"Let's drill in. With chart linking on, clicking the July bar filters the submission list to just that month's receipts." },
+    { do:()=>{ tSort = {key:"rejRate", dir:-1}; buildThead(); renderTable(); },
+      say:"Now we sort by reject percentage, highest first." },
+    { do:()=>{ tFilt = { rejRate: ">20" }; buildThead(); renderTable(); },
+      say:"And filter to rates above twenty percent. Immediately, a cluster of late July entries surfaces, showing extreme rejection rates, with large rejected footage recorded against small inspected quantities. These look less like true quality failures, and more like possible data entry errors worth verifying with the inspection team." },
+    { do:()=>demoHi($("expBtn") || document.querySelector(".tscroll").closest(".card")),
+      say:"One click exports exactly this view to Excel, ready to attach to a follow up with the team." },
+    { do:()=>{ demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); },
+      say:"From spotting the anomaly to a list of root cause candidates in under a minute. That is the power of live data. Powered by Alpha TransForm." }
+  ];
+  for(const st of steps){
+    if(demoStop) break;
+    try{ st.do(); }catch(err){}
+    await demoSay(st.say);
+  }
+  demoClearHi(); $("demoCap").style.display = "none";
+}
+(function initDemo(){
+  if(new URLSearchParams(location.search).get("demo") !== "1") return;
+  const cap = document.createElement("div"); cap.id = "demoCap"; document.body.appendChild(cap);
+  const ov = document.createElement("div"); ov.id = "demoStart";
+  ov.innerHTML = '<button id="demoGo">&#9654;&nbsp; Start narrated demo</button><div class="note">Turn your volume up \u00b7 press Esc to stop</div>';
+  document.body.appendChild(ov);
+  if(window.speechSynthesis) speechSynthesis.getVoices();   // warm the voice list
+  document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ demoStop = true;
+    if(window.speechSynthesis) speechSynthesis.cancel();
+    demoClearHi(); const c=$("demoCap"); if(c) c.style.display="none"; } });
+  document.getElementById("demoGo").addEventListener("click", async ()=>{
+    ov.remove();
+    await ensureVoices();                                    // voice list loads async in some browsers
+    const t0 = Date.now();                                   // wait for the live data to land
+    while(rows.length===0 && Date.now()-t0 < 15000) await new Promise(r=>setTimeout(r,400));
+    runDemo();
+  });
+})();
+buildThead(); buildFilters(); render();
 if(CONFIG.autoRefreshOnLoad && CONFIG.api.proxyUrl){
   refreshFromApi(false);
 }
