@@ -32,7 +32,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
 header{background:linear-gradient(135deg,var(--steel) 0%,var(--steel2) 100%);color:#fff;padding:22px 28px;display:flex;flex-wrap:wrap;align-items:center;gap:16px;}
 .logocard{background:#fff;border-radius:10px;padding:8px 14px;display:flex;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .logocard img{height:54px;display:block}
-header .sub{font-size:13px;opacity:.85}
+.htitle{font-size:30px;font-weight:800;color:#fff;letter-spacing:.4px;line-height:1.1}
+.htitle em{font-style:normal;color:var(--accent)}
+header .sub{font-size:13px;opacity:.85;margin-top:3px}
+.verline{font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.5px;margin-top:2px}
+.poweredby{font-size:11px;color:rgba(255,255,255,.7);text-align:right}
+.poweredby b{color:var(--accent);font-weight:700}
 header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .btn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;transition:.15s}
 .btn:hover{background:rgba(255,255,255,.28)}
@@ -93,6 +98,9 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:24px}
 const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
+  // Bump these with every published change — shown subtly in the header.
+  version: "2.1",
+  updated: "Aug 6, 2026",
   brand: { steel:"#1B4965", steel2:"#2C6E8F", accent:"#62B6CB", red:"#C1121F",
            green:"#198038", gold:"#E9C46A", ink:"#212529",
            series:["#1B4965","#62B6CB","#C1121F","#198038","#E9C46A","#7B2CBF",
@@ -129,14 +137,21 @@ const DATA = [];
 </script>
 
 <header>
-  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+  <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
     <div class="logocard"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAdoAAADpCAMAAAC0owYqAAAACXBIWXMAACE3AAAhNwEzWJ96AAAAVFBMVEVHcExEX3ouU24uU3EwVl5HYXwvVW41VnMZLjApR0kuU3EuU3EvVGxRZoAxWGs9WndFYHsuU3EuU3EuU3FVaYJKYn1OZH8lQEIOHB8uUFEuU3EAAAAnGkrJAAAAGnRSTlMA3YXwcC4//PC/uxBelB/wUqDQ4HfBrdf7nCLzdDMAABUFSURBVHja7F3ZlqQgDG0X5BzccH3w/z90qqfLEhU0IItS5HGmu6z2kuTmBsLPz8ZqbM3qn6tGyzGKovWnvv6hLNFPsJ3hyZrhC1+zjOrjb/rCeCgDnKxNt4e2j+r/vw16RB31AdNHQNtHClEFB3j/v7v7QovGWvVB01SPXw9teVNo0XCZBHw7utEtoVX21y26ZYD2TtBSrd8p+tq6CN8N2rLW/di6D9DeANrByPfBX5l1pztBO5h79hCgdQjtYPbp3wZufxtoR/OP/y66XN4E2t5Kzsc01D6WoUW1ra9QowCtTWgHm1/ia8gydg8ttfodvicqu4c2mqxbFGofC9Dadtl31x4FaE1DO06OzP+MS51Ca48Yc6hyKGsNQtvjyaH5zqYGh9COk2PzW5yK3EEbTc7Na1W5dgZtPd3AfE642BG0CE+3MI+roMkNtPQmyPqMrRto++k+5itRpk6gvROyL/Nz51TpBNppCth6VtbeFVovsY0CtL5iWwdofcUWB2h9rYGmAK2v2AL+5vstqP8jDsbyv41RVGOscdl9U1l7J2hxHfGHVqAyukwb/NKTSzeLWRHW8SRmoosnN73aMTU8BVocAeVApfkIPvZvIzdLWdqdpGTeC6dzPZKT6wdAq3KufcRfT6WwxSDFTB4z5rCM69ZfTqUs5h+lKHllVoEauOMXQavpSSp9vKsnr5TA9STd2itrkZsWucJuWE92wtkra2tXkXH4TmTtlbWl7VjMxAusYUFlWR7KWj3hWKt2ILGTnd/aQ+00JUUoazWEY91NGOj2ScFz07//rUJZe5kdR07WsAjZvHn/dxrKWqUVZFrIBbAKvlqRt5Ov0NomqdjQTpZeLVag5PMDjwrIyAq0yGWaBTNlftFDF2Sf5bR2ytrISc0jiS0/CxTLDzTPIsijDWhlzieYFecPsOVngWb5gTaUtZcKH9NtFxG2AmpMGGSfpljYKGvpfZAVYStAtl1+onsaspCiZLTntDba4Dxs6zNqPCXP28dqQbGgZrkxlZX/EDAu0WcjCylrOX9VX76t1+q0Cu+PdtNEJMvNHlT0MNT4kcjKlbXlwNvL/bvb++A6O3hNK69UvGlOfKks4D82Zn+keB6y8LK2PN0AKroNC1zTyrdJUadYcEZnyObN05GFlbV/+3pPs/LrB/CAVEK+Ijn+JMNMnWKcU+OHImvgbO0W3cEYhSouqEToUPpCK2TTRyJr5mzt+taVyFCi/SAbq/zhJbDoeZy8KFP7qB2dYbwB1AWPlJEt1Be1gBp7gazBY9MsuCOQq1lE9jckj6dFz4ORNXqAmQH31HF7RWQvbFfqT/sBLyOPRRZNRi2CZtxaFVndUsK66HleS0CqrL1GqEpYUEZ3Qbb1BVkL04iX6qLXxqE+DJbqDmL+IGtlZNTHccVtcEVkdUsJ66JnSqoHI2tnZFR0hu2gFjR1I1tskH32OBo7I6MWoanW4LTkilJxYOnkE7LWpoH1R9jKOW1sqOBsrjcYv6as5cNXX3TazMweNHYT1INbAtbKWi62+BI9zt/5MNFLXjdFz/ORtToJuRZxKanIR4yEyw019gBZu5fs1PxQISVEpUZefbZFtnk8spYnIddc7WJU8C69r76Y/EPW9iTkOasOqiSqNbElON5+TeIBsrYnIX+4VK0Wj2MDiTbfFj3PlhedQfuJvlilm4cMaBU7auwJsg7GTffbdCsfjnVWtPOWSEaE8gNZB9DOmmMkH49T/aI9TXbIejLHvJwcYLsOyXB+XCXa9xcu1Lj1RV50Ce1Mk6nsqyTaw/FCoGJTbcIvKWs36TaS2+2W6XarRTVOqHfIOoIWM3wXnmo7zex42VDRZa1HUoWr2mcVkkeZfl6smb8u2mL7cV+PkHUF7bylCcOr2rnhoytiFoyo2PhV0LqqfVYhuYRXtY1eCZAhUJ+OQ+cTsu4uyHrvhMNQFlVp5VCLApUU5va9fl/ts3JbKIsiOpPhokC94Px0av26ck0dWozr6L+pXnf2pk/AVJvp5FAFQ6A+Odyjske99sG72QalyoVJUl+UaCx8lhZeky+hOf75cmhFIw1ehUyt5ra2nZbZ3ZYua8arskel9qkPwyeKjLkt0RYzF50ioYwHe1X2yEN7ftuOHLijrNN21//gpdHTIqa4TbxDVqb2gV3KQrE0SbbptEuaJb9gzuQ48e6uaRlowS4mMdGaWnZaJs3GrMDlGzmWqn1k7lGCXzFQ23VaxOoUv+YrOZaBVm70NPxKHSkh6qrTLtVsh1ZaY+MhstDaR3YWARhbWJRvtDjtJs0uFMo/cgyHVn6MLRRb0JrJ30FUk2g8h1/kxenoa9CqjLGlGiNyrCEhLr3ZeV5N7qdyzAiEAKNKn6wvInfXK8/lSHQ3I9n6S47vEetrcAC4wHWYmofk6/ztJ4W6h9AFrnzU4yazh/wT1Aszp6+/xEo9qkV1dXPFslEm+QzWRf7qi1YM1Ak6bf/E11Iic1Sr/VDhvPObQhk3qiXZdpcqH2bAV7OL8YFCmXXbM2wusZ1iV/Ow4kWgUMoGEpMRKB4rRU42GKN9NGlDojVLkk9uEErU5WOGGRMGxflMmKcqlCWD9PciSDxWUaKYyW2rk32tZEcx2AEwF3jUOx7LOxgjU3SI84leNvJuFpExgB/Lx2NmVhDJebSdBHCuWXSRIleKHhYLgvGSaAOFsqBIAfKlJD+uWkEwXhJt0CouG/wYNdeIil7BzDRucr43pwEZG8m2PC19pKQFhj/trhIJidYutOMpw5bRAxn+1G559Zxou5Bo7fCog8K2kC19coY/7blXSLT3gbaRTLVZx2nghUTrjCIfQNtKZUbWZck+5mYh0d4IWqmqlnVZTnbOQ6K1Di0+Y1GZtMtWwjpK5QrjYFyjV6DN4CyKdiL9aS1+BOnYpmYhhjaG7oxjatlVZ3YXAEKi1WfoOrTnmw7T5Kjk+Y99G3q0t8q1McjRsvbMZZe6hwZE7sGQIdCuhsvHx0k7bIZ6ErRxckKMQ91jygaj0LK8OBGLTCQIjAYMLDT2SBrajOHFPPkp1D1GDbAV+e/8wFCLoO0AwHYHQsTc7wl1j14D92sjTkv+7W75GbDJoT+SUPc4Uiw+0GIRsS2OgZ2aQ9BC3eOMIE8f996d7Mr5ByWL1ZVLJANpJpy6J8syG55cpXGcCplAXpBEzO2fzaIWaPcMluxFYRSv7uXpznZgiK7gy5oEsDBULSakWAWYpBDgqm2M3Q1TLV4i9y4kz0dj4z9gchqvb9JKTkmv4Aq+YvkcwO6c7OV3L6PQsvhP0kZrQWW/hgomrTyuHwU/PYD4h21nBBLSNGR7QVoSn77rjNsMYqXJ0z0clCTrrF50Jw9+nzXK1uL2xjFpk0gcanukYPEua0s+1znoCQKA/RyRJlxPhrzVYrOe0r9GQwoIFFXVis7/b3B94twFLEGQ+XOMGsFvdaBdjoRzVGB372UGU7vmFXVSI38iQlxs4CMiXA/1FjXry3PrrzwANM0CraSNrXCxv4D0/6uAVTKUU/fsP7A6TplcE0FbLUtx/8vFT5WlnM/s9Cda0KF1avoBG/8eRPFteRMxsFSYZaj4EFmxjpmIvzS/hZTHCTdzZIcvgORuMqHCED9IotydwTw4TLCWimP5yxXz/b8B4nHKrqbmRZCZX+UfBku5a+GXEpCDF2AkzUL4q8yocZVMu2ZRgjNAVfGqEwmJU6nIlXKmWMdA/2OTfPJWu5j4nAEIF7s3oOKxBaNHBmFDu1R5+SgxNyqCnu+SX7gppxZiXn1+hux8IowZn9CcaNrT7peLXVJBqudL9WlFyiEZFhMmziLDOoq8OamSn6NwfIpsOzsoy3d33w/xgWUkKJZrd/+TSmZUq4DNY8ORwZBQ87oIOrDlXZuZQRlMs/W6FVlOxLR47ZqrPwNlxa+kVWT56suY2tOj/WYP2Yjw/ujywjj8YxkqO3Ba0b6MJWsWP7tgvOPUeSziRzno5RsaSwa9dEk++0HvlhB9j4v5NufUPRsyI1KzOPJyuuG8p/UOyB3JWiB3EpEV3jT0ZolaGD2uYUt4hUWxaAldQwWVaTdtkd0pF7GAFrdEBtklPXQv9j9dsoT82f+A/4744F8epN7sOEmF+v76E/kdI8TJoAd1ZLWSANOdcvEubWMusF2RJzLIHle7V6yRyYiT3M0S8Jt+jvJCrYzsLEOlvFcZi1s8vIC6ZNKEvj+h4QD7216MZZCtmmQyZVSiQpGiNqiWXS+iJ6Jr4Zj8wKGtNp3gd++eGcz6Oz5h2Ye33hHwP28zTtucAzsZtE7Sbc9G7knn749eUSpNMDmXoSowtFSgP27HJ9BV+2elJbJk63SuZzwZNfoj6bag/Cdzpd4shhx4eY20heMZ2l07gPJCI1l37JO/t5VzU1u13jZwekihas0iG8vVnx/PPXzXVO4K2xKwukpd4Zg/73GHazc7LRszd5dRcLZTUqgyi9ZPJJ/WniZDknog40giAQMNkpfhYtDiknXcVLjtuNic5qsKkuyAek9GyfinxCoRsAzfjcHIJqSoFjqvv7xVuFJ8f6E4UrlRfABKYpGWcMzwnN/6L97B+keGiKB587PX+TtWbMiBTboFWbJRRAyoyYoRHdfzFU81VvsEeKU0agjHZ+ylLfjF5kYsmjsBW9GDAsNxu28dNMagHSY3Vkq0EfB4ORwLd+P89WQzPvy8s9g5k892yyaGiSlLY6Iiq5Xuom2r27BkrQRSp3JxOOYwmCU05vxsmsC7qQ2ss95tCt+FrBk5bdY7gbaXXlc1hYZjYb5De79t00oUtRuJ8xopaCsZXcGYs5vMzexErh0gW6tkAzwgkOIu/ql1p6ZrilzY6Y2lDuL8bXk+8/L5PqpXjULjVVo31NtDDqBFihwOR/Q03B2/4Nc7ff0cITEVYFcVseQ2rHfObE/xERI5Y5dJjdaRHdUrr9/SmoJ3VtzLUsh+jGczKbxVcBS8d9gW13NJe+Pr1CouPY9NrkXkJhxjLa4PKWnvYvuI3MWGg4xdllxqyQO1LIe6H7ZJQ80/MrKIbKQlVGD+ZSB3nzPz6Qy3JLW0CmvbifZqOO75OlQY++WOSn287doDB74OFa6k5VEpbJVCXXxgzc9h4e53hzS517KYtom2moy1T7yw3i6yV7DtJXp5waxg2+tJApFAPA4T3Zzl292ZAPSvvXPtTh4FArBmeeOwh6K7rQVO/v//3FZNwmUGJgk2Ww/zpUdDE+BhrqCet8TYsdK2L9jcje1HpaTrD75X1hKfvfJb4pD6dfsKeW9Ku2tdivwwwNtGRzueSnlv7Ery9hSymXOJi86lp462VSv2dbjZo+KLgqk/RMW9JT67GOXiJ7Ou69fIqLStWrGH4jKOmn6c1tr1prT7eVzmRzuOqxztpLTt50B+3Cqf2B/I4igueba7/TrTMqtcAe616mJ6I5W2lRh/GO7SL6QopEFIAtWUdr1cVwdUpzXfN3Vd5GhHpW2/9LJOPlbVHhkf41hqKC6k0rYS42r5XEj3/LnhYVQB45NW2rYv8DN0N3G9u9wz48hMU9qKcrmWPiV9Ol8vdR51ZjjaprSVPe/1eEIAn74/qVF1HR2Ljnbc8mlKWzctuv3qxPH4+f3n8pxH+ME5auTf22ber5W3c8bRjkrbNvN+qXW4qS7+Tep/N6X9/XTRr9B9nD0WbYZeTroWHr+q/NXC41fNstuWz6vKP23L51XlvR2ueFHR7UTUq4pq5YpXlb6dUH1ttM3VoiKHVABkbOPEdDGt+/QSbHIDIh35agthWzu1hYGS+Zl6ek/eXv872mPpt/Tu1KVjvb949JQ3I35T7UwyXuPPSodc7zJzL4M3yUkY6M4hwDIDMWEzSEY4TbbBn4ax1Tg9q9lovYfd/0kpfcihHVRltA6/6ib3bznzWRctPuFk26AvDhtEjhbOFrKzxkCryMki0Xr9EBXQCqqPjyXUU9fdk9GmQ6HbesGJDnSM+f/pOlVk246JFogOZtB6Q66BFgoza7Jknok2uk+uraMaBbew/FXk3QYeEtyyjFbQD6DRzv2tgdaLEcIhDInnuotFPMNz0A747Y0cxUBCcDQyJvByoT5/3UDcREqglunjWdAnJvr2LAMR8em1CteRQSK6DNoplFqE9jGcWZRveEQaYQZkvK/I7sn4E0U7DdpGkwD+FPpiiQhXkrMEcewC49TKdFw94lIpVyvSyDua4YLz0CZtgKC1ECnMIrT4DjDWXyjc1ixCm+8H+qbDLTLSVkXdE9OiSEGKTEhDoZXFjIyIxSdP0aeZDYIWVBRK1UNrdb7rA6tAVgvtuHjKaONRw4wPYpIdl5avdbMtufkBoXlo5RzGySSiw9DOgT1sN8gqDIDnMXwPwfWxq4yuq6eilVy0kdHpPFUV8aKUaWFgWXkEHRw67b0X3ukk1EPRzvGq3BxGQT7KGQMIKha06oloBRNtH6mm9V9CNCNZ65WUorhxOzrtgYOVcUSHo51nWlRCSyY3VhcyDrUTWnq6w0mMw71FaCcDkIouohXhk+OIjkCrrZcF10BLlmjGrhh+nr8bWhHELhLTnSk4c8yKdWdzNYssWkAfPK0JAu3BD6VqoM2U3w4Ftv8btDbsaJxzusxN1T1DRvfaetFJT2Cg03bAAnwb9cMU0M6hlKkRRt0HLfwhmARdeF1a1DLVROuWoe3y7tGWkx+RYr2JZlZkgFX16gtovVCqQvJzuA+hx5Iy77rCyuxin+QnsS5daaNNBh5QLRiKKNoSsiJB20Ea7TwGuR2tyvgK77b2wKlZ1C5ZuPu26U0EUmgMbKnIVCx1mMdNd5gKX9RQjKe2ClhodaYfooRWoz5vQEp2YDKFRuG7bm8pazkkaIPgoysYZBv2QTHQGsyp3ZvOupI3P5CZUlNqoYvbA+wwygylzawM2njHKZOgQs5AoNsDNuqHJbcPBmbAJhhoMxPOROvQvUbpe7mipWTlPoXkp0fzB+EvixzaaPt8E1pb8FCwaiesClpz4KPVeKe0X8Sg8zy1wAiYfMkCcDsAnmPLog21fhNaV1idF/L65dlo+wVoJeE0nf8+xfbCP0CTZPPE/oQkqluyiDZYVJvQUpenQqJjZe710Vp14KPtSUsSlg9UcpQNwBEHSJ1Jmpo0AY6eSyaGJtkwoNDqamgPykTD/fKqUuRO9n1d7/g19eVov+M/l6Qc/wHTtrEvAPKBDwAAAABJRU5ErkJggg==" alt="PAC Stainless Ltd. — 50 Years"></div>
-    <div class="sub" id="subTitle"></div>
+    <div>
+      <div class="htitle">Receiving <em>Quality</em> Dashboard</div>
+      <div class="sub" id="subTitle"></div>
+      <div class="verline" id="verLine"></div>
+    </div>
   </div>
-  <div class="actions">
-    <button class="btn" id="btnApi" title="Pulls live submissions from Alpha TransForm">&#8635; Refresh from API</button>
-    <button class="btn" onclick="document.getElementById('fileIn').click()" title="Load a TransForm JSON export">&#8683; Load JSON export</button>
-    <input type="file" id="fileIn" accept=".json">
+  <div class="actions" style="flex-direction:column;align-items:flex-end;gap:7px">
+    <div style="display:flex;gap:10px">
+      <button class="btn" id="btnApi" title="Pulls live submissions from Alpha TransForm">&#8635; Refresh from API</button>
+      <button class="btn" onclick="document.getElementById('fileIn').click()" title="Load a TransForm JSON export">&#8683; Load JSON export</button>
+      <input type="file" id="fileIn" accept=".json">
+    </div>
+    <div class="poweredby">Powered by <b>Alpha TransForm</b></div>
   </div>
 </header>
 
@@ -183,7 +198,8 @@ let rows = DATA.slice();
 let charts = {};
 
 document.title = CONFIG.clientName+" — "+CONFIG.title;
-$("subTitle").textContent = CONFIG.title;
+$("subTitle").textContent = "";
+$("verLine").textContent = "Rev " + CONFIG.version + " \u00b7 updated " + CONFIG.updated;
 
 /* ---------- filters ---------- */
 function fillSelect(id, values){
@@ -345,7 +361,7 @@ function render(){
   scopeRows = S;
   renderTable();
 
-  $("foot").textContent = `${CONFIG.clientName} · ${CONFIG.title} · ${fmt(rows.length)} submissions loaded · footage prorated from Quantity (ft) by piece counts, matching the Excel R2 methodology`;
+  $("foot").textContent = `${CONFIG.clientName} · ${CONFIG.title} · ${fmt(rows.length)} submissions loaded · footage prorated from Quantity (ft) by piece counts, matching the Excel R2 methodology \u00b7 Powered by Alpha TransForm`;
 }
 
 /* ---------- chart-click -> list linking ---------- */
@@ -495,11 +511,11 @@ async function refreshFromApi(interactive){
     }
     if(!list.length) throw new Error("empty response");
     adoptInstances(list);
-    $("subTitle").textContent = CONFIG.title + " \u2014 live \u00b7 " + new Date().toLocaleString() + " \u00b7 " + list.length + " submissions";
+    $("subTitle").textContent = "Live \u00b7 " + new Date().toLocaleString() + " \u00b7 " + list.length + " submissions";
   }catch(e){
     if(!interactive){
       console.warn("Live refresh failed:", e.message);
-      $("subTitle").textContent = CONFIG.title;
+      $("subTitle").textContent = "Live refresh failed";
       setStatus("Could not load live data (" + e.message + "). Retry with the \u21bb Refresh from API button, or check the proxy deployment.");
       return;
     }
