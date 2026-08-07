@@ -66,6 +66,13 @@ tbody tr.link{cursor:pointer}
 .pill.hold{background:#FBE3E5;color:var(--red)}
 .pill.release{background:#E2F1E7;color:var(--green)}
 .tscroll{max-height:420px;overflow:auto;border-radius:8px}
+.switch{display:inline-flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);font-weight:700;cursor:pointer;user-select:none;white-space:nowrap}
+.switch input{display:none}
+.switch .slider{width:34px;height:18px;background:#CBD5DD;border-radius:99px;position:relative;transition:.2s;flex:none}
+.switch .slider::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked + .slider{background:var(--steel2)}
+.switch input:checked + .slider::after{transform:translateX(16px)}
+.selchip{display:none;align-items:center;background:#E2F1F6;color:var(--steel);border:1px solid var(--accent);border-radius:99px;padding:2px 10px;font-size:11px;font-weight:700;margin-left:8px}
 footer{text-align:center;font-size:12px;color:var(--muted);padding:24px}
 @media(max-width:980px){.c8,.c6,.c4{grid-column:span 12}.chartbox{height:260px}}
 </style>
@@ -145,7 +152,10 @@ const DATA = [];
     <div class="card c6"><h3>Inspector Performance</h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
     <div class="card c7 c8"><h3>Vendor / Mill Performance <small>top by inspected footage</small></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
     <div class="card c4"><h3>Alloy — True Rejected <small>held footage</small></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
-    <div class="card c12"><h3>Submissions in Scope <small id="tblNote"></small></h3><div class="tscroll"><table>
+    <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
+      <label class="switch" title="When on, clicking a chart bar or pie slice narrows this list to those submissions">
+        <input type="checkbox" id="linkToggle"><span class="slider"></span><span>Chart click filters list</span>
+      </label></h3><div class="tscroll"><table>
       <thead><tr><th>Date</th><th>Mill</th><th>Alloy</th><th>PO #</th><th>Heat</th><th>Inspector</th><th>Type</th>
       <th style="text-align:right">Received (ft)</th><th style="text-align:right">Inspected (ft)</th>
       <th style="text-align:right">Rejected (ft)</th><th>Disposition</th><th>Primary Reason</th></tr></thead>
@@ -314,9 +324,65 @@ function render(){
       scales:{ x:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
       plugins:{ legend:{ display:false } }}});
 
-  /* table — newest 50 */
-  const T = S.slice().sort((a,b)=>(b.created||"").localeCompare(a.created||"")).slice(0,50);
-  $("tblNote").textContent = `showing ${T.length} of ${fmt(S.length)} — newest first`;
+  /* chart-click -> list linking (active when the toggle in the list header is on) */
+  hook("chWeekly","week", wk.map(x=>x[0]));
+  hook("chMonthly","month", mo.map(x=>x[0]));
+  hook("chReasons","reason", re.map(x=>x[0]));
+  hook("chInsp","inspector", ins.map(x=>x[0]));
+  hook("chMills","mill", mi.map(x=>x[0]));
+  hook("chAlloy","alloy", al.map(x=>x[0]));
+
+  /* table — newest 50 (respects chart selection when linking is on) */
+  scopeRows = S;
+  renderTable();
+
+  $("foot").textContent = `${CONFIG.clientName} · ${CONFIG.title} · ${fmt(rows.length)} submissions loaded · footage prorated from Quantity (ft) by piece counts, matching the Excel R2 methodology`;
+}
+
+/* ---------- chart-click -> list linking ---------- */
+let chartSel = null;      // {kind, value} set by clicking a chart element
+let scopeRows = [];       // rows matching the global filters (set by render)
+
+function hook(id, kind, keys){
+  const c = charts[id]; if(!c) return;
+  c.options.onClick = (e, els)=>{
+    if(!$("linkToggle").checked || !els.length) return;
+    const v = keys[els[0].index];
+    chartSel = (chartSel && chartSel.kind===kind && chartSel.value===v) ? null : {kind, value:v};  // click again to clear
+    renderTable();
+  };
+  c.options.onHover = (e, els)=>{
+    e.native.target.style.cursor = ($("linkToggle").checked && els.length) ? "pointer" : "default";
+  };
+}
+function matchSel(r){
+  if(!chartSel) return true;
+  const v = chartSel.value;
+  switch(chartSel.kind){
+    case "week":      return weekStart(r.date) === v;
+    case "month":     return monthStart(r.date) === v;
+    case "reason":    return r.reason === v && r.tRej > 0;   // matches the doughnut (held footage)
+    case "inspector": return r.inspector === v;
+    case "mill":      return r.mill === v;
+    case "alloy":     return r.alloy === v && r.tRej > 0;    // matches the alloy chart (held footage)
+  }
+  return true;
+}
+function selLabel(){
+  if(!chartSel) return "";
+  const names = { week:"Week of ", month:"Month ", reason:"Reason: ", inspector:"Inspector: ", mill:"Mill: ", alloy:"Alloy: " };
+  return (names[chartSel.kind]||"") + chartSel.value;
+}
+function clearSel(){ chartSel = null; renderTable(); }
+function renderTable(){
+  const F = chartSel ? scopeRows.filter(matchSel) : scopeRows;
+  const T = F.slice().sort((a,b)=>(b.created||"").localeCompare(a.created||"")).slice(0,50);
+  $("tblNote").textContent = `showing ${T.length} of ${fmt(F.length)} \u2014 newest first`;
+  const chip = $("selChip");
+  if(chartSel){
+    chip.style.display = "inline-flex";
+    chip.innerHTML = selLabel() + ' <b onclick="clearSel()" style="cursor:pointer;margin-left:6px">&#10005;</b>';
+  } else { chip.style.display = "none"; }
   $("tbody").innerHTML = T.map(r=>{
     const link = CONFIG.submissionBrowserUrl ? ` class="link" onclick="window.open('${CONFIG.submissionBrowserUrl.replace("{id}", encodeURIComponent(r.id))}','_blank')"` : "";
     return `<tr${link}><td>${r.date||""}</td><td>${r.mill||""}</td><td>${r.alloy||""}</td>
@@ -326,9 +392,8 @@ function render(){
       <td><span class="pill ${r.disp==="Hold"?"hold":"release"}">${r.disp||""}</span></td>
       <td>${r.reason||""}</td></tr>`;
   }).join("");
-
-  $("foot").textContent = `${CONFIG.clientName} · ${CONFIG.title} · ${fmt(rows.length)} submissions loaded · footage prorated from Quantity (ft) by piece counts, matching the Excel R2 methodology`;
 }
+$("linkToggle").addEventListener("change", ()=>{ if(!$("linkToggle").checked) chartSel = null; renderTable(); });
 
 /* ---------- data loading ---------- */
 function num(x){ const v=parseFloat(x); return isFinite(v)?v:0; }
@@ -432,9 +497,9 @@ async function refreshFromApi(interactive){
   }finally{ $("btnApi").innerHTML = "&#8635; Refresh from API"; }
 }
 $("btnApi").addEventListener("click", ()=>refreshFromApi(true));
-$("btnReset").addEventListener("click", ()=>{ buildFilters(); render(); });
+$("btnReset").addEventListener("click", ()=>{ chartSel = null; buildFilters(); render(); });
 for(const id of ["fFrom","fTo","fMill","fInsp","fAlloy","fReason","fDisp","fType"])
-  $(id).addEventListener("change", render);
+  $(id).addEventListener("change", ()=>{ chartSel = null; render(); });
 
 if(!CONFIG.showJsonLoader){
   document.querySelector('button[onclick*="fileIn"]').style.display = "none";
