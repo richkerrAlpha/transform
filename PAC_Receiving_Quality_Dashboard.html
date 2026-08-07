@@ -72,7 +72,8 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .card h3{font-size:14px;font-weight:800;color:var(--steel);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .card h3 small{font-weight:600;color:var(--muted);font-size:11px}
 .c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}
-.dlbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.perdates{align-self:flex-end;padding-bottom:9px;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.dategroup{display:flex;gap:14px;align-items:flex-end;border:1px solid #B7C6D0;border-radius:10px;padding:7px 12px 8px;background:#F7FAFC}
 .seg{display:inline-flex;border:1px solid #CBD5DD;border-radius:8px;overflow:hidden;flex:none}
 .seg button{border:none;background:#fff;color:var(--muted);font-size:12px;font-weight:700;padding:7px 10px;cursor:pointer;transition:.15s}
 .seg button.on{background:var(--steel);color:#fff}
@@ -115,7 +116,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "2.2",
+  version: "2.4",
   updated: "Aug 7, 2026",
   // Default quality target: monthly rejection rate above this fraction is flagged red
   // on the Monthly Rejection Rate chart and drives the Rejection Rate KPI card color.
@@ -184,17 +185,19 @@ const DATA = [];
 </header>
 
 <div class="filters">
-  <label>Date Range
-    <div style="display:flex;gap:8px;align-items:center">
+  <div class="dategroup">
+    <label>Date Range
       <div class="seg" id="dateSeg">
         <button type="button" data-mode="custom" class="on">Dates</button>
         <button type="button" data-mode="period">Period</button>
       </div>
-      <span id="customDates" style="display:flex;gap:6px;align-items:center">
-        <span class="dlbl">From:</span> <input type="date" id="fFrom">
-        <span class="dlbl">To:</span> <input type="date" id="fTo">
-      </span>
-      <span id="periodBox" style="display:none;gap:6px;align-items:center">
+    </label>
+    <span id="customDates" style="display:flex;gap:12px">
+      <label>From <input type="date" id="fFrom"></label>
+      <label>To <input type="date" id="fTo"></label>
+    </span>
+    <span id="periodBox" style="display:none;gap:12px">
+      <label>Period
         <select id="fPeriod">
           <option value="thisweek">This Week</option>
           <option value="lastweek">Last Week</option>
@@ -206,10 +209,13 @@ const DATA = [];
           <option value="lastx">Last X Months</option>
           <option value="all" selected>All Time</option>
         </select>
-        <input type="number" id="fMonthsX" class="tgtspin" min="1" max="60" step="1" value="6" style="display:none" title="How many months back">
-      </span>
-    </div>
-  </label>
+      </label>
+      <label id="mxLbl" style="display:none">Months
+        <input type="number" id="fMonthsX" class="tgtspin" min="1" max="60" step="1" value="6" style="width:64px;padding:7px 9px;font-size:13px" title="How many months back">
+      </label>
+      <span id="perDates" class="perdates"></span>
+    </span>
+  </div>
   <label>Mill
     <div class="msel" id="millSel">
       <button type="button" class="msel-btn" id="millBtn">All</button>
@@ -327,13 +333,20 @@ function periodRange(key){
   }
   return null;
 }
+function mdy(x){ const d = (x instanceof Date) ? ymd(x) : String(x||"");
+  const p = d.split("-"); return p.length===3 ? (+p[1])+"/"+(+p[2])+"/"+p[0].slice(2) : ""; }
 function setDatesFromPeriod(){
   if(dateMode === "period"){
     const r = periodRange($("fPeriod").value);
-    if(r){ $("fFrom").value = ymd(r[0]); $("fTo").value = ymd(r[1]); return; }
+    if(r){
+      $("fFrom").value = ymd(r[0]); $("fTo").value = ymd(r[1]);
+      $("perDates").textContent = mdy(r[0]) + " \u2013 " + mdy(r[1]);
+      return;
+    }
   }
   const ds = rows.map(r=>r.date).filter(Boolean).sort();   // custom default / All Time
   $("fFrom").value = ds[0]||""; $("fTo").value = ds[ds.length-1]||"";
+  if(dateMode === "period") $("perDates").textContent = mdy(ds[0]) + " \u2013 " + mdy(ds[ds.length-1]);
 }
 function applyPeriod(){ setDatesFromPeriod(); chartSel = null; render(); }
 document.querySelectorAll("#dateSeg button").forEach(b => b.addEventListener("click", ()=>{
@@ -341,10 +354,11 @@ document.querySelectorAll("#dateSeg button").forEach(b => b.addEventListener("cl
   document.querySelectorAll("#dateSeg button").forEach(x => x.classList.toggle("on", x === b));
   $("customDates").style.display = dateMode === "custom" ? "flex" : "none";
   $("periodBox").style.display  = dateMode === "period" ? "flex" : "none";
-  applyPeriod();
+  if(dateMode === "period") applyPeriod();
+  /* switching to Dates: keep whatever range is in From/To (e.g. the period just used) */
 }));
 $("fPeriod").addEventListener("change", ()=>{
-  $("fMonthsX").style.display = $("fPeriod").value === "lastx" ? "inline-block" : "none";
+  $("mxLbl").style.display = $("fPeriod").value === "lastx" ? "flex" : "none";
   applyPeriod();
 });
 $("fMonthsX").addEventListener("change", applyPeriod);
