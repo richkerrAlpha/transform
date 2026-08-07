@@ -63,7 +63,11 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th{background:var(--steel);color:#fff;padding:8px 10px;text-align:left;font-weight:700;white-space:nowrap;position:sticky;top:0}
 td{padding:7px 10px;border-bottom:1px solid #E6ECF0;white-space:nowrap}
-tbody tr:hover{background:#EDF4F8}
+tbody tr.rowhold td{background:#FBE9EB}
+tbody tr.rowrelease td{background:#E9F5EE}
+tbody tr.rowhold:hover td{background:#F6D5D9}
+tbody tr.rowrelease:hover td{background:#D5EBDE}
+tbody tr:hover td{background:#EDF4F8}
 tbody tr.link{cursor:pointer}
 .pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:700}
 .pill.hold{background:#FBE3E5;color:var(--red)}
@@ -389,8 +393,9 @@ function renderTable(){
     chip.innerHTML = selLabel() + ' <b onclick="clearSel()" style="cursor:pointer;margin-left:6px">&#10005;</b>';
   } else { chip.style.display = "none"; }
   $("tbody").innerHTML = T.map(r=>{
-    const link = CONFIG.submissionBrowserUrl ? ` class="link" onclick="window.open('${CONFIG.submissionBrowserUrl.replace("{id}", encodeURIComponent(r.id))}','_blank')"` : "";
-    return `<tr${link}><td>${r.date||""}</td><td>${r.mill||""}</td><td>${r.alloy||""}</td>
+    const link = CONFIG.submissionBrowserUrl ? ` onclick="window.open('${CONFIG.submissionBrowserUrl.replace("{id}", encodeURIComponent(r.id))}','_blank')" style="cursor:pointer"` : "";
+    const rowcls = r.disp==="Hold" ? "rowhold" : (r.disp==="Release" ? "rowrelease" : "");
+    return `<tr class="${rowcls}"${link}><td>${r.date||""}</td><td>${r.mill||""}</td><td>${r.alloy||""}</td>
       <td>${r.po||""}</td><td>${r.heat||""}</td><td>${r.inspector||""}</td><td>${r.type||""}</td>
       <td style="text-align:right">${fmt(r.fRecv)}</td><td style="text-align:right">${fmt(r.fInsp)}</td>
       <td style="text-align:right;color:${r.fRej? "var(--red)":"inherit"}">${fmt(r.fRej)}</td>
