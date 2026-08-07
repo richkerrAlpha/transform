@@ -72,6 +72,7 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .card h3{font-size:14px;font-weight:800;color:var(--steel);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
 .card h3 small{font-weight:600;color:var(--muted);font-size:11px}
 .c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}
+.tgtspin{width:56px;border:1px solid #CBD5DD;border-radius:6px;padding:2px 5px;font-size:11px;font-weight:700;color:var(--ink);background:#fff}
 .pngbtn{border:1px solid #CBD5DD;background:#fff;color:var(--muted);border-radius:7px;font-size:12px;padding:3px 9px;cursor:pointer;transition:.15s;flex:none}
 .pngbtn:hover{background:var(--steel);color:#fff;border-color:var(--steel)}
 .chartbox{position:relative;height:300px}
@@ -112,8 +113,9 @@ const CONFIG = {
   // Bump these with every published change — shown subtly in the header.
   version: "2.2",
   updated: "Aug 7, 2026",
-  // Quality target: monthly rejection rate above this fraction is flagged red on the
-  // Monthly Rejection Rate chart (and drives the Rejection Rate KPI card color).
+  // Default quality target: monthly rejection rate above this fraction is flagged red
+  // on the Monthly Rejection Rate chart and drives the Rejection Rate KPI card color.
+  // Users can adjust it live via the spin control on that chart (saved per user).
   rejectionRateTarget: 0.05,
   brand: { steel:"#1B4965", steel2:"#2C6E8F", accent:"#62B6CB", red:"#C1121F",
            green:"#198038", gold:"#E9C46A", ink:"#212529",
@@ -202,7 +204,7 @@ const DATA = [];
   <div class="grid">
     <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
     <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
-    <div class="card c6"><h3><span>Monthly Rejection Rate <small id="mrrNote"></small></span><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
+    <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5"> % target</small></span><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
     <div class="card c6"><h3><span>Inspector Performance</span><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Performance" data-title="Inspector Performance" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
     <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small>top by inspected footage</small></span><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Download as PNG">&#8681;</button></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
     <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Download as PNG">&#8681;</button></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
@@ -342,7 +344,7 @@ function render(){
     ["Footage Inspected", fmt(insp), "ft", ""],
     ["Footage Rejected", fmt(rej), "ft", "alert"],
     ["Footage Approved", fmt(appr), "ft", "good"],
-    ["Rejection Rate", pct(insp?rej/insp:0), "", rej/Math.max(insp,1)>CONFIG.rejectionRateTarget?"alert":"good"],
+    ["Rejection Rate", pct(insp?rej/insp:0), "", rej/Math.max(insp,1)>rateTarget?"alert":"good"],
     ["Inspection Coverage", pct(recv?insp/recv:0), "", ""],
     ["Footage Borescoped", fmt(bore), "ft", ""],
     ["Held Lots", fmt(held), "of "+fmt(S.length), held? "alert":"good"],
@@ -363,8 +365,7 @@ function render(){
       plugins:{ legend:{ position:"bottom" } } }});
 
   /* monthly rate — bars above the CONFIG.rejectionRateTarget flag red */
-  const TGT = CONFIG.rejectionRateTarget;
-  $("mrrNote").textContent = "red = above " + (100*TGT).toFixed(TGT*100 % 1 ? 1 : 0) + "% target";
+  const TGT = rateTarget;
   const mo = [...groupSum(S, r=>monthStart(r.date), ["fInsp","fRej"])].sort((a,b)=>a[0].localeCompare(b[0]));
   const moRates = mo.map(m=>m[1].fInsp? m[1].fRej/m[1].fInsp:0);
   mkChart("chMonthly", { type:"bar",
@@ -542,6 +543,23 @@ function applyFont(key, redraw){
   ts.addEventListener("change", ()=>applyTheme(ts.value, true));
   $("fontSel").addEventListener("change", ()=>applyFont($("fontSel").value, true));
 })();
+
+/* ---------- adjustable rejection-rate target ---------- */
+let rateTarget = CONFIG.rejectionRateTarget;
+try{
+  const saved = parseFloat(localStorage.getItem("pacTarget"));
+  if(isFinite(saved) && saved >= 0 && saved <= 0.5) rateTarget = saved;
+}catch(err){}
+$("tgtSpin").value = parseFloat((rateTarget * 100).toFixed(1));
+$("tgtSpin").addEventListener("change", ()=>{
+  let v = parseFloat($("tgtSpin").value);
+  if(!isFinite(v) || v < 0) v = CONFIG.rejectionRateTarget * 100;
+  if(v > 50) v = 50;
+  $("tgtSpin").value = v;
+  rateTarget = v / 100;
+  try{ localStorage.setItem("pacTarget", rateTarget); }catch(err){}
+  render();
+});
 
 /* ---------- export (XLSX / CSV / JSON) ---------- */
 const EXPORT_COLS = [
