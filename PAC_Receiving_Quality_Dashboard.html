@@ -45,6 +45,12 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .filters{position:sticky;top:0;z-index:50;background:var(--card);box-shadow:var(--shadow);padding:12px 28px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
 .filters label{display:flex;flex-direction:column;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;gap:4px}
 .filters input,.filters select{border:1px solid #CBD5DD;border-radius:8px;padding:7px 9px;font-size:13px;background:#fff;color:var(--ink);min-width:120px}
+.msel{position:relative}
+.msel-btn{border:1px solid #CBD5DD;border-radius:8px;padding:7px 26px 7px 9px;font-size:13px;background:#fff url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236C7A89'/%3E%3C/svg%3E") no-repeat right 9px center;color:var(--ink);min-width:140px;text-align:left;cursor:pointer;white-space:nowrap}
+.msel-panel{display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #CBD5DD;border-radius:8px;box-shadow:0 8px 22px rgba(27,73,101,.18);max-height:280px;overflow:auto;padding:6px;z-index:80;min-width:230px}
+.msel-panel label.ms-opt{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink);text-transform:none;letter-spacing:0;padding:5px 8px;border-radius:6px;cursor:pointer}
+.msel-panel label.ms-opt:hover{background:#EDF4F8}
+.msel-panel label.ms-all{border-bottom:1px solid #E6ECF0;margin-bottom:4px;padding-bottom:8px}
 .filters .reset{background:var(--steel);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer}
 .filters .reset:hover{background:var(--steel2)}
 .wrap{max-width:1440px;margin:0 auto;padding:22px 28px 60px}
@@ -159,7 +165,12 @@ const DATA = [];
 <div class="filters">
   <label>From <input type="date" id="fFrom"></label>
   <label>To <input type="date" id="fTo"></label>
-  <label>Mill <select id="fMill"></select></label>
+  <label>Mill
+    <div class="msel" id="millSel">
+      <button type="button" class="msel-btn" id="millBtn">All</button>
+      <div class="msel-panel" id="millPanel"></div>
+    </div>
+  </label>
   <label>Inspector <select id="fInsp"></select></label>
   <label>Alloy <select id="fAlloy"></select></label>
   <label>Rejection Reason <select id="fReason"></select></label>
@@ -207,19 +218,50 @@ function fillSelect(id, values){
   const s = $(id); s.innerHTML = "";
   ["All", ...values].forEach(v => { const o=document.createElement("option"); o.value=o.textContent=v; s.appendChild(o); });
 }
+let millChoice = new Set();   // empty = All
+function updateMillBtn(){
+  $("millBtn").textContent = millChoice.size===0 ? "All"
+    : (millChoice.size===1 ? [...millChoice][0] : millChoice.size + " mills");
+}
+function buildMillSelect(values){
+  const p = $("millPanel");
+  millChoice.clear();
+  p.innerHTML = '<label class="ms-opt ms-all"><input type="checkbox" id="msAll" checked> All mills</label>' +
+    values.map(v=>`<label class="ms-opt"><input type="checkbox" class="msChk" value="${v}"> ${v}</label>`).join("");
+  $("msAll").addEventListener("change", ()=>{
+    millChoice.clear();
+    p.querySelectorAll(".msChk").forEach(c=>c.checked=false);
+    $("msAll").checked = true;
+    updateMillBtn(); chartSel = null; render();
+  });
+  p.querySelectorAll(".msChk").forEach(c=>c.addEventListener("change", ()=>{
+    if(c.checked) millChoice.add(c.value); else millChoice.delete(c.value);
+    $("msAll").checked = (millChoice.size===0);
+    updateMillBtn(); chartSel = null; render();
+  }));
+  updateMillBtn();
+}
 function buildFilters(){
   const uniq = k => [...new Set(rows.map(r=>r[k]).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-  fillSelect("fMill", uniq("mill")); fillSelect("fInsp", uniq("inspector"));
+  buildMillSelect(uniq("mill")); fillSelect("fInsp", uniq("inspector"));
   fillSelect("fAlloy", uniq("alloy")); fillSelect("fReason", uniq("reason"));
   fillSelect("fDisp", uniq("disp")); fillSelect("fType", uniq("type"));
   const ds = rows.map(r=>r.date).filter(Boolean).sort();
   $("fFrom").value = ds[0]||""; $("fTo").value = ds[ds.length-1]||"";
 }
+$("millBtn").addEventListener("click", ()=>{
+  const p = $("millPanel");
+  p.style.display = p.style.display === "block" ? "none" : "block";
+});
+document.addEventListener("click", (e)=>{
+  if(!$("millSel").contains(e.target)) $("millPanel").style.display = "none";
+});
 function inScope(r){
   const f=$("fFrom").value, t=$("fTo").value;
   if(f && r.date < f) return false;
   if(t && r.date > t) return false;
-  for(const [id,k] of [["fMill","mill"],["fInsp","inspector"],["fAlloy","alloy"],
+  if(millChoice.size && !millChoice.has(r.mill)) return false;
+  for(const [id,k] of [["fInsp","inspector"],["fAlloy","alloy"],
                        ["fReason","reason"],["fDisp","disp"],["fType","type"]]){
     const v=$(id).value; if(v!=="All" && r[k]!==v) return false;
   }
@@ -529,7 +571,7 @@ async function refreshFromApi(interactive){
 }
 $("btnApi").addEventListener("click", ()=>refreshFromApi(true));
 $("btnReset").addEventListener("click", ()=>{ chartSel = null; buildFilters(); render(); });
-for(const id of ["fFrom","fTo","fMill","fInsp","fAlloy","fReason","fDisp","fType"])
+for(const id of ["fFrom","fTo","fInsp","fAlloy","fReason","fDisp","fType"])
   $(id).addEventListener("change", ()=>{ chartSel = null; render(); });
 
 if(!CONFIG.showJsonLoader){
