@@ -36,6 +36,8 @@ header{background:linear-gradient(135deg,var(--steel) 0%,var(--steel2) 100%);col
 .htitle em{font-style:normal;color:var(--accent)}
 header .sub{font-size:13px;opacity:.85;margin-top:3px}
 .verline{font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.5px;margin-top:2px}
+.hdr-sel{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:5px 8px;font-size:12px;cursor:pointer}
+.hdr-sel option{color:var(--ink)}
 .poweredby{font-size:11px;color:rgba(255,255,255,.7);text-align:right}
 .poweredby b{color:var(--accent);font-weight:700}
 header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
@@ -48,8 +50,8 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .msel{position:relative}
 .msel-btn{border:1px solid #CBD5DD;border-radius:8px;padding:7px 26px 7px 9px;font-size:13px;background:#fff url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236C7A89'/%3E%3C/svg%3E") no-repeat right 9px center;color:var(--ink);min-width:140px;text-align:left;cursor:pointer;white-space:nowrap}
 .msel-panel{display:none;position:absolute;top:calc(100% + 4px);left:0;background:#fff;border:1px solid #CBD5DD;border-radius:8px;box-shadow:0 8px 22px rgba(27,73,101,.18);max-height:280px;overflow:auto;padding:6px;z-index:80;min-width:230px}
-.msel-panel label.ms-opt{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink);text-transform:none;letter-spacing:0;padding:5px 8px;border-radius:6px;cursor:pointer}
-.msel-panel label.ms-opt:hover{background:#EDF4F8}
+.msel-panel .ms-opt{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink);text-transform:none;letter-spacing:0;padding:6px 9px;border-radius:6px;cursor:pointer}
+.msel-panel .ms-opt:hover{background:#EDF4F8}
 .msel-panel label.ms-all{border-bottom:1px solid #E6ECF0;margin-bottom:4px;padding-bottom:8px}
 .filters .reset{background:var(--steel);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer}
 .filters .reset:hover{background:var(--steel2)}
@@ -157,6 +159,14 @@ const DATA = [];
       <button class="btn" id="btnApi" title="Pulls live submissions from Alpha TransForm">&#8635; Refresh from API</button>
       <button class="btn" onclick="document.getElementById('fileIn').click()" title="Load a TransForm JSON export">&#8683; Load JSON export</button>
       <input type="file" id="fileIn" accept=".json">
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <select id="themeSel" class="hdr-sel" title="Color scheme"></select>
+      <select id="fontSel" class="hdr-sel" title="Text size">
+        <option value="s">Aa Small</option>
+        <option value="m" selected>Aa Normal</option>
+        <option value="l">Aa Large</option>
+      </select>
     </div>
     <div class="poweredby">Powered by <b>Alpha TransForm</b></div>
   </div>
@@ -474,6 +484,49 @@ function renderTable(){
   }).join("");
 }
 $("linkToggle").addEventListener("change", ()=>{ if(!$("linkToggle").checked) chartSel = null; renderTable(); });
+
+/* ---------- view preferences: color scheme + text size ---------- */
+const THEMES = {
+  steel:  { label:"PAC Steel",       steel:"#1B4965", steel2:"#2C6E8F", accent:"#62B6CB", bg:"#F1F5F8", card:"#FFFFFF", ink:"#212529", muted:"#6C7A89" },
+  slate:  { label:"Slate & Emerald", steel:"#3D484D", steel2:"#54646B", accent:"#26A554", bg:"#F2F4F4", card:"#FFFFFF", ink:"#22282B", muted:"#6F7E86" },
+  navy:   { label:"Navy & Gold",     steel:"#14213D", steel2:"#2A3E66", accent:"#E9C46A", bg:"#F5F4F0", card:"#FFFFFF", ink:"#1B2430", muted:"#6E7887" },
+  claret: { label:"Claret & Gold",   steel:"#6D1A2E", steel2:"#8C2F44", accent:"#C9A227", bg:"#F6F3F2", card:"#FFFFFF", ink:"#2A2226", muted:"#7C6E73" }
+};
+const FONTS = { s:"90%", m:"100%", l:"112%" };
+function applyTheme(key, redraw){
+  const t = THEMES[key] || THEMES.steel;
+  const rs = document.documentElement.style;
+  rs.setProperty("--steel", t.steel); rs.setProperty("--steel2", t.steel2);
+  rs.setProperty("--accent", t.accent); rs.setProperty("--bg", t.bg);
+  rs.setProperty("--card", t.card); rs.setProperty("--ink", t.ink); rs.setProperty("--muted", t.muted);
+  B.steel = t.steel; B.steel2 = t.steel2; B.accent = t.accent;
+  B.series = [t.steel, t.accent, B.red, B.green, "#E9C46A", "#7B2CBF", "#F4845F",
+              t.steel2, "#8D99AE", "#40916C", "#B5838D", "#5E60CE", "#D62828", "#606C38"];
+  try{ localStorage.setItem("pacTheme", key); }catch(err){}
+  if(redraw) render();
+}
+function applyFont(key, redraw){
+  document.body.style.zoom = FONTS[key] || "100%";
+  try{ localStorage.setItem("pacFont", key); }catch(err){}
+  if(redraw) render();
+}
+(function initPrefs(){
+  const ts = $("themeSel");
+  for(const k in THEMES){
+    const o = document.createElement("option");
+    o.value = k; o.textContent = THEMES[k].label; ts.appendChild(o);
+  }
+  let th = "steel", fo = "m";
+  try{
+    th = localStorage.getItem("pacTheme") || "steel";
+    fo = localStorage.getItem("pacFont") || "m";
+  }catch(err){}
+  if(!THEMES[th]) th = "steel"; if(!FONTS[fo]) fo = "m";
+  ts.value = th; $("fontSel").value = fo;
+  applyTheme(th, false); applyFont(fo, false);
+  ts.addEventListener("change", ()=>applyTheme(ts.value, true));
+  $("fontSel").addEventListener("change", ()=>applyFont($("fontSel").value, true));
+})();
 
 /* ---------- export (XLSX / CSV / JSON) ---------- */
 const EXPORT_COLS = [
