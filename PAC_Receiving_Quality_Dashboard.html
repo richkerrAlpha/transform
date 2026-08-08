@@ -122,6 +122,7 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .aipill.warn{background:#FFF6E0;color:#8A6100;border:1px solid #E9C46A}
 .aipill.crit{background:#FDE8EA;color:#A4121F;border:1px solid #EFA1A8}
 #aiSpeak{white-space:nowrap;margin-top:1px}
+#aiVoiceSel{max-width:150px;border:1px solid #CBD5DD;border-radius:8px;padding:6px 8px;font-size:12px;font-weight:600;color:var(--ink);background:#fff;margin-top:1px}
 .ai-spin{display:inline-block;width:18px;height:18px;border:3px solid #CBD5DD;border-top-color:var(--steel);border-radius:50%;animation:aispin .8s linear infinite;vertical-align:middle;margin-right:8px}
 @keyframes aispin{to{transform:rotate(360deg)}}
 .mailbtn{border:1px solid #CBD5DD;background:#fff;border-radius:6px;font-size:12px;padding:2px 7px;cursor:pointer;transition:.15s}
@@ -1398,7 +1399,7 @@ function aiOpen(title, sub, bodyHtml){
     ov = document.createElement("div"); ov.id = "aiOverlay";
     ov.innerHTML = '<div id="aiCard">' +
       '<div class="aihead"><span id="aiIcon"></span><div style="flex:1;min-width:0"><h4 id="aiTitle"></h4><div class="aisub" id="aiSub" style="margin-bottom:0"></div></div>' +
-      '<span id="aiStatus"></span><button id="aiSpeak" title="Click to have this analysis read aloud" style="display:none">&#128266; Speak</button></div>' +
+      '<span id="aiStatus"></span><select id="aiVoiceSel" title="Choose the reading voice (saved for next time)"></select><button id="aiSpeak" title="Click to have this analysis read aloud" style="display:none">&#128266; Speak</button></div>' +
       '<div id="aiScope"></div>' +
       '<div class="seg" id="aiSeg" style="margin-bottom:12px"><button data-m="quick" class="on">Quick take</button><button data-m="detailed">Detailed</button></div>' +
       '<div class="aibody" id="aiBody"></div>' +
@@ -1409,6 +1410,25 @@ function aiOpen(title, sub, bodyHtml){
       const b=document.getElementById("aiSpeak"); if(b) b.innerHTML="&#128266; Speak"; };
     ov.addEventListener("click", e=>{ if(e.target===ov){ aiHush(); ov.style.display="none"; } });
     document.getElementById("aiClose").addEventListener("click", ()=>{ aiHush(); ov.style.display="none"; });
+    function aiFillVoices(){
+      const sel = document.getElementById("aiVoiceSel"); if(!sel || !window.speechSynthesis) return;
+      const vs = speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang||""));
+      if(!vs.length) return;
+      let saved = ""; try{ saved = localStorage.getItem("pacVoice") || ""; }catch(e){}
+      sel.innerHTML = '<option value="">Voice: Auto</option>' +
+        vs.map(v=>`<option value="${v.name.replace(/"/g,"&quot;")}"${v.name===saved?" selected":""}>${v.name}</option>`).join("");
+    }
+    aiFillVoices();
+    if(window.speechSynthesis && speechSynthesis.addEventListener)
+      speechSynthesis.addEventListener("voiceschanged", aiFillVoices);
+    document.getElementById("aiVoiceSel").addEventListener("change", (e)=>{
+      try{ e.target.value ? localStorage.setItem("pacVoice", e.target.value)
+                          : localStorage.removeItem("pacVoice"); }catch(err){}
+      if(window.speechSynthesis && speechSynthesis.speaking){   // switch voice mid-read: restart
+        speechSynthesis.cancel();
+        document.getElementById("aiSpeak").click();
+      }
+    });
     document.getElementById("aiSpeak").addEventListener("click", ()=>{
       const b = document.getElementById("aiSpeak");
       if(window.speechSynthesis && speechSynthesis.speaking){ aiHush(); return; }
@@ -1722,6 +1742,10 @@ document.querySelectorAll(".aibtn").forEach(b=>{
 let demoStop = false;
 function pickVoice(){
   const vs = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  try{
+    const saved = localStorage.getItem("pacVoice");
+    if(saved){ const hit = vs.find(v=>v.name === saved); if(hit) return hit; }
+  }catch(e){}
   const score = v=>{
     const n = v.name||"", l = v.lang||"";
     if(!/^en/i.test(l)) return -1;
