@@ -1339,7 +1339,12 @@ function aiScopeSummary(){
   let range = dLabel($("fFrom").value) + " through " + dLabel($("fTo").value);
   if(dateMode === "period"){
     const opt = $("fPeriod").selectedOptions[0];
-    if(opt && opt.value !== "all") range = opt.textContent + " (" + range + ")";
+    if(opt && opt.value === "lastx"){
+      const n = Math.max(1, parseInt($("fMonthsX").value, 10) || 6);
+      range = "Last " + n + " Month" + (n === 1 ? "" : "s") + " (" + range + ")";
+    } else if(opt && opt.value !== "all"){
+      range = opt.textContent + " (" + range + ")";
+    }
   }
   parts.push(range);
   for(const key in MSEL){
