@@ -108,6 +108,7 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 #aiScope::before{content:"\1F50D  Analyzing: ";font-weight:800;color:var(--steel)}
 #aiCard .aibody b{color:var(--steel)}
 #aiCard .aibody i{color:var(--muted)}
+#aiCard .aibody .spkw.on{background:color-mix(in srgb, var(--accent) 40%, #fff);border-radius:3px;box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 40%, #fff)}
 #aiCard .aibody mark{background:color-mix(in srgb, var(--accent) 30%, #fff);color:var(--ink);padding:0 3px;border-radius:3px;font-weight:700}
 #aiCard .airow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px}
 #aiCard button{border:1px solid #CBD5DD;background:#fff;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer}
@@ -1404,22 +1405,61 @@ function aiOpen(title, sub, bodyHtml){
       '<div class="airow"><span class="aisub">AI-generated \u2014 verify before acting</span><span><button id="aiPngBtn" title="Download this assessment as a PNG">&#8681; PNG</button> <button id="aiMail" title="Email this assessment">&#9993; Email</button> <button id="aiCopy">Copy</button> <button id="aiClose">Close</button></span></div></div>';
     document.body.appendChild(ov);
     const aiHush = ()=>{ if(window.speechSynthesis) speechSynthesis.cancel();
+      document.querySelectorAll("#aiBody .spkw.on").forEach(x=>x.classList.remove("on"));
       const b=document.getElementById("aiSpeak"); if(b) b.innerHTML="&#128266; Speak"; };
     ov.addEventListener("click", e=>{ if(e.target===ov){ aiHush(); ov.style.display="none"; } });
     document.getElementById("aiClose").addEventListener("click", ()=>{ aiHush(); ov.style.display="none"; });
     document.getElementById("aiSpeak").addEventListener("click", ()=>{
       const b = document.getElementById("aiSpeak");
       if(window.speechSynthesis && speechSynthesis.speaking){ aiHush(); return; }
-      const plain = (aiTexts[aiMode]||"").replace(/==|\*\*|\*/g,"").replace(/^\s*-\s+/gm,"")
-        .replace(/\bJesus\b/g, "Hay-soos")             // Spanish given name, spoken correctly
-        .replace(/\s*[\u2013\u2014]\s*/g, " through ") // en/em dashes are ranges: read as "through"
-        .replace(/(\d)\s*-\s*(\d)/g, "$1 through $2");  // numeric ranges with plain hyphens too
-      if(!plain || !window.speechSynthesis) return;
-      const u = new SpeechSynthesisUtterance(plain);
+      if(!aiTexts[aiMode] || !window.speechSynthesis) return;
+      /* wrap every display word in a span, and build the spoken string token-by-token
+         so word-boundary events can be mapped back to the right display word even
+         where the spoken text differs (Hay-soos, "through" for dashes). */
+      aiRenderBody();                                   // fresh formatted body to wrap
+      const spokenWord = w => w
+        .replace(/\bJesus\b/g, "Hay-soos")
+        .replace(/[\u2013\u2014]/g, " through ")
+        .replace(/(\d)\s*-\s*(\d)/g, "$1 through $2");
+      const walker = document.createTreeWalker($("aiBody"), NodeFilter.SHOW_TEXT);
+      const textNodes = []; let n;
+      while((n = walker.nextNode())) textNodes.push(n);
+      let idx = 0; const offsets = [];                  // [spokenStart, spokenEnd, wordIndex]
+      let spoken = "";
+      for(const tn of textNodes){
+        const frag = document.createDocumentFragment();
+        for(const tok of tn.textContent.split(/(\s+)/)){
+          if(!tok) continue;
+          if(/^\s+$/.test(tok)){ frag.appendChild(document.createTextNode(tok)); continue; }
+          const sp = document.createElement("span");
+          sp.className = "spkw"; sp.dataset.i = idx; sp.textContent = tok;
+          frag.appendChild(sp);
+          if(!/^[\u2022\-\u2013\u2014]+$/.test(tok)){   // bullets/bare dashes aren't spoken
+            const sw = spokenWord(tok).trim();
+            if(sw){ offsets.push([spoken.length, spoken.length + sw.length, idx]); spoken += sw + " "; }
+          }
+          idx++;
+        }
+        tn.parentNode.replaceChild(frag, tn);
+      }
+      if(!spoken.trim()) return;
+      const u = new SpeechSynthesisUtterance(spoken);
       const v = (typeof pickVoice==="function") ? pickVoice() : null;
       if(v) u.voice = v;
       u.rate = 1.0;
-      u.onend = ()=>{ b.innerHTML = "&#128266; Speak"; };
+      const clearHi = ()=>document.querySelectorAll("#aiBody .spkw.on").forEach(x=>x.classList.remove("on"));
+      u.onboundary = (ev)=>{
+        if(ev.name && ev.name !== "word") return;
+        const ci = ev.charIndex || 0;
+        const hit = offsets.find(o => ci >= o[0] && ci < o[1]) ||
+                    offsets.filter(o => o[0] <= ci).pop();
+        if(!hit) return;
+        clearHi();
+        const el = document.querySelector('#aiBody .spkw[data-i="' + hit[2] + '"]');
+        if(el){ el.classList.add("on"); el.scrollIntoView({block:"nearest", behavior:"smooth"}); }
+      };
+      u.onend = ()=>{ b.innerHTML = "&#128266; Speak"; clearHi(); };
+      u.onerror = ()=>{ b.innerHTML = "&#128266; Speak"; clearHi(); };
       b.innerHTML = "&#9632; Stop";
       speechSynthesis.speak(u);
     });
