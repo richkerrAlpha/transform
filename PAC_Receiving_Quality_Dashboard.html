@@ -157,8 +157,8 @@ const CONFIG = {
   // Bump these with every published change — shown subtly in the header.
   version: "3.0",
   updated: "Aug 7, 2026",
-  // AI insight cards: client-side Gemini call (same pattern as TransForm form AI).
-  ai: { geminiKey: "AIzaSyBDmiTgD3Wtyw5IMRN2Zu5h7g7UDjQE0vg", model: "gemini-2.5-flash" },
+  // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
+  // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
   // Default quality target: monthly rejection rate above this fraction is flagged red
   // on the Monthly Rejection Rate chart and drives the Rejection Rate KPI card color.
   // Users can adjust it live via the spin control on that chart (saved per user).
@@ -1438,13 +1438,14 @@ async function aiAssess(tileKey){
     "Use inline emphasis to make key elements pop, in BOTH versions: **bold** for the most important figures and names (e.g. **21.3%**, **July 2026**, **TUBACEX**), *italics* for caveats and interpretive comments, and ==highlight== around the single most critical finding or number that demands attention. Use highlighting at most once or twice. No other markdown.\n\nDATA:\n" +
     aiAnon(JSON.stringify(payload), anonMaps);
   try{
-    const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + CONFIG.ai.model + ":generateContent?key=" + CONFIG.ai.geminiKey, {
-      method:"POST", headers:{ "Content-Type":"application/json" },
-      body: JSON.stringify({ contents:[{ parts:[{ text: prompt }] }] })
+    if(!CONFIG.api.proxyUrl) throw new Error("proxy not configured");
+    const r = await fetch(CONFIG.api.proxyUrl, {
+      method:"POST",                                   // text/plain body: simple request, no preflight
+      body: JSON.stringify({ action:"ai", prompt: prompt })
     });
     const j = await r.json();
-    let txt = (((j.candidates||[])[0]||{}).content||{parts:[]}).parts.map(p=>p.text||"").join("").trim();
-    if(!txt) throw new Error(j.error ? j.error.message : "empty response");
+    let txt = (j.text||"").trim();
+    if(!txt) throw new Error(j.error || "empty response");
     let st = "OK";
     const sm = /STATUS:\s*(CRITICAL|WARNING|OK)/i.exec(txt);
     if(sm){ st = sm[1].toUpperCase(); txt = txt.replace(/STATUS:[^\n]*\n?/i, ""); }
