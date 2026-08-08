@@ -1412,9 +1412,30 @@ function aiOpen(title, sub, bodyHtml){
     document.getElementById("aiClose").addEventListener("click", ()=>{ aiHush(); ov.style.display="none"; });
     function aiFillVoices(){
       const sel = document.getElementById("aiVoiceSel"); if(!sel || !window.speechSynthesis) return;
-      const vs = speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang||""));
+      const all = speechSynthesis.getVoices();
+      if(!all.length) return;
+      /* rank with the same scorer the auto-pick uses, drop the novelty/robotic set, keep the best 6 */
+      const score = v=>{
+        const n = v.name||"", l = v.lang||"";
+        if(!/^en/i.test(l)) return -1;
+        let sc = 0;
+        if(/premium|enhanced|natural|neural/i.test(n)) sc += 9;
+        if(/\bAva\b/i.test(n)) sc += 6;
+        if(/google us english/i.test(n)) sc += 6;
+        if(/samantha/i.test(n)) sc += 5;
+        if(/allison|susan|zoe|joelle|evan|nathan|tom|aaron|nicky|noelle/i.test(n)) sc += 4;
+        if(/en-US/i.test(l)) sc += 2;
+        if(/google uk/i.test(n)) sc += 3;
+        if(/compact|fred|albert|kathy|ralph|junior|whisper|zarvox|trinoids|boing|bells|bubbles|cellos|organ|jester|bad news|good news|wobble|eloquence|flo|grandma|grandpa|rocko|sandy|shelley|superstar|bahh|deranged|hysterical|pipe|princess|trinoid/i.test(n)) return -1;
+        return sc;
+      };
+      const vs = all.map(v=>[score(v), v]).filter(x=>x[0] >= 0)
+                    .sort((a,b)=>b[0]-a[0]).slice(0,6).map(x=>x[1]);
       if(!vs.length) return;
       let saved = ""; try{ saved = localStorage.getItem("pacVoice") || ""; }catch(e){}
+      if(saved && !vs.some(v=>v.name===saved)){          // keep a previously saved voice visible
+        const hit = all.find(v=>v.name===saved); if(hit) vs.push(hit);
+      }
       sel.innerHTML = '<option value="">Voice: Auto</option>' +
         vs.map(v=>`<option value="${v.name.replace(/"/g,"&quot;")}"${v.name===saved?" selected":""}>${v.name}</option>`).join("");
     }
