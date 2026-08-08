@@ -1562,7 +1562,7 @@ function aiPngCanvas(){
 }
 async function aiAssess(tileKey){
   const tile = AI_TILES[tileKey]; if(!tile) return;
-  const sub = "AI assessment \u00b7 " + dLabel($("fFrom").value) + " \u2013 " + dLabel($("fTo").value);
+  const sub = "AI assessment";           // the scope strip below carries the range + filters
   aiTexts = { quick:"", detailed:"" };
   if(window.speechSynthesis) speechSynthesis.cancel();
   aiMode = "quick";                                   // every tile opens on the quick take
