@@ -84,6 +84,8 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 #demoStart button{font-size:20px;font-weight:800;padding:16px 34px;border:none;border-radius:12px;background:var(--steel);color:#fff;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.4)}
 #demoStart button:hover{background:var(--steel2)}
 #demoStart .note{color:#DDE6EE;font-size:14px;font-weight:600}
+.chkcol{width:34px;text-align:center}
+.chkcol input[type=checkbox]{width:15px;height:15px;margin:0;accent-color:var(--steel);cursor:pointer}
 #thead th.sth{cursor:pointer;user-select:none;white-space:nowrap}
 #thead th.sth:hover{color:var(--accent)}
 #thead th.sth .arr{font-size:9px;margin-left:3px;opacity:.9}
@@ -165,7 +167,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.3",
+  version: "3.4",
   updated: "Aug 7, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -735,6 +737,7 @@ const TCOLS = [
   { key:"reason",    label:"Primary Reason", num:false, get:r=>r.reason||"" }
 ];
 let tSort = { key:null, dir:-1 };      // null = default newest-first
+let exportSel = new Set();             // row ids ticked for export
 let tFilt = {};                        // key -> filter text
 function buildThead(){
   const h = TCOLS.map(c=>{
@@ -746,7 +749,13 @@ function buildThead(){
     const ph = c.num ? "&gt; &lt; =" : "filter";
     return `<th><input data-fkey="${c.key}" value="${v}" placeholder="${ph}" title="${c.num?'Filter: a number to match, or >5000, <=100 etc.':'Type to filter (contains)'}"></th>`;
   }).join("");
-  $("thead").innerHTML = `<tr>${h}</tr><tr class="frow">${f}</tr>`;
+  const chkTh = '<th class="chkcol"><input type="checkbox" id="selAllChk" title="Select All rows in the current list for export"></th>';
+  $("thead").innerHTML = `<tr>${chkTh}${h}</tr><tr class="frow"><th class="chkcol"></th>${f}</tr>`;
+  $("selAllChk").addEventListener("change", ()=>{
+    if($("selAllChk").checked) tableView().forEach(r=>exportSel.add(String(r.id)));
+    else tableView().forEach(r=>exportSel.delete(String(r.id)));
+    renderTable();
+  });
   $("thead").querySelectorAll("th.sth").forEach(th=>th.addEventListener("click", ()=>{
     const k = th.dataset.key;
     if(tSort.key===k) tSort.dir = -tSort.dir; else { tSort.key = k; tSort.dir = 1; }
@@ -806,7 +815,9 @@ function renderTable(){
   $("tbody").innerHTML = T.map(r=>{
     const link = CONFIG.submissionBrowserUrl ? ` onclick="window.open('${CONFIG.submissionBrowserUrl.replace("{id}", encodeURIComponent(r.id))}','_blank')" style="cursor:pointer"` : "";
     const rowcls = r.disp==="Hold" ? "rowhold" : (r.disp==="Release" ? "rowrelease" : "");
-    return `<tr class="${rowcls}"${link}><td style="white-space:nowrap">${dLabel(r.date)}</td><td>${r.mill||""}</td><td>${r.alloy||""}</td>
+    const rid = String(r.id||"").replace(/"/g,"&quot;");
+    const ck = exportSel.has(String(r.id)) ? " checked" : "";
+    return `<tr class="${rowcls}"${link}><td class="chkcol"><input type="checkbox" class="rowChk" data-rid="${rid}"${ck} onclick="event.stopPropagation()"></td><td style="white-space:nowrap">${dLabel(r.date)}</td><td>${r.mill||""}</td><td>${r.alloy||""}</td>
       <td>${r.po||""}</td><td>${r.heat||""}</td><td>${r.inspector||""}</td><td>${r.type||""}</td>
       <td style="text-align:right">${fmt(r.fRecv)}</td><td style="text-align:right">${fmt(r.fInsp)}</td>
       <td style="text-align:right;color:${r.fRej? "var(--red)":"inherit"}">${fmt(r.fRej)}</td>
@@ -814,6 +825,20 @@ function renderTable(){
       <td><span class="pill ${r.disp==="Hold"?"hold":"release"}">${r.disp||""}</span></td>
       <td>${r.reason||""}</td></tr>`;
   }).join("");
+  $("tbody").querySelectorAll(".rowChk").forEach(c=>c.addEventListener("change", ()=>{
+    if(c.checked) exportSel.add(c.dataset.rid); else exportSel.delete(c.dataset.rid);
+    syncSelAll(F);
+  }));
+  syncSelAll(F);
+}
+function syncSelAll(F){
+  const box = $("selAllChk"); if(!box) return;
+  const view = F || tableView();
+  const inView = view.filter(r=>exportSel.has(String(r.id))).length;
+  box.checked = inView > 0 && inView === view.length;
+  box.indeterminate = inView > 0 && inView < view.length;
+  const base = $("tblNote").textContent.replace(/ \u00b7 \d+ selected for export$/, "");
+  $("tblNote").textContent = base + (inView > 0 ? " \u00b7 " + inView + " selected for export" : "");
 }
 $("linkToggle").addEventListener("change", ()=>{ if(!$("linkToggle").checked) chartSel = null; renderTable(); });
 
@@ -898,7 +923,11 @@ const EXPORT_COLS = [
   ["Pieces Inspected", r=>r.pcsInsp], ["Pieces Accepted", r=>r.pcsAcc], ["Pieces Rejected", r=>r.pcsRej],
   ["Disposition", r=>r.disp], ["Primary Rejection Reason", r=>r.reason], ["Instance ID", r=>r.id]
 ];
-function exportScope(){ return tableView(); }   // exports exactly what the list shows (uncapped)
+function exportScope(){
+  const F = tableView();
+  const sel = F.filter(r=>exportSel.has(String(r.id)));
+  return sel.length ? sel : F;                    // ticked rows only; nothing ticked = whole list
+}
 function dlBlob(name, blob){
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = name;
@@ -1224,7 +1253,7 @@ async function refreshFromApi(interactive){
   }finally{ $("btnApi").innerHTML = "&#8635; Refresh from API"; }
 }
 $("btnApi").addEventListener("click", ()=>refreshFromApi(true));
-$("btnReset").addEventListener("click", ()=>{ chartSel = null; tSort = {key:null, dir:-1}; tFilt = {}; buildThead(); buildFilters(); render(); });
+$("btnReset").addEventListener("click", ()=>{ chartSel = null; tSort = {key:null, dir:-1}; tFilt = {}; exportSel = new Set(); buildThead(); buildFilters(); render(); });
 for(const id of ["fFrom","fTo","fDisp","fType"])
   $(id).addEventListener("change", ()=>{ chartSel = null; render(); });
 
