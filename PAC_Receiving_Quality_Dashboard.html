@@ -174,7 +174,7 @@ const CONFIG = {
   //   GET {host}/transformAPIVersion1.a5svc/GetFormDataArrayForFormId/{formId}
   //   header "apikey: <key>", params pagesize (max 200), pageNumber, injectFormMetaDataIntoData=true
   // Direct mode is kept for completeness but the browser blocks it (CORS) — use the proxy.
-  api: { proxyUrl:"https://script.google.com/macros/s/AKfycbz0ojM6xTxK6DW11IMbKcd5lrzM6qd_kKzXSHeX5d_Zg4tb8ilWtKFO6pU-h7GP_xstOA/exec", apiKey:"", formId:"PAC_IIS",
+  api: { proxyUrl:"https://script.google.com/macros/s/AKfycbxl4kdDozgyV0qQ-UK_rfWJY5Zi6BQnyqvJQQYH9eZ0vDvpOTBjguSARM_dpaMXv4EXqA/exec", apiKey:"", formId:"PAC_IIS",
          host:"https://transform.alphasoftware.com",
          endpoint:"transformAPIVersion1.a5svc/GetFormDataArrayForFormId", pageSize:200 },
   // DATA-FREE PUBLIC BUILD: this file ships with no embedded data, so it is safe
@@ -1227,8 +1227,13 @@ const AI_TILES = {
   chAlloy:   { title:"Alloy Rejections",        data:()=>({ heldFootageByAlloy: (AGG.alloys||[]).map(a=>({alloy:a[0], heldFt:Math.round(a[1].tRej)})) }) }
 };
 function aiContext(){
+  const today = ymd(new Date());
+  const to = $("fTo").value || today;
+  const daysAgo = Math.max(0, Math.round((new Date(today) - new Date(to)) / 86400000));
   return { client:"PAC Stainless (stainless pipe & tube distribution)",
-    dateRange: { from: $("fFrom").value, to: $("fTo").value },
+    todaysDate: today,
+    dateRange: { from: $("fFrom").value, to: to },
+    dataEndsDaysAgo: daysAgo,
     rejectionRateTargetPct: 100*rateTarget,
     submissionsInScope: scopeRows.length,
     note:"Footage figures are prorated feet. Held footage = rejected footage still on Hold disposition. Inspector figures measure activity volume, not job performance; anomalous inspector reject rates usually reflect supplier mix, not inspector quality." };
@@ -1426,6 +1431,7 @@ async function aiAssess(tileKey){
   const anonMaps = aiTokenMaps();
   const prompt =
     "You are a quality engineering analyst reviewing receiving-inspection data for a stainless steel pipe and tube distributor. " +
+    "TIME AWARENESS: context.todaysDate is today; the analyzed range ends context.dataEndsDaysAgo days ago. Weigh recency in every recommendation. If the range is current (ends within ~45 days), timely actions like 'this week' are appropriate. If the data or the anomaly is months in the past, do NOT recommend urgent immediate action on it \u2014 instead recommend verifying whether the issue was already addressed at the time, checking whether the pattern persists in recent data, and noting lessons learned. Historical anomalies are context, not emergencies, and severity STATUS should reflect that (an old resolved-era spike alone is rarely CRITICAL today). " +
     "Entity names are tokenized for privacy. Tokens look like CLIENT_1, MILL_3, INSPECTOR_2. When referring to a specific entity, use the exact numbered token from the data \u2014 NEVER write a generic placeholder like MILL_n or INSPECTOR_n, and never invent token numbers not present in the data. When speaking generally, use plain words like 'the affected mills' or 'these suppliers' instead of tokens. Tokens will be substituted back to real names later. " +
     "Start your ENTIRE reply with one line declaring overall severity: 'STATUS: CRITICAL' (urgent issue or likely data error demanding immediate action), 'STATUS: WARNING' (needs attention soon), or 'STATUS: OK' (within target, nothing alarming). Then continue with BOTH versions, using exactly these markers:\n" +
     "===QUICK===\n2-3 plain sentences: the single most important takeaway and one recommended action. No bullets, no headers.\n" +
