@@ -35,6 +35,12 @@ header{background:linear-gradient(135deg,var(--steel) 0%,var(--steel2) 100%);col
 .htitle{font-size:30px;font-weight:800;color:var(--accent);letter-spacing:.4px;line-height:1.1}
 header .sub{font-size:13px;opacity:.85;margin-top:3px}
 .verline{font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.5px;margin-top:2px}
+.hdr-group{display:inline-flex;gap:0;border:1px solid rgba(255,255,255,.45);border-radius:8px;overflow:hidden}
+.hdr-group .hdr-btn{border:none;border-radius:0}
+.hdr-group .hdr-btn + .hdr-btn{border-left:1px solid rgba(255,255,255,.35)}
+.hdr-div{width:1px;height:22px;background:rgba(255,255,255,.35);margin:0 6px;align-self:center}
+.hdr-btn{border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:700;cursor:pointer;transition:.15s;white-space:nowrap}
+.hdr-btn:hover{background:rgba(255,255,255,.28)}
 .hdr-sel{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:5px 8px;font-size:12px;cursor:pointer}
 .hdr-sel option{color:var(--ink)}
 .poweredby{font-size:11px;color:rgba(255,255,255,.7);text-align:right}
@@ -214,6 +220,11 @@ const DATA = [];
       <input type="file" id="fileIn" accept=".json">
     </div>
     <div style="display:flex;gap:8px;align-items:center">
+      <span class="hdr-group" title="Save a snapshot of the whole dashboard">
+        <button class="hdr-btn" id="dashPngBtn" title="Save the entire dashboard as a PNG image">&#8681; PNG</button>
+        <button class="hdr-btn" id="dashPdfBtn" title="Save the entire dashboard as a PDF">&#8681; PDF</button>
+      </span>
+      <span class="hdr-div"></span>
       <select id="themeSel" class="hdr-sel" title="Color scheme"></select>
       <select id="fontSel" class="hdr-sel" title="Text size">
         <option value="s">Aa Small</option>
@@ -1046,9 +1057,9 @@ function roundRect(g, x, y, w, h, r){
   g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
   g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
 }
-function exportKpisPng(){
+function kpisPngCanvas(){
   const cards = [...document.querySelectorAll(".kpi")];
-  if(!cards.length) return;
+  if(!cards.length) return null;
   const S = 2;                                   // render scale for crispness
   const W = 226 * S, H = 112 * S, GAP = 14 * S, PAD = 22 * S, R = 12 * S;
   const out = document.createElement("canvas");
@@ -1080,7 +1091,11 @@ function exportKpisPng(){
       g.fillText(unit, x + 16 * S + valueW + 6 * S, y + H - 20 * S);
     }
   });
-  out.toBlob(b => dlBlob("PAC_KPIs_" + stampDate() + ".png", b), "image/png");
+  return out;
+}
+function exportKpisPng(){
+  const cv = kpisPngCanvas(); if(!cv) return;
+  cv.toBlob(b => dlBlob("PAC_KPIs_" + stampDate() + ".png", b), "image/png");
 }
 document.querySelectorAll(".pngbtn[data-chart]").forEach(btn =>
   btn.addEventListener("click", () => exportChartPng(btn.dataset.chart, btn.dataset.name, btn.dataset.title)));
@@ -1213,6 +1228,97 @@ if(!CONFIG.showJsonLoader){
   document.querySelector('button[onclick*="fileIn"]').style.display = "none";
 }
 
+/* ================= Full-dashboard snapshot (PNG / PDF) ================= */
+function dashboardCanvas(){
+  const W = 1560, M = 40, S = 2;                    // logical layout, drawn at 2x
+  const charts6 = [
+    ["chWeekly","Weekly Footage \u2014 Inspected vs Rejected"], ["chMonthly","Monthly Rejection Rate"],
+    ["chReasons","Rejection Reasons (held ft)"],  ["chInsp","Inspector Volume"],
+    ["chMills","Mill Performance (top 14)"],       ["chAlloy","Alloy Rejections (held ft)"]
+  ];
+  const kpi = kpisPngCanvas();
+  const colW = (W - M*2 - 24) / 2;
+  // measure chart heights from live canvases, preserving aspect
+  const items = charts6.map(([id, t])=>{
+    const c = charts[id]; if(!c) return null;
+    const src = c.canvas;
+    const h = Math.round(colW * (src.height / src.width));
+    return { src, t, h };
+  }).filter(Boolean);
+  const rows = Math.ceil(items.length / 2);
+  const rowH = [];
+  for(let r = 0; r < rows; r++) rowH.push(Math.max(items[r*2]?items[r*2].h:0, items[r*2+1]?items[r*2+1].h:0) + 46);
+  const headH = 120;
+  const kpiH = kpi ? Math.round((W - M*2) * (kpi.height / kpi.width)) : 0;
+  const H = headH + kpiH + 24 + rowH.reduce((a,b)=>a+b+22,0) + 56;
+  const cv = document.createElement("canvas");
+  cv.width = W * S; cv.height = H * S;
+  const g = cv.getContext("2d"); g.scale(S, S);
+  g.fillStyle = cssVar("--bg", "#F1F5F8"); g.fillRect(0, 0, W, H);
+  // header band
+  g.fillStyle = cssVar("--steel", "#1B4965"); g.fillRect(0, 0, W, headH - 26);
+  g.fillStyle = cssVar("--accent", "#62B6CB"); g.font = "800 30px Arial";
+  g.fillText("Receiving Quality Dashboard", M, 46);
+  g.fillStyle = "rgba(255,255,255,.92)"; g.font = "600 14px Arial";
+  g.fillText(CONFIG.clientName + " \u00b7 " + dLabel($("fFrom").value) + " \u2013 " + dLabel($("fTo").value) +
+             " \u00b7 " + fmt(scopeRows.length) + " submissions \u00b7 Rev " + CONFIG.version, M, 72);
+  g.fillStyle = "rgba(255,255,255,.75)"; g.font = "600 12px Arial";
+  const gen = "Generated " + new Date().toLocaleString();
+  g.fillText(gen, W - M - g.measureText(gen).width, 72);
+  let y = headH;
+  if(kpi){ g.drawImage(kpi, M, y, W - M*2, kpiH); y += kpiH + 24; }
+  for(let r = 0; r < rows; r++){
+    for(let c2 = 0; c2 < 2; c2++){
+      const it = items[r*2 + c2]; if(!it) continue;
+      const x = M + c2 * (colW + 24);
+      roundRect(g, x, y, colW, rowH[r] - 8, 12); g.fillStyle = "#FFFFFF"; g.fill();
+      g.fillStyle = cssVar("--steel", "#1B4965"); g.font = "700 15px Arial";
+      g.fillText(it.t, x + 16, y + 26);
+      g.drawImage(it.src, x + 10, y + 38, colW - 20, it.h - 8);
+    }
+    y += rowH[r] + 22;
+  }
+  g.fillStyle = cssVar("--muted", "#6C7A89"); g.font = "600 12px Arial";
+  g.fillText("Powered by Alpha TransForm \u00b7 " + CONFIG.clientName + " \u00b7 " + stampDate(), M, H - 22);
+  return cv;
+}
+function exportDashPng(){
+  const cv = dashboardCanvas(); if(!cv) return;
+  cv.toBlob(b => dlBlob("PAC_Dashboard_" + stampDate() + ".png", b), "image/png");
+}
+/* Minimal single-page PDF: the snapshot embedded as a JPEG XObject. No libraries. */
+function exportDashPdf(){
+  const cv = dashboardCanvas(); if(!cv) return;
+  const jpeg = atob(cv.toDataURL("image/jpeg", 0.92).split(",")[1]);
+  const img = new Uint8Array(jpeg.length);
+  for(let i = 0; i < jpeg.length; i++) img[i] = jpeg.charCodeAt(i);
+  const wPt = cv.width * 0.375, hPt = cv.height * 0.375;      // 2x pixels -> 0.75pt/px
+  const enc = s => new TextEncoder().encode(s);
+  const parts = []; const offs = []; let pos = 0;
+  const push = x => { parts.push(x); pos += x.length; };
+  const obj = body => { offs.push(pos); push(enc(body)); };
+  push(enc("%PDF-1.4\n"));
+  obj("1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n");
+  obj("2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n");
+  obj("3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 " + wPt.toFixed(2) + " " + hPt.toFixed(2) +
+      "]/Resources<</XObject<</Im1 4 0 R>>>>/Contents 5 0 R>>endobj\n");
+  offs.push(pos);
+  push(enc("4 0 obj<</Type/XObject/Subtype/Image/Width " + cv.width + "/Height " + cv.height +
+           "/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length " + img.length + ">>stream\n"));
+  push(img);
+  push(enc("\nendstream endobj\n"));
+  const content = "q " + wPt.toFixed(2) + " 0 0 " + hPt.toFixed(2) + " 0 0 cm /Im1 Do Q";
+  obj("5 0 obj<</Length " + content.length + ">>stream\n" + content + "\nendstream endobj\n");
+  const xref = pos;
+  let x = "xref\n0 6\n0000000000 65535 f \n";
+  for(const o of offs) x += String(o).padStart(10, "0") + " 00000 n \n";
+  x += "trailer<</Size 6/Root 1 0 R>>\nstartxref\n" + xref + "\n%%EOF";
+  push(enc(x));
+  dlBlob("PAC_Dashboard_" + stampDate() + ".pdf", new Blob(parts, { type:"application/pdf" }));
+}
+$("dashPngBtn").addEventListener("click", exportDashPng);
+$("dashPdfBtn").addEventListener("click", exportDashPdf);
+
 /* ================= AI insight cards ================= */
 const AGG = {};   // last-render aggregates, keyed for the AI payloads
 const AI_TILES = {
@@ -1230,10 +1336,13 @@ function aiContext(){
   const today = ymd(new Date());
   const to = $("fTo").value || today;
   const daysAgo = Math.max(0, Math.round((new Date(today) - new Date(to)) / 86400000));
+  const ds = rows.map(r=>r.date).filter(Boolean).sort();
   return { client:"PAC Stainless (stainless pipe & tube distribution)",
     todaysDate: today,
     dateRange: { from: $("fFrom").value, to: to },
     dataEndsDaysAgo: daysAgo,
+    fullDatasetRange: { from: ds[0]||"", to: ds[ds.length-1]||"" },
+    analysisScopeNote: "You are analyzing ONLY the dateRange slice. Data outside it exists (see fullDatasetRange) but is NOT visible to you.",
     rejectionRateTargetPct: 100*rateTarget,
     submissionsInScope: scopeRows.length,
     note:"Footage figures are prorated feet. Held footage = rejected footage still on Hold disposition. Inspector figures measure activity volume, not job performance; anomalous inspector reject rates usually reflect supplier mix, not inspector quality." };
@@ -1257,7 +1366,7 @@ function aiOpen(title, sub, bodyHtml){
     ov = document.createElement("div"); ov.id = "aiOverlay";
     ov.innerHTML = '<div id="aiCard">' +
       '<div class="aihead"><span id="aiIcon"></span><div style="flex:1;min-width:0"><h4 id="aiTitle"></h4><div class="aisub" id="aiSub" style="margin-bottom:0"></div></div>' +
-      '<span id="aiStatus"></span><button id="aiSpeak" title="Read this assessment aloud">&#128266; Speak</button></div>' +
+      '<span id="aiStatus"></span><button id="aiSpeak" title="Click to have this analysis read aloud" style="display:none">&#128266; Speak</button></div>' +
       '<div class="seg" id="aiSeg" style="margin-bottom:12px"><button data-m="quick" class="on">Quick take</button><button data-m="detailed">Detailed</button></div>' +
       '<div class="aibody" id="aiBody"></div>' +
       '<div class="airow"><span class="aisub">AI-generated \u2014 verify before acting</span><span><button id="aiPngBtn" title="Download this assessment as a PNG">&#8681; PNG</button> <button id="aiMail" title="Email this assessment">&#9993; Email</button> <button id="aiCopy">Copy</button> <button id="aiClose">Close</button></span></div></div>';
@@ -1270,7 +1379,9 @@ function aiOpen(title, sub, bodyHtml){
       const b = document.getElementById("aiSpeak");
       if(window.speechSynthesis && speechSynthesis.speaking){ aiHush(); return; }
       const plain = (aiTexts[aiMode]||"").replace(/==|\*\*|\*/g,"").replace(/^\s*-\s+/gm,"")
-        .replace(/\bJesus\b/g, "Hay-soos");            // Spanish given name, spoken correctly
+        .replace(/\bJesus\b/g, "Hay-soos")             // Spanish given name, spoken correctly
+        .replace(/\s*[\u2013\u2014]\s*/g, " through ") // en/em dashes are ranges: read as "through"
+        .replace(/(\d)\s*-\s*(\d)/g, "$1 through $2");  // numeric ranges with plain hyphens too
       if(!plain || !window.speechSynthesis) return;
       const u = new SpeechSynthesisUtterance(plain);
       const v = (typeof pickVoice==="function") ? pickVoice() : null;
@@ -1426,12 +1537,17 @@ async function aiAssess(tileKey){
   document.querySelectorAll("#aiSeg button").forEach(b=>b.classList.toggle("on", b.dataset.m==="quick"));
   aiOpen(tile.title, sub, '<span class="ai-spin"></span>Analyzing current data\u2026');
   $("aiIcon").textContent = "\u2728"; $("aiStatus").textContent = ""; $("aiStatus").className = "";
+  $("aiSpeak").style.display = "none";
   const payload = { context: aiContext(), tile: tile.title, data: tile.data() };
   const tileGuide = tile.guidance ? ("\nTILE-SPECIFIC GUIDANCE: " + tile.guidance + "\n") : "";
   const anonMaps = aiTokenMaps();
   const prompt =
     "You are a quality engineering analyst reviewing receiving-inspection data for a stainless steel pipe and tube distributor. " +
-    "TIME AWARENESS: context.todaysDate is today; the analyzed range ends context.dataEndsDaysAgo days ago. Weigh recency in every recommendation. If the range is current (ends within ~45 days), timely actions like 'this week' are appropriate. If the data or the anomaly is months in the past, do NOT recommend urgent immediate action on it \u2014 instead recommend verifying whether the issue was already addressed at the time, checking whether the pattern persists in recent data, and noting lessons learned. Historical anomalies are context, not emergencies, and severity STATUS should reflect that (an old resolved-era spike alone is rarely CRITICAL today). " +
+    "TIME AWARENESS \u2014 strict rules: context.todaysDate is today; the analyzed range ends context.dataEndsDaysAgo days ago. " +
+    "(1) NEVER call the analyzed period 'recent', 'current', 'ongoing', or 'lately' unless dataEndsDaysAgo is 45 or less; otherwise name it by its actual dates (e.g. 'during May\u2013June 2026'). " +
+    "(2) You can see ONLY the dateRange slice. Never claim or imply anything about performance outside it \u2014 good results inside the window say NOTHING about what happened after it ended. Do not write phrases like 'continue the excellent performance' about a window that ended months ago; instead say performance WAS strong during that period and recommend re-running this analysis on current data before drawing present-day conclusions. " +
+    "(3) If dataEndsDaysAgo > 45, at least one recommendation should be to check whether the pattern (good or bad) persisted in the months after the window. " +
+    "(4) Urgency scales with recency: month-old-plus anomalies get verification and lessons-learned framing, not this-week action items, and severity STATUS should reflect that an old spike alone is rarely CRITICAL today. " +
     "Entity names are tokenized for privacy. Tokens look like CLIENT_1, MILL_3, INSPECTOR_2. When referring to a specific entity, use the exact numbered token from the data \u2014 NEVER write a generic placeholder like MILL_n or INSPECTOR_n, and never invent token numbers not present in the data. When speaking generally, use plain words like 'the affected mills' or 'these suppliers' instead of tokens. Tokens will be substituted back to real names later. " +
     "Start your ENTIRE reply with one line declaring overall severity: 'STATUS: CRITICAL' (urgent issue or likely data error demanding immediate action), 'STATUS: WARNING' (needs attention soon), or 'STATUS: OK' (within target, nothing alarming). Then continue with BOTH versions, using exactly these markers:\n" +
     "===QUICK===\n2-3 plain sentences: the single most important takeaway and one recommended action. No bullets, no headers.\n" +
@@ -1439,7 +1555,7 @@ async function aiAssess(tileKey){
     "**Assessment**\nThen 2-4 short bullet points (start each with '- ').\n" +
     "**Watch items**\nThen 1-3 bullets on anomalies or data-quality concerns (e.g., extreme rates from tiny inspected quantities suggest data-entry errors).\n" +
     "**Recommended next steps**\nThen 2-4 action bullets a quality manager could take this week.\n" +
-    "Be specific: name months, mills, inspectors, reasons and figures from the data. Detailed section under 220 words.\n" +
+    "Be specific: name months, mills, inspectors, reasons and figures from the data. Detailed section under 220 words. When writing date or number ranges in prose, prefer the word 'through' (e.g. 'January through June 2026') over a dash.\n" +
     tileGuide +
     "Use inline emphasis to make key elements pop, in BOTH versions: **bold** for the most important figures and names (e.g. **21.3%**, **July 2026**, **TUBACEX**), *italics* for caveats and interpretive comments, and ==highlight== around the single most critical finding or number that demands attention. Use highlighting at most once or twice. No other markdown.\n\nDATA:\n" +
     aiAnon(JSON.stringify(payload), anonMaps);
@@ -1464,6 +1580,7 @@ async function aiAssess(tileKey){
     $("aiIcon").textContent = stMap[st][0];
     $("aiStatus").textContent = stMap[st][1];
     $("aiStatus").className = "aipill " + stMap[st][2];
+    $("aiSpeak").style.display = "";
     const qm = txt.split("===QUICK===")[1];
     if(qm && qm.includes("===DETAILED===")){
       aiTexts.quick = qm.split("===DETAILED===")[0].trim();
