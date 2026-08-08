@@ -1352,7 +1352,9 @@ function aiScopeSummary(){
     const label = { mill:"Mill", insp:"Inspector", alloy:"Alloy", reason:"Reason" }[key];
     if(n === N) continue;                                   // All -> not worth mentioning
     if(n === 0){ parts.push(label + ": none selected"); continue; }
-    parts.push(label + ": " + (n <= 3 ? [...m.choice].join(", ") : n + " of " + N));
+    const names = [...m.choice].sort();
+    parts.push(label + ": " + (n <= 5 ? names.join(", ")
+      : names.slice(0,3).join(", ") + " + " + (n - 3) + " more (" + n + " of " + N + ")"));
   }
   for(const [id, label] of [["fDisp","Disposition"],["fType","Type"]]){
     const v = $(id).value; if(v && v !== "All") parts.push(label + ": " + v);
