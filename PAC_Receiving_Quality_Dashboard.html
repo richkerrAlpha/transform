@@ -1426,7 +1426,7 @@ async function aiAssess(tileKey){
   const anonMaps = aiTokenMaps();
   const prompt =
     "You are a quality engineering analyst reviewing receiving-inspection data for a stainless steel pipe and tube distributor. " +
-    "Entity names are tokenized for privacy (CLIENT_n, MILL_n, INSPECTOR_n). Refer to them using these exact tokens; they will be substituted back later. " +
+    "Entity names are tokenized for privacy. Tokens look like CLIENT_1, MILL_3, INSPECTOR_2. When referring to a specific entity, use the exact numbered token from the data \u2014 NEVER write a generic placeholder like MILL_n or INSPECTOR_n, and never invent token numbers not present in the data. When speaking generally, use plain words like 'the affected mills' or 'these suppliers' instead of tokens. Tokens will be substituted back to real names later. " +
     "Start your ENTIRE reply with one line declaring overall severity: 'STATUS: CRITICAL' (urgent issue or likely data error demanding immediate action), 'STATUS: WARNING' (needs attention soon), or 'STATUS: OK' (within target, nothing alarming). Then continue with BOTH versions, using exactly these markers:\n" +
     "===QUICK===\n2-3 plain sentences: the single most important takeaway and one recommended action. No bullets, no headers.\n" +
     "===DETAILED===\n" +
@@ -1450,6 +1450,9 @@ async function aiAssess(tileKey){
     if(sm){ st = sm[1].toUpperCase(); txt = txt.replace(/STATUS:[^\n]*\n?/i, ""); }
     else st = txt.includes("==") ? "WARNING" : "OK";
     txt = aiDeanon(txt, anonMaps);
+    txt = txt.replace(/\b(?:the specific |these )?MILL_[n\d]+\b/g, "mill")     // stray generic/unmapped tokens
+             .replace(/\b(?:the specific |these )?INSPECTOR_[n\d]+\b/g, "inspector")
+             .replace(/\bCLIENT_[n\d]+\b/g, CONFIG.clientName);
     const stMap = { CRITICAL:["\ud83d\udea8","Critical finding","crit"], WARNING:["\u26a0\ufe0f","Needs attention","warn"], OK:["\u2705","Within target","ok"] };
     $("aiIcon").textContent = stMap[st][0];
     $("aiStatus").textContent = stMap[st][1];
