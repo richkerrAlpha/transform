@@ -1416,7 +1416,21 @@ function aiOpen(title, sub, bodyHtml){
     });
     document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ aiHush(); ov.style.display="none"; } });
     document.querySelectorAll("#aiSeg button").forEach(b=>b.addEventListener("click", ()=>{
-      aiMode = b.dataset.m; aiRenderBody();
+      aiMode = b.dataset.m;
+      if(aiMode === "detailed" && !aiTexts.detailed){
+        if(String(aiTexts.detailedErr||"")){} // no-op placeholder
+        $("aiBody").innerHTML = '<span class="ai-spin"></span>Preparing the detailed assessment\u2026';
+        document.querySelectorAll("#aiSeg button").forEach(x=>x.classList.toggle("on", x.dataset.m===aiMode));
+        aiLoadDetailed();
+        return;
+      }
+      if(aiMode === "detailed" && /^Could not generate the detailed/.test(aiTexts.detailed||"")){
+        aiTexts.detailed = ""; $("aiBody").innerHTML = '<span class="ai-spin"></span>Retrying\u2026';
+        document.querySelectorAll("#aiSeg button").forEach(x=>x.classList.toggle("on", x.dataset.m===aiMode));
+        aiLoadDetailed();
+        return;
+      }
+      aiRenderBody();
     }));
     document.getElementById("aiPngBtn").addEventListener("click", ()=>{
       const cv = aiPngCanvas(); if(!cv) return;
@@ -1532,6 +1546,7 @@ async function aiAssess(tileKey){
   const tile = AI_TILES[tileKey]; if(!tile) return;
   const sub = "AI assessment \u00b7 " + dLabel($("fFrom").value) + " \u2013 " + dLabel($("fTo").value);
   aiTexts = { quick:"", detailed:"" };
+  aiCurrent = null;
   if(window.speechSynthesis) speechSynthesis.cancel();
   aiMode = "quick";                                   // every tile opens on the quick take
   document.querySelectorAll("#aiSeg button").forEach(b=>b.classList.toggle("on", b.dataset.m==="quick"));
@@ -1541,59 +1556,80 @@ async function aiAssess(tileKey){
   const payload = { context: aiContext(), tile: tile.title, data: tile.data() };
   const tileGuide = tile.guidance ? ("\nTILE-SPECIFIC GUIDANCE: " + tile.guidance + "\n") : "";
   const anonMaps = aiTokenMaps();
-  const prompt =
-    "You are a quality engineering analyst reviewing receiving-inspection data for a stainless steel pipe and tube distributor. " +
-    "TIME AWARENESS \u2014 strict rules: context.todaysDate is today; the analyzed range ends context.dataEndsDaysAgo days ago. " +
-    "(1) NEVER call the analyzed period 'recent', 'current', 'ongoing', or 'lately' unless dataEndsDaysAgo is 45 or less; otherwise name it by its actual dates (e.g. 'during May\u2013June 2026'). " +
-    "(2) You can see ONLY the dateRange slice. Never claim or imply anything about performance outside it \u2014 good results inside the window say NOTHING about what happened after it ended. Do not write phrases like 'continue the excellent performance' about a window that ended months ago; instead say performance WAS strong during that period and recommend re-running this analysis on current data before drawing present-day conclusions. " +
-    "(3) If dataEndsDaysAgo > 45, at least one recommendation should be to check whether the pattern (good or bad) persisted in the months after the window. " +
-    "(4) Urgency scales with recency: month-old-plus anomalies get verification and lessons-learned framing, not this-week action items, and severity STATUS should reflect that an old spike alone is rarely CRITICAL today. " +
-    "Entity names are tokenized for privacy. Tokens look like CLIENT_1, MILL_3, INSPECTOR_2. When referring to a specific entity, use the exact numbered token from the data \u2014 NEVER write a generic placeholder like MILL_n or INSPECTOR_n, and never invent token numbers not present in the data. When speaking generally, use plain words like 'the affected mills' or 'these suppliers' instead of tokens. Tokens will be substituted back to real names later. " +
-    "Start your ENTIRE reply with one line declaring overall severity: 'STATUS: CRITICAL' (urgent issue or likely data error demanding immediate action), 'STATUS: WARNING' (needs attention soon), or 'STATUS: OK' (within target, nothing alarming). Then continue with BOTH versions, using exactly these markers:\n" +
-    "===QUICK===\n2-3 plain sentences: the single most important takeaway and one recommended action. No bullets, no headers.\n" +
-    "===DETAILED===\n" +
-    "**Assessment**\nThen 2-4 short bullet points (start each with '- ').\n" +
-    "**Watch items**\nThen 1-3 bullets on anomalies or data-quality concerns (e.g., extreme rates from tiny inspected quantities suggest data-entry errors).\n" +
-    "**Recommended next steps**\nThen 2-4 action bullets a quality manager could take this week.\n" +
-    "Be specific: name months, mills, inspectors, reasons and figures from the data. Detailed section under 220 words. When writing date or number ranges in prose, prefer the word 'through' (e.g. 'January through June 2026') over a dash.\n" +
-    tileGuide +
-    "Use inline emphasis to make key elements pop, in BOTH versions: **bold** for the most important figures and names (e.g. **21.3%**, **July 2026**, **TUBACEX**), *italics* for caveats and interpretive comments, and ==highlight== around the single most critical finding or number that demands attention. Use highlighting at most once or twice. No other markdown.\n\nDATA:\n" +
-    aiAnon(JSON.stringify(payload), anonMaps);
+  aiCurrent = { anonMaps,
+    dataBlock: aiAnon(JSON.stringify(payload), anonMaps),
+    tileGuide, pendingDetailed: null };
   try{
-    if(!CONFIG.api.proxyUrl) throw new Error("proxy not configured");
-    const r = await fetch(CONFIG.api.proxyUrl, {
-      method:"POST",                                   // text/plain body: simple request, no preflight
-      body: JSON.stringify({ action:"ai", prompt: prompt })
-    });
-    const j = await r.json();
-    let txt = (j.text||"").trim();
-    if(!txt) throw new Error(j.error || "empty response");
+    let txt = await aiFetch(aiBuildPrompt("quick", aiCurrent));
     let st = "OK";
     const sm = /STATUS:\s*(CRITICAL|WARNING|OK)/i.exec(txt);
     if(sm){ st = sm[1].toUpperCase(); txt = txt.replace(/STATUS:[^\n]*\n?/i, ""); }
     else st = txt.includes("==") ? "WARNING" : "OK";
-    txt = aiDeanon(txt, anonMaps);
-    txt = txt.replace(/\b(?:the specific |these )?MILL_[n\d]+\b/g, "mill")     // stray generic/unmapped tokens
-             .replace(/\b(?:the specific |these )?INSPECTOR_[n\d]+\b/g, "inspector")
-             .replace(/\bCLIENT_[n\d]+\b/g, CONFIG.clientName);
     const stMap = { CRITICAL:["\ud83d\udea8","Critical finding","crit"], WARNING:["\u26a0\ufe0f","Needs attention","warn"], OK:["\u2705","Within target","ok"] };
     $("aiIcon").textContent = stMap[st][0];
     $("aiStatus").textContent = stMap[st][1];
     $("aiStatus").className = "aipill " + stMap[st][2];
     $("aiSpeak").style.display = "";
-    const qm = txt.split("===QUICK===")[1];
-    if(qm && qm.includes("===DETAILED===")){
-      aiTexts.quick = qm.split("===DETAILED===")[0].trim();
-      aiTexts.detailed = qm.split("===DETAILED===")[1].trim();
-    } else {
-      aiTexts.detailed = txt;
-      aiTexts.quick = txt.split(/(?<=[.!?])\s+/).slice(0,3).join(" ");
-    }
+    aiTexts.quick = aiClean(txt, anonMaps);
     aiRenderBody();
   }catch(err){
     $("aiBody").innerHTML = "Could not generate the assessment: " + mdLite(err.message||String(err)) +
       "<br><br>Check the network connection and try again.";
   }
+}
+let aiCurrent = null;
+const AI_RULES =
+  "You are a quality engineering analyst reviewing receiving-inspection data for a stainless steel pipe and tube distributor. " +
+  "TIME AWARENESS \u2014 strict rules: context.todaysDate is today; the analyzed range ends context.dataEndsDaysAgo days ago. " +
+  "(1) NEVER call the analyzed period 'recent', 'current', 'ongoing', or 'lately' unless dataEndsDaysAgo is 45 or less; otherwise name it by its actual dates (e.g. 'during May\u2013June 2026'). " +
+  "(2) You can see ONLY the dateRange slice. Never claim or imply anything about performance outside it \u2014 good results inside the window say NOTHING about what happened after it ended. Do not write phrases like 'continue the excellent performance' about a window that ended months ago; instead say performance WAS strong during that period and recommend re-running this analysis on current data before drawing present-day conclusions. " +
+  "(3) If dataEndsDaysAgo > 45, at least one recommendation should be to check whether the pattern (good or bad) persisted in the months after the window. " +
+  "(4) Urgency scales with recency: month-old-plus anomalies get verification and lessons-learned framing, not this-week action items, and any severity judgment should reflect that an old spike alone is rarely critical today. " +
+  "Entity names are tokenized for privacy. Tokens look like CLIENT_1, MILL_3, INSPECTOR_2. When referring to a specific entity, use the exact numbered token from the data \u2014 NEVER write a generic placeholder like MILL_n or INSPECTOR_n, and never invent token numbers not present in the data. When speaking generally, use plain words like 'the affected mills' or 'these suppliers' instead of tokens. Tokens will be substituted back to real names later. " +
+  "When writing date or number ranges in prose, prefer the word 'through' (e.g. 'January through June 2026') over a dash. " +
+  "Use inline emphasis: **bold** for the most important figures and names, *italics* for caveats and interpretive comments, and ==highlight== around the single most critical finding (at most once or twice). No other markdown. ";
+function aiBuildPrompt(mode, cur){
+  const shape = mode === "quick"
+    ? "Start your ENTIRE reply with one line declaring overall severity: 'STATUS: CRITICAL' (urgent issue or likely data error demanding immediate action), 'STATUS: WARNING' (needs attention soon), or 'STATUS: OK' (within target, nothing alarming). Then reply with ONLY a quick take: 2-3 plain sentences giving the single most important takeaway and one recommended action. No bullets, no headers, nothing else.\n"
+    : "Reply with ONLY the detailed assessment, using exactly this structure (no STATUS line, no summary sentence before it):\n" +
+      "**Assessment**\nThen 2-4 short bullet points (start each with '- ').\n" +
+      "**Watch items**\nThen 1-3 bullets on anomalies or data-quality concerns (e.g., extreme rates from tiny inspected quantities suggest data-entry errors).\n" +
+      "**Recommended next steps**\nThen 2-4 action bullets a quality manager could take, with urgency scaled to data recency.\n" +
+      "Be specific: name months, mills, inspectors, reasons and figures from the data. Under 220 words.\n";
+  return AI_RULES + shape + cur.tileGuide + "\nDATA:\n" + cur.dataBlock;
+}
+async function aiFetch(prompt){
+  if(!CONFIG.api.proxyUrl) throw new Error("proxy not configured");
+  const r = await fetch(CONFIG.api.proxyUrl, {
+    method:"POST",                                   // text/plain body: simple request, no preflight
+    body: JSON.stringify({ action:"ai", prompt: prompt })
+  });
+  const j = await r.json();
+  const txt = (j.text||"").trim();
+  if(!txt) throw new Error(j.error || "empty response");
+  return txt;
+}
+function aiClean(txt, maps){
+  txt = aiDeanon(txt, maps);
+  return txt.replace(/\b(?:the specific |these )?MILL_[n\d]+\b/g, "mill")
+            .replace(/\b(?:the specific |these )?INSPECTOR_[n\d]+\b/g, "inspector")
+            .replace(/\bCLIENT_[n\d]+\b/g, CONFIG.clientName);
+}
+async function aiLoadDetailed(){
+  if(!aiCurrent || aiTexts.detailed) return;
+  if(aiCurrent.pendingDetailed) return aiCurrent.pendingDetailed;
+  const cur = aiCurrent;
+  cur.pendingDetailed = (async ()=>{
+    try{
+      const txt = await aiFetch(aiBuildPrompt("detailed", cur));
+      if(aiCurrent === cur){ aiTexts.detailed = aiClean(txt.replace(/^\s*STATUS:[^\n]*\n?/i,""), cur.anonMaps); }
+    }catch(err){
+      if(aiCurrent === cur) aiTexts.detailed = "Could not generate the detailed assessment: " + (err.message||err) + "\nSwitch back to Quick take, or toggle Detailed again to retry.";
+    }finally{
+      if(aiCurrent === cur){ cur.pendingDetailed = null; if(aiMode === "detailed") aiRenderBody(); }
+    }
+  })();
+  return cur.pendingDetailed;
 }
 document.querySelectorAll(".aibtn").forEach(b=>{
   const png = b.nextElementSibling;                       // adjacent pngbtn identifies the tile
