@@ -104,6 +104,8 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 #aiCard h4{margin:0 0 4px;font-size:18px;color:var(--steel)}
 #aiCard .aisub{font-size:12px;color:var(--muted);margin-bottom:14px}
 #aiCard .aibody{font-size:14px;line-height:1.6;color:var(--ink);white-space:pre-wrap}
+#aiScope{background:color-mix(in srgb, var(--accent) 12%, #fff);border-left:3px solid var(--accent);border-radius:6px;padding:8px 12px;font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:12px;line-height:1.5}
+#aiScope::before{content:"\1F50D  Analyzing: ";font-weight:800;color:var(--steel)}
 #aiCard .aibody b{color:var(--steel)}
 #aiCard .aibody i{color:var(--muted)}
 #aiCard .aibody mark{background:color-mix(in srgb, var(--accent) 30%, #fff);color:var(--ink);padding:0 3px;border-radius:3px;font-weight:700}
@@ -1332,6 +1334,27 @@ const AI_TILES = {
   chMills:   { title:"Mill Performance",        data:()=>({ mills: (AGG.mills||[]).map(m=>({mill:m[0], inspected:Math.round(m[1].fInsp), rejected:Math.round(m[1].fRej), ratePct: m[1].fInsp? +(100*m[1].fRej/m[1].fInsp).toFixed(2):0})) }) },
   chAlloy:   { title:"Alloy Rejections",        data:()=>({ heldFootageByAlloy: (AGG.alloys||[]).map(a=>({alloy:a[0], heldFt:Math.round(a[1].tRej)})) }) }
 };
+function aiScopeSummary(){
+  const parts = [];
+  let range = dLabel($("fFrom").value) + " through " + dLabel($("fTo").value);
+  if(dateMode === "period"){
+    const opt = $("fPeriod").selectedOptions[0];
+    if(opt && opt.value !== "all") range = opt.textContent + " (" + range + ")";
+  }
+  parts.push(range);
+  for(const key in MSEL){
+    const m = MSEL[key], n = m.choice.size, N = m.values.length;
+    const label = { mill:"Mill", insp:"Inspector", alloy:"Alloy", reason:"Reason" }[key];
+    if(n === N) continue;                                   // All -> not worth mentioning
+    if(n === 0){ parts.push(label + ": none selected"); continue; }
+    parts.push(label + ": " + (n <= 3 ? [...m.choice].join(", ") : n + " of " + N));
+  }
+  for(const [id, label] of [["fDisp","Disposition"],["fType","Type"]]){
+    const v = $(id).value; if(v && v !== "All") parts.push(label + ": " + v);
+  }
+  if(chartSel) parts.push("Chart selection: " + selLabel());
+  return parts.join(" \u00b7 ");
+}
 function aiContext(){
   const today = ymd(new Date());
   const to = $("fTo").value || today;
@@ -1342,6 +1365,7 @@ function aiContext(){
     dateRange: { from: $("fFrom").value, to: to },
     dataEndsDaysAgo: daysAgo,
     fullDatasetRange: { from: ds[0]||"", to: ds[ds.length-1]||"" },
+    activeFilters: aiScopeSummary(),
     analysisScopeNote: "You are analyzing ONLY the dateRange slice. Data outside it exists (see fullDatasetRange) but is NOT visible to you.",
     rejectionRateTargetPct: 100*rateTarget,
     submissionsInScope: scopeRows.length,
@@ -1367,6 +1391,7 @@ function aiOpen(title, sub, bodyHtml){
     ov.innerHTML = '<div id="aiCard">' +
       '<div class="aihead"><span id="aiIcon"></span><div style="flex:1;min-width:0"><h4 id="aiTitle"></h4><div class="aisub" id="aiSub" style="margin-bottom:0"></div></div>' +
       '<span id="aiStatus"></span><button id="aiSpeak" title="Click to have this analysis read aloud" style="display:none">&#128266; Speak</button></div>' +
+      '<div id="aiScope"></div>' +
       '<div class="seg" id="aiSeg" style="margin-bottom:12px"><button data-m="quick" class="on">Quick take</button><button data-m="detailed">Detailed</button></div>' +
       '<div class="aibody" id="aiBody"></div>' +
       '<div class="airow"><span class="aisub">AI-generated \u2014 verify before acting</span><span><button id="aiPngBtn" title="Download this assessment as a PNG">&#8681; PNG</button> <button id="aiMail" title="Email this assessment">&#9993; Email</button> <button id="aiCopy">Copy</button> <button id="aiClose">Close</button></span></div></div>';
@@ -1398,7 +1423,8 @@ function aiOpen(title, sub, bodyHtml){
         .replace(/<\/mark>/g,'</span>')
         .replace(/\n/g,"<br>");
       const htmlDoc = '<div style="font-family:Calibri,Arial,sans-serif;font-size:11pt;line-height:1.5">' +
-        '<b>' + $("aiTitle").textContent + '</b><br><span style="color:#666;font-size:9pt">' + $("aiSub").textContent + '</span><br><br>' +
+        '<b>' + $("aiTitle").textContent + '</b><br><span style="color:#666;font-size:9pt">' + $("aiSub").textContent + '</span><br>' +
+        '<span style="color:#666;font-size:9pt"><i>Scope: ' + $("aiScope").textContent + '</i></span><br><br>' +
         inner + '</div>';
       let ok = false;
       try{
@@ -1455,7 +1481,8 @@ function aiDeanon(text, maps){
 }
 function aiPngCanvas(){
   const S = 2, W = 1000 * S / 2;                                 // logical 1000px wide, drawn 2x
-  const text = aiTexts[aiMode] || ""; if(!text) return null;
+  let text = aiTexts[aiMode] || ""; if(!text) return null;
+  text = "*Scope: " + $("aiScope").textContent + "*\n\n" + text;
   const cv = document.createElement("canvas"); const g = cv.getContext("2d");
   const bodyPx = 17, lineH = 27, pad = 34;
   const maxW = W - pad*2;
@@ -1536,6 +1563,7 @@ async function aiAssess(tileKey){
   aiMode = "quick";                                   // every tile opens on the quick take
   document.querySelectorAll("#aiSeg button").forEach(b=>b.classList.toggle("on", b.dataset.m==="quick"));
   aiOpen(tile.title, sub, '<span class="ai-spin"></span>Analyzing current data\u2026');
+  $("aiScope").textContent = aiScopeSummary();
   $("aiIcon").textContent = "\u2728"; $("aiStatus").textContent = ""; $("aiStatus").className = "";
   $("aiSpeak").style.display = "none";
   const seq = ++aiSeq;
@@ -1601,6 +1629,7 @@ const AI_RULES =
   "(3) If dataEndsDaysAgo > 45, at least one recommendation should be to check whether the pattern (good or bad) persisted in the months after the window. " +
   "(4) Urgency scales with recency: month-old-plus anomalies get verification and lessons-learned framing, not this-week action items, and severity STATUS should reflect that an old spike alone is rarely CRITICAL today. " +
   "Entity names are tokenized for privacy. Tokens look like CLIENT_1, MILL_3, INSPECTOR_2. When referring to a specific entity, use the exact numbered token from the data \u2014 NEVER write a generic placeholder like MILL_n or INSPECTOR_n, and never invent token numbers not present in the data. When speaking generally, use plain words like 'the affected mills' or 'these suppliers' instead of tokens. Tokens will be substituted back to real names later. " +
+  "context.activeFilters describes the user's active filter selections; the interface already displays them, so do NOT repeat the full filter list, but keep your analysis framed within that scope and refer to it naturally when relevant (e.g. 'within this inspector's submissions'). " +
   "When writing date or number ranges in prose, prefer the word 'through' (e.g. 'January through June 2026') over a dash. " +
   "Use inline emphasis in BOTH versions: **bold** for the most important figures and names, *italics* for caveats and interpretive comments, and ==highlight== around the single most critical finding (at most once or twice). No other markdown. ";
 function aiBuildPrompt(mode, cur){
