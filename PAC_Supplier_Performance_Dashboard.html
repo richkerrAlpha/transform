@@ -530,7 +530,7 @@ const valueLabels = {
         const v = ds.data[i];
         if(v == null || v === 0) return;                   // don't stamp zeros
         if(typeof v === "object") return;                  // scatter points: tooltip only
-        const txt = /rate/i.test(ds.label||"") ? (100*v).toFixed(1)+"%" : fmt(v);
+        const txt = (ds.pctLabel || /rate/i.test(ds.label||"")) ? (100*v).toFixed(1)+"%" : fmt(v);
         if(meta.type === "doughnut" || meta.type === "pie"){
           const p = el.tooltipPosition();
           ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
@@ -645,7 +645,7 @@ function render(){
   const trendColors = [B.steel, B.accent, B.red, B.steel2, "#8A6FBF"];
   const trendSets = top5.map((mill, i)=>{
     const byMo = groupSum(S.filter(r=>r.mill===mill), r=>monthStart(r.date), ["fInsp","fRej"]);
-    return { label: mill, tension:.3, pointRadius:3, borderColor: trendColors[i], backgroundColor: trendColors[i],
+    return { label: mill, pctLabel:true, tension:.3, pointRadius:3, borderColor: trendColors[i], backgroundColor: trendColors[i],
       data: moKeys.map(k=>{ const g = byMo.get(k); return g && g.fInsp ? g.fRej/g.fInsp : null; }), spanGaps:true };
   });
   AGG.supTrend = { months: moKeys, suppliers: top5,
