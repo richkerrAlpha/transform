@@ -90,6 +90,33 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .seg button{border:none;background:#fff;color:var(--muted);font-size:12px;font-weight:700;padding:7px 10px;cursor:pointer;transition:.15s}
 .seg button.on{background:var(--steel);color:#fff}
 .tgtspin{width:56px;border:1px solid #CBD5DD;border-radius:6px;padding:2px 5px;font-size:11px;font-weight:700;color:var(--ink);background:#fff}
+.tilebtns{display:flex;gap:6px;align-items:center;flex:none;margin-left:auto}
+.aibtn{border:1px solid var(--steel);background:var(--steel);color:#fff;border-radius:6px;font-size:11px;font-weight:800;letter-spacing:.3px;padding:3px 9px;cursor:pointer;transition:.15s;white-space:nowrap}
+.aibtn:hover{background:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
+#aiOverlay{display:none;position:fixed;inset:0;background:rgba(10,20,30,.55);z-index:920;align-items:center;justify-content:center;padding:20px}
+#aiCard{background:var(--card);max-width:640px;width:100%;max-height:82vh;overflow:auto;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.35);padding:22px 26px}
+#aiCard h4{margin:0 0 4px;font-size:18px;color:var(--steel)}
+#aiCard .aisub{font-size:12px;color:var(--muted);margin-bottom:14px}
+#aiCard .aibody{font-size:14px;line-height:1.6;color:var(--ink);white-space:pre-wrap}
+#aiCard .aibody b{color:var(--steel)}
+#aiCard .aibody i{color:var(--muted)}
+#aiCard .aibody mark{background:color-mix(in srgb, var(--accent) 30%, #fff);color:var(--ink);padding:0 3px;border-radius:3px;font-weight:700}
+#aiCard .airow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:16px}
+#aiCard button{border:1px solid #CBD5DD;background:#fff;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer}
+#aiCard button:hover{background:var(--steel);color:#fff;border-color:var(--steel)}
+#aiCard .seg button{border:none;border-radius:0;padding:6px 12px;font-size:12px;background:#fff;color:var(--muted)}
+#aiCard .seg button.on{background:var(--steel);color:#fff}
+.aihead{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+#aiIcon{font-size:30px;line-height:1.1}
+.aipill{font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;padding:4px 10px;border-radius:20px;white-space:nowrap;margin-top:3px}
+.aipill.ok{background:#E7F5E9;color:#1E7B34;border:1px solid #A9D8B2}
+.aipill.warn{background:#FFF6E0;color:#8A6100;border:1px solid #E9C46A}
+.aipill.crit{background:#FDE8EA;color:#A4121F;border:1px solid #EFA1A8}
+#aiSpeak{white-space:nowrap;margin-top:1px}
+.ai-spin{display:inline-block;width:18px;height:18px;border:3px solid #CBD5DD;border-top-color:var(--steel);border-radius:50%;animation:aispin .8s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes aispin{to{transform:rotate(360deg)}}
+.mailbtn{border:1px solid #CBD5DD;background:#fff;border-radius:6px;font-size:12px;padding:2px 7px;cursor:pointer;transition:.15s}
+.mailbtn:hover{background:var(--steel);color:#fff;border-color:var(--steel)}
 .pngbtn{border:1px solid #CBD5DD;background:#fff;color:var(--muted);border-radius:7px;font-size:12px;padding:3px 9px;cursor:pointer;transition:.15s;flex:none}
 .pngbtn:hover{background:var(--steel);color:#fff;border-color:var(--steel)}
 .chartbox{position:relative;height:300px}
@@ -128,8 +155,10 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "2.6",
+  version: "3.0",
   updated: "Aug 7, 2026",
+  // AI insight cards: client-side Gemini call (same pattern as TransForm form AI).
+  ai: { geminiKey: "AIzaSyBDmiTgD3Wtyw5IMRN2Zu5h7g7UDjQE0vg", model: "gemini-2.5-flash" },
   // Default quality target: monthly rejection rate above this fraction is flagged red
   // on the Monthly Rejection Rate chart and drives the Rejection Rate KPI card color.
   // Users can adjust it live via the spin control on that chart (saved per user).
@@ -264,16 +293,16 @@ const DATA = [];
 
 <div class="wrap">
   <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-    <button class="pngbtn" id="kpiPng" title="Download the KPI cards as a PNG image">&#8681; PNG</button>
+    <span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Download the KPI cards as a PNG image">&#8681; PNG</button><button class="mailbtn" id="kpiMail" title="Email the KPI cards">&#9993;</button></span>
   </div>
   <div class="kpis" id="kpis"></div>
   <div class="grid">
-    <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
-    <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
-    <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5"> % target</small></span><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
-    <div class="card c6"><h3><span>Inspector Performance</span><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Performance" data-title="Inspector Performance" title="Download as PNG">&#8681;</button></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
-    <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small>top by inspected footage</small></span><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Download as PNG">&#8681;</button></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
-    <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Download as PNG">&#8681;</button></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
+    <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
+    <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
+    <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
+    <div class="card c6"><h3><span>Inspector Volume</span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Volume" data-title="Inspector Volume" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
+    <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small>top by inspected footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
+    <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
     <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
       <span style="display:flex;align-items:center;gap:16px">
         <div class="msel" id="expSel">
@@ -523,6 +552,11 @@ function render(){
   const recv=sum(S,"fRecv"), insp=sum(S,"fInsp"), rej=sum(S,"fRej"),
         appr=insp-rej, bore=sum(S,"fBore"), trej=sum(S,"tRej"),
         held=S.filter(r=>r.disp==="Hold").length;
+  AGG.kpis = { footageReceived:Math.round(recv), footageInspected:Math.round(insp),
+    footageRejected:Math.round(rej), footageApproved:Math.round(appr),
+    footageBorescoped:Math.round(bore), trueRejectedHeldFt:Math.round(trej),
+    submissionsOnHold:held, submissions:S.length,
+    rejectionRatePct: insp? +(100*rej/insp).toFixed(2) : 0 };
   $("kpis").innerHTML = [
     ["Footage Received", fmt(recv), "ft", ""],
     ["Footage Inspected", fmt(insp), "ft", ""],
@@ -536,6 +570,7 @@ function render(){
 
   /* weekly */
   const wk = [...groupSum(S, r=>weekStart(r.date), ["fInsp","fRej"])].sort((a,b)=>a[0].localeCompare(b[0]));
+  AGG.weekly = wk;
   /* show the selected range, not the week buckets it happened to land in */
   const rf = $("fFrom").value, rt = $("fTo").value;
   $("wkNote").textContent = (rf && rt) ? dLabel(rf)+" → "+dLabel(rt)
@@ -554,6 +589,7 @@ function render(){
   /* monthly rate — bars above the CONFIG.rejectionRateTarget flag red */
   const TGT = rateTarget;
   const mo = [...groupSum(S, r=>monthStart(r.date), ["fInsp","fRej"])].sort((a,b)=>a[0].localeCompare(b[0]));
+  AGG.monthly = mo;
   const moRates = mo.map(m=>m[1].fInsp? m[1].fRej/m[1].fInsp:0);
   mkChart("chMonthly", { type:"bar",
     data:{ labels: mo.map(m=>dLabel(m[0])),
@@ -570,7 +606,7 @@ function render(){
           callbacks:{ label:c=>pct(c.parsed.y) + (c.parsed.y > TGT ? "  \u26a0 above target" : "") } } }}});
 
   /* reasons doughnut (true rejected) */
-  const re = [...groupSum(S.filter(r=>r.reason), r=>r.reason, ["tRej"])]
+  const re = AGG.reasons = [...groupSum(S.filter(r=>r.reason), r=>r.reason, ["tRej"])]
     .filter(x=>x[1].tRej>0).sort((a,b)=>b[1].tRej-a[1].tRej);
   mkChart("chReasons", { type:"doughnut",
     data:{ labels: re.map(x=>x[0]),
@@ -580,7 +616,7 @@ function render(){
         tooltip:{ callbacks:{ label:c=>` ${c.label}: ${fmt(c.parsed)} ft` } } }}});
 
   /* inspectors — bars + rate line (line dataset first) */
-  const ins = [...groupSum(S, r=>r.inspector, ["fInsp","fRej"])].sort((a,b)=>b[1].fInsp-a[1].fInsp);
+  const ins = AGG.inspectors = [...groupSum(S, r=>r.inspector, ["fInsp","fRej"])].sort((a,b)=>b[1].fInsp-a[1].fInsp);
   mkChart("chInsp", { type:"bar",
     data:{ labels: ins.map(x=>x[0]),
       datasets:[
@@ -596,7 +632,7 @@ function render(){
       plugins:{ legend:{ position:"bottom" } }}});
 
   /* mills — horizontal, top 14 */
-  const mi = [...groupSum(S, r=>r.mill, ["fInsp","fRej"])].sort((a,b)=>b[1].fInsp-a[1].fInsp).slice(0,14);
+  const mi = AGG.mills = [...groupSum(S, r=>r.mill, ["fInsp","fRej"])].sort((a,b)=>b[1].fInsp-a[1].fInsp).slice(0,14);
   mkChart("chMills", { type:"bar",
     data:{ labels: mi.map(x=>x[0]),
       datasets:[
@@ -607,7 +643,7 @@ function render(){
       plugins:{ legend:{ position:"bottom" } }}});
 
   /* alloys — true rejected */
-  const al = [...groupSum(S.filter(r=>r.tRej>0), r=>r.alloy, ["tRej"])].sort((a,b)=>b[1].tRej-a[1].tRej);
+  const al = AGG.alloys = [...groupSum(S.filter(r=>r.tRej>0), r=>r.alloy, ["tRej"])].sort((a,b)=>b[1].tRej-a[1].tRej);
   mkChart("chAlloy", { type:"bar",
     data:{ labels: al.map(x=>x[0]),
       datasets:[{ label:"True rejected (ft)", data:al.map(x=>x[1].tRej),
@@ -970,8 +1006,8 @@ function cssVar(name, fallback){
   const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   return v || fallback;
 }
-function exportChartPng(id, name, title){
-  const c = charts[id]; if(!c) return;
+function chartPngCanvas(id, title){
+  const c = charts[id]; if(!c) return null;
   const src = c.canvas;
   const dpr = (src.width / (src.clientWidth || src.width)) || 1;
   const pad = Math.round(20 * dpr), titleH = Math.round(34 * dpr);
@@ -986,7 +1022,24 @@ function exportChartPng(id, name, title){
   g.font = Math.round(10 * dpr) + "px Arial";
   g.fillText(CONFIG.clientName + " \u00b7 " + stampDate(), out.width - g.measureText(CONFIG.clientName + " \u00b7 " + stampDate()).width - pad, pad + Math.round(14 * dpr));
   g.drawImage(src, pad, titleH + pad);
+  return out;
+}
+function exportChartPng(id, name, title){
+  const out = chartPngCanvas(id, title); if(!out) return;
   out.toBlob(b => dlBlob("PAC_" + name + "_" + stampDate() + ".png", b), "image/png");
+}
+async function emailCanvas(canvas, subject, bodyText){
+  let copied = false;
+  try{
+    if(canvas && navigator.clipboard && window.ClipboardItem){
+      const blob = await new Promise(res=>canvas.toBlob(res, "image/png"));
+      await navigator.clipboard.write([ new ClipboardItem({ "image/png": blob }) ]);
+      copied = true;
+    }
+  }catch(err){}
+  const note = copied ? "(The chart image is on your clipboard \u2014 paste it here with Cmd+V / Ctrl+V.)\n\n" : "";
+  location.href = "mailto:?subject=" + encodeURIComponent(subject) +
+    "&body=" + encodeURIComponent(note + (bodyText||"")).slice(0, 1800);
 }
 function roundRect(g, x, y, w, h, r){
   g.beginPath();
@@ -1032,6 +1085,19 @@ function exportKpisPng(){
 document.querySelectorAll(".pngbtn[data-chart]").forEach(btn =>
   btn.addEventListener("click", () => exportChartPng(btn.dataset.chart, btn.dataset.name, btn.dataset.title)));
 $("kpiPng").addEventListener("click", exportKpisPng);
+document.querySelectorAll(".mailbtn").forEach(btn=>{
+  if(btn.id === "kpiMail") return;
+  const png = btn.previousElementSibling;                  // adjacent pngbtn carries the tile info
+  btn.addEventListener("click", ()=>{
+    const cv = chartPngCanvas(png.dataset.chart, png.dataset.title);
+    emailCanvas(cv, CONFIG.clientName + " \u2014 " + png.dataset.title + " \u00b7 " + stampDate(),
+      png.dataset.title + " from the " + CONFIG.clientName + " Receiving Quality Dashboard.\nDate range: " + dLabel($("fFrom").value) + " \u2013 " + dLabel($("fTo").value) + ".");
+  });
+});
+$("kpiMail").addEventListener("click", ()=>{
+  emailCanvas(null, CONFIG.clientName + " \u2014 Key Metrics \u00b7 " + stampDate(),
+    "Key receiving-quality metrics, " + dLabel($("fFrom").value) + " \u2013 " + dLabel($("fTo").value) + ". Use the dashboard's KPI PNG download to attach the image.");
+});
 
 /* ---------- data loading ---------- */
 function num(x){ const v=parseFloat(x); return isFinite(v)?v:0; }
@@ -1147,6 +1213,267 @@ if(!CONFIG.showJsonLoader){
   document.querySelector('button[onclick*="fileIn"]').style.display = "none";
 }
 
+/* ================= AI insight cards ================= */
+const AGG = {};   // last-render aggregates, keyed for the AI payloads
+const AI_TILES = {
+  kpi:       { title:"Key Metrics",             data:()=>AGG.kpis },
+  chWeekly:  { title:"Weekly Footage",          data:()=>({ weeks: (AGG.weekly||[]).map(w=>({week:w[0], inspected:Math.round(w[1].fInsp), rejected:Math.round(w[1].fRej)})) }) },
+  chMonthly: { title:"Monthly Rejection Rate",  data:()=>({ targetPct: 100*rateTarget, months: (AGG.monthly||[]).map(m=>({month:m[0], inspected:Math.round(m[1].fInsp), rejected:Math.round(m[1].fRej), ratePct: m[1].fInsp? +(100*m[1].fRej/m[1].fInsp).toFixed(2):0})) }) },
+  chReasons: { title:"Rejection Reasons",       data:()=>({ heldFootageByReason: (AGG.reasons||[]).map(r=>({reason:r[0], heldFt:Math.round(r[1].tRej)})) }) },
+  chInsp:    { title:"Inspector Volume",
+    guidance:"IMPORTANT: this tile measures inspection ACTIVITY VOLUME only, never inspector job performance. Do not praise or criticize any inspector for finding many or few defects. Zero defects found is NOT evidence of good work; it can equally mean defects were missed. Unusually low or high reject rates for an inspector are flags about the SUPPLIER MIX (mills and material they happened to receive) or sampling coverage, not about the inspector. Frame all findings accordingly.",
+    data:()=>({ inspectors: (AGG.inspectors||[]).map(i=>({inspector:i[0], inspected:Math.round(i[1].fInsp), rejected:Math.round(i[1].fRej), ratePct: i[1].fInsp? +(100*i[1].fRej/i[1].fInsp).toFixed(2):0})) }) },
+  chMills:   { title:"Mill Performance",        data:()=>({ mills: (AGG.mills||[]).map(m=>({mill:m[0], inspected:Math.round(m[1].fInsp), rejected:Math.round(m[1].fRej), ratePct: m[1].fInsp? +(100*m[1].fRej/m[1].fInsp).toFixed(2):0})) }) },
+  chAlloy:   { title:"Alloy Rejections",        data:()=>({ heldFootageByAlloy: (AGG.alloys||[]).map(a=>({alloy:a[0], heldFt:Math.round(a[1].tRej)})) }) }
+};
+function aiContext(){
+  return { client:"PAC Stainless (stainless pipe & tube distribution)",
+    dateRange: { from: $("fFrom").value, to: $("fTo").value },
+    rejectionRateTargetPct: 100*rateTarget,
+    submissionsInScope: scopeRows.length,
+    note:"Footage figures are prorated feet. Held footage = rejected footage still on Hold disposition. Inspector figures measure activity volume, not job performance; anomalous inspector reject rates usually reflect supplier mix, not inspector quality." };
+}
+function mdLite(t){
+  return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/==([^=]+)==/g,'<mark>$1</mark>')
+    .replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>")
+    .replace(/(^|[\s(])\*([^*\n]+)\*(?=[\s).,;:!?]|$)/g,"$1<i>$2</i>")
+    .replace(/^\s*-\s+/gm,"\u2022 ");
+}
+let aiTexts = { quick:"", detailed:"" };
+let aiMode = "quick";
+function aiRenderBody(){
+  $("aiBody").innerHTML = mdLite(aiTexts[aiMode] || aiTexts.detailed || "");
+  document.querySelectorAll("#aiSeg button").forEach(b=>b.classList.toggle("on", b.dataset.m===aiMode));
+}
+function aiOpen(title, sub, bodyHtml){
+  let ov = $("aiOverlay");
+  if(!ov){
+    ov = document.createElement("div"); ov.id = "aiOverlay";
+    ov.innerHTML = '<div id="aiCard">' +
+      '<div class="aihead"><span id="aiIcon"></span><div style="flex:1;min-width:0"><h4 id="aiTitle"></h4><div class="aisub" id="aiSub" style="margin-bottom:0"></div></div>' +
+      '<span id="aiStatus"></span><button id="aiSpeak" title="Read this assessment aloud">&#128266; Speak</button></div>' +
+      '<div class="seg" id="aiSeg" style="margin-bottom:12px"><button data-m="quick" class="on">Quick take</button><button data-m="detailed">Detailed</button></div>' +
+      '<div class="aibody" id="aiBody"></div>' +
+      '<div class="airow"><span class="aisub">AI-generated \u2014 verify before acting</span><span><button id="aiPngBtn" title="Download this assessment as a PNG">&#8681; PNG</button> <button id="aiMail" title="Email this assessment">&#9993; Email</button> <button id="aiCopy">Copy</button> <button id="aiClose">Close</button></span></div></div>';
+    document.body.appendChild(ov);
+    const aiHush = ()=>{ if(window.speechSynthesis) speechSynthesis.cancel();
+      const b=document.getElementById("aiSpeak"); if(b) b.innerHTML="&#128266; Speak"; };
+    ov.addEventListener("click", e=>{ if(e.target===ov){ aiHush(); ov.style.display="none"; } });
+    document.getElementById("aiClose").addEventListener("click", ()=>{ aiHush(); ov.style.display="none"; });
+    document.getElementById("aiSpeak").addEventListener("click", ()=>{
+      const b = document.getElementById("aiSpeak");
+      if(window.speechSynthesis && speechSynthesis.speaking){ aiHush(); return; }
+      const plain = (aiTexts[aiMode]||"").replace(/==|\*\*|\*/g,"").replace(/^\s*-\s+/gm,"")
+        .replace(/\bJesus\b/g, "Hay-soos");            // Spanish given name, spoken correctly
+      if(!plain || !window.speechSynthesis) return;
+      const u = new SpeechSynthesisUtterance(plain);
+      const v = (typeof pickVoice==="function") ? pickVoice() : null;
+      if(v) u.voice = v;
+      u.rate = 1.0;
+      u.onend = ()=>{ b.innerHTML = "&#128266; Speak"; };
+      b.innerHTML = "&#9632; Stop";
+      speechSynthesis.speak(u);
+    });
+    document.getElementById("aiCopy").addEventListener("click", async ()=>{
+      const plain = aiTexts[aiMode] || "";
+      const inner = mdLite(plain)
+        .replace(/<mark>/g,'<span style="background:#FFF2A8;font-weight:bold;padding:0 2px">')
+        .replace(/<\/mark>/g,'</span>')
+        .replace(/\n/g,"<br>");
+      const htmlDoc = '<div style="font-family:Calibri,Arial,sans-serif;font-size:11pt;line-height:1.5">' +
+        '<b>' + $("aiTitle").textContent + '</b><br><span style="color:#666;font-size:9pt">' + $("aiSub").textContent + '</span><br><br>' +
+        inner + '</div>';
+      let ok = false;
+      try{
+        if(navigator.clipboard && window.ClipboardItem){
+          await navigator.clipboard.write([ new ClipboardItem({
+            "text/html":  new Blob([htmlDoc], {type:"text/html"}),
+            "text/plain": new Blob([plain],  {type:"text/plain"})
+          })]);
+          ok = true;
+        }
+      }catch(err){}
+      if(!ok && navigator.clipboard) await navigator.clipboard.writeText(plain);
+      document.getElementById("aiCopy").textContent = "Copied!";
+      setTimeout(()=>document.getElementById("aiCopy").textContent="Copy", 1500);
+    });
+    document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ aiHush(); ov.style.display="none"; } });
+    document.querySelectorAll("#aiSeg button").forEach(b=>b.addEventListener("click", ()=>{
+      aiMode = b.dataset.m; aiRenderBody();
+    }));
+    document.getElementById("aiPngBtn").addEventListener("click", ()=>{
+      const cv = aiPngCanvas(); if(!cv) return;
+      cv.toBlob(b => dlBlob("PAC_AI_" + $("aiTitle").textContent.replace(/\W+/g,"_") + "_" + stampDate() + ".png", b), "image/png");
+    });
+    document.getElementById("aiMail").addEventListener("click", ()=>{
+      const plain = (aiTexts[aiMode]||"").replace(/==|\*\*|\*/g,"");
+      emailCanvas(aiPngCanvas(),
+        CONFIG.clientName + " \u2014 AI Assessment: " + $("aiTitle").textContent + " \u00b7 " + stampDate(),
+        plain);
+    });
+  }
+  $("aiTitle").textContent = title; $("aiSub").textContent = sub;
+  $("aiBody").innerHTML = bodyHtml;
+  ov.style.display = "flex";
+}
+function aiTokenMaps(){
+  const maps = [];
+  maps.push([CONFIG.clientName || "PAC Stainless", "CLIENT_1"]);
+  (MSEL.mill.values||[]).forEach((v,i)=>maps.push([v, "MILL_"+(i+1)]));
+  (MSEL.insp.values||[]).forEach((v,i)=>maps.push([v, "INSPECTOR_"+(i+1)]));
+  return maps.filter(m=>m[0]).sort((a,b)=>b[0].length-a[0].length);   // longest first
+}
+function aiAnon(text, maps){
+  let t = text;
+  for(const [name, tok] of maps){
+    const esc = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    t = t.replace(new RegExp(esc, "gi"), tok);
+  }
+  return t;
+}
+function aiDeanon(text, maps){
+  let t = text;
+  for(const [name, tok] of maps) t = t.replace(new RegExp("\\b"+tok+"\\b", "g"), name);
+  return t;
+}
+function aiPngCanvas(){
+  const S = 2, W = 1000 * S / 2;                                 // logical 1000px wide, drawn 2x
+  const text = aiTexts[aiMode] || ""; if(!text) return null;
+  const cv = document.createElement("canvas"); const g = cv.getContext("2d");
+  const bodyPx = 17, lineH = 27, pad = 34;
+  const maxW = W - pad*2;
+  const fontOf = sg => (sg.i? "italic ":"") + ((sg.b||sg.hi)? "700 ":"400 ") + bodyPx + "px 'Segoe UI',Arial";
+  function parseLine(line){
+    const out = []; let str = line.replace(/^\s*-\s+/, "\u2022 ");
+    const re = /(\*\*[^*]+\*\*|==[^=]+==|\*[^*\n]+\*)/g; let last = 0, m;
+    while((m = re.exec(str))){
+      if(m.index > last) out.push({t:str.slice(last, m.index)});
+      const tk = m[0];
+      if(tk.startsWith("**"))      out.push({t:tk.slice(2,-2), b:1});
+      else if(tk.startsWith("==")) out.push({t:tk.slice(2,-2), hi:1});
+      else                         out.push({t:tk.slice(1,-1), i:1});
+      last = m.index + tk.length;
+    }
+    if(last < str.length) out.push({t:str.slice(last)});
+    return out;
+  }
+  // wrap into draw ops
+  const opsLines = [];
+  for(const raw of text.split("\n")){
+    if(!raw.trim()){ opsLines.push([]); continue; }
+    let cur = [], curW = 0;
+    for(const sg of parseLine(raw)){
+      g.font = fontOf(sg);
+      for(const word of sg.t.split(/(\s+)/)){
+        if(!word) continue;
+        const w = g.measureText(word).width;
+        if(curW + w > maxW && cur.length){ opsLines.push(cur); cur = []; curW = 0; if(/^\s+$/.test(word)) continue; }
+        cur.push({t:word, b:sg.b, i:sg.i, hi:sg.hi, w}); curW += w;
+      }
+    }
+    if(cur.length) opsLines.push(cur);
+  }
+  const headH = 92, footH = 44;
+  const H = headH + opsLines.length * lineH + footH + pad;
+  cv.width = W * S; cv.height = H * S; g.scale(S, S);
+  g.fillStyle = "#FFFFFF"; g.fillRect(0, 0, W, H);
+  // header: icon, title, pill
+  g.font = "30px Arial"; g.fillText($("aiIcon").textContent || "", pad, 48);
+  g.fillStyle = cssVar("--steel", "#1B4965"); g.font = "800 24px Arial";
+  g.fillText($("aiTitle").textContent, pad + 44, 44);
+  g.fillStyle = cssVar("--muted", "#6C7A89"); g.font = "600 12px Arial";
+  g.fillText($("aiSub").textContent, pad + 44, 64);
+  const pill = $("aiStatus").textContent;
+  if(pill){
+    g.font = "800 12px Arial";
+    const pw = g.measureText(pill.toUpperCase()).width + 24;
+    const px = W - pad - pw;
+    roundRect(g, px, 30, pw, 26, 13);
+    const cls = $("aiStatus").className;
+    g.fillStyle = cls.includes("crit") ? "#FDE8EA" : cls.includes("warn") ? "#FFF6E0" : "#E7F5E9"; g.fill();
+    g.fillStyle = cls.includes("crit") ? "#A4121F" : cls.includes("warn") ? "#8A6100" : "#1E7B34";
+    g.fillText(pill.toUpperCase(), px + 12, 48);
+  }
+  // body
+  let y = headH + 18;
+  for(const line of opsLines){
+    let x = pad;
+    for(const sg of line){
+      g.font = fontOf(sg);
+      if(sg.hi){ g.fillStyle = "#FFF2A8"; g.fillRect(x - 1, y - bodyPx + 1, sg.w + 2, bodyPx + 6); }
+      g.fillStyle = sg.b || sg.hi ? cssVar("--steel", "#1B4965") : (sg.i ? cssVar("--muted","#6C7A89") : cssVar("--ink","#22303B"));
+      g.fillText(sg.t, x, y); x += sg.w;
+    }
+    y += lineH;
+  }
+  // footer
+  g.fillStyle = cssVar("--muted", "#6C7A89"); g.font = "600 11px Arial";
+  g.fillText(CONFIG.clientName + " \u00b7 " + stampDate() + " \u00b7 AI-generated \u2014 verify before acting", pad, H - 18);
+  return cv;
+}
+async function aiAssess(tileKey){
+  const tile = AI_TILES[tileKey]; if(!tile) return;
+  const sub = "AI assessment \u00b7 " + dLabel($("fFrom").value) + " \u2013 " + dLabel($("fTo").value);
+  aiTexts = { quick:"", detailed:"" };
+  if(window.speechSynthesis) speechSynthesis.cancel();
+  aiMode = "quick";                                   // every tile opens on the quick take
+  document.querySelectorAll("#aiSeg button").forEach(b=>b.classList.toggle("on", b.dataset.m==="quick"));
+  aiOpen(tile.title, sub, '<span class="ai-spin"></span>Analyzing current data\u2026');
+  $("aiIcon").textContent = "\u2728"; $("aiStatus").textContent = ""; $("aiStatus").className = "";
+  const payload = { context: aiContext(), tile: tile.title, data: tile.data() };
+  const tileGuide = tile.guidance ? ("\nTILE-SPECIFIC GUIDANCE: " + tile.guidance + "\n") : "";
+  const anonMaps = aiTokenMaps();
+  const prompt =
+    "You are a quality engineering analyst reviewing receiving-inspection data for a stainless steel pipe and tube distributor. " +
+    "Entity names are tokenized for privacy (CLIENT_n, MILL_n, INSPECTOR_n). Refer to them using these exact tokens; they will be substituted back later. " +
+    "Start your ENTIRE reply with one line declaring overall severity: 'STATUS: CRITICAL' (urgent issue or likely data error demanding immediate action), 'STATUS: WARNING' (needs attention soon), or 'STATUS: OK' (within target, nothing alarming). Then continue with BOTH versions, using exactly these markers:\n" +
+    "===QUICK===\n2-3 plain sentences: the single most important takeaway and one recommended action. No bullets, no headers.\n" +
+    "===DETAILED===\n" +
+    "**Assessment**\nThen 2-4 short bullet points (start each with '- ').\n" +
+    "**Watch items**\nThen 1-3 bullets on anomalies or data-quality concerns (e.g., extreme rates from tiny inspected quantities suggest data-entry errors).\n" +
+    "**Recommended next steps**\nThen 2-4 action bullets a quality manager could take this week.\n" +
+    "Be specific: name months, mills, inspectors, reasons and figures from the data. Detailed section under 220 words.\n" +
+    tileGuide +
+    "Use inline emphasis to make key elements pop, in BOTH versions: **bold** for the most important figures and names (e.g. **21.3%**, **July 2026**, **TUBACEX**), *italics* for caveats and interpretive comments, and ==highlight== around the single most critical finding or number that demands attention. Use highlighting at most once or twice. No other markdown.\n\nDATA:\n" +
+    aiAnon(JSON.stringify(payload), anonMaps);
+  try{
+    const r = await fetch("https://generativelanguage.googleapis.com/v1beta/models/" + CONFIG.ai.model + ":generateContent?key=" + CONFIG.ai.geminiKey, {
+      method:"POST", headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ contents:[{ parts:[{ text: prompt }] }] })
+    });
+    const j = await r.json();
+    let txt = (((j.candidates||[])[0]||{}).content||{parts:[]}).parts.map(p=>p.text||"").join("").trim();
+    if(!txt) throw new Error(j.error ? j.error.message : "empty response");
+    let st = "OK";
+    const sm = /STATUS:\s*(CRITICAL|WARNING|OK)/i.exec(txt);
+    if(sm){ st = sm[1].toUpperCase(); txt = txt.replace(/STATUS:[^\n]*\n?/i, ""); }
+    else st = txt.includes("==") ? "WARNING" : "OK";
+    txt = aiDeanon(txt, anonMaps);
+    const stMap = { CRITICAL:["\ud83d\udea8","Critical finding","crit"], WARNING:["\u26a0\ufe0f","Needs attention","warn"], OK:["\u2705","Within target","ok"] };
+    $("aiIcon").textContent = stMap[st][0];
+    $("aiStatus").textContent = stMap[st][1];
+    $("aiStatus").className = "aipill " + stMap[st][2];
+    const qm = txt.split("===QUICK===")[1];
+    if(qm && qm.includes("===DETAILED===")){
+      aiTexts.quick = qm.split("===DETAILED===")[0].trim();
+      aiTexts.detailed = qm.split("===DETAILED===")[1].trim();
+    } else {
+      aiTexts.detailed = txt;
+      aiTexts.quick = txt.split(/(?<=[.!?])\s+/).slice(0,3).join(" ");
+    }
+    aiRenderBody();
+  }catch(err){
+    $("aiBody").innerHTML = "Could not generate the assessment: " + mdLite(err.message||String(err)) +
+      "<br><br>Check the network connection and try again.";
+  }
+}
+document.querySelectorAll(".aibtn").forEach(b=>{
+  const png = b.nextElementSibling;                       // adjacent pngbtn identifies the tile
+  const key = png && png.dataset.chart ? png.dataset.chart : "kpi";
+  b.addEventListener("click", ()=>aiAssess(key));
+});
+
 /* ================= Guided narrated demo (open with ?demo=1) =================
    The July 2026 spike investigation: anomaly -> suspect submissions -> export.
    Narration uses the browser's speech synthesis; captions mirror the audio. */
@@ -1217,6 +1544,22 @@ async function runDemo(){
       say:"The monthly rejection rate chart flags any month above the five percent quality target in red. July twenty twenty six stands out dramatically, at over twenty percent. Is quality really five times worse, or is something off in the data?" },
     { do:()=>{ const b = document.querySelector('.pngbtn[data-chart="chMonthly"]'); demoHi(chartCard("chMonthly")); if(b) b.click(); },
       say:"Before we dig in, notice that any tile exports as a presentation ready image in one click, stamped with the PAC name and date. That chart just landed in the downloads folder, ready for a quality meeting deck." },
+    { do:()=>demoHi(chartCard("chMonthly")),
+      say:"Better yet, every tile includes a built in AI analyst. One click, and the dashboard reads the July data for itself. Listen." },
+    { run: async ()=>{
+        aiAssess("chMonthly");
+        const t0 = Date.now();
+        while(!aiTexts.quick && Date.now()-t0 < 25000 && !demoStop) await new Promise(r=>setTimeout(r,400));
+        if(aiTexts.quick && !demoStop){
+          await new Promise(r=>setTimeout(r,800));           // let the card render
+          const b = document.getElementById("aiSpeak"); if(b) b.click();
+          while(window.speechSynthesis && speechSynthesis.speaking && !demoStop) await new Promise(r=>setTimeout(r,300));
+          await new Promise(r=>setTimeout(r,600));
+        }
+        const c = document.getElementById("aiClose"); if(c) c.click();
+      } },
+    { do:()=>{},
+      say:"An instant severity verdict, and a written assessment ready to copy into an email. Now, let's verify its suspicion ourselves." },
     { do:()=>{ $("linkToggle").checked = true; chartSel = {kind:"month", value:"2026-07"}; renderTable();
                demoHi(document.querySelector(".tscroll").closest(".card")); },
       say:"Let's drill in. With chart linking on, clicking the July bar filters the submission list to just that month's receipts." },
@@ -1231,6 +1574,7 @@ async function runDemo(){
   ];
   for(const st of steps){
     if(demoStop) break;
+    if(st.run){ try{ await st.run(); }catch(err){} continue; }
     try{ st.do(); }catch(err){}
     await demoSay(st.say);
   }
