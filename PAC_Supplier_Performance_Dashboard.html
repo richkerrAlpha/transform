@@ -79,6 +79,15 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .card h3 small{font-weight:600;color:var(--muted);font-size:11px}
 .c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}
 .demo-hi{outline:3px solid var(--accent);outline-offset:4px;border-radius:14px;transition:outline .3s}
+#demoCur{display:none;position:fixed;left:0;top:0;width:26px;height:26px;z-index:980;pointer-events:none;
+  transition:transform .6s cubic-bezier(.33,.02,.24,1);filter:drop-shadow(0 3px 5px rgba(0,0,0,.45))}
+#demoCur svg{display:block}
+#demoRing{display:none;position:fixed;left:0;top:0;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;
+  border:3px solid var(--accent);z-index:979;pointer-events:none;opacity:0}
+@keyframes demoPing{0%{transform:scale(.35);opacity:.95}70%{transform:scale(1.25);opacity:.35}100%{transform:scale(1.5);opacity:0}}
+#demoRing.ping{display:block;animation:demoPing .55s ease-out}
+#demoToast{display:none;position:fixed;right:22px;bottom:96px;z-index:981;background:rgba(15,25,35,.94);color:#fff;
+  font-size:13px;font-weight:700;padding:11px 16px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
 #demoCap{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:26px;max-width:820px;background:rgba(15,25,35,.92);color:#fff;font-size:16px;font-weight:600;line-height:1.45;padding:14px 22px;border-radius:12px;z-index:900;box-shadow:0 10px 30px rgba(0,0,0,.35);text-align:center}
 #demoStart{position:fixed;inset:0;background:rgba(10,20,30,.72);z-index:950;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
 #demoStart button{font-size:20px;font-weight:800;padding:16px 34px;border:none;border-radius:12px;background:var(--steel);color:#fff;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.4)}
@@ -928,7 +937,12 @@ function exportScope(){
   const sel = F.filter(r=>exportSel.has(String(r.id)));
   return sel.length ? sel : F;                    // ticked rows only; nothing ticked = whole list
 }
+/* During the guided demo, real downloads are suppressed: the export still runs
+   end to end, but the browser's download shelf never opens over the dashboard.
+   A toast reports what WOULD have been saved. */
+var demoSuppressDownloads = false;   /* var so it is reachable for testing */
 function dlBlob(name, blob){
+  if(demoSuppressDownloads){ demoToast("Saved: " + name); return; }
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = name;
   document.body.appendChild(a); a.click(); a.remove();
@@ -1836,108 +1850,202 @@ function demoHi(id){
   if(el){ el.classList.add("demo-hi"); el.scrollIntoView({behavior:"smooth", block:"center"}); }
 }
 function demoClearHi(){ document.querySelectorAll(".demo-hi").forEach(e=>e.classList.remove("demo-hi")); }
+
+/* ---------- virtual mouse pointer ----------
+   Screens that change on their own are hard to follow, so the tour drives a
+   visible cursor to each control and shows a click ripple before acting. */
+function demoCursorInit(){
+  if($("demoCur")) return;
+  const c = document.createElement("div"); c.id = "demoCur";
+  c.innerHTML = '<svg width="26" height="26" viewBox="0 0 26 26">' +
+    '<path d="M4 2 L4 20 L9 15.5 L12.2 22.5 L15.8 20.9 L12.6 14 L19 13.6 Z" fill="#fff" stroke="#16232E" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+  document.body.appendChild(c);
+  const r = document.createElement("div"); r.id = "demoRing"; document.body.appendChild(r);
+  const t = document.createElement("div"); t.id = "demoToast"; document.body.appendChild(t);
+  c.style.transform = "translate(" + (window.innerWidth*0.5) + "px," + (window.innerHeight*0.75) + "px)";
+}
+function demoToast(msg){
+  const t = $("demoToast"); if(!t) return;
+  t.textContent = msg; t.style.display = "block";
+  clearTimeout(t._h); t._h = setTimeout(()=>{ t.style.display = "none"; }, 2600);
+}
+function demoTarget(el){
+  const e = typeof el === "string" ? $(el) : el;
+  if(!e || !e.getBoundingClientRect) return null;
+  return e;
+}
+/* Move the pointer over an element and wait for the glide to finish. */
+async function demoPoint(el, opts){
+  const e = demoTarget(el); if(!e) return null;
+  opts = opts || {};
+  if(opts.scroll !== false){
+    e.scrollIntoView({behavior:"smooth", block:"center"});
+    await new Promise(r=>setTimeout(r, 450));
+  }
+  const cur = $("demoCur"); if(!cur) return e;
+  cur.style.display = "block";
+  const b = e.getBoundingClientRect();
+  const x = b.left + Math.max(0, Math.min(b.width  * (opts.fx == null ? 0.5 : opts.fx), b.width  - 6));
+  const y = b.top  + Math.max(0, Math.min(b.height * (opts.fy == null ? 0.5 : opts.fy), b.height - 6));
+  cur.style.transform = "translate(" + x + "px," + y + "px)";
+  await new Promise(r=>setTimeout(r, opts.fast ? 380 : 650));
+  return e;
+}
+/* Ripple at the pointer, then really fire the action. */
+async function demoClick(el, opts){
+  const e = await demoPoint(el, opts); if(!e) return null;
+  const cur = $("demoCur"), ring = $("demoRing");
+  if(cur && ring){
+    const m = /translate\(([-\d.]+)px,\s*([-\d.]+)px\)/.exec(cur.style.transform || "");
+    if(m){ ring.style.left = m[1] + "px"; ring.style.top = m[2] + "px"; }
+    ring.classList.remove("ping"); void ring.offsetWidth; ring.classList.add("ping");
+  }
+  await new Promise(r=>setTimeout(r, 230));
+  try{ e.click(); }catch(err){}
+  await new Promise(r=>setTimeout(r, 260));
+  return e;
+}
+/* Point at a control, then set its value the way a user would. */
+async function demoSet(el, value){
+  const e = await demoPoint(el); if(!e) return;
+  const cur = $("demoCur"), ring = $("demoRing");
+  if(cur && ring){
+    const m = /translate\(([-\d.]+)px,\s*([-\d.]+)px\)/.exec(cur.style.transform || "");
+    if(m){ ring.style.left = m[1] + "px"; ring.style.top = m[2] + "px"; }
+    ring.classList.remove("ping"); void ring.offsetWidth; ring.classList.add("ping");
+  }
+  await new Promise(r=>setTimeout(r, 220));
+  e.value = value;
+  e.dispatchEvent(new Event("change"));
+  await new Promise(r=>setTimeout(r, 260));
+}
+function demoCursorHide(){
+  ["demoCur","demoRing","demoToast"].forEach(id=>{ const e = $(id); if(e) e.style.display = "none"; });
+}
 async function runDemo(){
   const chartCard = id => $(id).closest(".card");
   const seg2 = ()=>document.querySelectorAll("#dateSeg button");
-  const setTheme = k => { const s=$("themeSel"); if(s){ s.value=k; } applyTheme(k, true); };
   const pause = ms => new Promise(r=>setTimeout(r, ms));
+  demoCursorInit();
+  demoSuppressDownloads = true;      // exports run for real; no download shelf opens
+
+  /* Steps may supply do() for instant changes, or run() for anything that has
+     to drive the pointer and wait. Narration follows the action. */
   const steps = [
 
     /* ---------------- ACT 1 - orientation ---------------- */
     { do:()=>{ window.scrollTo({top:0, behavior:"smooth"}); },
       say:"Welcome to the PAC Stainless Receiving Quality Dashboard. Everything you are about to see is live production data, pulled straight from Alpha TransForm the moment this page loaded." },
-    { do:()=>demoHi($("btnApi")),
+    { run:()=>demoPoint($("btnApi")),
       say:"There is no overnight batch and no spreadsheet to refresh. One button re-queries the API, and the whole dashboard rebuilds in about a second." },
-    { do:()=>demoHi(document.querySelector(".kpis")),
+    { run:()=>demoPoint(document.querySelector(".kpis")),
       say:"Eight key metrics summarize receiving quality. Footage received, inspected, borescoped and rejected, the overall rejection rate, and the true rejected figure, which counts only material actually placed on hold." },
-    { do:()=>{ demoHi(chartCard("chWeekly")); },
-      say:"Below the metrics sit six charts: weekly footage, monthly rejection rate, rejection reasons, inspector volume, mill performance, and rejections by alloy. Every one of them responds to every filter." },
+    { run:()=>demoPoint(chartCard("chWeekly")),
+      say:"Below them sit six charts: weekly footage, monthly rejection rate, rejection reasons, inspector volume, mill performance, and rejections by alloy. Every one responds to every filter." },
 
-    /* ---------------- ACT 2 - make it yours ---------------- */
-    { do:()=>{ demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); demoHi($("themeSel")); },
-      say:"First, a word about presentation, because a dashboard nobody wants to look at is a dashboard nobody opens." },
-    { do:()=>{ setTheme("navy"); },
-      say:"Fifteen color schemes ship with it. Navy and gold." },
-    { do:()=>{ setTheme("redblk"); },
-      say:"Red and black." },
-    { do:()=>{ setTheme("astros"); },
+    /* ---------------- ACT 2 - presentation ---------------- */
+    { run: async ()=>{ demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); await pause(400);
+                       await demoPoint($("themeSel")); demoHi($("themeSel")); },
+      say:"First, presentation, because a dashboard nobody wants to look at is a dashboard nobody opens. This selector holds fifteen color schemes." },
+    { run: async ()=>{ await demoSet($("themeSel"), "navy"); },
+      say:"Navy and gold." },
+    { run: async ()=>{ await demoSet($("themeSel"), "claret"); },
+      say:"Claret and gold." },
+    { run: async ()=>{ await demoSet($("themeSel"), "astros"); },
       say:"There is even a set of Houston team colors, for the days when that matters more than it should." },
-    { do:()=>{ setTheme("steel"); demoHi($("fontSel")); },
-      say:"And back to PAC's own palette. Text size adjusts too, which matters when this is on a shop floor monitor rather than a laptop." },
-    { do:()=>{ demoHi(chartCard("chMonthly")); const t=$("tgtSpin"); if(t){ t.value = 3; t.dispatchEvent(new Event("change")); } },
-      say:"The quality target itself is yours to set. Drop it to three percent, and every month that now breaches the tighter standard turns red immediately, across the chart, the target line, and the rejection rate metric." },
-    { do:()=>{ const t=$("tgtSpin"); if(t){ t.value = 5; t.dispatchEvent(new Event("change")); } },
-      say:"Back to five percent. Whatever you choose is remembered for next time." },
+    { run: async ()=>{ await demoSet($("themeSel"), "steel"); },
+      say:"And back to PAC's own steel blue palette. Whatever you pick is remembered the next time you open it." },
+    { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(500); await demoSet($("fontSel"), "m"); demoClearHi(); },
+      say:"Text size adjusts the same way, which matters when this is on a shop floor monitor rather than a laptop." },
+    { run: async ()=>{ demoHi(chartCard("chMonthly")); await demoSet($("tgtSpin"), 3); },
+      say:"The quality target itself is yours to set. Drop it to three percent, and every month that now breaches the tighter standard turns red immediately, across the bars, the target line, and the rejection rate metric." },
+    { run: async ()=>{ await demoSet($("tgtSpin"), 5); demoClearHi(); },
+      say:"Back to five percent." },
 
     /* ---------------- ACT 3 - filtering ---------------- */
-    { do:()=>{ demoHi(document.querySelector(".dategroup")); seg2()[1].click();
-               $("fPeriod").value = "thisyear"; $("fPeriod").dispatchEvent(new Event("change")); },
+    { run: async ()=>{ demoHi(document.querySelector(".dategroup")); await demoClick(seg2()[1]);
+                       await demoSet($("fPeriod"), "thisyear"); },
       say:"Filtering is built for how quality teams actually work. Period mode gives one click access to fourteen presets: this week, last quarter, year to date, last thirty days. Selecting this year recalculates everything." },
-    { do:()=>{ $("fPeriod").value = "lastmonth"; $("fPeriod").dispatchEvent(new Event("change")); },
+    { run: async ()=>{ await demoSet($("fPeriod"), "lastmonth"); },
       say:"Last month, and the entire dashboard follows. Or switch to date mode and pick any custom window you like." },
-    { do:()=>{ demoHi($("millSel"));
-               $("millPanel").style.display = "block";
-               const boxes = $("millPanel").querySelectorAll(".msChk");
-               if(boxes[0]) boxes[0].click(); if(boxes[1]) boxes[1].click(); },
-      say:"Every major filter is an Excel style checkbox list. Untick a couple of mills and they drop out of every chart and every metric instantly. Inspector, alloy, and rejection reason all work the same way, and the button tells you exactly what is selected." },
-    { do:()=>{ const all = $("millPanel").querySelector(".msAllChk"); if(all && !all.checked) all.click();
-               $("millPanel").style.display = "none"; demoHi($("btnReset")); },
+    { run: async ()=>{ demoHi($("millSel")); await demoClick($("millBtn"));
+                       $("millPanel").style.display = "block"; await pause(300);
+                       const boxes = $("millPanel").querySelectorAll(".msChk");
+                       if(boxes[0]) await demoClick(boxes[0], {fast:true, scroll:false});
+                       if(boxes[1]) await demoClick(boxes[1], {fast:true, scroll:false}); },
+      say:"Every major filter is an Excel style checkbox list. Untick a couple of mills and they drop out of every chart and every metric instantly. Inspector, alloy, and rejection reason all work the same way." },
+    { run: async ()=>{ const all = $("millPanel").querySelector(".msAllChk");
+                       if(all && !all.checked) await demoClick(all, {fast:true, scroll:false});
+                       $("millPanel").style.display = "none";
+                       await demoPoint($("btnReset")); demoHi($("btnReset")); },
       say:"One reset button clears every filter at once, so nobody ever has to hunt for the setting that is hiding half their data." },
-    { do:()=>{ $("fPeriod").value = "all"; $("fPeriod").dispatchEvent(new Event("change")); demoClearHi(); },
+    { run: async ()=>{ await demoSet($("fPeriod"), "all"); demoClearHi(); },
       say:"Let's restore all mills and all time, because today we are investigating an anomaly." },
 
     /* ---------------- ACT 4 - the investigation ---------------- */
-    { do:()=>demoHi(chartCard("chMonthly")),
+    { run:()=>{ demoHi(chartCard("chMonthly")); return demoPoint(chartCard("chMonthly")); },
       say:"The monthly rejection rate chart flags any month above the five percent target in red. July twenty twenty six stands out dramatically, at over twenty percent. Is quality really five times worse, or is something off in the data?" },
-    { do:()=>demoHi(chartCard("chMonthly")),
+    { run: async ()=>{ const b = chartCard("chMonthly").querySelector(".aibtn"); await demoPoint(b); },
       say:"Every tile includes a built in AI analyst. One click, and the dashboard reads the July data for itself. Listen." },
     { run: async ()=>{
-        aiAssess("chMonthly");
+        const b = chartCard("chMonthly").querySelector(".aibtn");
+        if(b) await demoClick(b, {scroll:false});
         const t0 = Date.now();
-        while(!aiTexts.quick && Date.now()-t0 < 25000 && !demoStop) await new Promise(r=>setTimeout(r,400));
+        while(!aiTexts.quick && Date.now()-t0 < 25000 && !demoStop) await pause(400);
         if(aiTexts.quick && !demoStop){
           await pause(800);
-          const b = document.getElementById("aiSpeak"); if(b) b.click();
-          while(window.speechSynthesis && speechSynthesis.speaking && !demoStop) await new Promise(r=>setTimeout(r,300));
+          const s = document.getElementById("aiSpeak"); if(s) s.click();
+          while(window.speechSynthesis && speechSynthesis.speaking && !demoStop) await pause(300);
           await pause(500);
         }
       } },
-    { do:()=>{},
-      say:"Notice the scope line at the top of that card. The assistant is told exactly which date range and filters are active, so it can never quietly analyze something other than what you are looking at." },
-    { run: async ()=>{
-        const seg = document.querySelectorAll("#aiSeg button");
-        if(seg[1]) seg[1].click();
-        await pause(400);
-      },
-      say:"A quick take for the meeting, and one click away, a detailed assessment with the specific months, mills and figures spelled out. It arrived in a single call, so switching between them is instant." },
-    { do:()=>{ demoHi($("aiVoiceSel")); },
+    { run:()=>demoPoint($("aiScope"), {scroll:false}),
+      say:"Notice the scope line at the top of the card. The assistant is told exactly which date range and filters are active, so it can never quietly analyze something other than what you are looking at." },
+    { run: async ()=>{ const seg = document.querySelectorAll("#aiSeg button");
+                       if(seg[1]) await demoClick(seg[1], {scroll:false}); },
+      say:"A quick take for the meeting, and one click away, a detailed assessment with the specific months, mills and figures spelled out. Both arrived in a single call, so switching is instant." },
+    { run:()=>demoPoint($("aiVoiceSel"), {scroll:false}),
       say:"It reads aloud in whichever voice you prefer, highlighting each word as it speaks, and the card copies as formatted text or emails straight from here." },
-    { run: async ()=>{ const c = document.getElementById("aiClose"); if(c) c.click(); await pause(400); } },
-    { do:()=>{ $("linkToggle").checked = true; chartSel = {kind:"month", value:"2026-07"}; renderTable();
-               demoHi(document.querySelector(".tscroll").closest(".card")); },
+    { run: async ()=>{ const c = document.getElementById("aiClose");
+                       if(c) await demoClick(c, {scroll:false}); await pause(300); } },
+    { run: async ()=>{ await demoClick($("linkToggle"));
+                       chartSel = {kind:"month", value:"2026-07"}; renderTable();
+                       demoHi(document.querySelector(".tscroll").closest(".card")); },
       say:"Now let's verify its suspicion ourselves. With chart linking on, clicking the July bar filters the submission list to just that month's receipts." },
-    { do:()=>{ tSort = {key:"rejRate", dir:-1}; buildThead(); renderTable(); },
+    { run: async ()=>{ const th = document.querySelector('#thead th[data-key="rejRate"]');
+                       if(th) await demoClick(th, {scroll:false});
+                       tSort = {key:"rejRate", dir:-1}; buildThead(); renderTable(); },
       say:"Every column sorts, Excel style. Reject percentage, highest first." },
-    { do:()=>{ tFilt = { rejRate: ">20" }; buildThead(); renderTable(); },
-      say:"And every column filters, including numeric expressions like greater than twenty. Immediately a cluster of late July entries surfaces, with large rejected footage recorded against small inspected quantities. These look less like true quality failures and more like data entry errors worth verifying with the inspection team." },
-    { do:()=>{ const boxes = document.querySelectorAll("#tbody .rowChk");
-               [0,1,2].forEach(i=>{ if(boxes[i]) boxes[i].click(); }); },
+    { run: async ()=>{ const inp = document.querySelector('#thead .frow input[data-fkey="rejRate"]');
+                       if(inp) await demoPoint(inp, {scroll:false});
+                       tFilt = { rejRate: ">20" }; buildThead(); renderTable(); },
+      say:"And every column filters, including numeric expressions like greater than twenty. Immediately a cluster of late July entries surfaces, with large rejected footage against small inspected quantities. These look less like true quality failures and more like data entry errors worth verifying with the inspection team." },
+    { run: async ()=>{ const boxes = document.querySelectorAll("#tbody .rowChk");
+                       for(const i of [0,1,2]) if(boxes[i]) await demoClick(boxes[i], {fast:true, scroll:false}); },
       say:"Tick the specific rows you want to raise, and the export follows your selection rather than the whole table." },
-    { do:()=>{ demoHi($("expSel")); $("expPanel").style.display = "block"; },
-      say:"Export those three as an Excel workbook, a CSV, or raw JSON, ready to attach to a follow up with the team." },
-    { do:()=>{ $("expPanel").style.display = "none"; },
+    { run: async ()=>{ await demoClick($("expBtn")); $("expPanel").style.display = "block"; await pause(300);
+                       const x = $("expPanel").querySelector('[data-fmt="xlsx"]');
+                       if(x) await demoClick(x, {fast:true, scroll:false}); },
+      say:"Export those three rows as an Excel workbook, a CSV, or raw JSON, ready to attach to a follow up. The file is built right in the browser." },
+    { run: async ()=>{ $("expPanel").style.display = "none"; },
       say:"From spotting the anomaly to a short list of root cause candidates, in under a minute." },
 
-    /* ---------------- ACT 5 - getting it out of the browser ---------------- */
-    { do:()=>{ const b = document.querySelector('.pngbtn[data-chart="chMonthly"]'); demoHi(chartCard("chMonthly")); if(b) b.click(); },
-      say:"Any single tile exports as a presentation ready image in one click, stamped with the PAC name and the active date range. That chart just landed in the downloads folder." },
-    { do:()=>{ demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); demoHi($("dashPngBtn")); },
-      say:"Or capture the entire dashboard at once, as a single high resolution image, or as a one page PDF for the quality review pack." },
-    { do:()=>{ demoHi($("kpiMail")); },
+    /* ---------------- ACT 5 - getting it out ---------------- */
+    { run: async ()=>{ demoClearHi();
+                       const b = document.querySelector('.pngbtn[data-chart="chMonthly"]');
+                       if(b) await demoClick(b); },
+      say:"Any single tile exports as a presentation ready image, stamped with the PAC name and the active date range." },
+    { run: async ()=>{ window.scrollTo({top:0, behavior:"smooth"}); await pause(500);
+                       await demoClick($("dashPngBtn")); },
+      say:"Or capture the whole dashboard at once. Every metric and all six charts, rendered into one high resolution image." },
+    { run: async ()=>{ await demoClick($("dashPdfBtn")); },
+      say:"The same thing as a single page PDF, ready to drop into the quality review pack." },
+    { run:()=>demoPoint($("kpiMail")),
       say:"And the envelope on any tile drafts an email with the figures already in the body, so the person who needs to know does not have to open the dashboard to find out." },
-    { do:()=>{ demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); },
+    { run: async ()=>{ demoCursorHide(); demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); },
       say:"Live data, filtered any way you need it, read by an assistant that understands the context, and out the door as a spreadsheet, an image, a PDF or an email. Powered by Alpha TransForm." }
   ];
+
   for(const st of steps){
     if(demoStop) break;
     if(st.run){
@@ -1948,7 +2056,8 @@ async function runDemo(){
     }
     await demoSay(st.say);
   }
-  demoClearHi(); $("demoCap").style.display = "none";
+  demoSuppressDownloads = false;
+  demoCursorHide(); demoClearHi(); $("demoCap").style.display = "none";
 }
 (function initDemo(){
   if(new URLSearchParams(location.search).get("demo") !== "1") return;
@@ -1959,6 +2068,8 @@ async function runDemo(){
   if(window.speechSynthesis) speechSynthesis.getVoices();   // warm the voice list
   document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ demoStop = true;
     if(window.speechSynthesis) speechSynthesis.cancel();
+    demoSuppressDownloads = false;                     // never leave exports muted
+    if(typeof demoCursorHide === "function") demoCursorHide();
     demoClearHi(); const c=$("demoCap"); if(c) c.style.display="none"; } });
   document.getElementById("demoGo").addEventListener("click", async ()=>{
     ov.remove();
