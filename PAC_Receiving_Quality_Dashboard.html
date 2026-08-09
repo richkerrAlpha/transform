@@ -32,6 +32,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-s
 header{background:linear-gradient(135deg,var(--steel) 0%,var(--steel2) 100%);color:#fff;padding:22px 28px;display:flex;flex-wrap:wrap;align-items:center;gap:16px;}
 .logocard{background:#fff;border-radius:10px;padding:8px 14px;display:flex;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .logocard img{height:54px;display:block}
+.demobtn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:8px;
+  padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;transition:.15s;white-space:nowrap}
+.demobtn:hover{background:#fff;color:var(--steel);border-color:#fff}
 .htitle{font-size:30px;font-weight:800;color:var(--accent);letter-spacing:.4px;line-height:1.1}
 header .sub{font-size:13px;opacity:.85;margin-top:3px}
 .verline{font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.5px;margin-top:2px}
@@ -86,6 +89,20 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
   border:3px solid var(--accent);z-index:979;pointer-events:none;opacity:0}
 @keyframes demoPing{0%{transform:scale(.35);opacity:.95}70%{transform:scale(1.25);opacity:.35}100%{transform:scale(1.5);opacity:0}}
 #demoRing.ping{display:block;animation:demoPing .55s ease-out}
+#demoPrev{display:none;position:fixed;inset:0;z-index:985;background:rgba(10,18,26,.72);
+  align-items:center;justify-content:center;padding:40px}
+#demoPrev.on{display:flex}
+#demoPrevBox{background:#fff;border-radius:14px;box-shadow:0 24px 70px rgba(0,0,0,.5);max-width:88vw;max-height:86vh;
+  overflow:hidden;display:flex;flex-direction:column;animation:demoPop .32s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes demoPop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+#demoPrevBar{display:flex;align-items:center;gap:9px;padding:10px 16px;background:#F1F5F8;border-bottom:1px solid #DCE4EA;
+  font-size:13px;font-weight:800;color:#2A3A47}
+#demoPrevBody{overflow:auto;padding:14px}
+#demoPrevBody img{max-width:78vw;max-height:66vh;display:block;border:1px solid #E2E8ED;border-radius:6px}
+#demoPrevBody table{border-collapse:collapse;font-size:12px}
+#demoPrevBody th{background:#217346;color:#fff;font-weight:700;padding:6px 10px;border:1px solid #1B5E3A;white-space:nowrap}
+#demoPrevBody td{padding:5px 10px;border:1px solid #D8E0E6;white-space:nowrap}
+#demoPrevBody tr:nth-child(even) td{background:#F6F9FB}
 #demoToast{display:none;position:fixed;right:22px;bottom:96px;z-index:981;background:rgba(15,25,35,.94);color:#fff;
   font-size:13px;font-weight:700;padding:11px 16px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
 #demoCap{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:26px;max-width:820px;background:rgba(15,25,35,.92);color:#fff;font-size:16px;font-weight:600;line-height:1.45;padding:14px 22px;border-radius:12px;z-index:900;box-shadow:0 10px 30px rgba(0,0,0,.35);text-align:center}
@@ -108,7 +125,14 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .seg button.on{background:var(--steel);color:#fff}
 .tgtspin{width:56px;border:1px solid #CBD5DD;border-radius:6px;padding:2px 5px;font-size:11px;font-weight:700;color:var(--ink);background:#fff}
 .tilebtns{display:flex;gap:6px;align-items:center;flex:none;margin-left:auto}
-.aibtn{border:1px solid var(--steel);background:var(--steel);color:#fff;border-radius:6px;font-size:11px;font-weight:800;letter-spacing:.3px;padding:3px 9px;cursor:pointer;transition:.15s;white-space:nowrap}
+/* All three tile buttons share one look: light fill, accent border, accent
+   text. Previously the AI button was solid steel and the other two were white,
+   which read as three different kinds of control. */
+.aibtn,.pngbtn,.mailbtn{background:var(--card);border:1.5px solid var(--accent);color:var(--steel);
+  border-radius:7px;cursor:pointer;transition:.15s;white-space:nowrap;display:inline-flex;
+  align-items:center;justify-content:center;gap:5px}
+.aibtn:hover,.pngbtn:hover,.mailbtn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.aibtn{font-size:11px;font-weight:800;letter-spacing:.3px;padding:5px 10px}
 .aibtn:hover{background:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
 #aiOverlay{display:none;position:fixed;inset:0;background:rgba(10,20,30,.55);z-index:920;align-items:center;justify-content:center;padding:20px}
 #aiCard{background:var(--card);max-width:640px;width:100%;max-height:82vh;overflow:auto;border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.35);padding:22px 26px}
@@ -136,10 +160,10 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 #aiVoiceSel{max-width:150px;border:1px solid #CBD5DD;border-radius:8px;padding:6px 8px;font-size:12px;font-weight:600;color:var(--ink);background:#fff;margin-top:1px}
 .ai-spin{display:inline-block;width:18px;height:18px;border:3px solid #CBD5DD;border-top-color:var(--steel);border-radius:50%;animation:aispin .8s linear infinite;vertical-align:middle;margin-right:8px}
 @keyframes aispin{to{transform:rotate(360deg)}}
-.mailbtn{border:1px solid #CBD5DD;background:#fff;border-radius:6px;font-size:12px;padding:2px 7px;cursor:pointer;transition:.15s}
-.mailbtn:hover{background:var(--steel);color:#fff;border-color:var(--steel)}
-.pngbtn{border:1px solid #CBD5DD;background:#fff;color:var(--muted);border-radius:7px;font-size:12px;padding:3px 9px;cursor:pointer;transition:.15s;flex:none}
-.pngbtn:hover{background:var(--steel);color:#fff;border-color:var(--steel)}
+.mailbtn{padding:4px 10px}
+
+.pngbtn{padding:4px 10px;flex:none}
+
 .chartbox{position:relative;height:300px}
 .chartbox.tall{height:380px}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
@@ -176,7 +200,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.5",
+  version: "3.6",
   updated: "Aug 7, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -221,7 +245,10 @@ const DATA = [];
 
 <header>
   <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
-    <div class="logocard"><img src="data:image/png;base64,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" alt="PAC Stainless Ltd. — 50 Years"></div>
+    <div style="display:flex;flex-direction:column;align-items:stretch;gap:8px">
+      <div class="logocard"><img src="data:image/png;base64,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" alt="PAC Stainless Ltd. — 50 Years"></div>
+      <button class="demobtn" id="showDemoBtn" title="A guided, narrated tour of what this dashboard can do">&#9654;&nbsp; Show Demo</button>
+    </div>
     <div>
       <div class="htitle">Receiving Quality Dashboard</div>
       <div class="sub" id="subTitle"></div>
@@ -319,16 +346,16 @@ const DATA = [];
 
 <div class="wrap">
   <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-    <span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Download the KPI cards as a PNG image">&#8681; PNG</button><button class="mailbtn" id="kpiMail" title="Email the KPI cards">&#9993;</button></span>
+    <span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Download the KPI cards as a PNG image"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" id="kpiMail" title="Email the KPI cards"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
   </div>
   <div class="kpis" id="kpis"></div>
   <div class="grid">
-    <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
-    <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
-    <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
-    <div class="card c6"><h3><span>Inspector Volume</span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Volume" data-title="Inspector Volume" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
-    <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small>top by inspected footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
-    <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
+    <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" title="Email this chart"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
+    <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" title="Email this chart"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
+    <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" title="Email this chart"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
+    <div class="card c6"><h3><span>Inspector Volume</span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Volume" data-title="Inspector Volume" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" title="Email this chart"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
+    <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small>top by inspected footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" title="Email this chart"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
+    <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" title="Email this chart"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
     <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
       <span style="display:flex;align-items:center;gap:16px">
         <div class="msel" id="expSel">
@@ -1832,17 +1859,33 @@ function ensureVoices(){
     speechSynthesis.onvoiceschanged = ()=>{ clearTimeout(t); res(); };
   });
 }
+/* Long single utterances run words together, so narration is spoken one
+   sentence at a time with a short gap between. Numbers and units also read
+   better with explicit separators. */
+function demoSpeechChunks(text){
+  return String(text).split(/(?<=[.!?])\s+/).filter(s=>s.trim().length);
+}
 function demoSay(text){
   const cap = $("demoCap"); cap.style.display = "block"; cap.textContent = text;
-  return new Promise(res=>{
-    if(!window.speechSynthesis){ setTimeout(res, Math.max(2600, text.length*60)); return; }
-    const u = new SpeechSynthesisUtterance(text);
-    u.rate = 1.0; u.pitch = 1.0;
-    const v = pickVoice();
-    if(v) u.voice = v;
-    u.onend = ()=>setTimeout(res, 350); u.onerror = ()=>res();
-    speechSynthesis.speak(u);
-  });
+  const chunks = demoSpeechChunks(text);
+  if(!window.speechSynthesis){
+    return new Promise(res=>setTimeout(res, Math.max(2600, text.length*60)));
+  }
+  const v = pickVoice();
+  return (async ()=>{
+    for(const part of chunks){
+      if(demoStop) return;
+      await new Promise(res=>{
+        const u = new SpeechSynthesisUtterance(part);
+        u.rate = 0.97; u.pitch = 1.0;          // a touch slower reads clearer
+        if(v) u.voice = v;
+        u.onend = ()=>res(); u.onerror = ()=>res();
+        speechSynthesis.speak(u);
+      });
+      await new Promise(res=>setTimeout(res, 260));   // beat between sentences
+    }
+    await new Promise(res=>setTimeout(res, 200));
+  })();
 }
 function demoHi(id){
   document.querySelectorAll(".demo-hi").forEach(e=>e.classList.remove("demo-hi"));
@@ -1919,74 +1962,135 @@ async function demoSet(el, value){
   e.dispatchEvent(new Event("change"));
   await new Promise(r=>setTimeout(r, 260));
 }
+/* ---------- artifact preview ----------
+   Downloads are suppressed during the tour, so the audience would otherwise
+   never see what an export actually produces. These popups show the real
+   generated artifact - the actual PNG canvas, the actual exported rows. */
+function demoPrevInit(){
+  if($("demoPrev")) return;
+  const o = document.createElement("div"); o.id = "demoPrev";
+  o.innerHTML = '<div id="demoPrevBox"><div id="demoPrevBar"><span id="demoPrevIcon">&#128444;&#65039;</span>' +
+                '<span id="demoPrevName"></span></div><div id="demoPrevBody"></div></div>';
+  document.body.appendChild(o);
+}
+function demoPrevShow(icon, name, node){
+  demoPrevInit();
+  $("demoPrevIcon").innerHTML = icon;
+  $("demoPrevName").textContent = name;
+  const body = $("demoPrevBody"); body.innerHTML = ""; body.appendChild(node);
+  $("demoPrev").classList.add("on");
+}
+function demoPrevHide(){ const p = $("demoPrev"); if(p) p.classList.remove("on"); }
+/* Show a canvas as the image the user would have downloaded. */
+function demoPrevCanvas(name, canvas){
+  if(!canvas) return;
+  const img = document.createElement("img");
+  try{ img.src = canvas.toDataURL("image/png"); }catch(e){ return; }
+  demoPrevShow("&#128444;&#65039;", name, img);
+}
+/* Render exported rows as a spreadsheet-looking preview. */
+function demoPrevRows(name, rowsIn, maxRows){
+  const R = rowsIn.slice(0, maxRows || 8);
+  const cols = EXPORT_COLS.slice(0, 8);
+  const t = document.createElement("table");
+  const hr = document.createElement("tr");
+  cols.forEach(c=>{ const th = document.createElement("th"); th.textContent = c[0]; hr.appendChild(th); });
+  t.appendChild(hr);
+  R.forEach(r=>{
+    const tr = document.createElement("tr");
+    cols.forEach(c=>{ const td = document.createElement("td");
+      let v = c[1](r); if(typeof v === "number") v = fmt(v);
+      td.textContent = (v === null || v === undefined) ? "" : String(v); tr.appendChild(td); });
+    t.appendChild(tr);
+  });
+  demoPrevShow("&#128202;", name, t);
+}
+/* Point at a specific bar inside a Chart.js chart and click it for real. */
+async function demoClickBar(chartId, label){
+  const ch = charts[chartId]; if(!ch) return false;
+  const labels = ch.data.labels || [];
+  let idx = labels.findIndex(l=>String(l).indexOf(label) > -1);
+  if(idx < 0) return false;
+  const bars = ch.getDatasetMeta(ch.data.datasets.length - 1).data;
+  const el = bars && bars[idx]; if(!el) return false;
+  const cv = ch.canvas;
+  cv.scrollIntoView({behavior:"smooth", block:"center"});
+  await new Promise(r=>setTimeout(r, 500));
+  const b = cv.getBoundingClientRect();
+  const cur = $("demoCur"), ring = $("demoRing");
+  const x = b.left + el.x, y = b.top + Math.max(el.y, b.height * 0.15);
+  if(cur){ cur.style.display = "block"; cur.style.transform = "translate(" + x + "px," + y + "px)"; }
+  await new Promise(r=>setTimeout(r, 700));
+  if(ring){ ring.style.left = x + "px"; ring.style.top = y + "px";
+            ring.classList.remove("ping"); void ring.offsetWidth; ring.classList.add("ping"); }
+  await new Promise(r=>setTimeout(r, 300));
+  return true;
+}
 function demoCursorHide(){
   ["demoCur","demoRing","demoToast"].forEach(id=>{ const e = $(id); if(e) e.style.display = "none"; });
+  demoPrevHide();
 }
 async function runDemo(){
   const chartCard = id => $(id).closest(".card");
   const seg2 = ()=>document.querySelectorAll("#dateSeg button");
   const pause = ms => new Promise(r=>setTimeout(r, ms));
-  demoCursorInit();
+  demoCursorInit(); demoPrevInit();
   demoSuppressDownloads = true;      // exports run for real; no download shelf opens
 
-  /* Steps may supply do() for instant changes, or run() for anything that has
-     to drive the pointer and wait. Narration follows the action. */
   const steps = [
 
-    /* ---------------- ACT 1 - orientation ---------------- */
+    /* ===== HEADER ===== */
     { do:()=>{ window.scrollTo({top:0, behavior:"smooth"}); },
-      say:"Welcome to the PAC Stainless Receiving Quality Dashboard. Everything you are about to see is live production data, pulled straight from Alpha TransForm the moment this page loaded." },
+      say:"Welcome to the PAC Stainless Receiving Quality Dashboard. Everything you are about to see is live production data. It was pulled straight from Alpha TransForm the moment this page loaded." },
     { run:()=>demoPoint($("btnApi")),
-      say:"There is no overnight batch and no spreadsheet to refresh. One button re-queries the API, and the whole dashboard rebuilds in about a second." },
-    { run:()=>demoPoint(document.querySelector(".kpis")),
-      say:"Eight key metrics summarize receiving quality. Footage received, inspected, borescoped and rejected, the overall rejection rate, and the true rejected figure, which counts only material actually placed on hold." },
-    { run:()=>demoPoint(chartCard("chWeekly")),
-      say:"Below them sit six charts: weekly footage, monthly rejection rate, rejection reasons, inspector volume, mill performance, and rejections by alloy. Every one responds to every filter." },
+      say:"There is no overnight batch, and no spreadsheet to refresh. One button re-queries the API, and the whole dashboard rebuilds in about a second." },
+    { run: async ()=>{ await demoPoint($("themeSel")); demoHi($("themeSel")); },
+      say:"Presentation matters, because a dashboard nobody wants to look at is a dashboard nobody opens. This selector holds fifteen color schemes." },
+    { run:()=>demoSet($("themeSel"), "navy"),      say:"Navy and gold." },
+    { run:()=>demoSet($("themeSel"), "claret"),    say:"Claret and gold." },
+    { run:()=>demoSet($("themeSel"), "astros"),    say:"There is even a set of Houston team colors, for the days when that matters more than it should." },
+    { run:()=>demoSet($("themeSel"), "steel"),     say:"And back to PAC's own steel blue. Whatever you pick is remembered next time you open it." },
+    { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(600);
+                       await demoSet($("fontSel"), "m"); demoClearHi(); },
+      say:"Text size adjusts the same way. That matters when this is running on a shop floor monitor rather than a laptop." },
 
-    /* ---------------- ACT 2 - presentation ---------------- */
-    { run: async ()=>{ demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); await pause(400);
-                       await demoPoint($("themeSel")); demoHi($("themeSel")); },
-      say:"First, presentation, because a dashboard nobody wants to look at is a dashboard nobody opens. This selector holds fifteen color schemes." },
-    { run: async ()=>{ await demoSet($("themeSel"), "navy"); },
-      say:"Navy and gold." },
-    { run: async ()=>{ await demoSet($("themeSel"), "claret"); },
-      say:"Claret and gold." },
-    { run: async ()=>{ await demoSet($("themeSel"), "astros"); },
-      say:"There is even a set of Houston team colors, for the days when that matters more than it should." },
-    { run: async ()=>{ await demoSet($("themeSel"), "steel"); },
-      say:"And back to PAC's own steel blue palette. Whatever you pick is remembered the next time you open it." },
-    { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(500); await demoSet($("fontSel"), "m"); demoClearHi(); },
-      say:"Text size adjusts the same way, which matters when this is on a shop floor monitor rather than a laptop." },
-    { run: async ()=>{ demoHi(chartCard("chMonthly")); await demoSet($("tgtSpin"), 3); },
-      say:"The quality target itself is yours to set. Drop it to three percent, and every month that now breaches the tighter standard turns red immediately, across the bars, the target line, and the rejection rate metric." },
-    { run: async ()=>{ await demoSet($("tgtSpin"), 5); demoClearHi(); },
-      say:"Back to five percent." },
-
-    /* ---------------- ACT 3 - filtering ---------------- */
+    /* ===== FILTER BAR ===== */
     { run: async ()=>{ demoHi(document.querySelector(".dategroup")); await demoClick(seg2()[1]);
                        await demoSet($("fPeriod"), "thisyear"); },
-      say:"Filtering is built for how quality teams actually work. Period mode gives one click access to fourteen presets: this week, last quarter, year to date, last thirty days. Selecting this year recalculates everything." },
-    { run: async ()=>{ await demoSet($("fPeriod"), "lastmonth"); },
-      say:"Last month, and the entire dashboard follows. Or switch to date mode and pick any custom window you like." },
+      say:"Next, the filter bar. Period mode gives one click access to fourteen presets. This week, last quarter, year to date, last thirty days. Selecting this year recalculates everything above and below it." },
+    { run:()=>demoSet($("fPeriod"), "lastmonth"),
+      say:"Last month, and the entire dashboard follows. Or switch back to date mode and pick any custom window you like." },
     { run: async ()=>{ demoHi($("millSel")); await demoClick($("millBtn"));
                        $("millPanel").style.display = "block"; await pause(300);
                        const boxes = $("millPanel").querySelectorAll(".msChk");
                        if(boxes[0]) await demoClick(boxes[0], {fast:true, scroll:false});
                        if(boxes[1]) await demoClick(boxes[1], {fast:true, scroll:false}); },
-      say:"Every major filter is an Excel style checkbox list. Untick a couple of mills and they drop out of every chart and every metric instantly. Inspector, alloy, and rejection reason all work the same way." },
+      say:"Every major filter is an Excel style checkbox list. Untick a couple of mills, and they drop out of every chart and every metric instantly. Inspector, alloy, and rejection reason all work the same way." },
     { run: async ()=>{ const all = $("millPanel").querySelector(".msAllChk");
                        if(all && !all.checked) await demoClick(all, {fast:true, scroll:false});
                        $("millPanel").style.display = "none";
                        await demoPoint($("btnReset")); demoHi($("btnReset")); },
-      say:"One reset button clears every filter at once, so nobody ever has to hunt for the setting that is hiding half their data." },
+      say:"One reset button clears every filter at once. Nobody ever has to hunt for the setting that is quietly hiding half their data." },
     { run: async ()=>{ await demoSet($("fPeriod"), "all"); demoClearHi(); },
-      say:"Let's restore all mills and all time, because today we are investigating an anomaly." },
+      say:"Let's restore all mills, and all time, because today we are investigating an anomaly." },
 
-    /* ---------------- ACT 4 - the investigation ---------------- */
-    { run:()=>{ demoHi(chartCard("chMonthly")); return demoPoint(chartCard("chMonthly")); },
-      say:"The monthly rejection rate chart flags any month above the five percent target in red. July twenty twenty six stands out dramatically, at over twenty percent. Is quality really five times worse, or is something off in the data?" },
+    /* ===== KPI ROW ===== */
+    { run: async ()=>{ await demoPoint(document.querySelector(".kpis")); demoHi(document.querySelector(".kpis")); },
+      say:"Eight key metrics summarize receiving quality. Footage received, inspected, borescoped and rejected. The overall rejection rate. And the true rejected figure, which counts only material actually placed on hold." },
+
+    /* ===== CHARTS, IN PAGE ORDER ===== */
+    { run: async ()=>{ demoClearHi(); await demoPoint(chartCard("chWeekly")); demoHi(chartCard("chWeekly")); },
+      say:"The first chart tracks weekly footage, inspected against rejected, so seasonality and workload shifts are visible at a glance." },
+    { run: async ()=>{ await demoPoint(chartCard("chReasons")); demoHi(chartCard("chReasons")); },
+      say:"Beside it, rejection reasons by held footage. This answers what is actually going wrong, rather than just how much." },
+    { run: async ()=>{ await demoPoint(chartCard("chMonthly")); demoHi(chartCard("chMonthly")); },
+      say:"Then the monthly rejection rate, and this is where today's story starts." },
+    { run:()=>demoSet($("tgtSpin"), 3),
+      say:"The quality target is yours to set. Drop it to three percent, and every month that now breaches the tighter standard turns red immediately. Across the bars, the target line, and the rejection rate metric above." },
+    { run:()=>demoSet($("tgtSpin"), 5),
+      say:"Back to five percent. July twenty twenty six still stands out dramatically, at over twenty percent. Is quality really five times worse? Or is something off in the data?" },
     { run: async ()=>{ const b = chartCard("chMonthly").querySelector(".aibtn"); await demoPoint(b); },
-      say:"Every tile includes a built in AI analyst. One click, and the dashboard reads the July data for itself. Listen." },
+      say:"Every tile has a built in AI analyst. One click, and the dashboard reads the July data for itself. Listen." },
     { run: async ()=>{
         const b = chartCard("chMonthly").querySelector(".aibtn");
         if(b) await demoClick(b, {scroll:false});
@@ -2000,18 +2104,38 @@ async function runDemo(){
         }
       } },
     { run:()=>demoPoint($("aiScope"), {scroll:false}),
-      say:"Notice the scope line at the top of the card. The assistant is told exactly which date range and filters are active, so it can never quietly analyze something other than what you are looking at." },
+      say:"Notice the scope line at the top of the card. The assistant is told exactly which date range and filters are active. It can never quietly analyze something other than what you are looking at." },
     { run: async ()=>{ const seg = document.querySelectorAll("#aiSeg button");
                        if(seg[1]) await demoClick(seg[1], {scroll:false}); },
-      say:"A quick take for the meeting, and one click away, a detailed assessment with the specific months, mills and figures spelled out. Both arrived in a single call, so switching is instant." },
+      say:"A quick take for the meeting. And one click away, a detailed assessment, with the specific months, mills and figures spelled out. Both arrived in a single call, so switching is instant." },
     { run:()=>demoPoint($("aiVoiceSel"), {scroll:false}),
-      say:"It reads aloud in whichever voice you prefer, highlighting each word as it speaks, and the card copies as formatted text or emails straight from here." },
+      say:"It reads aloud in whichever voice you prefer, highlighting each word as it speaks. The card copies as formatted text, or emails, straight from here." },
     { run: async ()=>{ const c = document.getElementById("aiClose");
                        if(c) await demoClick(c, {scroll:false}); await pause(300); } },
-    { run: async ()=>{ await demoClick($("linkToggle"));
+
+    /* tile PNG - shown as an actual popup image */
+    { run: async ()=>{ const b = document.querySelector('.pngbtn[data-chart="chMonthly"]'); await demoClick(b); },
+      say:"Any single tile exports as a presentation ready image, stamped with the PAC name and the active date range." },
+    { run: async ()=>{ demoPrevCanvas("Monthly_Rejection_Rate.png", chartPngCanvas("chMonthly","Monthly Rejection Rate")); },
+      say:"Here is the actual file it just produced. Drop that straight into a slide deck." },
+    { run: async ()=>{ demoPrevHide(); await pause(300); } },
+
+    /* remaining charts, still in page order */
+    { run: async ()=>{ await demoPoint(chartCard("chInsp")); demoHi(chartCard("chInsp")); },
+      say:"Below, inspector volume shows who is carrying the inspection load." },
+    { run: async ()=>{ await demoPoint(chartCard("chMills")); demoHi(chartCard("chMills")); },
+      say:"Vendor and mill performance ranks suppliers by inspected footage." },
+    { run: async ()=>{ await demoPoint(chartCard("chAlloy")); demoHi(chartCard("chAlloy")); demoClearHi(); },
+      say:"And rejections by alloy, so a material specific problem cannot hide inside the overall number." },
+
+    /* ===== THE TABLE ===== */
+    { run: async ()=>{ await demoClick($("linkToggle")); },
+      say:"Now let's verify the assistant's suspicion ourselves. Chart linking is switched on." },
+    { run: async ()=>{ await demoClickBar("chMonthly", "Jul");
                        chartSel = {kind:"month", value:"2026-07"}; renderTable();
+                       await pause(400);
                        demoHi(document.querySelector(".tscroll").closest(".card")); },
-      say:"Now let's verify its suspicion ourselves. With chart linking on, clicking the July bar filters the submission list to just that month's receipts." },
+      say:"Clicking the July bar filters the submission list below to just that month's receipts." },
     { run: async ()=>{ const th = document.querySelector('#thead th[data-key="rejRate"]');
                        if(th) await demoClick(th, {scroll:false});
                        tSort = {key:"rejRate", dir:-1}; buildThead(); renderTable(); },
@@ -2019,31 +2143,32 @@ async function runDemo(){
     { run: async ()=>{ const inp = document.querySelector('#thead .frow input[data-fkey="rejRate"]');
                        if(inp) await demoPoint(inp, {scroll:false});
                        tFilt = { rejRate: ">20" }; buildThead(); renderTable(); },
-      say:"And every column filters, including numeric expressions like greater than twenty. Immediately a cluster of late July entries surfaces, with large rejected footage against small inspected quantities. These look less like true quality failures and more like data entry errors worth verifying with the inspection team." },
+      say:"And every column filters, including numeric expressions like greater than twenty. Immediately, a cluster of late July entries surfaces. Large rejected footage, against small inspected quantities. These look less like true quality failures, and more like data entry errors worth verifying with the inspection team." },
     { run: async ()=>{ const boxes = document.querySelectorAll("#tbody .rowChk");
                        for(const i of [0,1,2]) if(boxes[i]) await demoClick(boxes[i], {fast:true, scroll:false}); },
-      say:"Tick the specific rows you want to raise, and the export follows your selection rather than the whole table." },
+      say:"Tick the specific rows you want to raise, and the export follows your selection, rather than the whole table." },
     { run: async ()=>{ await demoClick($("expBtn")); $("expPanel").style.display = "block"; await pause(300);
                        const x = $("expPanel").querySelector('[data-fmt="xlsx"]');
-                       if(x) await demoClick(x, {fast:true, scroll:false}); },
-      say:"Export those three rows as an Excel workbook, a CSV, or raw JSON, ready to attach to a follow up. The file is built right in the browser." },
-    { run: async ()=>{ $("expPanel").style.display = "none"; },
-      say:"From spotting the anomaly to a short list of root cause candidates, in under a minute." },
+                       if(x) await demoClick(x, {fast:true, scroll:false});
+                       $("expPanel").style.display = "none"; },
+      say:"Export those rows as an Excel workbook, a CSV, or raw JSON. The file is built right here in the browser." },
+    { run: async ()=>{ demoPrevRows("PAC_Submissions_selection.xlsx", exportScope(), 8); },
+      say:"And this is the workbook it just wrote. The selected submissions, every column, ready to attach to a follow up email." },
+    { run: async ()=>{ demoPrevHide(); await pause(300); },
+      say:"From spotting the anomaly, to a short list of root cause candidates, in under a minute." },
 
-    /* ---------------- ACT 5 - getting it out ---------------- */
-    { run: async ()=>{ demoClearHi();
-                       const b = document.querySelector('.pngbtn[data-chart="chMonthly"]');
-                       if(b) await demoClick(b); },
-      say:"Any single tile exports as a presentation ready image, stamped with the PAC name and the active date range." },
-    { run: async ()=>{ window.scrollTo({top:0, behavior:"smooth"}); await pause(500);
+    /* ===== BACK TO THE HEADER FOR WHOLE-DASHBOARD OUTPUT ===== */
+    { run: async ()=>{ demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); await pause(600);
                        await demoClick($("dashPngBtn")); },
-      say:"Or capture the whole dashboard at once. Every metric and all six charts, rendered into one high resolution image." },
-    { run: async ()=>{ await demoClick($("dashPdfBtn")); },
+      say:"Finally, back to the top. The whole dashboard captures at once. Every metric, and all six charts, rendered into a single high resolution image." },
+    { run: async ()=>{ const c = dashboardCanvas(); demoPrevCanvas("PAC_Dashboard_Snapshot.png", c); },
+      say:"That is the real snapshot, exactly as it would be saved." },
+    { run: async ()=>{ demoPrevHide(); await pause(300); await demoClick($("dashPdfBtn")); },
       say:"The same thing as a single page PDF, ready to drop into the quality review pack." },
     { run:()=>demoPoint($("kpiMail")),
-      say:"And the envelope on any tile drafts an email with the figures already in the body, so the person who needs to know does not have to open the dashboard to find out." },
+      say:"And the envelope on any tile drafts an email with the figures already in the body. The person who needs to know does not have to open the dashboard to find out." },
     { run: async ()=>{ demoCursorHide(); demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); },
-      say:"Live data, filtered any way you need it, read by an assistant that understands the context, and out the door as a spreadsheet, an image, a PDF or an email. Powered by Alpha TransForm." }
+      say:"Live data. Filtered any way you need it. Read by an assistant that understands the context. And out the door as a spreadsheet, an image, a PDF, or an email. Powered by Alpha TransForm." }
   ];
 
   for(const st of steps){
@@ -2057,27 +2182,50 @@ async function runDemo(){
     await demoSay(st.say);
   }
   demoSuppressDownloads = false;
-  demoCursorHide(); demoClearHi(); $("demoCap").style.display = "none";
+  demoPrevHide(); demoCursorHide(); demoClearHi(); $("demoCap").style.display = "none";
 }
+/* The tour can be started two ways: the ?demo=1 splash screen, or the Show Demo
+   button in the header. Both funnel through startDemo(). */
+function demoScaffold(){
+  if(!$("demoCap")){
+    const cap = document.createElement("div"); cap.id = "demoCap"; document.body.appendChild(cap);
+  }
+  if(window.speechSynthesis) speechSynthesis.getVoices();     // warm the voice list
+}
+let demoRunning = false;
+async function startDemo(){
+  if(demoRunning) return;
+  demoRunning = true; demoStop = false;
+  demoScaffold();
+  try{
+    await ensureVoices();                                    // voice list loads async in some browsers
+    const t0 = Date.now();                                   // wait for the live data to land
+    while(rows.length===0 && Date.now()-t0 < 15000 && !demoStop) await new Promise(r=>setTimeout(r,400));
+    await runDemo();
+  } finally { demoRunning = false; }
+}
+function abortDemo(){
+  demoStop = true;
+  if(window.speechSynthesis) speechSynthesis.cancel();
+  demoSuppressDownloads = false;                             // never leave exports muted
+  if(typeof demoPrevHide === "function") demoPrevHide();
+  if(typeof demoCursorHide === "function") demoCursorHide();
+  demoClearHi(); const c = $("demoCap"); if(c) c.style.display = "none";
+}
+document.addEventListener("keydown", e=>{ if(e.key === "Escape") abortDemo(); });
 (function initDemo(){
+  const btn = $("showDemoBtn");
+  if(btn) btn.addEventListener("click", ()=>{
+    if(demoRunning){ abortDemo(); return; }                  // second press stops it
+    window.scrollTo({top:0, behavior:"smooth"});
+    startDemo();
+  });
   if(new URLSearchParams(location.search).get("demo") !== "1") return;
-  const cap = document.createElement("div"); cap.id = "demoCap"; document.body.appendChild(cap);
+  demoScaffold();
   const ov = document.createElement("div"); ov.id = "demoStart";
   ov.innerHTML = '<button id="demoGo">&#9654;&nbsp; Start narrated demo</button><div class="note">Turn your volume up \u00b7 press Esc to stop</div>';
   document.body.appendChild(ov);
-  if(window.speechSynthesis) speechSynthesis.getVoices();   // warm the voice list
-  document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ demoStop = true;
-    if(window.speechSynthesis) speechSynthesis.cancel();
-    demoSuppressDownloads = false;                     // never leave exports muted
-    if(typeof demoCursorHide === "function") demoCursorHide();
-    demoClearHi(); const c=$("demoCap"); if(c) c.style.display="none"; } });
-  document.getElementById("demoGo").addEventListener("click", async ()=>{
-    ov.remove();
-    await ensureVoices();                                    // voice list loads async in some browsers
-    const t0 = Date.now();                                   // wait for the live data to land
-    while(rows.length===0 && Date.now()-t0 < 15000) await new Promise(r=>setTimeout(r,400));
-    runDemo();
-  });
+  document.getElementById("demoGo").addEventListener("click", ()=>{ ov.remove(); startDemo(); });
 })();
 buildThead(); buildFilters(); render();
 if(CONFIG.autoRefreshOnLoad && CONFIG.api.proxyUrl){
