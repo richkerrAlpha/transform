@@ -203,7 +203,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.6",
+  version: "3.7",
   updated: "Aug 7, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -729,7 +729,23 @@ function render(){
 
 /* Every tile repeats the active date range and filters, so a chart read on its
    own - or screenshotted - can never be mistaken for the whole data set. */
+/* True when the view is wide open: every checkbox list fully ticked, no
+   dropdown narrowed, no chart selection, and the date range covering the whole
+   data set. In that state the scope line says nothing useful, so it is hidden
+   rather than repeated seven times. */
+function scopeIsDefault(){
+  for(const key in MSEL){ const m = MSEL[key]; if(m.choice.size !== m.values.length) return false; }
+  for(const id of ["fDisp","fType"]){ const e = $(id); if(e && e.value && e.value !== "All") return false; }
+  if(chartSel) return false;
+  if(!rows.length) return true;
+  const ds = rows.map(r=>r.date).filter(Boolean).sort();
+  const from = $("fFrom").value, to = $("fTo").value;
+  if(from && from > ds[0]) return false;
+  if(to && to < ds[ds.length-1]) return false;
+  return true;
+}
 function syncTileScopes(){
+  const hide = scopeIsDefault();
   const txt = aiScopeSummary();
   const escHtml = v => String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   document.querySelectorAll(".card").forEach(card=>{
@@ -742,6 +758,7 @@ function syncTileScopes(){
       if(h && h.nextSibling) card.insertBefore(s, h.nextSibling); else card.appendChild(s);
     }
     s.innerHTML = "<b>Showing:</b> " + escHtml(txt);
+    s.style.display = hide ? "none" : "";
   });
   const k = document.querySelector(".kpis");
   if(k && k.parentElement){
@@ -749,6 +766,7 @@ function syncTileScopes(){
     if(!s){ s = document.createElement("div"); s.className = "tilescope";
             k.parentElement.insertBefore(s, k); }
     s.innerHTML = "<b>Showing:</b> " + escHtml(txt);
+    s.style.display = hide ? "none" : "";
   }
 }
 
@@ -1175,18 +1193,24 @@ function exportChartPng(id, name, title){
 /* Email client. "gmail" opens a Gmail compose tab, which is what most people
    actually use; "mailto" hands off to the desktop client. A blocked popup
    falls back to mailto rather than silently doing nothing. */
-function openCompose(subject, body){
+function openCompose(subject, body, opts){
+  opts = opts || {};
   const su = encodeURIComponent(subject || "");
   const bd = encodeURIComponent(String(body || "").slice(0, 1800));
   if((CONFIG.emailMode || "gmail") === "gmail"){
     const w = window.open("https://mail.google.com/mail/?view=cm&fs=1&tf=1&su=" + su + "&body=" + bd,
                           "_blank", "noopener");
-    if(w) return;
+    if(w) return true;
   }
+  // Mid-demo, silently launching the desktop mail client would hijack the
+  // screen, so the caller can opt out of the fallback.
+  if(opts.noMailtoFallback) return false;
   location.href = "mailto:?subject=" + su + "&body=" + bd;
+  return true;
 }
 async function emailCanvas(canvas, subject, bodyText){
   let copied = false;
+  const inDemo = typeof demoSuppressDownloads !== "undefined" && demoSuppressDownloads;
   try{
     if(canvas && navigator.clipboard && window.ClipboardItem){
       const blob = await new Promise(res=>canvas.toBlob(res, "image/png"));
@@ -1196,7 +1220,12 @@ async function emailCanvas(canvas, subject, bodyText){
   }catch(err){}
   const note = copied ? "(The chart image is on your clipboard \u2014 paste it here with Cmd+V / Ctrl+V.)\n\n" : "";
   const body = note + (bodyText || "") + "\n\nScope: " + aiScopeSummary();
-  openCompose(subject, body);
+  const ok = openCompose(subject, body, { noMailtoFallback: inDemo });
+  if(typeof demoToast === "function" && inDemo){
+    demoToast(ok ? (copied ? "Gmail draft opened \u00b7 image copied to clipboard" : "Gmail draft opened")
+                 : "Popup blocked \u2014 allow popups to open Gmail");
+  }
+  return copied;
 }
 function roundRect(g, x, y, w, h, r){
   g.beginPath();
@@ -1256,8 +1285,10 @@ document.querySelectorAll(".mailbtn").forEach(btn=>{
   });
 });
 $("kpiMail").addEventListener("click", ()=>{
-  emailCanvas(null, CONFIG.clientName + " \u2014 Key Metrics \u00b7 " + stampDate(),
-    "Key receiving-quality metrics, " + dLabel($("fFrom").value) + " \u2013 " + dLabel($("fTo").value) + ". Use the dashboard's KPI PNG download to attach the image.");
+  // Pass the rendered KPI canvas so the image lands on the clipboard, same as
+  // the chart tiles - previously this passed null and copied nothing.
+  emailCanvas(kpisPngCanvas(), CONFIG.clientName + " \u2014 Key Metrics \u00b7 " + stampDate(),
+    "Key receiving-quality metrics, " + dLabel($("fFrom").value) + " \u2013 " + dLabel($("fTo").value) + ".");
 });
 
 /* ---------- data loading ---------- */
@@ -2098,6 +2129,19 @@ async function demoClickBar(chartId, label){
   await new Promise(r=>setTimeout(r, 300));
   return true;
 }
+/* A native dropdown cannot be forced open from script, but giving it a size
+   renders it as an expanded list, which shows the viewer the real options. */
+function demoExpand(el, n){
+  if(!el) return;
+  el._demoSize = el.size;
+  el.size = Math.min(n || 8, el.options ? el.options.length : (n || 8));
+  el.style.position = "relative"; el.style.zIndex = "970";
+}
+function demoCollapse(el){
+  if(!el) return;
+  el.size = el._demoSize || 0;
+  el.style.zIndex = ""; el.style.position = "";
+}
 function demoCursorHide(){
   ["demoCur","demoRing","demoToast"].forEach(id=>{ const e = $(id); if(e) e.style.display = "none"; });
   demoPrevHide();
@@ -2128,8 +2172,10 @@ async function runDemo(){
 
     /* ===== FILTER BAR ===== */
     { run: async ()=>{ demoHi(document.querySelector(".dategroup")); await demoClick(seg2()[1]);
-                       await demoSet($("fPeriod"), "thisyear"); },
-      say:"Next, the filter bar. Period mode gives one click access to fourteen presets. This week, last quarter, year to date, last thirty days. Selecting this year recalculates everything above and below it." },
+                       await demoPoint($("fPeriod")); demoExpand($("fPeriod"), 9); },
+      say:"Next, the filter bar. Period mode opens a list of fourteen ready made ranges. For example, last quarter, or this month." },
+    { run: async ()=>{ demoCollapse($("fPeriod")); await demoSet($("fPeriod"), "thisyear"); },
+      say:"Choosing this year recalculates every metric and every chart." },
     { run:()=>demoSet($("fPeriod"), "lastmonth"),
       say:"Last month, and the entire dashboard follows. Or switch back to date mode and pick any custom window you like." },
     { run: async ()=>{ demoHi($("millSel")); await demoClick($("millBtn"));
@@ -2148,7 +2194,7 @@ async function runDemo(){
 
     /* ===== KPI ROW ===== */
     { run: async ()=>{ await demoPoint(document.querySelector(".kpis")); demoHi(document.querySelector(".kpis")); },
-      say:"Eight key metrics summarize receiving quality. Footage received, inspected, borescoped and rejected. The overall rejection rate. And the true rejected figure, which counts only material actually placed on hold." },
+      say:"Eight key metrics summarize receiving quality. For example, Footage Inspected, or the overall Rejection Rate." },
 
     /* ===== CHARTS, IN PAGE ORDER ===== */
     { run: async ()=>{ demoClearHi(); await demoPoint(chartCard("chWeekly")); demoHi(chartCard("chWeekly")); },
@@ -2237,8 +2283,8 @@ async function runDemo(){
       say:"That is the real snapshot, exactly as it would be saved." },
     { run: async ()=>{ demoPrevHide(); await pause(210); await demoClick($("dashPdfBtn")); },
       say:"The same thing as a single page PDF, ready to drop into the quality review pack." },
-    { run:()=>demoPoint($("kpiMail")),
-      say:"And the envelope on any tile drafts an email with the figures already in the body. The person who needs to know does not have to open the dashboard to find out." },
+    { run: async ()=>{ await demoClick($("kpiMail")); },
+      say:"And the envelope on any tile opens a ready made email, with the figures and the active filters already in the body, and the tile image copied to your clipboard to paste in. Watch the new tab open." },
     { run: async ()=>{ demoCursorHide(); demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); },
       say:"Live data. Filtered any way you need it. Read by an assistant that understands the context. And out the door as a spreadsheet, an image, a PDF, or an email. Powered by Alpha TransForm." }
   ];

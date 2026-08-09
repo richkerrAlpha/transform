@@ -80,12 +80,26 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}
 .demo-hi{outline:3px solid var(--accent);outline-offset:4px;border-radius:14px;transition:outline .3s}
 #demoCur{display:none;position:fixed;left:0;top:0;width:26px;height:26px;z-index:980;pointer-events:none;
-  transition:transform .6s cubic-bezier(.33,.02,.24,1);filter:drop-shadow(0 3px 5px rgba(0,0,0,.45))}
+  transition:transform .42s cubic-bezier(.33,.02,.24,1);filter:drop-shadow(0 3px 5px rgba(0,0,0,.45))}
 #demoCur svg{display:block}
 #demoRing{display:none;position:fixed;left:0;top:0;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;
   border:3px solid var(--accent);z-index:979;pointer-events:none;opacity:0}
 @keyframes demoPing{0%{transform:scale(.35);opacity:.95}70%{transform:scale(1.25);opacity:.35}100%{transform:scale(1.5);opacity:0}}
 #demoRing.ping{display:block;animation:demoPing .55s ease-out}
+#demoPrev{display:none;position:fixed;inset:0;z-index:985;background:rgba(10,18,26,.72);
+  align-items:center;justify-content:center;padding:40px}
+#demoPrev.on{display:flex}
+#demoPrevBox{background:#fff;border-radius:14px;box-shadow:0 24px 70px rgba(0,0,0,.5);max-width:88vw;max-height:86vh;
+  overflow:hidden;display:flex;flex-direction:column;animation:demoPop .32s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes demoPop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+#demoPrevBar{display:flex;align-items:center;gap:9px;padding:10px 16px;background:#F1F5F8;border-bottom:1px solid #DCE4EA;
+  font-size:13px;font-weight:800;color:#2A3A47}
+#demoPrevBody{overflow:auto;padding:14px}
+#demoPrevBody img{max-width:78vw;max-height:66vh;display:block;border:1px solid #E2E8ED;border-radius:6px}
+#demoPrevBody table{border-collapse:collapse;font-size:12px}
+#demoPrevBody th{background:#217346;color:#fff;font-weight:700;padding:6px 10px;border:1px solid #1B5E3A;white-space:nowrap}
+#demoPrevBody td{padding:5px 10px;border:1px solid #D8E0E6;white-space:nowrap}
+#demoPrevBody tr:nth-child(even) td{background:#F6F9FB}
 #demoToast{display:none;position:fixed;right:22px;bottom:96px;z-index:981;background:rgba(15,25,35,.94);color:#fff;
   font-size:13px;font-weight:700;padding:11px 16px;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
 #demoCap{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:26px;max-width:820px;background:rgba(15,25,35,.92);color:#fff;font-size:16px;font-weight:600;line-height:1.45;padding:14px 22px;border-radius:12px;z-index:900;box-shadow:0 10px 30px rgba(0,0,0,.35);text-align:center}
@@ -115,6 +129,9 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 #aiCard h4{margin:0 0 4px;font-size:18px;color:var(--steel)}
 #aiCard .aisub{font-size:12px;color:var(--muted);margin-bottom:14px}
 #aiCard .aibody{font-size:14px;line-height:1.6;color:var(--ink);white-space:pre-wrap}
+.tilescope{font-size:11px;font-weight:600;color:var(--muted);background:color-mix(in srgb, var(--accent) 8%, #fff);
+  border-left:3px solid var(--accent);border-radius:5px;padding:5px 9px;margin:0 0 10px;line-height:1.4}
+.tilescope b{color:var(--steel);font-weight:800}
 #aiScope{background:color-mix(in srgb, var(--accent) 12%, #fff);border-left:3px solid var(--accent);border-radius:6px;padding:8px 12px;font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:12px;line-height:1.5}
 #aiScope::before{content:"\1F50D  Analyzing: ";font-weight:800;color:var(--steel)}
 #aiCard .aibody b{color:var(--steel)}
@@ -176,7 +193,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.5",
+  version: "1.2",
   updated: "Aug 7, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -201,6 +218,9 @@ const CONFIG = {
   // DATA-FREE PUBLIC BUILD: this file ships with no embedded data, so it is safe
   // to host publicly (e.g. GitHub Pages) for iframe embedding. All data arrives
   // from the live API on load; nothing renders without a working proxyUrl.
+  // Email target for the tile envelope buttons: "gmail" opens a Gmail compose
+  // tab; "mailto" hands off to the machine's default mail client.
+  emailMode: "gmail",
   autoRefreshOnLoad: true,
   // Show the "Load JSON export" file-loader button (manual/demo fallback).
   // Off for the client-facing embed; set true if you ever need to demo from a file.
@@ -223,7 +243,7 @@ const DATA = [];
   <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
     <div class="logocard"><img src="data:image/png;base64,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" alt="PAC Stainless Ltd. — 50 Years"></div>
     <div>
-      <div class="htitle">Receiving Quality Dashboard</div>
+      <div class="htitle">Supplier Performance Dashboard</div>
       <div class="sub" id="subTitle"></div>
       <div class="verline" id="verLine"></div>
     </div>
@@ -323,12 +343,12 @@ const DATA = [];
   </div>
   <div class="kpis" id="kpis"></div>
   <div class="grid">
-    <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
+    <div class="card c8"><h3><span>Reject Rate by Supplier <small id="wkNote">red above target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chSupRate" data-name="Reject_Rate_by_Supplier" data-title="Reject Rate by Supplier" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox tall"><canvas id="chSupRate"></canvas></div></div>
     <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
     <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
-    <div class="card c6"><h3><span>Inspector Volume</span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Volume" data-title="Inspector Volume" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
-    <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small>top by inspected footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
-    <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
+    <div class="card c6"><h3><span>Supplier Rate Trend <small>top 5 by volume, monthly</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chSupTrend" data-name="Supplier_Rate_Trend" data-title="Supplier Rate Trend" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox"><canvas id="chSupTrend"></canvas></div></div>
+    <div class="card c7 c8"><h3><span>Volume vs Reject Rate <small>each point is a supplier</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chScatter" data-name="Volume_vs_Reject_Rate" data-title="Volume vs Reject Rate" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox tall"><canvas id="chScatter"></canvas></div></div>
+    <div class="card c4"><h3><span>Held Footage by Supplier <small>true rejected</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chHeld" data-name="Held_Footage_by_Supplier" data-title="Held Footage by Supplier (true rejected)" title="Download as PNG">&#8681;</button><button class="mailbtn" title="Email this chart">&#9993;</button></span></h3><div class="chartbox tall"><canvas id="chHeld"></canvas></div></div>
     <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
       <span style="display:flex;align-items:center;gap:16px">
         <div class="msel" id="expSel">
@@ -538,7 +558,8 @@ const valueLabels = {
       meta.data.forEach((el, i)=>{
         const v = ds.data[i];
         if(v == null || v === 0) return;                   // don't stamp zeros
-        const txt = /rate/i.test(ds.label||"") ? (100*v).toFixed(1)+"%" : fmt(v);
+        if(typeof v === "object") return;                  // scatter points: tooltip only
+        const txt = (ds.pctLabel || /rate/i.test(ds.label||"")) ? (100*v).toFixed(1)+"%" : fmt(v);
         if(meta.type === "doughnut" || meta.type === "pie"){
           const p = el.tooltipPosition();
           ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
@@ -578,39 +599,44 @@ function render(){
   const recv=sum(S,"fRecv"), insp=sum(S,"fInsp"), rej=sum(S,"fRej"),
         appr=insp-rej, bore=sum(S,"fBore"), trej=sum(S,"tRej"),
         held=S.filter(r=>r.disp==="Hold").length;
-  AGG.kpis = { footageReceived:Math.round(recv), footageInspected:Math.round(insp),
-    footageRejected:Math.round(rej), footageApproved:Math.round(appr),
-    footageBorescoped:Math.round(bore), trueRejectedHeldFt:Math.round(trej),
-    submissionsOnHold:held, submissions:S.length,
-    rejectionRatePct: insp? +(100*rej/insp).toFixed(2) : 0 };
+  const supStats = [...groupSum(S, r=>r.mill, ["fInsp","fRej"])].filter(x=>x[0] && x[1].fInsp > 0)
+    .map(x=>({ mill:x[0], insp:x[1].fInsp, rate:x[1].fRej/x[1].fInsp }));
+  const MINVOL = 200;                                     // ignore tiny samples for above/worst
+  const rated = supStats.filter(x=>x.insp >= MINVOL);
+  const above = rated.filter(x=>x.rate > rateTarget);
+  const worst = rated.slice().sort((a,b)=>b.rate-a.rate)[0];
+  AGG.kpis = { activeSuppliers: supStats.length,
+    footageReceived:Math.round(recv), footageInspected:Math.round(insp),
+    rejectionRatePct: insp? +(100*rej/insp).toFixed(2) : 0,
+    suppliersAboveTargetPct: above.length, ratedSuppliersMinFt: MINVOL,
+    worstSupplier: worst ? { name:worst.mill, ratePct:+(100*worst.rate).toFixed(2) } : null,
+    trueRejectedHeldFt:Math.round(trej), onTargetSuppliers: rated.length - above.length,
+    submissions:S.length };
   $("kpis").innerHTML = [
+    ["Active Suppliers", fmt(supStats.length), "", ""],
     ["Footage Received", fmt(recv), "ft", ""],
     ["Footage Inspected", fmt(insp), "ft", ""],
-    ["Footage Rejected", fmt(rej), "ft", "alert"],
-    ["Footage Approved", fmt(appr), "ft", "good"],
-    ["Rejection Rate", pct(insp?rej/insp:0), "", rej/Math.max(insp,1)>rateTarget?"alert":"good"],
-    ["Inspection Coverage", pct(recv?insp/recv:0), "", ""],
-    ["Footage Borescoped", fmt(bore), "ft", ""],
-    ["Held Lots", fmt(held), "of "+fmt(S.length), held? "alert":"good"],
+    ["Suppliers Above Target", fmt(above.length), "of " + fmt(rated.length) + " rated", above.length ? "alert" : "good"],
+    ["Overall Rejection Rate", pct(insp?rej/insp:0), "", rej/Math.max(insp,1)>rateTarget?"alert":"good"],
+    ["Worst Supplier Rate", worst? pct(worst.rate) : "\u2014", worst? worst.mill : "", worst && worst.rate>rateTarget ? "alert":"good"],
+    ["Held Footage", fmt(trej), "ft", trej? "alert":"good"],
+    ["On-Target Suppliers", fmt(rated.length - above.length), "of " + fmt(rated.length) + " rated", "good"],
   ].map(([t,v,u,cls])=>`<div class="kpi ${cls}"><h4>${t}</h4><div class="v">${v}<span class="u">${u}</span></div></div>`).join("");
 
-  /* weekly */
-  const wk = [...groupSum(S, r=>weekStart(r.date), ["fInsp","fRej"])].sort((a,b)=>a[0].localeCompare(b[0]));
-  AGG.weekly = wk;
-  /* show the selected range, not the week buckets it happened to land in */
-  const rf = $("fFrom").value, rt = $("fTo").value;
-  $("wkNote").textContent = (rf && rt) ? dLabel(rf)+" → "+dLabel(rt)
-    : (wk.length? dLabel(wk[0][0])+" → "+dLabel(wk[wk.length-1][0]) : "");
-  mkChart("chWeekly", { type:"bar",
-    data:{ labels: wk.map(w=>dLabel(w[0])),
-      datasets:[
-        { type:"line", label:"Rejected (ft)", data:wk.map(w=>w[1].fRej), borderColor:B.red,
-          backgroundColor:B.red, tension:.3, pointRadius:2, yAxisID:"y" },
-        { type:"bar", label:"Inspected (ft)", data:wk.map(w=>w[1].fInsp),
-          backgroundColor:B.accent+"CC", borderRadius:4, yAxisID:"y" } ]},
-    options:{ responsive:true, maintainAspectRatio:false,
-      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
-      plugins:{ legend:{ position:"bottom" } } }});
+  /* reject rate by supplier — the hero chart */
+  const supAll = [...groupSum(S, r=>r.mill, ["fInsp","fRej"])].filter(x=>x[0] && x[1].fInsp > 0);
+  const sup = supAll.map(x=>[x[0], x[1], x[1].fRej / x[1].fInsp]).sort((a,b)=>b[2]-a[2]);
+  AGG.supRate = sup.map(x=>({ supplier:x[0], inspected:Math.round(x[1].fInsp),
+    rejected:Math.round(x[1].fRej), ratePct:+(100*x[2]).toFixed(2) }));
+  $("wkNote").textContent = "red above " + (100*rateTarget).toFixed(rateTarget*100 % 1 ? 1 : 0) + "% target \u00b7 sorted worst first";
+  mkChart("chSupRate", { type:"bar",
+    data:{ labels: sup.map(x=>x[0]),
+      datasets:[{ label:"Rejection rate", data: sup.map(x=>x[2]),
+        backgroundColor: sup.map(x=>x[2] > rateTarget ? B.red+"CC" : B.steel+"CC"), borderRadius:4 }]},
+    options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false,
+      scales:{ x:{ beginAtZero:true, ticks:{ callback:v=>(100*v).toFixed(0)+"%" } } },
+      plugins:{ legend:{ display:false },
+        tooltip:{ callbacks:{ label:c=>pct(c.parsed.x) + "  \u00b7  " + fmt(sup[c.dataIndex][1].fInsp) + " ft inspected" } } }}});
 
   /* monthly rate — bars above the CONFIG.rejectionRateTarget flag red */
   const TGT = rateTarget;
@@ -642,35 +668,43 @@ function render(){
         tooltip:{ callbacks:{ label:c=>` ${c.label}: ${fmt(c.parsed)} ft` } } }}});
 
   /* inspectors — bars + rate line (line dataset first) */
-  const ins = AGG.inspectors = [...groupSum(S, r=>r.inspector, ["fInsp","fRej"])].sort((a,b)=>b[1].fInsp-a[1].fInsp);
-  mkChart("chInsp", { type:"bar",
-    data:{ labels: ins.map(x=>x[0]),
-      datasets:[
-        { type:"line", label:"Rejection rate", yAxisID:"y1",
-          data: ins.map(x=>x[1].fInsp? x[1].fRej/x[1].fInsp:0),
-          borderColor:B.red, backgroundColor:B.red, tension:.3, pointRadius:4 },
-        { type:"bar", label:"Inspected (ft)", yAxisID:"y",
-          data: ins.map(x=>x[1].fInsp), backgroundColor:B.steel+"CC", borderRadius:5 } ]},
+  /* supplier rate trend: monthly rejection-rate lines for the top 5 suppliers by volume */
+  const top5 = supAll.slice().sort((a,b)=>b[1].fInsp-a[1].fInsp).slice(0,5).map(x=>x[0]);
+  const moKeys = [...new Set(S.map(r=>monthStart(r.date)).filter(Boolean))].sort();
+  const trendColors = [B.steel, B.accent, B.red, B.steel2, "#8A6FBF"];
+  const trendSets = top5.map((mill, i)=>{
+    const byMo = groupSum(S.filter(r=>r.mill===mill), r=>monthStart(r.date), ["fInsp","fRej"]);
+    return { label: mill, pctLabel:true, tension:.3, pointRadius:3, borderColor: trendColors[i], backgroundColor: trendColors[i],
+      data: moKeys.map(k=>{ const g = byMo.get(k); return g && g.fInsp ? g.fRej/g.fInsp : null; }), spanGaps:true };
+  });
+  AGG.supTrend = { months: moKeys, suppliers: top5,
+    series: trendSets.map(t=>({ supplier:t.label, ratesPct: t.data.map(v=>v==null? null : +(100*v).toFixed(2)) })) };
+  mkChart("chSupTrend", { type:"line",
+    data:{ labels: moKeys.map(dLabel), datasets: trendSets },
     options:{ responsive:true, maintainAspectRatio:false,
-      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } },
-               y1:{ beginAtZero:true, position:"right", grid:{ drawOnChartArea:false },
-                    ticks:{ callback:v=>(100*v).toFixed(0)+"%" } } },
-      plugins:{ legend:{ position:"bottom" } }}});
+      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>(100*v).toFixed(0)+"%" } } },
+      plugins:{ legend:{ position:"bottom" },
+        tooltip:{ callbacks:{ label:c=>c.dataset.label + ": " + pct(c.parsed.y) } } }}});
 
   /* mills — horizontal, top 14 */
-  const mi = AGG.mills = [...groupSum(S, r=>r.mill, ["fInsp","fRej"])].sort((a,b)=>b[1].fInsp-a[1].fInsp).slice(0,14);
-  mkChart("chMills", { type:"bar",
-    data:{ labels: mi.map(x=>x[0]),
-      datasets:[
-        { label:"Inspected (ft)", data:mi.map(x=>x[1].fInsp), backgroundColor:B.accent+"CC", borderRadius:4 },
-        { label:"Rejected (ft)", data:mi.map(x=>x[1].fRej), backgroundColor:B.red+"CC", borderRadius:4 } ]},
-    options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false,
-      scales:{ x:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
-      plugins:{ legend:{ position:"bottom" } }}});
+  /* volume vs reject rate: who is big AND bad */
+  const scat = sup.map(x=>({ mill:x[0], x:x[1].fInsp, y:x[2] }));
+  AGG.scatter = scat.map(p=>({ supplier:p.mill, inspectedFt:Math.round(p.x), ratePct:+(100*p.y).toFixed(2) }));
+  mkChart("chScatter", { type:"scatter",
+    data:{ datasets:[{ label:"Suppliers", data: scat,
+      pointRadius:6, pointHoverRadius:8,
+      pointBackgroundColor: scat.map(p=>p.y > rateTarget ? B.red+"CC" : B.steel+"CC"),
+      pointBorderColor: scat.map(p=>p.y > rateTarget ? B.red : B.steel) }]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      scales:{ x:{ beginAtZero:true, title:{ display:true, text:"Inspected footage (ft)" }, ticks:{ callback:v=>fmt(v) } },
+               y:{ beginAtZero:true, title:{ display:true, text:"Rejection rate" }, ticks:{ callback:v=>(100*v).toFixed(0)+"%" } } },
+      plugins:{ legend:{ display:false },
+        tooltip:{ callbacks:{ label:c=>{ const p = scat[c.dataIndex];
+          return p.mill + ": " + pct(p.y) + " \u00b7 " + fmt(p.x) + " ft"; } } } }}});
 
-  /* alloys — true rejected */
-  const al = AGG.alloys = [...groupSum(S.filter(r=>r.tRej>0), r=>r.alloy, ["tRej"])].sort((a,b)=>b[1].tRej-a[1].tRej);
-  mkChart("chAlloy", { type:"bar",
+  /* held footage by supplier — true rejected */
+  const al = AGG.held = [...groupSum(S.filter(r=>r.tRej>0), r=>r.mill, ["tRej"])].sort((a,b)=>b[1].tRej-a[1].tRej).slice(0,14);
+  mkChart("chHeld", { type:"bar",
     data:{ labels: al.map(x=>x[0]),
       datasets:[{ label:"True rejected (ft)", data:al.map(x=>x[1].tRej),
         backgroundColor:B.steel2+"CC", borderRadius:5 }]},
@@ -679,18 +713,59 @@ function render(){
       plugins:{ legend:{ display:false } }}});
 
   /* chart-click -> list linking (active when the toggle in the list header is on) */
-  hook("chWeekly","week", wk.map(x=>x[0]));
+  hook("chSupRate","mill", sup.map(x=>x[0]));
   hook("chMonthly","month", mo.map(x=>x[0]));
   hook("chReasons","reason", re.map(x=>x[0]));
-  hook("chInsp","inspector", ins.map(x=>x[0]));
-  hook("chMills","mill", mi.map(x=>x[0]));
-  hook("chAlloy","alloy", al.map(x=>x[0]));
+  hook("chScatter","mill", scat.map(p=>p.mill));
+  hook("chHeld","mill", al.map(x=>x[0]));
 
   /* table — newest 50 (respects chart selection when linking is on) */
   scopeRows = S;
   renderTable();
+  syncTileScopes();
 
   $("foot").textContent = `${CONFIG.clientName} · ${CONFIG.title} · ${fmt(rows.length)} submissions loaded · footage prorated from Quantity (ft) by piece counts, matching the Excel R2 methodology \u00b7 Powered by Alpha TransForm`;
+}
+
+/* True when the view is wide open: every checkbox list fully ticked, no
+   dropdown narrowed, no chart selection, and the date range covering the whole
+   data set. In that state the scope line says nothing useful, so it is hidden
+   rather than repeated seven times. */
+function scopeIsDefault(){
+  for(const key in MSEL){ const m = MSEL[key]; if(m.choice.size !== m.values.length) return false; }
+  for(const id of ["fDisp","fType"]){ const e = $(id); if(e && e.value && e.value !== "All") return false; }
+  if(chartSel) return false;
+  if(!rows.length) return true;
+  const ds = rows.map(r=>r.date).filter(Boolean).sort();
+  const from = $("fFrom").value, to = $("fTo").value;
+  if(from && from > ds[0]) return false;
+  if(to && to < ds[ds.length-1]) return false;
+  return true;
+}
+function syncTileScopes(){
+  const hide = scopeIsDefault();
+  const txt = aiScopeSummary();
+  const escHtml = v => String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  document.querySelectorAll(".card").forEach(card=>{
+    if(!card.querySelector("canvas") && !card.querySelector(".kpis")) return;
+    if(card.querySelector(".tscroll")) return;              // the list has its own note
+    let s = card.querySelector(".tilescope");
+    if(!s){
+      s = document.createElement("div"); s.className = "tilescope";
+      const h = card.querySelector("h3");
+      if(h && h.nextSibling) card.insertBefore(s, h.nextSibling); else card.appendChild(s);
+    }
+    s.innerHTML = "<b>Showing:</b> " + escHtml(txt);
+    s.style.display = hide ? "none" : "";
+  });
+  const k = document.querySelector(".kpis");
+  if(k && k.parentElement){
+    let s = k.parentElement.querySelector(".tilescope");
+    if(!s){ s = document.createElement("div"); s.className = "tilescope";
+            k.parentElement.insertBefore(s, k); }
+    s.innerHTML = "<b>Showing:</b> " + escHtml(txt);
+    s.style.display = hide ? "none" : "";
+  }
 }
 
 /* ---------- chart-click -> list linking ---------- */
@@ -938,9 +1013,8 @@ function exportScope(){
   return sel.length ? sel : F;                    // ticked rows only; nothing ticked = whole list
 }
 /* During the guided demo, real downloads are suppressed: the export still runs
-   end to end, but the browser's download shelf never opens over the dashboard.
-   A toast reports what WOULD have been saved. */
-var demoSuppressDownloads = false;   /* var so it is reachable for testing */
+   end to end, but the browser's download shelf never opens over the dashboard. */
+var demoSuppressDownloads = false;
 function dlBlob(name, blob){
   if(demoSuppressDownloads){ demoToast("Saved: " + name); return; }
   const a = document.createElement("a");
@@ -1064,11 +1138,33 @@ function cssVar(name, fallback){
   const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   return v || fallback;
 }
+/* Greedy word wrap for canvas text, capped at maxLines with an ellipsis. */
+function wrapCanvasText(text, font, maxWidth, maxLines){
+  const c = document.createElement("canvas").getContext("2d");
+  c.font = font;
+  const words = String(text || "").split(/\s+/);
+  const lines = []; let cur = "";
+  const fits = s => c.measureText((lines.length === 0 ? "Showing: " : "") + s).width <= maxWidth;
+  for(const w of words){
+    const t = cur ? cur + " " + w : w;
+    if(fits(t)) { cur = t; }
+    else { if(cur) lines.push(cur); cur = w;
+           if(lines.length === maxLines){ lines[maxLines-1] += " \u2026"; return lines; } }
+  }
+  if(cur) lines.push(cur);
+  return lines.slice(0, maxLines);
+}
 function chartPngCanvas(id, title){
   const c = charts[id]; if(!c) return null;
   const src = c.canvas;
   const dpr = (src.width / (src.clientWidth || src.width)) || 1;
-  const pad = Math.round(20 * dpr), titleH = Math.round(34 * dpr);
+  const pad = Math.round(20 * dpr);
+  /* The exported image must stand alone, so the active date range and filters
+     are stamped under the title - otherwise a screenshot of a filtered chart
+     is indistinguishable from the full data set. */
+  const scope = aiScopeSummary();
+  const scopeLines = wrapCanvasText(scope, Math.round(9.5 * dpr) + "px Arial", src.width - pad, 2);
+  const titleH = Math.round(34 * dpr) + scopeLines.length * Math.round(13 * dpr);
   const out = document.createElement("canvas");
   out.width = src.width + pad * 2; out.height = src.height + titleH + pad * 2;
   const g = out.getContext("2d");
@@ -1076,9 +1172,14 @@ function chartPngCanvas(id, title){
   g.fillStyle = cssVar("--steel", "#1B4965");
   g.font = "700 " + Math.round(15 * dpr) + "px Arial";
   g.fillText(title, pad, pad + Math.round(14 * dpr));
+  const stamp = CONFIG.clientName + " \u00b7 " + stampDate();
   g.fillStyle = cssVar("--muted", "#6C7A89");
   g.font = Math.round(10 * dpr) + "px Arial";
-  g.fillText(CONFIG.clientName + " \u00b7 " + stampDate(), out.width - g.measureText(CONFIG.clientName + " \u00b7 " + stampDate()).width - pad, pad + Math.round(14 * dpr));
+  g.fillText(stamp, out.width - g.measureText(stamp).width - pad, pad + Math.round(14 * dpr));
+  g.font = Math.round(9.5 * dpr) + "px Arial";
+  scopeLines.forEach((ln, i)=>{
+    g.fillText((i === 0 ? "Showing: " : "") + ln, pad, pad + Math.round(30 * dpr) + i * Math.round(13 * dpr));
+  });
   g.drawImage(src, pad, titleH + pad);
   return out;
 }
@@ -1086,8 +1187,27 @@ function exportChartPng(id, name, title){
   const out = chartPngCanvas(id, title); if(!out) return;
   out.toBlob(b => dlBlob("PAC_" + name + "_" + stampDate() + ".png", b), "image/png");
 }
+/* Email client. "gmail" opens a Gmail compose tab, which is what most people
+   actually use; "mailto" hands off to the desktop client. A blocked popup
+   falls back to mailto rather than silently doing nothing. */
+function openCompose(subject, body, opts){
+  opts = opts || {};
+  const su = encodeURIComponent(subject || "");
+  const bd = encodeURIComponent(String(body || "").slice(0, 1800));
+  if((CONFIG.emailMode || "gmail") === "gmail"){
+    const w = window.open("https://mail.google.com/mail/?view=cm&fs=1&tf=1&su=" + su + "&body=" + bd,
+                          "_blank", "noopener");
+    if(w) return true;
+  }
+  // Mid-demo, silently launching the desktop mail client would hijack the
+  // screen, so the caller can opt out of the fallback.
+  if(opts.noMailtoFallback) return false;
+  location.href = "mailto:?subject=" + su + "&body=" + bd;
+  return true;
+}
 async function emailCanvas(canvas, subject, bodyText){
   let copied = false;
+  const inDemo = typeof demoSuppressDownloads !== "undefined" && demoSuppressDownloads;
   try{
     if(canvas && navigator.clipboard && window.ClipboardItem){
       const blob = await new Promise(res=>canvas.toBlob(res, "image/png"));
@@ -1096,8 +1216,13 @@ async function emailCanvas(canvas, subject, bodyText){
     }
   }catch(err){}
   const note = copied ? "(The chart image is on your clipboard \u2014 paste it here with Cmd+V / Ctrl+V.)\n\n" : "";
-  location.href = "mailto:?subject=" + encodeURIComponent(subject) +
-    "&body=" + encodeURIComponent(note + (bodyText||"")).slice(0, 1800);
+  const body = note + (bodyText || "") + "\n\nScope: " + aiScopeSummary();
+  const ok = openCompose(subject, body, { noMailtoFallback: inDemo });
+  if(typeof demoToast === "function" && inDemo){
+    demoToast(ok ? (copied ? "Gmail draft opened \u00b7 image copied to clipboard" : "Gmail draft opened")
+                 : "Popup blocked \u2014 allow popups to open Gmail");
+  }
+  return copied;
 }
 function roundRect(g, x, y, w, h, r){
   g.beginPath();
@@ -1279,9 +1404,9 @@ if(!CONFIG.showJsonLoader){
 function dashboardCanvas(){
   const W = 1560, M = 40, S = 2;                    // logical layout, drawn at 2x
   const charts6 = [
-    ["chWeekly","Weekly Footage \u2014 Inspected vs Rejected"], ["chMonthly","Monthly Rejection Rate"],
-    ["chReasons","Rejection Reasons (held ft)"],  ["chInsp","Inspector Volume"],
-    ["chMills","Mill Performance (top 14)"],       ["chAlloy","Alloy Rejections (held ft)"]
+    ["chSupRate","Reject Rate by Supplier"],       ["chReasons","Rejection Reasons (held ft)"],
+    ["chMonthly","Monthly Rejection Rate"],        ["chSupTrend","Supplier Rate Trend (top 5)"],
+    ["chScatter","Volume vs Reject Rate"],         ["chHeld","Held Footage by Supplier"]
   ];
   const kpi = kpisPngCanvas();
   const colW = (W - M*2 - 24) / 2;
@@ -1305,7 +1430,7 @@ function dashboardCanvas(){
   // header band
   g.fillStyle = cssVar("--steel", "#1B4965"); g.fillRect(0, 0, W, headH - 26);
   g.fillStyle = cssVar("--accent", "#62B6CB"); g.font = "800 30px Arial";
-  g.fillText("Receiving Quality Dashboard", M, 46);
+  g.fillText("Supplier Performance Dashboard", M, 46);
   g.fillStyle = "rgba(255,255,255,.92)"; g.font = "600 14px Arial";
   g.fillText(CONFIG.clientName + " \u00b7 " + dLabel($("fFrom").value) + " \u2013 " + dLabel($("fTo").value) +
              " \u00b7 " + fmt(scopeRows.length) + " submissions \u00b7 Rev " + CONFIG.version, M, 72);
@@ -1369,15 +1494,21 @@ $("dashPdfBtn").addEventListener("click", exportDashPdf);
 /* ================= AI insight cards ================= */
 const AGG = {};   // last-render aggregates, keyed for the AI payloads
 const AI_TILES = {
-  kpi:       { title:"Key Metrics",             data:()=>AGG.kpis },
-  chWeekly:  { title:"Weekly Footage",          data:()=>({ weeks: (AGG.weekly||[]).map(w=>({week:w[0], inspected:Math.round(w[1].fInsp), rejected:Math.round(w[1].fRej)})) }) },
-  chMonthly: { title:"Monthly Rejection Rate",  data:()=>({ targetPct: 100*rateTarget, months: (AGG.monthly||[]).map(m=>({month:m[0], inspected:Math.round(m[1].fInsp), rejected:Math.round(m[1].fRej), ratePct: m[1].fInsp? +(100*m[1].fRej/m[1].fInsp).toFixed(2):0})) }) },
+  kpi:       { title:"Key Metrics",
+    guidance:"This is a SUPPLIER PERFORMANCE dashboard: frame everything around supplier (mill) quality. 'Rated' suppliers have at least context-noted minimum inspected footage; tiny-sample suppliers are excluded from above-target/worst calculations.",
+    data:()=>AGG.kpis },
+  chSupRate: { title:"Reject Rate by Supplier",
+    guidance:"Rates for suppliers with small inspected footage are statistically weak \u2014 flag any extreme rate built on a small sample as low-confidence rather than as a definitive supplier problem. Prioritize suppliers that combine meaningful volume with above-target rates.",
+    data:()=>({ targetPct: 100*rateTarget, suppliers: AGG.supRate }) },
+  chSupTrend:{ title:"Supplier Rate Trend",
+    guidance:"These are monthly rejection-rate trajectories for the five highest-volume suppliers. Look for sustained deterioration or improvement across months, single-month spikes (possible data-entry or shipment-specific issues), and divergence between suppliers.",
+    data:()=>AGG.supTrend },
+  chScatter: { title:"Volume vs Reject Rate",
+    guidance:"Each point is a supplier: x = inspected footage (volume), y = rejection rate. The dangerous quadrant is high volume AND above-target rate \u2014 prioritize those. High rate at tiny volume is a data-confidence question, not necessarily a supplier problem.",
+    data:()=>({ targetPct: 100*rateTarget, suppliers: AGG.scatter }) },
   chReasons: { title:"Rejection Reasons",       data:()=>({ heldFootageByReason: (AGG.reasons||[]).map(r=>({reason:r[0], heldFt:Math.round(r[1].tRej)})) }) },
-  chInsp:    { title:"Inspector Volume",
-    guidance:"IMPORTANT: this tile measures inspection ACTIVITY VOLUME only, never inspector job performance. Do not praise or criticize any inspector for finding many or few defects. Zero defects found is NOT evidence of good work; it can equally mean defects were missed. Unusually low or high reject rates for an inspector are flags about the SUPPLIER MIX (mills and material they happened to receive) or sampling coverage, not about the inspector. Frame all findings accordingly.",
-    data:()=>({ inspectors: (AGG.inspectors||[]).map(i=>({inspector:i[0], inspected:Math.round(i[1].fInsp), rejected:Math.round(i[1].fRej), ratePct: i[1].fInsp? +(100*i[1].fRej/i[1].fInsp).toFixed(2):0})) }) },
-  chMills:   { title:"Mill Performance",        data:()=>({ mills: (AGG.mills||[]).map(m=>({mill:m[0], inspected:Math.round(m[1].fInsp), rejected:Math.round(m[1].fRej), ratePct: m[1].fInsp? +(100*m[1].fRej/m[1].fInsp).toFixed(2):0})) }) },
-  chAlloy:   { title:"Alloy Rejections",        data:()=>({ heldFootageByAlloy: (AGG.alloys||[]).map(a=>({alloy:a[0], heldFt:Math.round(a[1].tRej)})) }) }
+  chMonthly: { title:"Monthly Rejection Rate",  data:()=>({ targetPct: 100*rateTarget, months: (AGG.monthly||[]).map(m=>({month:m[0], inspected:Math.round(m[1].fInsp), rejected:Math.round(m[1].fRej), ratePct: m[1].fInsp? +(100*m[1].fRej/m[1].fInsp).toFixed(2):0})) }) },
+  chHeld:    { title:"Held Footage by Supplier", data:()=>({ heldFootageBySupplier: (AGG.held||[]).map(m=>({supplier:m[0], heldFt:Math.round(m[1].tRej)})) }) }
 };
 function aiScopeSummary(){
   const parts = [];
@@ -1530,7 +1661,7 @@ function aiOpen(title, sub, bodyHtml){
       const u = new SpeechSynthesisUtterance(spoken);
       const v = (typeof pickVoice==="function") ? pickVoice() : null;
       if(v) u.voice = v;
-      u.rate = 1.0;
+      u.rate = 1.26;
       const clearHi = ()=>document.querySelectorAll("#aiBody .spkw.on").forEach(x=>x.classList.remove("on"));
       u.onboundary = (ev)=>{
         if(ev.name && ev.name !== "word") return;
@@ -1835,9 +1966,9 @@ function ensureVoices(){
 function demoSay(text){
   const cap = $("demoCap"); cap.style.display = "block"; cap.textContent = text;
   return new Promise(res=>{
-    if(!window.speechSynthesis){ setTimeout(res, Math.max(2600, text.length*60)); return; }
+    if(!window.speechSynthesis){ setTimeout(res, Math.max(1820, text.length*42)); return; }
     const u = new SpeechSynthesisUtterance(text);
-    u.rate = 1.0; u.pitch = 1.0;
+    u.rate = 1.26; u.pitch = 1.0;
     const v = pickVoice();
     if(v) u.voice = v;
     u.onend = ()=>setTimeout(res, 350); u.onerror = ()=>res();
@@ -1880,7 +2011,7 @@ async function demoPoint(el, opts){
   opts = opts || {};
   if(opts.scroll !== false){
     e.scrollIntoView({behavior:"smooth", block:"center"});
-    await new Promise(r=>setTimeout(r, 450));
+    await new Promise(r=>setTimeout(r, 315));
   }
   const cur = $("demoCur"); if(!cur) return e;
   cur.style.display = "block";
@@ -1888,7 +2019,7 @@ async function demoPoint(el, opts){
   const x = b.left + Math.max(0, Math.min(b.width  * (opts.fx == null ? 0.5 : opts.fx), b.width  - 6));
   const y = b.top  + Math.max(0, Math.min(b.height * (opts.fy == null ? 0.5 : opts.fy), b.height - 6));
   cur.style.transform = "translate(" + x + "px," + y + "px)";
-  await new Promise(r=>setTimeout(r, opts.fast ? 380 : 650));
+  await new Promise(r=>setTimeout(r, opts.fast ? 266 : 455));
   return e;
 }
 /* Ripple at the pointer, then really fire the action. */
@@ -1900,9 +2031,9 @@ async function demoClick(el, opts){
     if(m){ ring.style.left = m[1] + "px"; ring.style.top = m[2] + "px"; }
     ring.classList.remove("ping"); void ring.offsetWidth; ring.classList.add("ping");
   }
-  await new Promise(r=>setTimeout(r, 230));
+  await new Promise(r=>setTimeout(r, 160));
   try{ e.click(); }catch(err){}
-  await new Promise(r=>setTimeout(r, 260));
+  await new Promise(r=>setTimeout(r, 180));
   return e;
 }
 /* Point at a control, then set its value the way a user would. */
@@ -1914,136 +2045,245 @@ async function demoSet(el, value){
     if(m){ ring.style.left = m[1] + "px"; ring.style.top = m[2] + "px"; }
     ring.classList.remove("ping"); void ring.offsetWidth; ring.classList.add("ping");
   }
-  await new Promise(r=>setTimeout(r, 220));
+  await new Promise(r=>setTimeout(r, 155));
   e.value = value;
   e.dispatchEvent(new Event("change"));
-  await new Promise(r=>setTimeout(r, 260));
+  await new Promise(r=>setTimeout(r, 180));
+}
+/* ---------- artifact preview ----------
+   Downloads are suppressed during the tour, so the audience would otherwise
+   never see what an export actually produces. These popups show the real
+   generated artifact - the actual PNG canvas, the actual exported rows. */
+function demoPrevInit(){
+  if($("demoPrev")) return;
+  const o = document.createElement("div"); o.id = "demoPrev";
+  o.innerHTML = '<div id="demoPrevBox"><div id="demoPrevBar"><span id="demoPrevIcon">&#128444;&#65039;</span>' +
+                '<span id="demoPrevName"></span></div><div id="demoPrevBody"></div></div>';
+  document.body.appendChild(o);
+}
+function demoPrevShow(icon, name, node){
+  demoPrevInit();
+  $("demoPrevIcon").innerHTML = icon;
+  $("demoPrevName").textContent = name;
+  const body = $("demoPrevBody"); body.innerHTML = ""; body.appendChild(node);
+  $("demoPrev").classList.add("on");
+}
+function demoPrevHide(){ const p = $("demoPrev"); if(p) p.classList.remove("on"); }
+/* Show a canvas as the image the user would have downloaded. */
+function demoPrevCanvas(name, canvas){
+  if(!canvas) return;
+  const img = document.createElement("img");
+  try{ img.src = canvas.toDataURL("image/png"); }catch(e){ return; }
+  demoPrevShow("&#128444;&#65039;", name, img);
+}
+/* Render exported rows as a spreadsheet-looking preview. */
+function demoPrevRows(name, rowsIn, maxRows){
+  const R = rowsIn.slice(0, maxRows || 8);
+  const cols = EXPORT_COLS.slice(0, 8);
+  const t = document.createElement("table");
+  const hr = document.createElement("tr");
+  cols.forEach(c=>{ const th = document.createElement("th"); th.textContent = c[0]; hr.appendChild(th); });
+  t.appendChild(hr);
+  R.forEach(r=>{
+    const tr = document.createElement("tr");
+    cols.forEach(c=>{ const td = document.createElement("td");
+      let v = c[1](r); if(typeof v === "number") v = fmt(v);
+      td.textContent = (v === null || v === undefined) ? "" : String(v); tr.appendChild(td); });
+    t.appendChild(tr);
+  });
+  demoPrevShow("&#128202;", name, t);
+}
+/* Point at a specific bar inside a Chart.js chart and click it for real. */
+async function demoClickBar(chartId, label){
+  const ch = charts[chartId]; if(!ch) return false;
+  const labels = ch.data.labels || [];
+  let idx = labels.findIndex(l=>String(l).indexOf(label) > -1);
+  if(idx < 0) return false;
+  const bars = ch.getDatasetMeta(ch.data.datasets.length - 1).data;
+  const el = bars && bars[idx]; if(!el) return false;
+  const cv = ch.canvas;
+  cv.scrollIntoView({behavior:"smooth", block:"center"});
+  await new Promise(r=>setTimeout(r, 500));
+  const b = cv.getBoundingClientRect();
+  const cur = $("demoCur"), ring = $("demoRing");
+  const x = b.left + el.x, y = b.top + Math.max(el.y, b.height * 0.15);
+  if(cur){ cur.style.display = "block"; cur.style.transform = "translate(" + x + "px," + y + "px)"; }
+  await new Promise(r=>setTimeout(r, 700));
+  if(ring){ ring.style.left = x + "px"; ring.style.top = y + "px";
+            ring.classList.remove("ping"); void ring.offsetWidth; ring.classList.add("ping"); }
+  await new Promise(r=>setTimeout(r, 300));
+  return true;
+}
+/* A native dropdown cannot be forced open from script, but giving it a size
+   renders it as an expanded list, which shows the viewer the real options. */
+function demoExpand(el, n){
+  if(!el) return;
+  el._demoSize = el.size;
+  el.size = Math.min(n || 8, el.options ? el.options.length : (n || 8));
+  el.style.position = "relative"; el.style.zIndex = "970";
+}
+function demoCollapse(el){
+  if(!el) return;
+  el.size = el._demoSize || 0;
+  el.style.zIndex = ""; el.style.position = "";
 }
 function demoCursorHide(){
   ["demoCur","demoRing","demoToast"].forEach(id=>{ const e = $(id); if(e) e.style.display = "none"; });
+  demoPrevHide();
+}
+
+/* Full reset to the dashboard's opening state - filters, sort, selection,
+   chart linking and target - so a demo never narrates the wrong numbers. */
+function demoResetState(){
+  try{
+    chartSel = null; tSort = {key:null, dir:-1}; tFilt = {}; exportSel = new Set();
+    const lt = $("linkToggle"); if(lt) lt.checked = false;
+    for(const key in MSEL){                     // re-tick every checkbox list
+      const m = MSEL[key];
+      m.choice = new Set(m.values);
+      const p = $(m.panel);
+      if(p){ p.querySelectorAll(".msChk").forEach(c=>c.checked = true);
+             const all = p.querySelector(".msAllChk"); if(all){ all.checked = true; all.indeterminate = false; }
+             p.style.display = "none"; }
+      msUpdateBtn(m);
+    }
+    ["fDisp","fType"].forEach(id=>{ const e = $(id); if(e) e.value = "All"; });
+    const seg = document.querySelectorAll("#dateSeg button");
+    if(seg[1]) seg[1].click();                  // period mode
+    const per = $("fPeriod"); if(per){ per.value = "all"; per.dispatchEvent(new Event("change")); }
+    const t = $("tgtSpin");
+    if(t){ t.value = parseFloat((CONFIG.rejectionRateTarget*100).toFixed(1)); t.dispatchEvent(new Event("change")); }
+    buildThead(); render();
+  }catch(err){}
 }
 async function runDemo(){
   const chartCard = id => $(id).closest(".card");
   const seg2 = ()=>document.querySelectorAll("#dateSeg button");
   const pause = ms => new Promise(r=>setTimeout(r, ms));
   demoCursorInit();
-  demoSuppressDownloads = true;      // exports run for real; no download shelf opens
+  demoSuppressDownloads = true;
 
-  /* Steps may supply do() for instant changes, or run() for anything that has
-     to drive the pointer and wait. Narration follows the action. */
+  /* Worst supplier is read from the live aggregates rather than hardcoded, so
+     the tour still makes sense as the data changes month to month. */
+  const worst = () => {
+    const s = (AGG.supRate || []).filter(x=>x.inspected >= 200);
+    return s.length ? s[0] : null;
+  };
+
   const steps = [
 
     /* ---------------- ACT 1 - orientation ---------------- */
     { do:()=>{ window.scrollTo({top:0, behavior:"smooth"}); },
-      say:"Welcome to the PAC Stainless Receiving Quality Dashboard. Everything you are about to see is live production data, pulled straight from Alpha TransForm the moment this page loaded." },
+      say:"Welcome to the PAC Stainless Supplier Performance Dashboard. Everything you are about to see is live production data, pulled straight from Alpha TransForm the moment this page loaded." },
     { run:()=>demoPoint($("btnApi")),
-      say:"There is no overnight batch and no spreadsheet to refresh. One button re-queries the API, and the whole dashboard rebuilds in about a second." },
+      say:"There is no overnight batch and no spreadsheet to maintain. One button re-queries the API, and every supplier metric rebuilds in about a second." },
     { run:()=>demoPoint(document.querySelector(".kpis")),
-      say:"Eight key metrics summarize receiving quality. Footage received, inspected, borescoped and rejected, the overall rejection rate, and the true rejected figure, which counts only material actually placed on hold." },
-    { run:()=>demoPoint(chartCard("chWeekly")),
-      say:"Below them sit six charts: weekly footage, monthly rejection rate, rejection reasons, inspector volume, mill performance, and rejections by alloy. Every one responds to every filter." },
+      say:"Eight metrics frame supplier quality: how many suppliers are active, how much footage they sent, the overall rejection rate, how many suppliers sit above target, and which one is currently worst." },
+    { run:()=>demoPoint(chartCard("chSupRate")),
+      say:"The main chart ranks every supplier by rejection rate, worst first, with anyone above the quality target shown in red. Only suppliers with meaningful inspected volume are rated, so a single bad length from a tiny shipment cannot brand a supplier as your worst." },
 
     /* ---------------- ACT 2 - presentation ---------------- */
-    { run: async ()=>{ demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); await pause(400);
+    { run: async ()=>{ demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); await pause(280);
                        await demoPoint($("themeSel")); demoHi($("themeSel")); },
-      say:"First, presentation, because a dashboard nobody wants to look at is a dashboard nobody opens. This selector holds fifteen color schemes." },
-    { run: async ()=>{ await demoSet($("themeSel"), "navy"); },
-      say:"Navy and gold." },
-    { run: async ()=>{ await demoSet($("themeSel"), "claret"); },
-      say:"Claret and gold." },
+      say:"A word on presentation, because a dashboard nobody wants to look at is a dashboard nobody opens. This selector holds fifteen color schemes." },
+    { run: async ()=>{ await demoSet($("themeSel"), "navy"); },   say:"Navy and gold." },
+    { run: async ()=>{ await demoSet($("themeSel"), "claret"); }, say:"Claret and gold." },
     { run: async ()=>{ await demoSet($("themeSel"), "astros"); },
       say:"There is even a set of Houston team colors, for the days when that matters more than it should." },
     { run: async ()=>{ await demoSet($("themeSel"), "steel"); },
-      say:"And back to PAC's own steel blue palette. Whatever you pick is remembered the next time you open it." },
-    { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(500); await demoSet($("fontSel"), "m"); demoClearHi(); },
+      say:"And back to PAC's own steel blue palette. Whatever you pick is remembered next time." },
+    { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(350); await demoSet($("fontSel"), "m"); demoClearHi(); },
       say:"Text size adjusts the same way, which matters when this is on a shop floor monitor rather than a laptop." },
     { run: async ()=>{ demoHi(chartCard("chMonthly")); await demoSet($("tgtSpin"), 3); },
-      say:"The quality target itself is yours to set. Drop it to three percent, and every month that now breaches the tighter standard turns red immediately, across the bars, the target line, and the rejection rate metric." },
+      say:"The quality target is yours to set. Tighten it to three percent, and every supplier and every month that now breaches the standard turns red immediately, right across the dashboard." },
     { run: async ()=>{ await demoSet($("tgtSpin"), 5); demoClearHi(); },
       say:"Back to five percent." },
 
     /* ---------------- ACT 3 - filtering ---------------- */
     { run: async ()=>{ demoHi(document.querySelector(".dategroup")); await demoClick(seg2()[1]);
                        await demoSet($("fPeriod"), "thisyear"); },
-      say:"Filtering is built for how quality teams actually work. Period mode gives one click access to fourteen presets: this week, last quarter, year to date, last thirty days. Selecting this year recalculates everything." },
-    { run: async ()=>{ await demoSet($("fPeriod"), "lastmonth"); },
-      say:"Last month, and the entire dashboard follows. Or switch to date mode and pick any custom window you like." },
+      say:"Filtering is built for how quality teams actually work. Period mode gives one click access to fourteen presets: this week, last quarter, year to date, last thirty days. Selecting this year recalculates every supplier figure." },
+    { run: async ()=>{ await demoSet($("fPeriod"), "lastquarter"); },
+      say:"Last quarter, and the rankings reorder themselves. This is how you check whether a supplier conversation from three months ago actually changed anything." },
     { run: async ()=>{ demoHi($("millSel")); await demoClick($("millBtn"));
-                       $("millPanel").style.display = "block"; await pause(300);
+                       $("millPanel").style.display = "block"; await pause(210);
                        const boxes = $("millPanel").querySelectorAll(".msChk");
                        if(boxes[0]) await demoClick(boxes[0], {fast:true, scroll:false});
                        if(boxes[1]) await demoClick(boxes[1], {fast:true, scroll:false}); },
-      say:"Every major filter is an Excel style checkbox list. Untick a couple of mills and they drop out of every chart and every metric instantly. Inspector, alloy, and rejection reason all work the same way." },
+      say:"Every major filter is an check list style filter tool. Narrow to the suppliers on your review agenda and everything else drops out of every chart and metric instantly. Inspector, alloy, and rejection reason work the same way." },
     { run: async ()=>{ const all = $("millPanel").querySelector(".msAllChk");
                        if(all && !all.checked) await demoClick(all, {fast:true, scroll:false});
                        $("millPanel").style.display = "none";
                        await demoPoint($("btnReset")); demoHi($("btnReset")); },
-      say:"One reset button clears every filter at once, so nobody ever has to hunt for the setting that is hiding half their data." },
+      say:"One reset clears every filter at once, so nobody ever has to hunt for the setting that is hiding half their data." },
     { run: async ()=>{ await demoSet($("fPeriod"), "all"); demoClearHi(); },
-      say:"Let's restore all mills and all time, because today we are investigating an anomaly." },
+      say:"Back to all suppliers and all time, because now we want the full picture." },
 
-    /* ---------------- ACT 4 - the investigation ---------------- */
-    { run:()=>{ demoHi(chartCard("chMonthly")); return demoPoint(chartCard("chMonthly")); },
-      say:"The monthly rejection rate chart flags any month above the five percent target in red. July twenty twenty six stands out dramatically, at over twenty percent. Is quality really five times worse, or is something off in the data?" },
-    { run: async ()=>{ const b = chartCard("chMonthly").querySelector(".aibtn"); await demoPoint(b); },
-      say:"Every tile includes a built in AI analyst. One click, and the dashboard reads the July data for itself. Listen." },
+    /* ---------------- ACT 4 - finding the problem supplier ---------------- */
+    { run:()=>{ demoHi(chartCard("chScatter")); return demoPoint(chartCard("chScatter")); },
+      say:"This scatter is the tile that earns its keep. Each point is a supplier: volume across the bottom, rejection rate up the side. The dangerous quadrant is the top right, high volume and above target, because that is where a percentage point costs real money." },
+    { run:()=>{ demoHi(chartCard("chSupTrend")); return demoPoint(chartCard("chSupTrend")); },
+      say:"The trend chart tracks monthly rejection rate for the five highest volume suppliers, which separates a genuinely deteriorating supplier from one bad shipment." },
+    { run: async ()=>{ demoHi(chartCard("chSupRate"));
+                       const b = chartCard("chSupRate").querySelector(".aibtn"); await demoPoint(b); },
+      say:"Every tile includes a built in AI analyst. One click, and the dashboard reads the supplier ranking for itself. Listen." },
     { run: async ()=>{
-        const b = chartCard("chMonthly").querySelector(".aibtn");
+        const b = chartCard("chSupRate").querySelector(".aibtn");
         if(b) await demoClick(b, {scroll:false});
         const t0 = Date.now();
-        while(!aiTexts.quick && Date.now()-t0 < 25000 && !demoStop) await pause(400);
+        while(!aiTexts.quick && Date.now()-t0 < 25000 && !demoStop) await pause(280);
         if(aiTexts.quick && !demoStop){
-          await pause(800);
+          await pause(560);
           const s = document.getElementById("aiSpeak"); if(s) s.click();
-          while(window.speechSynthesis && speechSynthesis.speaking && !demoStop) await pause(300);
-          await pause(500);
+          while(window.speechSynthesis && speechSynthesis.speaking && !demoStop) await pause(210);
+          await pause(350);
         }
       } },
     { run:()=>demoPoint($("aiScope"), {scroll:false}),
-      say:"Notice the scope line at the top of the card. The assistant is told exactly which date range and filters are active, so it can never quietly analyze something other than what you are looking at." },
+      say:"Notice the scope line at the top of the card. The assistant is told exactly which date range and filters are active, so it can never quietly analyze something other than what you are looking at. It is also told to treat small sample suppliers with caution rather than name them as your worst." },
     { run: async ()=>{ const seg = document.querySelectorAll("#aiSeg button");
                        if(seg[1]) await demoClick(seg[1], {scroll:false}); },
-      say:"A quick take for the meeting, and one click away, a detailed assessment with the specific months, mills and figures spelled out. Both arrived in a single call, so switching is instant." },
+      say:"A quick take for the meeting, and one click away, a detailed assessment naming the specific suppliers, months and figures. Both arrived in a single call, so switching is instant." },
     { run:()=>demoPoint($("aiVoiceSel"), {scroll:false}),
-      say:"It reads aloud in whichever voice you prefer, highlighting each word as it speaks, and the card copies as formatted text or emails straight from here." },
+      say:"It reads aloud in whichever voice you prefer, highlighting each word as it speaks, and the card copies as formatted text or emails straight from here, ready for a supplier corrective action request." },
     { run: async ()=>{ const c = document.getElementById("aiClose");
-                       if(c) await demoClick(c, {scroll:false}); await pause(300); } },
+                       if(c) await demoClick(c, {scroll:false}); await pause(210); } },
     { run: async ()=>{ await demoClick($("linkToggle"));
-                       chartSel = {kind:"month", value:"2026-07"}; renderTable();
+                       const w = worst(); if(w){ chartSel = {kind:"mill", value:w.supplier}; renderTable(); }
                        demoHi(document.querySelector(".tscroll").closest(".card")); },
-      say:"Now let's verify its suspicion ourselves. With chart linking on, clicking the July bar filters the submission list to just that month's receipts." },
+      say:"Now let's see the evidence. With chart linking on, clicking a supplier's bar filters the submission list to just that supplier's receipts." },
     { run: async ()=>{ const th = document.querySelector('#thead th[data-key="rejRate"]');
                        if(th) await demoClick(th, {scroll:false});
                        tSort = {key:"rejRate", dir:-1}; buildThead(); renderTable(); },
-      say:"Every column sorts, Excel style. Reject percentage, highest first." },
+      say:"Every column sorts with a click. Reject percentage, highest first, so the worst individual receipts rise to the top." },
     { run: async ()=>{ const inp = document.querySelector('#thead .frow input[data-fkey="rejRate"]');
                        if(inp) await demoPoint(inp, {scroll:false});
-                       tFilt = { rejRate: ">20" }; buildThead(); renderTable(); },
-      say:"And every column filters, including numeric expressions like greater than twenty. Immediately a cluster of late July entries surfaces, with large rejected footage against small inspected quantities. These look less like true quality failures and more like data entry errors worth verifying with the inspection team." },
+                       tFilt = { rejRate: ">10" }; buildThead(); renderTable(); },
+      say:"And every column filters, including numeric expressions like greater than ten. Now you have the specific heats and purchase orders behind that supplier's rate, not just an average to argue about." },
     { run: async ()=>{ const boxes = document.querySelectorAll("#tbody .rowChk");
                        for(const i of [0,1,2]) if(boxes[i]) await demoClick(boxes[i], {fast:true, scroll:false}); },
-      say:"Tick the specific rows you want to raise, and the export follows your selection rather than the whole table." },
-    { run: async ()=>{ await demoClick($("expBtn")); $("expPanel").style.display = "block"; await pause(300);
+      say:"Tick the specific receipts you want to raise, and the export follows your selection rather than the whole table." },
+    { run: async ()=>{ await demoClick($("expBtn")); $("expPanel").style.display = "block"; await pause(210);
                        const x = $("expPanel").querySelector('[data-fmt="xlsx"]');
                        if(x) await demoClick(x, {fast:true, scroll:false}); },
-      say:"Export those three rows as an Excel workbook, a CSV, or raw JSON, ready to attach to a follow up. The file is built right in the browser." },
+      say:"Export them as an Excel workbook, a CSV, or raw JSON, ready to attach to the supplier. The file is built right here in the browser." },
     { run: async ()=>{ $("expPanel").style.display = "none"; },
-      say:"From spotting the anomaly to a short list of root cause candidates, in under a minute." },
+      say:"From a ranked list of suppliers to documented evidence for a specific conversation, in about a minute." },
 
     /* ---------------- ACT 5 - getting it out ---------------- */
     { run: async ()=>{ demoClearHi();
-                       const b = document.querySelector('.pngbtn[data-chart="chMonthly"]');
+                       const b = document.querySelector('.pngbtn[data-chart="chSupRate"]');
                        if(b) await demoClick(b); },
       say:"Any single tile exports as a presentation ready image, stamped with the PAC name and the active date range." },
-    { run: async ()=>{ window.scrollTo({top:0, behavior:"smooth"}); await pause(500);
+    { run: async ()=>{ window.scrollTo({top:0, behavior:"smooth"}); await pause(350);
                        await demoClick($("dashPngBtn")); },
       say:"Or capture the whole dashboard at once. Every metric and all six charts, rendered into one high resolution image." },
     { run: async ()=>{ await demoClick($("dashPdfBtn")); },
-      say:"The same thing as a single page PDF, ready to drop into the quality review pack." },
+      say:"The same thing as a single page PDF, ready to drop into a supplier review pack or a quarterly business review." },
     { run:()=>demoPoint($("kpiMail")),
-      say:"And the envelope on any tile drafts an email with the figures already in the body, so the person who needs to know does not have to open the dashboard to find out." },
+      say:"And the envelope on any tile drafts an email with the figures already in the body, so the buyer who needs to know does not have to open the dashboard to find out." },
     { run: async ()=>{ demoCursorHide(); demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); },
-      say:"Live data, filtered any way you need it, read by an assistant that understands the context, and out the door as a spreadsheet, an image, a PDF or an email. Powered by Alpha TransForm." }
+      say:"Live supplier data, filtered any way you need it, read by an assistant that understands the context, and out the door as a spreadsheet, an image, a PDF or an email. Powered by Alpha TransForm." }
   ];
 
   for(const st of steps){
@@ -2076,6 +2316,7 @@ async function runDemo(){
     await ensureVoices();                                    // voice list loads async in some browsers
     const t0 = Date.now();                                   // wait for the live data to land
     while(rows.length===0 && Date.now()-t0 < 15000) await new Promise(r=>setTimeout(r,400));
+    demoResetState();
     runDemo();
   });
 })();
