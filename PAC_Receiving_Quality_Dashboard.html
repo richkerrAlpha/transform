@@ -85,6 +85,9 @@ header .sub{font-size:13px;opacity:.85;margin-top:3px}
 .qaBtn:hover{background:#9A2A2A;color:#fff;border-color:#9A2A2A}
 .qaResolvedLink{font-size:11.5px;color:var(--muted);text-decoration:underline;cursor:pointer;
   padding:8px 16px;display:block}
+.hdr-toggle{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#fff;
+  cursor:pointer;user-select:none;white-space:nowrap}
+.hdr-toggle input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;margin:0}
 
 .poweredby{font-size:11px;color:rgba(255,255,255,.7);white-space:nowrap;margin-left:auto;display:flex;align-items:center;gap:6px}
 .poweredby img{height:22px;display:block;filter:brightness(0) invert(1);opacity:.92}
@@ -292,7 +295,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.25",
+  version: "3.27",
   updated: "Aug 7, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -355,6 +358,9 @@ const DATA = [];
         <button class="hdr-btn" id="dashPngBtn" title="Save the entire dashboard as a PNG image">&#8681; PNG</button>
         <button class="hdr-btn" id="dashPdfBtn" title="Save the entire dashboard as a PDF">&#8681; PDF</button>
       </span>
+      <span class="hdr-div"></span>
+      <label class="hdr-toggle" title="Show or hide the Quality Alert banner on load">
+        <input type="checkbox" id="qaToggle" checked> Quality Alerts</label>
       <select id="themeSel" class="hdr-sel" title="Color scheme"></select>
       <select id="fontSel" class="hdr-sel" title="Text size">
         <option value="s">Aa Small</option>
@@ -1083,6 +1089,14 @@ try{
   if(isFinite(saved) && saved >= 0 && saved <= 0.5) rateTarget = saved;
 }catch(err){}
 $("tgtSpin").value = parseFloat((rateTarget * 100).toFixed(1));
+(function initQaToggle(){
+  const cb = $("qaToggle"); if(!cb) return;
+  cb.checked = qaEnabled();
+  cb.addEventListener("change", ()=>{
+    try{ localStorage.setItem(QA_ENABLED_KEY, cb.checked ? "1" : "0"); }catch(err){}
+    scanQualityAlerts();
+  });
+})();
 $("tgtSpin").addEventListener("change", ()=>{
   let v = parseFloat($("tgtSpin").value);
   if(!isFinite(v) || v < 0) v = CONFIG.rejectionRateTarget * 100;
@@ -1446,6 +1460,11 @@ function adoptInstances(list){
 --------------------------------------------------------------------- */
 const QA_OUTLIER_RATIO = 1.8;
 const QA_STORE_KEY = "pacQaResolved";
+const QA_ENABLED_KEY = "pacQaEnabled";
+function qaEnabled(){
+  try{ const v = localStorage.getItem(QA_ENABLED_KEY); return v === null ? true : v === "1"; }
+  catch(err){ return true; }
+}
 
 function qaResolvedSet(){
   try{ return new Set(JSON.parse(localStorage.getItem(QA_STORE_KEY) || "[]")); }
@@ -1461,9 +1480,30 @@ function qaUnresolve(id){
   const s = qaResolvedSet(); s.delete(id); qaSaveResolved(s); scanQualityAlerts();
 }
 
+let qaDemoSnapshot = null;
+function qaDemoForceState(){
+  // Snapshot the real values so the demo's use of Resolved/toggle never
+  // permanently changes what the actual user has already reviewed.
+  try{ qaDemoSnapshot = { enabled: localStorage.getItem(QA_ENABLED_KEY), resolved: localStorage.getItem(QA_STORE_KEY) }; }
+  catch(err){ qaDemoSnapshot = { enabled: null, resolved: null }; }
+  try{ localStorage.setItem(QA_ENABLED_KEY, "1"); localStorage.setItem(QA_STORE_KEY, "[]"); }catch(err){}
+  const cb = $("qaToggle"); if(cb) cb.checked = true;
+  scanQualityAlerts();
+}
+function qaDemoRestoreState(){
+  if(!qaDemoSnapshot) return;
+  try{
+    if(qaDemoSnapshot.enabled === null) localStorage.removeItem(QA_ENABLED_KEY); else localStorage.setItem(QA_ENABLED_KEY, qaDemoSnapshot.enabled);
+    if(qaDemoSnapshot.resolved === null) localStorage.removeItem(QA_STORE_KEY); else localStorage.setItem(QA_STORE_KEY, qaDemoSnapshot.resolved);
+  }catch(err){}
+  qaDemoSnapshot = null;
+  const cb = $("qaToggle"); if(cb) cb.checked = qaEnabled();
+  scanQualityAlerts();
+}
 function scanQualityAlerts(){
   const box = $("qaBanner"), list = $("qaList"), count = $("qaCount"), rlink = $("qaResolvedLink");
   if(!box || !rows.length) { if(box) box.classList.remove("show"); return; }
+  if(!qaEnabled()){ box.classList.remove("show"); return; }
 
   const mo = [...groupSum(rows, r=>monthStart(r.date), ["fInsp","fRej"])]
     .filter(m => m[1].fInsp > 0)
@@ -2422,6 +2462,7 @@ async function runDemo(){
   const pause = ms => new Promise(r=>setTimeout(r, ms));
   demoCursorInit(); demoPrevInit();
   demoSuppressDownloads = true;      // exports run for real; no download shelf opens
+  qaDemoForceState();                 // guarantee a known alert to narrate, without touching real data
   let demoOpenDD = null;             // a shown-but-not-yet-hidden fake dropdown, if any
 
   const steps = [
@@ -2431,6 +2472,10 @@ async function runDemo(){
       say:"Welcome to the PAC Stainless Receiving Quality Dashboard. Everything you are about to see is live production data. It was pulled straight from Alpha TransForm the moment this page loaded." },
     { run:()=>demoPoint($("btnApi")),
       say:"There is no overnight batch, and no spreadsheet to refresh. One button re-queries the API, and the whole dashboard rebuilds in about a second." },
+    { run: async ()=>{ demoClearHi(); const b = $("qaBanner"); await demoPoint(b); demoHi(b); },
+      say:"And right at the top, the dashboard checks itself. Any month whose rejection rate is a real statistical outlier, not just a little over target, gets flagged here automatically, before anyone has to go hunting through six charts to find it." },
+    { run: async ()=>{ demoClearHi(); },
+      say:"A Resolved button dismisses an alert once it has been reviewed, and that choice is remembered. A checkbox in the header turns the whole feature off, if you would rather monitor quality your own way." },
     { run: async ()=>{ await demoPoint($("themeSel")); demoHi($("themeSel"));
                        demoOpenDD = demoShowOptions($("themeSel"), "steel"); },
       say:"Fifteen color schemes are built in." },
@@ -2479,11 +2524,11 @@ async function runDemo(){
     { run: async ()=>{ await demoPoint(chartCard("chReasons")); demoHi(chartCard("chReasons")); },
       say:"Beside it, rejection reasons by held footage. This answers what is actually going wrong, rather than just how much." },
     { run: async ()=>{ await demoPoint(chartCard("chMonthly")); demoHi(chartCard("chMonthly")); },
-      say:"Then the monthly rejection rate, and this is where today's story starts." },
+      say:"Then the monthly rejection rate. This is exactly what that alert at the top was pointing to." },
     { run:()=>demoSet($("tgtSpin"), 3),
       say:"The quality target is yours to set. Drop it to three percent, and every month that now breaches the tighter standard turns red immediately. Across the bars, the target line, and the rejection rate metric above." },
     { run:()=>demoSet($("tgtSpin"), 5),
-      say:"Back to five percent. July twenty twenty six still stands out dramatically, at over twenty percent. Is quality really five times worse? Or is something off in the data?" },
+      say:"Back to five percent. July twenty twenty six still stands out dramatically, at over twenty percent, exactly as the banner flagged. Is quality really five times worse? Or is something off in the data?" },
     { run: async ()=>{ const b = chartCard("chMonthly").querySelector(".aibtn"); await demoPoint(b); },
       say:"Every tile has a built in AI analyst. One click, and the dashboard reads the July data for itself. Listen." },
     { run: async ()=>{
@@ -2583,6 +2628,7 @@ async function runDemo(){
     if(typeof closePngPop === "function") closePngPop();   // a PNG popover left open from this step must not survive into the next
   }
   demoSuppressDownloads = false;
+  qaDemoRestoreState();
   demoPrevHide(); demoCursorHide(); demoClearHi(); $("demoCap").style.display = "none";
 }
 /* The tour can be started two ways: the ?demo=1 splash screen, or the Show Demo
@@ -2644,6 +2690,7 @@ function abortDemo(){
   demoStop = true;
   if(window.speechSynthesis) speechSynthesis.cancel();
   demoSuppressDownloads = false;                             // never leave exports muted
+  qaDemoRestoreState();                                      // never leave a resolved-state override behind
   if(typeof demoPrevHide === "function") demoPrevHide();
   if(typeof demoCursorHide === "function") demoCursorHide();
   demoClearHi(); const c = $("demoCap"); if(c) c.style.display = "none";
