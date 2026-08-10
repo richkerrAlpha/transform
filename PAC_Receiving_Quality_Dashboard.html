@@ -67,6 +67,25 @@ header .sub{font-size:13px;opacity:.85;margin-top:3px}
   border-radius:6px;padding:8px 10px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer}
 .pngpop button:hover{background:#EDF4F8}
 .hdr-sel option{color:var(--ink)}
+/* -------------------- Quality Alert banner -------------------- */
+#qaBanner{display:none;margin:0 28px 18px;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+#qaBanner.show{display:block}
+.qaHead{display:flex;align-items:center;gap:9px;background:#FBECEC;border:1px solid #F0C4C4;border-bottom:0;
+  border-radius:12px 12px 0 0;padding:10px 16px;font-size:12.5px;font-weight:800;color:#9A2A2A;letter-spacing:.2px}
+.qaHead .qaCount{background:#C1121F;color:#fff;border-radius:999px;font-size:11px;font-weight:800;padding:1px 8px}
+.qaList{border:1px solid #F0C4C4;border-top:0;border-radius:0 0 12px 12px;background:#FFF7F7}
+.qaItem{display:flex;align-items:flex-start;gap:12px;padding:11px 16px;border-top:1px solid #F5DADA}
+.qaItem:first-child{border-top:0}
+.qaText{flex:1;font-size:13px;line-height:1.5;color:#3A2222;cursor:pointer}
+.qaText b{color:#9A2A2A}
+.qaText:hover{text-decoration:underline}
+.qaActions{display:flex;gap:6px;flex:none}
+.qaBtn{border:1px solid #E3B6B6;background:#fff;color:#7A2626;border-radius:7px;padding:5px 10px;
+  font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap}
+.qaBtn:hover{background:#9A2A2A;color:#fff;border-color:#9A2A2A}
+.qaResolvedLink{font-size:11.5px;color:var(--muted);text-decoration:underline;cursor:pointer;
+  padding:8px 16px;display:block}
+
 .poweredby{font-size:11px;color:rgba(255,255,255,.7);white-space:nowrap;margin-left:auto;display:flex;align-items:center;gap:6px}
 .poweredby img{height:22px;display:block;filter:brightness(0) invert(1);opacity:.92}
 @media(max-width:760px){ .poweredby{margin-left:0} }
@@ -273,7 +292,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.22",
+  version: "3.25",
   updated: "Aug 7, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -421,16 +440,19 @@ const DATA = [];
 
 <div class="wrap">
   <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-    <span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Download the KPI cards as a PNG image"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
+    <span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Copy or save the KPI cards as a PNG image"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
   </div>
-  <div class="kpis" id="kpis"></div>
+  <div id="qaBanner"><div class="qaHead"><span>&#9888; Quality Alert</span><span class="qaCount" id="qaCount"></span></div>
+  <div class="qaList" id="qaList"></div>
+  <div class="qaResolvedLink" id="qaResolvedLink" style="display:none"></div></div>
+<div class="kpis" id="kpis"></div>
   <div class="grid">
-    <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
-    <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
-    <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
-    <div class="card c6"><h3><span>Inspector Volume</span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Volume" data-title="Inspector Volume" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
-    <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small>top by inspected footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
-    <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
+    <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
+    <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
+    <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
+    <div class="card c6"><h3><span>Inspector Volume</span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Volume" data-title="Inspector Volume" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
+    <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small>top by inspected footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
+    <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
     <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
       <span style="display:flex;align-items:center;gap:16px">
         <div class="msel" id="expSel">
@@ -1069,6 +1091,7 @@ $("tgtSpin").addEventListener("change", ()=>{
   rateTarget = v / 100;
   try{ localStorage.setItem("pacTarget", rateTarget); }catch(err){}
   render();
+  scanQualityAlerts();   // target moved, so what counts as an outlier may have changed
 });
 
 /* ---------- export (XLSX / CSV / JSON) ---------- */
@@ -1409,7 +1432,122 @@ function transformInstance(inst){
 }
 function adoptInstances(list){
   rows = list.map(transformInstance).filter(r=>r.id);
-  buildFilters(); render();
+  buildFilters(); render(); scanQualityAlerts();
+}
+
+/* ---------------------------------------------------------------------
+   Quality Alert banner - deterministic only, no AI call. Runs once per
+   full data load against ALL rows, not the current filtered view, so it
+   catches things regardless of what the person happens to be looking at.
+   A month qualifies if its rejection rate is both above the configured
+   target AND at least 1.8x the average of every other month - that ratio
+   is what separates a genuine outlier (July's 20% spike against a ~5%
+   backdrop) from an ordinary month that is merely a little over target.
+--------------------------------------------------------------------- */
+const QA_OUTLIER_RATIO = 1.8;
+const QA_STORE_KEY = "pacQaResolved";
+
+function qaResolvedSet(){
+  try{ return new Set(JSON.parse(localStorage.getItem(QA_STORE_KEY) || "[]")); }
+  catch(err){ return new Set(); }
+}
+function qaSaveResolved(set){
+  try{ localStorage.setItem(QA_STORE_KEY, JSON.stringify([...set])); }catch(err){}
+}
+function qaResolve(id){
+  const s = qaResolvedSet(); s.add(id); qaSaveResolved(s); scanQualityAlerts();
+}
+function qaUnresolve(id){
+  const s = qaResolvedSet(); s.delete(id); qaSaveResolved(s); scanQualityAlerts();
+}
+
+function scanQualityAlerts(){
+  const box = $("qaBanner"), list = $("qaList"), count = $("qaCount"), rlink = $("qaResolvedLink");
+  if(!box || !rows.length) { if(box) box.classList.remove("show"); return; }
+
+  const mo = [...groupSum(rows, r=>monthStart(r.date), ["fInsp","fRej"])]
+    .filter(m => m[1].fInsp > 0)
+    .map(m => ({ month:m[0], rate: m[1].fRej / m[1].fInsp, inspected:Math.round(m[1].fInsp), rejected:Math.round(m[1].fRej) }));
+
+  const found = [];
+  mo.forEach((m, i) => {
+    const others = mo.filter((_, j) => j !== i);
+    if(!others.length) return;
+    const avgOthers = others.reduce((a,x)=>a+x.rate,0) / others.length;
+    if(m.rate > rateTarget && avgOthers > 0 && m.rate >= avgOthers * QA_OUTLIER_RATIO){
+      found.push({
+        id: "month:" + m.month,
+        text: "<b>" + dLabel(m.month) + "</b> rejection rate is <b>" + (100*m.rate).toFixed(1) + "%</b> \u2014 about " +
+              (m.rate/avgOthers).toFixed(1) + "x the average of the rest of the year (" + (100*avgOthers).toFixed(1) + "%).",
+        month: m.month
+      });
+    }
+  });
+
+  const resolved = qaResolvedSet();
+  const active = found.filter(a => !resolved.has(a.id));
+  const dismissed = found.filter(a => resolved.has(a.id));
+
+  if(!active.length){
+    box.classList.remove("show");
+    // Still offer a way back to alerts the person already reviewed, even
+    // when nothing is currently active, so "resolved" never reads as "gone".
+    if(dismissed.length){
+      box.classList.add("show");
+      list.innerHTML = "";
+      count.textContent = "0";
+        box.querySelector(".qaHead span:first-child").innerHTML = "&#9989; No active alerts";
+      box.querySelector(".qaHead").style.background = "#EAF6EE";
+      box.querySelector(".qaHead").style.borderColor = "#BFE3C8";
+      box.querySelector(".qaHead").style.color = "#1F6B37";
+      box.querySelector(".qaList").style.borderColor = "#BFE3C8";
+      count.style.display = "none";
+    } else {
+      return;
+    }
+  } else {
+    box.classList.add("show");
+    count.style.display = "";
+    count.textContent = String(active.length);
+    box.querySelector(".qaHead span:first-child").innerHTML = "&#9888; Quality Alert";
+    box.querySelector(".qaHead").style.background = "";
+    box.querySelector(".qaHead").style.borderColor = "";
+    box.querySelector(".qaHead").style.color = "";
+    box.querySelector(".qaList").style.borderColor = "";
+  }
+
+  list.innerHTML = active.map(a =>
+    '<div class="qaItem"><span class="qaText" data-month="' + a.month + '">' + a.text + '</span>' +
+    '<span class="qaActions"><button class="qaBtn" data-resolve="' + a.id + '">Resolved</button></span></div>'
+  ).join("");
+
+  list.querySelectorAll(".qaText").forEach(el => el.addEventListener("click", () => {
+    const seg = document.querySelectorAll("#dateSeg button");
+    if(seg[1]) seg[1].click();
+    const per = $("fPeriod"); if(per){ per.value = "all"; per.dispatchEvent(new Event("change")); }
+    chartSel = { kind:"month", value: el.dataset.month }; renderTable();
+    const card = document.getElementById("chMonthly"); if(card) card.closest(".card").scrollIntoView({behavior:"smooth", block:"center"});
+  }));
+  list.querySelectorAll("[data-resolve]").forEach(btn => btn.addEventListener("click", (e) => {
+    e.stopPropagation(); qaResolve(btn.dataset.resolve);
+  }));
+
+  if(dismissed.length){
+    rlink.style.display = "block";
+    rlink.textContent = dismissed.length + " resolved alert" + (dismissed.length>1?"s":"") + " \u2014 show";
+    rlink.onclick = () => {
+      list.innerHTML += dismissed.map(a =>
+        '<div class="qaItem" style="opacity:.6"><span class="qaText" data-month="' + a.month + '">' + a.text + '</span>' +
+        '<span class="qaActions"><button class="qaBtn" data-unresolve="' + a.id + '">Un-resolve</button></span></div>'
+      ).join("");
+      list.querySelectorAll("[data-unresolve]").forEach(btn => btn.addEventListener("click", (e) => {
+        e.stopPropagation(); qaUnresolve(btn.dataset.unresolve);
+      }));
+      rlink.style.display = "none";
+    };
+  } else {
+    rlink.style.display = "none";
+  }
 }
 $("fileIn").addEventListener("change", ev=>{
   const f = ev.target.files[0]; if(!f) return;
@@ -1650,7 +1788,7 @@ function aiOpen(title, sub, bodyHtml){
       '<div id="aiScope"></div>' +
       '<div class="seg" id="aiSeg" style="margin-bottom:12px"><button data-m="quick" class="on">Quick take</button><button data-m="detailed">Detailed</button></div>' +
       '<div class="aibody" id="aiBody"></div>' +
-      '<div class="airow"><span class="aisub">AI-generated \u2014 verify before acting</span><span><button id="aiPngBtn" title="Download this assessment as a PNG">&#8681; PNG</button> <button id="aiCopy">Copy</button> <button id="aiClose">Close</button></span></div></div>';
+      '<div class="airow"><span class="aisub">AI-generated \u2014 verify before acting</span><span><button id="aiPngBtn" title="Copy or save this assessment as a PNG">&#8681; PNG</button> <button id="aiCopy">Copy</button> <button id="aiClose">Close</button></span></div></div>';
     document.body.appendChild(ov);
     const aiHush = ()=>{ if(window.speechSynthesis) speechSynthesis.cancel();
       document.querySelectorAll("#aiBody .spkw.on").forEach(x=>x.classList.remove("on"));
@@ -2298,7 +2436,6 @@ async function runDemo(){
       say:"Fifteen color schemes are built in." },
     { run: async ()=>{ await demoSet($("themeSel"), "gold"); },
       say:"Black and gold." },
-    { run:()=>demoSet($("themeSel"), "astros"),    say:"One of the Houston team sets." },
     { run: async ()=>{ await demoSet($("themeSel"), "steel"); demoClearHi(); },
       say:"And back to PAC's own default." },
     { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(600);
@@ -2315,7 +2452,7 @@ async function runDemo(){
                        demoOpenDD = demoShowOptions($("fPeriod"), "all", 10); },
       say:"Period mode opens a list of sixteen ready made ranges, from today and yesterday out to full history. For example, last quarter, or this month." },
     { run: async ()=>{ await demoSet($("fPeriod"), "thisyear"); },
-      say:"Choosing this year recalculates every metric and every chart." },
+      say:"Selecting a time period, or setting a specific date range, causes the charts and KPIs to instantly update." },
     { run:()=>demoSet($("fPeriod"), "lastmonth"),
       say:"Last month, and the entire dashboard follows. Or switch back to date mode and pick any custom window you like." },
     { run: async ()=>{ demoHi($("millSel")); await demoClick($("millBtn"));
@@ -2367,7 +2504,7 @@ async function runDemo(){
                        if(seg[1]) await demoClick(seg[1], {scroll:false}); },
       say:"A quick take for the meeting. And one click away, a detailed assessment, with the specific months, mills and figures spelled out. Both arrived in a single call, so switching is instant." },
     { run:()=>demoPoint($("aiVoiceSel"), {scroll:false}),
-      say:"It reads aloud in whichever voice you prefer, highlighting each word as it speaks. The card copies as formatted text, or emails, straight from here." },
+      say:"It reads aloud in whichever voice you prefer, highlighting each word as it speaks, and the card copies as formatted text straight from here." },
     { run: async ()=>{ const c = document.getElementById("aiClose");
                        if(c) await demoClick(c, {scroll:false}); await pause(210); } },
 
@@ -2443,6 +2580,7 @@ async function runDemo(){
     // Any dropdown preview opened during this step has now been narrated over,
     // so it can close before the next step begins.
     if(demoOpenDD){ demoHideOptions(demoOpenDD); demoOpenDD = null; }
+    if(typeof closePngPop === "function") closePngPop();   // a PNG popover left open from this step must not survive into the next
   }
   demoSuppressDownloads = false;
   demoPrevHide(); demoCursorHide(); demoClearHi(); $("demoCap").style.display = "none";
@@ -2498,6 +2636,7 @@ function demoResetState(){
     resetAllFilters();
     const t = $("tgtSpin");
     if(t){ t.value = parseFloat((CONFIG.rejectionRateTarget*100).toFixed(1)); t.dispatchEvent(new Event("change")); }
+    scanQualityAlerts();
     buildThead(); render();
   }catch(err){}
 }
