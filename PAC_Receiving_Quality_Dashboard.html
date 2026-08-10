@@ -307,7 +307,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.38",
+  version: "3.40",
   updated: "Aug 10, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -636,6 +636,14 @@ document.addEventListener("click", (e)=>{
    Both the chart build and its click-matching route through this one
    function so they can never drift out of sync with each other. */
 function reasonLabel(r){ return r.reason || "(No reason specified)"; }
+/* An exact match against "Hold" is fragile against anything a human or an
+   external system could introduce - trailing whitespace, "HOLD", "hold".
+   disp itself stays UNTOUCHED for display (so a genuine typo like "Hld"
+   stays visible rather than being silently normalized away); this is only
+   for deciding whether a record counts as held. */
+function normDisp(v){ return String(v || "").trim().toLowerCase(); }
+function isHold(v){ return normDisp(v) === "hold"; }
+function isRelease(v){ return normDisp(v) === "release"; }
 function inScope(r){
   const f=$("fFrom").value, t=$("fTo").value;
   if(f && r.date < f) return false;
@@ -727,7 +735,7 @@ function render(){
   /* KPIs */
   const recv=sum(S,"fRecv"), insp=sum(S,"fInsp"), rej=sum(S,"fRej"),
         appr=insp-rej, bore=sum(S,"fBore"), trej=sum(S,"tRej"),
-        held=S.filter(r=>r.disp==="Hold").length;
+        held=S.filter(r=>isHold(r.disp)).length;
   AGG.kpis = { footageReceived:Math.round(recv), footageInspected:Math.round(insp),
     footageRejected:Math.round(rej), footageApproved:Math.round(appr),
     footageBorescoped:Math.round(bore), trueRejectedHeldFt:Math.round(trej),
@@ -1045,7 +1053,7 @@ function renderTable(){
   } else { chip.style.display = "none"; }
   $("tbody").innerHTML = T.map(r=>{
     const link = CONFIG.submissionBrowserUrl ? ` onclick="window.open('${CONFIG.submissionBrowserUrl.replace("{id}", encodeURIComponent(r.id))}','_blank')" style="cursor:pointer"` : "";
-    const rowcls = r.disp==="Hold" ? "rowhold" : (r.disp==="Release" ? "rowrelease" : "");
+    const rowcls = isHold(r.disp) ? "rowhold" : (isRelease(r.disp) ? "rowrelease" : "");
     const rid = String(r.id||"").replace(/"/g,"&quot;");
     const ck = exportSel.has(String(r.id)) ? " checked" : "";
     return `<tr class="${rowcls}"${link}><td class="chkcol"><input type="checkbox" class="rowChk" data-rid="${rid}"${ck} onclick="event.stopPropagation()"></td><td style="white-space:nowrap">${dLabel(r.date)}</td><td>${r.mill||""}</td><td>${r.alloy||""}</td>
@@ -1053,7 +1061,7 @@ function renderTable(){
       <td style="text-align:right">${fmt(r.fRecv)}</td><td style="text-align:right">${fmt(r.fInsp)}</td>
       <td style="text-align:right;color:${r.fRej? "var(--red)":"inherit"}">${fmt(r.fRej)}</td>
       <td style="text-align:right;font-weight:600;color:${(r.fInsp>0 && r.fRej/r.fInsp>rateTarget)? "var(--red)":"inherit"}">${r.fInsp>0? (100*r.fRej/r.fInsp).toFixed(1)+"%" : "\u2014"}</td>
-      <td><span class="pill ${r.disp==="Hold"?"hold":"release"}">${r.disp||""}</span></td>
+      <td><span class="pill ${isHold(r.disp)?"hold":"release"}">${r.disp||""}</span></td>
       <td>${r.reason||""}</td></tr>`;
   }).join("");
   $("tbody").querySelectorAll(".rowChk").forEach(c=>c.addEventListener("change", ()=>{
@@ -1502,7 +1510,19 @@ function transformInstance(inst){
     po:fd.PONumber||"", heat:fd.Heat||"", disp, reason:fd.PrimaryRejectionReason||"",
     pcsInsp:num(fd.PiecesInspected), pcsAcc:num(fd.PiecesAccepted), pcsRej:rejP,
     fRecv:qty, fInsp, fBore: recvP>0? qty*bore/recvP:0, fRej,
-    fAppr:fInsp-fRej, tRej: disp==="Hold"? fRej:0 };
+    fAppr:fInsp-fRej,
+    // A record marked Hold with a computed rejected footage of exactly 0
+    // does not make business sense - if nothing were wrong, it would not be
+    // on hold. The far more likely explanation is that PiecesReceived and/or
+    // PiecesRejected simply have not been tallied yet (that often happens
+    // later, at formal disposition, not at the moment something is flagged).
+    // Rather than silently reporting 0 - which makes a genuinely held lot
+    // invisible to every held-footage chart and KPI - fall back to treating
+    // the WHOLE submitted footage as held, since the entire lot is in fact
+    // being withheld pending review regardless of what fraction is ultimately
+    // found defective. This only affects tRej (held-footage reporting), not
+    // the general fRej/rejection-rate math used elsewhere.
+    tRej: isHold(disp) ? (fRej > 0 ? fRej : qty) : 0 };
 }
 function adoptInstances(list){
   rows = list.map(transformInstance).filter(r=>r.id);
