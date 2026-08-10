@@ -87,6 +87,17 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
   .filters .msel-btn{width:100%}
   #btnReset{width:100%}
 }
+/* Fake dropdown used only during the guided demo, so a select's real list can
+   be shown without switching the control into the browser's native multi-row
+   listbox mode - that renders with OS chrome (system font, plain scrollbar,
+   blue selection) that clashes with the rest of the page. This is a purely
+   decorative overlay; the actual selection still happens on the real <select>. */
+.demoFakeDD{position:fixed;z-index:985;background:#fff;border:1px solid #CBD5DD;border-radius:9px;
+  box-shadow:0 12px 30px rgba(0,0,0,.22);max-height:230px;overflow-y:auto;padding:5px;pointer-events:none;
+  font-family:inherit}
+.demoFakeDD .ddRow{font-size:12.5px;font-weight:600;color:var(--ink);padding:6px 11px;border-radius:6px;
+  white-space:nowrap}
+.demoFakeDD .ddRow.sel{background:color-mix(in srgb, var(--accent) 14%, #fff);color:var(--steel)}
 .filters label{display:flex;flex-direction:column;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;gap:4px}
 .filters input,.filters select{border:1px solid #CBD5DD;border-radius:8px;padding:7px 9px;font-size:13px;background:#fff;color:var(--ink);min-width:120px}
 .msel{position:relative}
@@ -230,7 +241,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "1.7",
+  version: "1.9",
   updated: "Aug 7, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -327,6 +338,8 @@ const DATA = [];
     <span id="periodBox" style="display:none;gap:12px">
       <label>Period
         <select id="fPeriod">
+          <option value="today">Today</option>
+          <option value="yesterday">Yesterday</option>
           <option value="thisweek">This Week</option>
           <option value="lastweek">Last Week</option>
           <option value="thismonth">This Month</option>
@@ -487,6 +500,8 @@ function periodRange(key){
   const now = new Date(), y = now.getFullYear(), m = now.getMonth();
   const monday = d => { const x = new Date(d); const wd = (x.getDay()+6)%7; x.setDate(x.getDate()-wd); return x; };
   switch(key){
+    case "today":        return [new Date(y,now.getMonth(),now.getDate()), new Date(y,now.getMonth(),now.getDate())];
+    case "yesterday":    { const a = new Date(y,now.getMonth(),now.getDate()-1); return [a,a]; }
     case "thisweek":    { const a = monday(now); const b = new Date(a); b.setDate(a.getDate()+6); return [a,b]; }
     case "lastweek":    { const a = monday(now); a.setDate(a.getDate()-7); const b = new Date(a); b.setDate(a.getDate()+6); return [a,b]; }
     case "thismonth":   return [new Date(y,m,1),   new Date(y,m+1,0)];
@@ -2195,16 +2210,27 @@ async function demoClickBar(chartId, label){
 }
 /* A native dropdown cannot be forced open from script, but giving it a size
    renders it as an expanded list, which shows the viewer the real options. */
-function demoExpand(el, n){
-  if(!el) return;
-  el._demoSize = el.size;
-  el.size = Math.min(n || 8, el.options ? el.options.length : (n || 8));
-  el.style.position = "relative"; el.style.zIndex = "970";
+/* Decorative option list positioned under a <select>, so the demo can show
+   "here is what this dropdown actually contains" without touching the real
+   control's rendering. selectedValue highlights the row the tour is about
+   to choose. Caller removes it via demoHideOptions before or right after
+   calling demoSet on the real element. */
+function demoShowOptions(el, selectedValue, max){
+  if(!el) return null;
+  const rect = el.getBoundingClientRect();
+  const dd = document.createElement("div");
+  dd.className = "demoFakeDD";
+  dd.style.left = Math.max(4, rect.left) + "px";
+  dd.style.top = (rect.bottom + 5) + "px";
+  dd.style.minWidth = Math.max(rect.width, 170) + "px";
+  const opts = Array.prototype.slice.call(el.options || [], 0, max || 9);
+  dd.innerHTML = opts.map(o=>'<div class="ddRow' + (o.value === selectedValue ? ' sel' : '') + '">' +
+    (o.textContent || o.value) + "</div>").join("");
+  document.body.appendChild(dd);
+  return dd;
 }
-function demoCollapse(el){
-  if(!el) return;
-  el.size = el._demoSize || 0;
-  el.style.zIndex = ""; el.style.position = "";
+function demoHideOptions(dd){
+  if(dd && dd.parentNode) dd.parentNode.removeChild(dd);
 }
 function demoCursorHide(){
   ["demoCur","demoRing","demoToast"].forEach(id=>{ const e = $(id); if(e) e.style.display = "none"; });
@@ -2272,7 +2298,7 @@ async function runDemo(){
     { run: async ()=>{ demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); await pause(280);
                        await demoPoint($("themeSel")); demoHi($("themeSel")); },
       say:"Fifteen color schemes are built in." },
-    { run: async ()=>{ demoExpand($("themeSel"), 6); await pause(500); demoCollapse($("themeSel"));
+    { run: async ()=>{ const dd = demoShowOptions($("themeSel"), "steel"); await pause(650); demoHideOptions(dd);
                        await demoSet($("themeSel"), "gold"); },
       say:"Black and gold." },
     { run: async ()=>{ await demoSet($("themeSel"), "astros"); },
@@ -2292,9 +2318,10 @@ async function runDemo(){
     { run: async ()=>{ await demoClick($("filterToggle")); demoHi(document.querySelector(".dategroup")); },
       say:"One tap brings it back." },
     { run: async ()=>{ await demoClick(seg2()[1]);
-                       await demoPoint($("fPeriod")); demoExpand($("fPeriod"), 9); },
-      say:"Period mode opens a list of fourteen ready made ranges. For example, last quarter, or this month." },
-    { run: async ()=>{ demoCollapse($("fPeriod")); await demoSet($("fPeriod"), "thisyear"); },
+                       await demoPoint($("fPeriod"));
+                       const dd = demoShowOptions($("fPeriod"), "all", 10); await pause(650); demoHideOptions(dd); },
+      say:"Period mode opens a list of sixteen ready made ranges, from today and yesterday out to full history. For example, last quarter, or this month." },
+    { run: async ()=>{ await demoSet($("fPeriod"), "thisyear"); },
       say:"Choosing this year recalculates every supplier figure." },
     { run: async ()=>{ await demoSet($("fPeriod"), "lastquarter"); },
       say:"Last quarter, and the rankings reorder themselves. This is how you check whether a supplier conversation from three months ago actually changed anything." },

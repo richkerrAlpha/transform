@@ -49,7 +49,55 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .btn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;transition:.15s}
 .btn:hover{background:rgba(255,255,255,.28)}
 #fileIn{display:none}
-.filters{position:sticky;top:0;z-index:50;background:var(--card);box-shadow:var(--shadow);padding:12px 28px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+/* The filter panel is now toggle-driven at every width, not just on phones -
+   collapsing it manually is useful on a laptop too when you want more chart
+   on screen. Desktop starts OPEN (matches prior behaviour, no regression);
+   phones start CLOSED (that was the original complaint). See initFilterOpen. */
+/* Chevron sits right next to the "Filters" word, not pushed to the far edge
+   of a full-width bar - and the whole bar changes appearance when open, so
+   the state reads at a glance instead of depending on a small rotating arrow. */
+#filterToggle{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  position:sticky;top:0;z-index:51;background:var(--card);box-shadow:var(--shadow);
+  padding:10px 28px;cursor:pointer;user-select:none;border:0;border-left:4px solid transparent;
+  width:100%;font:inherit;color:inherit;transition:background .18s ease,border-color .18s ease}
+#filterToggle .ftLeft{display:flex;align-items:center;gap:7px}
+#filterToggle .ftIcon{font-size:14px}
+#filterToggle .ftText{font-weight:800;font-size:13px;color:var(--steel);letter-spacing:.2px}
+#filterToggle .ftChev{transition:transform .22s ease;color:var(--muted);font-size:11px;display:inline-flex}
+#filterToggle .ftBadge{background:var(--accent);color:#fff;border-radius:999px;font-size:11px;font-weight:800;
+  padding:2px 8px;display:none}
+#filterToggle .ftBadge.show{display:inline-block}
+#filterToggle:hover{background:color-mix(in srgb, var(--accent) 6%, var(--card))}
+#filterToggle.open{background:color-mix(in srgb, var(--accent) 12%, var(--card));border-left-color:var(--accent)}
+#filterToggle.open .ftChev{transform:rotate(180deg);color:var(--accent)}
+#filterToggle.open .ftText{color:var(--accent)}
+.filters{position:sticky;top:41px;z-index:50;background:var(--card);box-shadow:var(--shadow);padding:12px 28px;
+  display:none;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.filters.open{display:flex}
+@media(max-width:760px){
+  /* On a phone the same panel wraps onto six or more lines and, being sticky,
+     never scrolls away - it just sits there eating the screen. Non-sticky
+     here, so once opened it scrolls away with the page like everything else
+     instead of staying pinned above the charts. */
+  #filterToggle{padding:11px 16px}
+  .filters{position:static;top:auto;box-shadow:none;padding:10px 16px 14px}
+  .filters label{width:100%}
+  .filters .dategroup{width:100%;flex-direction:column;align-items:flex-start}
+  .filters .msel{width:100%}
+  .filters .msel-btn{width:100%}
+  #btnReset{width:100%}
+}
+/* Fake dropdown used only during the guided demo, so a select's real list can
+   be shown without switching the control into the browser's native multi-row
+   listbox mode - that renders with OS chrome (system font, plain scrollbar,
+   blue selection) that clashes with the rest of the page. This is a purely
+   decorative overlay; the actual selection still happens on the real <select>. */
+.demoFakeDD{position:fixed;z-index:985;background:#fff;border:1px solid #CBD5DD;border-radius:9px;
+  box-shadow:0 12px 30px rgba(0,0,0,.22);max-height:230px;overflow-y:auto;padding:5px;pointer-events:none;
+  font-family:inherit}
+.demoFakeDD .ddRow{font-size:12.5px;font-weight:600;color:var(--ink);padding:6px 11px;border-radius:6px;
+  white-space:nowrap}
+.demoFakeDD .ddRow.sel{background:color-mix(in srgb, var(--accent) 14%, #fff);color:var(--steel)}
 .filters label{display:flex;flex-direction:column;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;gap:4px}
 .filters input,.filters select{border:1px solid #CBD5DD;border-radius:8px;padding:7px 9px;font-size:13px;background:#fff;color:var(--ink);min-width:120px}
 .msel{position:relative}
@@ -227,7 +275,7 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:24px}
 const CONFIG = {
   clientName: "Southeast Poultry",
   title: "Defect & AQL Dashboard",
-  version: "1.1",
+  version: "1.6",
   updated: "Aug 8, 2026",
   /* DEFECT RATE TARGET. Observed aggregate on Bone Check data is ~0.83%, so 1%
      is a working default, NOT a Southeast Poultry standard. Confirm with QA
@@ -299,7 +347,11 @@ const DATA = [];
   </div>
 </header>
 
-<div class="filters">
+<button type="button" id="filterToggle" aria-expanded="false" aria-controls="filterPanel">
+  <span class="ftLeft"><span class="ftIcon">&#9881;</span><span class="ftText" id="ftText">Show Filters</span><span class="ftChev">&#9660;</span></span>
+  <span class="ftBadge" id="ftBadge"></span>
+</button>
+<div class="filters" id="filterPanel">
   <div class="dategroup">
     <label>Date Range
       <div class="seg" id="dateSeg">
@@ -314,6 +366,8 @@ const DATA = [];
     <span id="periodBox" style="display:none;gap:12px">
       <label>Period
         <select id="fPeriod">
+          <option value="today">Today</option>
+          <option value="yesterday">Yesterday</option>
           <option value="thisweek">This Week</option>
           <option value="lastweek">Last Week</option>
           <option value="thismonth">This Month</option>
@@ -474,6 +528,8 @@ function periodRange(key){
   const now = new Date(), y = now.getFullYear(), m = now.getMonth();
   const monday = d => { const x = new Date(d); const wd = (x.getDay()+6)%7; x.setDate(x.getDate()-wd); return x; };
   switch(key){
+    case "today":        return [new Date(y,now.getMonth(),now.getDate()), new Date(y,now.getMonth(),now.getDate())];
+    case "yesterday":    { const a = new Date(y,now.getMonth(),now.getDate()-1); return [a,a]; }
     case "thisweek":    { const a = monday(now); const b = new Date(a); b.setDate(a.getDate()+6); return [a,b]; }
     case "lastweek":    { const a = monday(now); a.setDate(a.getDate()-7); const b = new Date(a); b.setDate(a.getDate()+6); return [a,b]; }
     case "thismonth":   return [new Date(y,m,1),   new Date(y,m+1,0)];
@@ -767,6 +823,7 @@ function render(){
   scopeRows = S;
   renderTable();
   syncTileScopes();
+  updateFilterToggle();
 
   const dq = flagged ? ` \u00b7 ${fmt(flagged)} rows carry data-quality flags` : "";
   $("foot").textContent = `${CONFIG.clientName} \u00b7 ${CONFIG.title} \u00b7 ${fmt(rows.length)} inspection checks from ` +
@@ -1543,7 +1600,7 @@ async function refreshFromApi(interactive){
   }finally{ $("btnApi").innerHTML = "&#8635; Refresh from API"; }
 }
 $("btnApi").addEventListener("click", ()=>refreshFromApi(true));
-$("btnReset").addEventListener("click", ()=>{ chartSel = null; tSort = {key:null, dir:-1}; tFilt = {}; exportSel = new Set(); buildThead(); buildFilters(); render(); });
+$("btnReset").addEventListener("click", ()=>{ resetAllFilters(); buildThead(); buildFilters(); render(); });
 for(const id of ["fFrom","fTo","fDisp","fType"])
   $(id).addEventListener("change", ()=>{ chartSel = null; render(); });
 
@@ -2135,6 +2192,43 @@ function demoHi(id){
   const el = typeof id==="string" ? $(id) : id;
   if(el){ el.classList.add("demo-hi"); el.scrollIntoView({behavior:"smooth", block:"center"}); }
 }
+function updateFilterToggle(){
+  const btn = $("filterToggle"); if(!btn) return;
+  const badge = $("ftBadge");
+  let n = 0;
+  for(const key in MSEL){ const m = MSEL[key]; if(m.choice.size !== m.values.length) n++; }
+  for(const id of ["fDisp","fType"]){ const e = $(id); if(e && e.value && e.value !== "All") n++; }
+  const per = $("fPeriod");
+  if(per && per.value && per.value !== "all") n++;
+  else {
+    const from = $("fFrom").value, to = $("fTo").value;
+    if(rows.length){
+      const ds = rows.map(r=>r.date).filter(Boolean).sort();
+      if((from && from > ds[0]) || (to && to < ds[ds.length-1])) n++;
+    }
+  }
+  if(n > 0){ badge.textContent = String(n); badge.classList.add("show"); }
+  else { badge.classList.remove("show"); }
+}
+function setFilterPanelOpen(open){
+  const panel = $("filterPanel"), btn = $("filterToggle"), txt = $("ftText");
+  if(!panel || !btn) return;
+  panel.classList.toggle("open", open);
+  btn.classList.toggle("open", open);
+  btn.setAttribute("aria-expanded", open ? "true" : "false");
+  if(txt) txt.textContent = open ? "Hide Filters" : "Show Filters";
+}
+(function initFilterToggle(){
+  const btn = $("filterToggle");
+  if(!btn) return;
+  btn.addEventListener("click", ()=>{
+    setFilterPanelOpen(!$("filterPanel").classList.contains("open"));
+  });
+  // Desktop keeps today's behaviour (panel visible on load); a phone-width
+  // screen starts collapsed, since that was the actual complaint. 760px
+  // matches the CSS breakpoint above.
+  setFilterPanelOpen(window.innerWidth > 760);
+})();
 function demoClearHi(){ document.querySelectorAll(".demo-hi").forEach(e=>e.classList.remove("demo-hi")); }
 
 /* ---------- virtual mouse pointer ----------
@@ -2271,16 +2365,27 @@ async function demoClickBar(chartId, label){
 }
 /* A native dropdown cannot be forced open from script, but giving it a size
    renders it as an expanded list, which shows the viewer the real options. */
-function demoExpand(el, n){
-  if(!el) return;
-  el._demoSize = el.size;
-  el.size = Math.min(n || 8, el.options ? el.options.length : (n || 8));
-  el.style.position = "relative"; el.style.zIndex = "970";
+/* Decorative option list positioned under a <select>, so the demo can show
+   "here is what this dropdown actually contains" without touching the real
+   control's rendering. selectedValue highlights the row the tour is about
+   to choose. Caller removes it via demoHideOptions before or right after
+   calling demoSet on the real element. */
+function demoShowOptions(el, selectedValue, max){
+  if(!el) return null;
+  const rect = el.getBoundingClientRect();
+  const dd = document.createElement("div");
+  dd.className = "demoFakeDD";
+  dd.style.left = Math.max(4, rect.left) + "px";
+  dd.style.top = (rect.bottom + 5) + "px";
+  dd.style.minWidth = Math.max(rect.width, 170) + "px";
+  const opts = Array.prototype.slice.call(el.options || [], 0, max || 9);
+  dd.innerHTML = opts.map(o=>'<div class="ddRow' + (o.value === selectedValue ? ' sel' : '') + '">' +
+    (o.textContent || o.value) + "</div>").join("");
+  document.body.appendChild(dd);
+  return dd;
 }
-function demoCollapse(el){
-  if(!el) return;
-  el.size = el._demoSize || 0;
-  el.style.zIndex = ""; el.style.position = "";
+function demoHideOptions(dd){
+  if(dd && dd.parentNode) dd.parentNode.removeChild(dd);
 }
 function demoCursorHide(){
   ["demoCur","demoRing","demoToast"].forEach(id=>{ const e = $(id); if(e) e.style.display = "none"; });
@@ -2289,23 +2394,27 @@ function demoCursorHide(){
 
 /* Full reset to the dashboard's opening state - filters, sort, selection,
    chart linking and target - so a demo never narrates the wrong numbers. */
+function resetAllFilters(){
+  chartSel = null; tSort = {key:null, dir:-1}; tFilt = {}; exportSel = new Set();
+  const lt = $("linkToggle"); if(lt) lt.checked = false;
+  for(const key in MSEL){                     // re-tick every checkbox list
+    const m = MSEL[key];
+    m.choice = new Set(m.values);
+    const p = $(m.panel);
+    if(p){ p.querySelectorAll(".msChk").forEach(c=>c.checked = true);
+           const all = p.querySelector(".msAllChk"); if(all){ all.checked = true; all.indeterminate = false; }
+           p.style.display = "none"; }
+    msUpdateBtn(m);
+  }
+  ["fDisp","fType"].forEach(id=>{ const e = $(id); if(e) e.value = "All"; });
+  const seg = document.querySelectorAll("#dateSeg button");
+  if(seg[1]) seg[1].click();                  // period mode
+  const per = $("fPeriod"); if(per){ per.value = "all"; per.dispatchEvent(new Event("change")); }
+}
 function demoResetState(){
   try{
-    chartSel = null; tSort = {key:null, dir:-1}; tFilt = {}; exportSel = new Set();
-    const lt = $("linkToggle"); if(lt) lt.checked = false;
-    for(const key in MSEL){                     // re-tick every checkbox list
-      const m = MSEL[key];
-      m.choice = new Set(m.values);
-      const p = $(m.panel);
-      if(p){ p.querySelectorAll(".msChk").forEach(c=>c.checked = true);
-             const all = p.querySelector(".msAllChk"); if(all){ all.checked = true; all.indeterminate = false; }
-             p.style.display = "none"; }
-      msUpdateBtn(m);
-    }
-    ["fDisp","fType"].forEach(id=>{ const e = $(id); if(e) e.value = "All"; });
-    const seg = document.querySelectorAll("#dateSeg button");
-    if(seg[1]) seg[1].click();                  // period mode
-    const per = $("fPeriod"); if(per){ per.value = "all"; per.dispatchEvent(new Event("change")); }
+    setFilterPanelOpen(true);          // demo needs the panel visible, phone or not
+    resetAllFilters();
     const t = $("tgtSpin");
     if(t){ t.value = parseFloat((CONFIG.rejectionRateTarget*100).toFixed(2)); t.dispatchEvent(new Event("change")); }
     buildThead(); render();
@@ -2347,9 +2456,10 @@ async function runDemo(){
 
     /* ===== FILTER BAR ===== */
     { run: async ()=>{ demoHi(document.querySelector(".dategroup")); await demoClick(seg2()[1]);
-                       await demoPoint($("fPeriod")); demoExpand($("fPeriod"), 9); },
-      say:"Next, the filter bar. Period mode opens a list of fourteen ready made ranges. For example, last quarter, or this month." },
-    { run: async ()=>{ demoCollapse($("fPeriod")); await demoSet($("fPeriod"), "all"); },
+                       await demoPoint($("fPeriod"));
+                       const dd = demoShowOptions($("fPeriod"), "all", 10); await pause(650); demoHideOptions(dd); },
+      say:"Next, the filter bar. Period mode opens a list of sixteen ready made ranges, from today and yesterday out to full history. For example, last quarter, or this month." },
+    { run: async ()=>{ await demoSet($("fPeriod"), "all"); },
       say:"Choosing a range recalculates every metric and every chart." },
     { run: async ()=>{ demoHi($("millSel")); await demoClick($("millBtn"));
                        $("millPanel").style.display = "block"; await pause(210);
