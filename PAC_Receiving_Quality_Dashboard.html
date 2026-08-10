@@ -245,13 +245,13 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:24px}
 <script>
 /* ============================ CLIENT CONFIG ============================
    Everything site-specific lives here. Rebrand or repoint by editing this
-   block only. api.* powers the "Refresh from API" button; leave apiKey
+   block only. api.* powers the "Refresh Data" button; leave apiKey
    empty to keep the button in demo mode (embedded snapshot only).       */
 const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.14",
+  version: "3.15",
   updated: "Aug 7, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -311,7 +311,7 @@ const DATA = [];
   </div>
   <div class="actions" style="flex-direction:column;align-items:flex-end;gap:7px">
     <div style="display:flex;gap:10px">
-      <button class="btn" id="btnApi" title="Pulls live submissions from Alpha TransForm">&#8635; Refresh from API</button>
+      <button class="btn" id="btnApi" title="Pulls live submissions from Alpha TransForm">&#8635; Refresh Data</button>
       <button class="btn" onclick="document.getElementById('fileIn').click()" title="Load a TransForm JSON export">&#8683; Load JSON export</button>
       <input type="file" id="fileIn" accept=".json">
     </div>
@@ -1443,7 +1443,7 @@ async function refreshFromApi(interactive){
     if(!interactive){
       console.warn("Live refresh failed:", e.message);
       $("subTitle").textContent = "Live refresh failed";
-      setStatus("Could not load live data (" + e.message + "). Retry with the \u21bb Refresh from API button, or check the proxy deployment.");
+      setStatus("Could not load live data (" + e.message + "). Retry with the \u21bb Refresh Data button, or check the proxy deployment.");
       return;
     }
     let msg = "API refresh failed: " + e.message;
@@ -1451,7 +1451,7 @@ async function refreshFromApi(interactive){
       msg += "\n\nThis is the browser's CORS policy blocking a direct call to the TransForm host. Fix: deploy PAC_TransForm_Proxy.gs and set CONFIG.api.proxyUrl \u2014 the proxy fetches server-side where CORS doesn't apply.";
     }
     alert(msg);
-  }finally{ $("btnApi").innerHTML = "&#8635; Refresh from API"; }
+  }finally{ $("btnApi").innerHTML = "&#8635; Refresh Data"; }
 }
 $("btnApi").addEventListener("click", ()=>refreshFromApi(true));
 $("btnReset").addEventListener("click", ()=>{ resetAllFilters(); buildThead(); buildFilters(); render(); });
@@ -2257,6 +2257,7 @@ async function runDemo(){
   const pause = ms => new Promise(r=>setTimeout(r, ms));
   demoCursorInit(); demoPrevInit();
   demoSuppressDownloads = true;      // exports run for real; no download shelf opens
+  let demoOpenDD = null;             // a shown-but-not-yet-hidden fake dropdown, if any
 
   const steps = [
 
@@ -2266,7 +2267,7 @@ async function runDemo(){
     { run:()=>demoPoint($("btnApi")),
       say:"There is no overnight batch, and no spreadsheet to refresh. One button re-queries the API, and the whole dashboard rebuilds in about a second." },
     { run: async ()=>{ await demoPoint($("themeSel")); demoHi($("themeSel"));
-                       const dd = demoShowOptions($("themeSel"), "steel"); await pause(650); demoHideOptions(dd); },
+                       demoOpenDD = demoShowOptions($("themeSel"), "steel"); },
       say:"Fifteen color schemes are built in." },
     { run: async ()=>{ await demoSet($("themeSel"), "gold"); },
       say:"Black and gold." },
@@ -2284,7 +2285,7 @@ async function runDemo(){
       say:"One tap brings it back." },
     { run: async ()=>{ await demoClick(seg2()[1]);
                        await demoPoint($("fPeriod"));
-                       const dd = demoShowOptions($("fPeriod"), "all", 10); await pause(650); demoHideOptions(dd); },
+                       demoOpenDD = demoShowOptions($("fPeriod"), "all", 10); },
       say:"Period mode opens a list of sixteen ready made ranges, from today and yesterday out to full history. For example, last quarter, or this month." },
     { run: async ()=>{ await demoSet($("fPeriod"), "thisyear"); },
       say:"Choosing this year recalculates every metric and every chart." },
@@ -2410,6 +2411,9 @@ async function runDemo(){
       try{ st.do(); }catch(err){}
     }
     await demoSay(st.say);
+    // Any dropdown preview opened during this step has now been narrated over,
+    // so it can close before the next step begins.
+    if(demoOpenDD){ demoHideOptions(demoOpenDD); demoOpenDD = null; }
   }
   demoSuppressDownloads = false;
   demoPrevHide(); demoCursorHide(); demoClearHi(); $("demoCap").style.display = "none";

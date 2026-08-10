@@ -270,12 +270,12 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:24px}
 <script>
 /* ============================ CLIENT CONFIG ============================
    Everything site-specific lives here. Rebrand or repoint by editing this
-   block only. api.* powers the "Refresh from API" button; leave apiKey
+   block only. api.* powers the "Refresh Data" button; leave apiKey
    empty to keep the button in demo mode (embedded snapshot only).       */
 const CONFIG = {
   clientName: "Southeast Poultry",
   title: "Defect & AQL Dashboard",
-  version: "1.6",
+  version: "1.7",
   updated: "Aug 8, 2026",
   /* DEFECT RATE TARGET. Observed aggregate on Bone Check data is ~0.83%, so 1%
      is a working default, NOT a Southeast Poultry standard. Confirm with QA
@@ -326,7 +326,7 @@ const DATA = [];
   </div>
   <div class="actions" style="flex-direction:column;align-items:flex-end;gap:7px">
     <div style="display:flex;gap:10px">
-      <button class="btn" id="btnApi" title="Pulls live submissions from Alpha TransForm">&#8635; Refresh from API</button>
+      <button class="btn" id="btnApi" title="Pulls live submissions from Alpha TransForm">&#8635; Refresh Data</button>
       <button class="btn" onclick="document.getElementById('fileIn').click()" title="Load a TransForm JSON export">&#8683; Load JSON export</button>
       <input type="file" id="fileIn" accept=".json">
     </div>
@@ -1565,7 +1565,7 @@ async function refreshFromApi(interactive){
       const j = await resp.json();
       if(j && j.error && !j.byForm) throw new Error(j.errorText || j.error);
       adoptPayload(j);
-      $("btnApi").textContent = "\u21bb Refresh from API";
+      $("btnApi").textContent = "\u21bb Refresh Data";
       return;
     }else{
       // Direct mode: GetFormDataArrayForFormId with pagesize<=200 + pageNumber paging.
@@ -1589,7 +1589,7 @@ async function refreshFromApi(interactive){
     if(!interactive){
       console.warn("Live refresh failed:", e.message);
       $("subTitle").textContent = "Live refresh failed";
-      setStatus("Could not load live data (" + e.message + "). Retry with the \u21bb Refresh from API button, or check the proxy deployment.");
+      setStatus("Could not load live data (" + e.message + "). Retry with the \u21bb Refresh Data button, or check the proxy deployment.");
       return;
     }
     let msg = "API refresh failed: " + e.message;
@@ -1597,7 +1597,7 @@ async function refreshFromApi(interactive){
       msg += "\n\nThis is the browser's CORS policy blocking a direct call to the TransForm host. Fix: deploy PAC_TransForm_Proxy.gs and set CONFIG.api.proxyUrl \u2014 the proxy fetches server-side where CORS doesn't apply.";
     }
     alert(msg);
-  }finally{ $("btnApi").innerHTML = "&#8635; Refresh from API"; }
+  }finally{ $("btnApi").innerHTML = "&#8635; Refresh Data"; }
 }
 $("btnApi").addEventListener("click", ()=>refreshFromApi(true));
 $("btnReset").addEventListener("click", ()=>{ resetAllFilters(); buildThead(); buildFilters(); render(); });
@@ -2426,6 +2426,7 @@ async function runDemo(){
   const pause = ms => new Promise(r=>setTimeout(r, ms));
   demoCursorInit();
   demoSuppressDownloads = true;
+  let demoOpenDD = null;             // a shown-but-not-yet-hidden fake dropdown, if any
 
   const steps = [
 
@@ -2457,7 +2458,7 @@ async function runDemo(){
     /* ===== FILTER BAR ===== */
     { run: async ()=>{ demoHi(document.querySelector(".dategroup")); await demoClick(seg2()[1]);
                        await demoPoint($("fPeriod"));
-                       const dd = demoShowOptions($("fPeriod"), "all", 10); await pause(650); demoHideOptions(dd); },
+                       demoOpenDD = demoShowOptions($("fPeriod"), "all", 10); },
       say:"Next, the filter bar. Period mode opens a list of sixteen ready made ranges, from today and yesterday out to full history. For example, last quarter, or this month." },
     { run: async ()=>{ await demoSet($("fPeriod"), "all"); },
       say:"Choosing a range recalculates every metric and every chart." },
@@ -2543,6 +2544,9 @@ async function runDemo(){
       try{ st.do(); }catch(err){}
     }
     await demoSay(st.say);
+    // Any dropdown preview opened during this step has now been narrated over,
+    // so it can close before the next step begins.
+    if(demoOpenDD){ demoHideOptions(demoOpenDD); demoOpenDD = null; }
   }
   demoSuppressDownloads = false;
   demoCursorHide(); demoClearHi(); $("demoCap").style.display = "none";
