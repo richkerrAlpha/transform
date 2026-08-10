@@ -307,7 +307,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.37",
+  version: "3.38",
   updated: "Aug 10, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -630,6 +630,12 @@ document.addEventListener("click", (e)=>{
     if(!$(MSEL[key].sel).contains(e.target)) $(MSEL[key].panel).style.display = "none";
   if(!$("expSel").contains(e.target)) $("expPanel").style.display = "none";
 });
+/* A hold can sit pending review with no reason assigned yet - especially
+   recent ones. Excluding those from the reasons chart used to make it look
+   like the held footage did not exist, when it was really just uncategorized.
+   Both the chart build and its click-matching route through this one
+   function so they can never drift out of sync with each other. */
+function reasonLabel(r){ return r.reason || "(No reason specified)"; }
 function inScope(r){
   const f=$("fFrom").value, t=$("fTo").value;
   if(f && r.date < f) return false;
@@ -775,9 +781,13 @@ function render(){
         tooltip:{ filter:c=>c.dataset.type!=="line",
           callbacks:{ label:c=>pct(c.parsed.y) + (c.parsed.y > TGT ? "  \u26a0 above target" : "") } } }}});
 
-  /* reasons doughnut (true rejected) */
-  const re = AGG.reasons = [...groupSum(S.filter(r=>r.reason), r=>r.reason, ["tRej"])]
-    .filter(x=>x[1].tRej>0).sort((a,b)=>b[1].tRej-a[1].tRej);
+  /* reasons doughnut (true rejected). Gate on actually HAVING held footage
+     (matching how the alloy chart does it) rather than on having a reason
+     assigned - a hold pending review is real held footage even before
+     someone has categorized why, and it needs to be countable here or the
+     chart's total silently falls short of the True Rejected KPI. */
+  const re = AGG.reasons = [...groupSum(S.filter(r=>r.tRej>0), r=>reasonLabel(r), ["tRej"])]
+    .sort((a,b)=>b[1].tRej-a[1].tRej);
   mkChart("chReasons", { type:"doughnut",
     data:{ labels: re.map(x=>x[0]),
       datasets:[{ data: re.map(x=>x[1].tRej), backgroundColor:B.series, borderWidth:2, borderColor:"#fff" }]},
@@ -927,7 +937,7 @@ function matchSel(r){
   switch(chartSel.kind){
     case "week":      return weekStart(r.date) === v;
     case "month":     return monthStart(r.date) === v;
-    case "reason":    return r.reason === v && r.tRej > 0;   // matches the doughnut (held footage)
+    case "reason":    return reasonLabel(r) === v && r.tRej > 0;   // matches the doughnut (held footage)
     case "inspector": return r.inspector === v;
     case "mill":      return r.mill === v;
     case "alloy":     return r.alloy === v && r.tRej > 0;    // matches the alloy chart (held footage)
