@@ -261,8 +261,9 @@ header .actions{display:flex;gap:10px;flex-wrap:wrap}
 
 .chartbox{position:relative;height:300px}
 .chartbox.tall{height:380px}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-th{background:var(--steel);color:#fff;padding:8px 10px;text-align:left;font-weight:700;white-space:nowrap;position:sticky;top:0}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px}
+th{background:var(--steel);color:#fff;padding:8px 10px;text-align:left;font-weight:700;white-space:nowrap;position:sticky;top:0;z-index:2}
+#thead .frow th{position:sticky;z-index:1;top:0}   /* top is set precisely in JS, once row 1's real height is known */
 td{padding:7px 10px;border-bottom:1px solid #E6ECF0;white-space:nowrap}
 tbody tr.rowhold td{background:#FBE9EB}
 tbody tr.rowrelease td{background:#E9F5EE}
@@ -295,7 +296,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.28",
+  version: "3.29",
   updated: "Aug 7, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -925,6 +926,22 @@ const TCOLS = [
 let tSort = { key:null, dir:-1 };      // null = default newest-first
 let exportSel = new Set();             // row ids ticked for export
 let tFilt = {};                        // key -> filter text
+/* Row 1 (sort headers) sticks at top:0. Row 2 (filter inputs) must stick
+   right below it, but its exact height depends on font size (the text-size
+   selector scales the whole page via zoom) - so it is measured, not guessed,
+   every time the header rebuilds. */
+function theadStickyOffset(){
+  const row1 = document.querySelector("#thead tr:not(.frow)");
+  const row2cells = document.querySelectorAll("#thead .frow th");
+  if(!row1 || !row2cells.length) return;
+  // The text-size selector scales the page via CSS zoom, not font-size. A
+  // value read from getBoundingClientRect() is already zoom-multiplied, so
+  // writing it straight back into a style property inside that same zoomed
+  // subtree would double-count the zoom on render - divide it back out first.
+  const zoom = parseFloat(document.body.style.zoom) / 100 || 1;
+  const h = row1.getBoundingClientRect().height / zoom;
+  row2cells.forEach(th => { th.style.top = h + "px"; });
+}
 function buildThead(){
   const h = TCOLS.map(c=>{
     const arr = tSort.key===c.key ? `<span class="arr">${tSort.dir===1?"\u25b2":"\u25bc"}</span>` : "";
@@ -937,6 +954,7 @@ function buildThead(){
   }).join("");
   const chkTh = '<th class="chkcol"><input type="checkbox" id="selAllChk" title="Select All rows in the current list for export"></th>';
   $("thead").innerHTML = `<tr>${chkTh}${h}</tr><tr class="frow"><th class="chkcol"></th>${f}</tr>`;
+  theadStickyOffset();
   $("selAllChk").addEventListener("change", ()=>{
     if($("selAllChk").checked) tableView().forEach(r=>exportSel.add(String(r.id)));
     else tableView().forEach(r=>exportSel.delete(String(r.id)));
@@ -1062,6 +1080,7 @@ function applyTheme(key, redraw){
 function applyFont(key, redraw){
   document.body.style.zoom = FONTS[key] || "100%";
   try{ localStorage.setItem("pacFont", key); }catch(err){}
+  theadStickyOffset();   // header row height changed with the zoom level
   if(redraw) render();
 }
 (function initPrefs(){
