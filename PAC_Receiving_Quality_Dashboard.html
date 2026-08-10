@@ -306,7 +306,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.33",
+  version: "3.34",
   updated: "Aug 10, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -2537,7 +2537,7 @@ async function runDemo(){
 
     /* ===== KPI ROW ===== */
     { run: async ()=>{ await demoPoint(document.querySelector(".kpis")); demoHi(document.querySelector(".kpis")); },
-      say:"Eight key metrics summarize receiving quality. For example, Footage Inspected, or the overall Rejection Rate." },
+      say:"Eight key metrics summarize receiving quality. For example, Footage Inspected, or the overall Rejection Rate. Its AI and PNG buttons sit right beside the tiles, not above them, so the row stays compact." },
 
     /* ===== CHARTS, IN PAGE ORDER ===== */
     { run: async ()=>{ demoClearHi(); await demoPoint(chartCard("chWeekly")); demoHi(chartCard("chWeekly")); },
@@ -2605,6 +2605,11 @@ async function runDemo(){
                        if(inp) await demoPoint(inp, {scroll:false});
                        tFilt = { rejRate: ">20" }; buildThead(); renderTable(); },
       say:"And every column filters, including numeric expressions like greater than twenty. Immediately, a cluster of late July entries surfaces. Large rejected footage, against small inspected quantities. These look less like true quality failures, and more like data entry errors worth verifying with the inspection team." },
+    { run: async ()=>{ const tb = document.querySelector(".tscroll");
+                       if(tb) tb.scrollTo({top: 220, behavior:"smooth"}); await pause(500); },
+      say:"Notice the column headers stay put while the list scrolls, the same way frozen panes work in a spreadsheet, so it is always clear which number belongs to which column." },
+    { run: async ()=>{ const tb = document.querySelector(".tscroll");
+                       if(tb) tb.scrollTo({top: 0, behavior:"smooth"}); await pause(400); } },
     { run: async ()=>{ const boxes = document.querySelectorAll("#tbody .rowChk");
                        for(const i of [0,1,2]) if(boxes[i]) await demoClick(boxes[i], {fast:true, scroll:false}); },
       say:"Tick the specific rows you want to raise, and the export follows your selection, rather than the whole table." },
