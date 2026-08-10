@@ -158,8 +158,18 @@ header .actions{display:flex;gap:10px;flex-wrap:wrap}
 .filters .reset{background:var(--steel);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer}
 .filters .reset:hover{background:var(--steel2)}
 .wrap{max-width:1440px;margin:0 auto;padding:22px 28px 60px}
-.kpis{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:12px;margin-bottom:22px}
-@media(max-width:1200px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* KPI tiles and their AI/PNG buttons now share one row - the grid takes
+   whatever width remains after the button cluster, so tiles shrink slightly
+   instead of the buttons costing an entire extra row above them. */
+.kpirow{display:flex;align-items:flex-start;gap:12px;margin-bottom:22px}
+.kpirow .kpis{flex:1;min-width:0}
+.kpirow .kpiActions{flex:none;margin-top:2px}
+.kpis{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:12px}
+@media(max-width:760px){
+  .kpirow{flex-direction:column}
+  .kpirow .kpiActions{align-self:flex-end}
+}
+@media(max-width:1200px){.kpirow{flex-direction:column}.kpirow .kpiActions{align-self:flex-end}.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:560px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .kpi{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;border-top:4px solid var(--accent);transition:transform .18s ease,box-shadow .18s ease;cursor:default;display:flex;flex-direction:column;justify-content:space-between;min-height:96px}
 .kpi:hover{transform:translateY(-4px) scale(1.04);box-shadow:0 10px 24px rgba(27,73,101,.25);z-index:2;position:relative}
@@ -296,8 +306,8 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.30",
-  updated: "Aug 7, 2026",
+  version: "3.33",
+  updated: "Aug 10, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
   // Default quality target: monthly rejection rate above this fraction is flagged red
@@ -449,10 +459,10 @@ const DATA = [];
   <div id="qaBanner"><div class="qaHead"><span>&#9888; Quality Alert</span><span class="qaCount" id="qaCount"></span></div>
   <div class="qaList" id="qaList"></div>
   <div class="qaResolvedLink" id="qaResolvedLink" style="display:none"></div></div>
-  <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-    <span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Copy or save the KPI cards as a PNG image"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
+  <div class="kpirow">
+    <div class="kpis" id="kpis"></div>
+    <span class="tilebtns kpiActions"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Copy or save the KPI cards as a PNG image"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
   </div>
-<div class="kpis" id="kpis"></div>
   <div class="grid">
     <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
     <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
@@ -861,11 +871,21 @@ function syncTileScopes(){
     s.innerHTML = "<b>Showing:</b> " + escHtml(txt);
     s.style.display = hide ? "none" : "";
   });
-  const k = document.querySelector(".kpis");
-  if(k && k.parentElement){
-    let s = k.parentElement.querySelector(".tilescope");
-    if(!s){ s = document.createElement("div"); s.className = "tilescope";
-            k.parentElement.insertBefore(s, k); }
+  // .kpis now lives inside .kpirow (a flex row shared with the AI/PNG
+  // buttons), so the scope note is anchored to .kpirow itself, not .kpis -
+  // otherwise it would become a third flex item squeezed beside the grid
+  // and the buttons instead of spanning full width above them.
+  const kr = document.querySelector(".kpirow");
+  if(kr && kr.parentElement){
+    // Check the SPECIFIC preceding sibling, not a subtree querySelector -
+    // that broader search was matching one of the six chart tiles' own
+    // scope notes instead (same class, wrong element), so the KPI row's
+    // note was silently never created at all.
+    let s = kr.previousElementSibling;
+    if(!s || !s.classList.contains("tilescope")){
+      s = document.createElement("div"); s.className = "tilescope";
+      kr.parentElement.insertBefore(s, kr);
+    }
     s.innerHTML = "<b>Showing:</b> " + escHtml(txt);
     s.style.display = hide ? "none" : "";
   }
