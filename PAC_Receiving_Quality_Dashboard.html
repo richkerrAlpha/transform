@@ -29,7 +29,14 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);}
-header{background:linear-gradient(135deg,var(--steel) 0%,var(--steel2) 100%);color:#fff;padding:22px 28px;display:flex;flex-wrap:wrap;align-items:center;gap:16px;}
+header{background:linear-gradient(135deg,var(--steel) 0%,var(--steel2) 100%);color:#fff;padding:22px 28px;display:flex;flex-direction:column;gap:12px;position:relative}
+/* Pinned to the header's own top-right corner, separate from the settings
+   cluster below it - it's the one action people reach for constantly, so it
+   gets its own spot rather than competing with theme/font for attention. */
+.refreshCorner{position:absolute;top:16px;right:26px}
+@media(max-width:760px){
+  .refreshCorner{position:static;top:auto;right:auto;order:-1;width:100%}
+}
 .logocard{background:#fff;border-radius:10px;padding:8px 14px;display:flex;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.18)}
 .logocard img{height:54px;display:block}
 .demobtn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:8px;
@@ -45,10 +52,26 @@ header .sub{font-size:13px;opacity:.85;margin-top:3px}
 .hdr-btn{border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:6px 11px;font-size:12px;font-weight:700;cursor:pointer;transition:.15s;white-space:nowrap}
 .hdr-btn:hover{background:rgba(255,255,255,.28)}
 .hdr-sel{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:5px 8px;font-size:12px;cursor:pointer}
+/* One coherent toolbar instead of Refresh Data sitting alone on its own row -
+   everything now hangs off the same right edge, with Powered-by matching it. */
+.toolbar{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;width:100%}
+/* One shared "Copy image / Save PNG" popover for every PNG button in the app -
+   chart tiles, the KPI card, and the AI assessment overlay all route through
+   this instead of downloading immediately, so the user picks what they want.
+   Email integration is scrapped for now (Gmail popup blocking was unreliable
+   in practice); this is the replacement. */
+.pngpop{display:none;position:fixed;z-index:986;background:#fff;border:1px solid #CBD5DD;border-radius:9px;
+  box-shadow:0 10px 28px rgba(0,0,0,.22);padding:5px;min-width:160px}
+.pngpop.show{display:block}
+.pngpop button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:none;border:0;
+  border-radius:6px;padding:8px 10px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer}
+.pngpop button:hover{background:#EDF4F8}
 .hdr-sel option{color:var(--ink)}
-.poweredby{font-size:11px;color:rgba(255,255,255,.7);text-align:right}
+.poweredby{font-size:11px;color:rgba(255,255,255,.7);white-space:nowrap;margin-left:auto;display:flex;align-items:center;gap:6px}
+.poweredby img{height:22px;display:block;filter:brightness(0) invert(1);opacity:.92}
+@media(max-width:760px){ .poweredby{margin-left:0} }
 .poweredby b{color:var(--accent);font-weight:700}
-header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
+header .actions{display:flex;gap:10px;flex-wrap:wrap}
 .btn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;transition:.15s}
 .btn:hover{background:rgba(255,255,255,.28)}
 #fileIn{display:none}
@@ -176,10 +199,10 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 /* All three tile buttons share one look: light fill, accent border, accent
    text. Previously the AI button was solid steel and the other two were white,
    which read as three different kinds of control. */
-.aibtn,.pngbtn,.mailbtn{background:var(--card);border:1.5px solid var(--accent);color:var(--steel);
+.aibtn,.pngbtn{background:var(--card);border:1.5px solid var(--accent);color:var(--steel);
   border-radius:7px;cursor:pointer;transition:.15s;white-space:nowrap;display:inline-flex;
   align-items:center;justify-content:center;gap:5px}
-.aibtn:hover,.pngbtn:hover,.mailbtn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.aibtn:hover,.pngbtn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
 .aibtn{font-size:11px;font-weight:800;letter-spacing:.3px;padding:5px 10px}
 .aibtn:hover{background:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
 #aiOverlay{display:none;position:fixed;inset:0;background:rgba(10,20,30,.55);z-index:920;align-items:center;justify-content:center;padding:20px}
@@ -211,7 +234,6 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 #aiVoiceSel{max-width:150px;border:1px solid #CBD5DD;border-radius:8px;padding:6px 8px;font-size:12px;font-weight:600;color:var(--ink);background:#fff;margin-top:1px}
 .ai-spin{display:inline-block;width:18px;height:18px;border:3px solid #CBD5DD;border-top-color:var(--steel);border-radius:50%;animation:aispin .8s linear infinite;vertical-align:middle;margin-right:8px}
 @keyframes aispin{to{transform:rotate(360deg)}}
-.mailbtn{padding:4px 10px}
 
 .pngbtn{padding:4px 10px;flex:none}
 
@@ -251,7 +273,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.15",
+  version: "3.22",
   updated: "Aug 7, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -276,9 +298,6 @@ const CONFIG = {
   // DATA-FREE PUBLIC BUILD: this file ships with no embedded data, so it is safe
   // to host publicly (e.g. GitHub Pages) for iframe embedding. All data arrives
   // from the live API on load; nothing renders without a working proxyUrl.
-  // Email target for the tile envelope buttons: "gmail" opens a Gmail compose
-  // tab; "mailto" hands off to the machine's default mail client.
-  emailMode: "gmail",
   autoRefreshOnLoad: true,
   // Show the "Load JSON export" file-loader button (manual/demo fallback).
   // Off for the client-facing embed; set true if you ever need to demo from a file.
@@ -299,36 +318,32 @@ const DATA = [];
 
 <header>
   <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
-    <div style="display:flex;flex-direction:column;align-items:stretch;gap:8px">
-      <div class="logocard"><img src="data:image/png;base64,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" alt="PAC Stainless Ltd. — 50 Years"></div>
-      <button class="demobtn" id="showDemoBtn" title="A guided, narrated tour of what this dashboard can do">&#9654;&nbsp; Show Demo</button>
-    </div>
+    <div class="logocard"><img src="data:image/png;base64,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" alt="PAC Stainless Ltd. — 50 Years"></div>
     <div>
       <div class="htitle">Receiving Quality Dashboard</div>
       <div class="sub" id="subTitle"></div>
       <div class="verline" id="verLine"></div>
     </div>
   </div>
-  <div class="actions" style="flex-direction:column;align-items:flex-end;gap:7px">
-    <div style="display:flex;gap:10px">
-      <button class="btn" id="btnApi" title="Pulls live submissions from Alpha TransForm">&#8635; Refresh Data</button>
-      <button class="btn" onclick="document.getElementById('fileIn').click()" title="Load a TransForm JSON export">&#8683; Load JSON export</button>
+  <button class="btn refreshCorner" id="btnApi" title="Pulls live submissions from Alpha TransForm">&#8635; Refresh Data</button>
+  <div class="actions">
+    <div class="toolbar">
+      <button class="demobtn" id="showDemoBtn" title="A guided, narrated tour of what this dashboard can do">&#9654;&nbsp; Show Demo</button>
+      <button class="btn" onclick="document.getElementById('fileIn').click()" title="Load a TransForm JSON export" style="display:none">&#8683; Load JSON export</button>
       <input type="file" id="fileIn" accept=".json">
-    </div>
-    <div style="display:flex;gap:8px;align-items:center">
+      <span class="hdr-div"></span>
       <span class="hdr-group" title="Save a snapshot of the whole dashboard">
         <button class="hdr-btn" id="dashPngBtn" title="Save the entire dashboard as a PNG image">&#8681; PNG</button>
         <button class="hdr-btn" id="dashPdfBtn" title="Save the entire dashboard as a PDF">&#8681; PDF</button>
       </span>
-      <span class="hdr-div"></span>
       <select id="themeSel" class="hdr-sel" title="Color scheme"></select>
       <select id="fontSel" class="hdr-sel" title="Text size">
         <option value="s">Aa Small</option>
         <option value="m" selected>Aa Normal</option>
         <option value="l">Aa Large</option>
       </select>
+      <div class="poweredby">Powered by <img src="data:image/png;base64,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" alt="Alpha TransForm"></div>
     </div>
-    <div class="poweredby">Powered by <b>Alpha TransForm</b></div>
   </div>
 </header>
 
@@ -406,16 +421,16 @@ const DATA = [];
 
 <div class="wrap">
   <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-    <span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Download the KPI cards as a PNG image"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" id="kpiMail" title="Email the KPI cards"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
+    <span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Download the KPI cards as a PNG image"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
   </div>
   <div class="kpis" id="kpis"></div>
   <div class="grid">
-    <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" title="Email this chart"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
-    <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" title="Email this chart"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
-    <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" title="Email this chart"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
-    <div class="card c6"><h3><span>Inspector Volume</span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Volume" data-title="Inspector Volume" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" title="Email this chart"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
-    <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small>top by inspected footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" title="Email this chart"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
-    <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button><button class="mailbtn" title="Email this chart"><svg viewBox="0 0 20 15" width="19" height="15" aria-hidden="true"><rect x="1" y="1" width="18" height="13" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M1.8 2.4 L10 8.6 L18.2 2.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
+    <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
+    <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
+    <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
+    <div class="card c6"><h3><span>Inspector Volume</span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Volume" data-title="Inspector Volume" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
+    <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small>top by inspected footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
+    <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Download as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
     <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
       <span style="display:flex;align-items:center;gap:16px">
         <div class="msel" id="expSel">
@@ -1075,6 +1090,60 @@ function exportScope(){
    end to end, but the browser's download shelf never opens over the dashboard.
    A toast reports what WOULD have been saved. */
 var demoSuppressDownloads = false;   /* var so it is reachable for testing */
+function ensureToastEl(){
+  let t = $("demoToast");
+  if(!t){ t = document.createElement("div"); t.id = "demoToast"; document.body.appendChild(t); }
+  return t;
+}
+function toast(msg){
+  const t = ensureToastEl();
+  t.textContent = msg; t.style.display = "block";
+  clearTimeout(t._h); t._h = setTimeout(()=>{ t.style.display = "none"; }, 2600);
+}
+function demoToast(msg){ toast(msg); }   // alias - existing demo code calls demoToast(...)
+
+let pngPopEl = null, pngPopOutside = null, pngPopEsc = null;
+function closePngPop(){
+  if(!pngPopEl) return;
+  pngPopEl.remove(); pngPopEl = null;
+  if(pngPopOutside){ document.removeEventListener("click", pngPopOutside, true); pngPopOutside = null; }
+  if(pngPopEsc){ document.removeEventListener("keydown", pngPopEsc); pngPopEsc = null; }
+}
+function openPngPop(anchorBtn, buildCanvas, filename){
+  closePngPop();
+  const pop = document.createElement("div");
+  pop.className = "pngpop show";
+  pop.innerHTML = '<button data-act="copy">&#128203; Copy image</button><button data-act="save">&#8681; Save PNG</button>';
+  document.body.appendChild(pop);
+  const r = anchorBtn.getBoundingClientRect();
+  pop.style.left = Math.max(4, Math.min(r.left, window.innerWidth - 170)) + "px";
+  pop.style.top = (r.bottom + 6) + "px";
+  pngPopEl = pop;
+  pop.querySelector('[data-act="copy"]').addEventListener("click", ()=>{
+    try{
+      const cv = buildCanvas(); if(!cv){ closePngPop(); return; }
+      cv.toBlob(async b=>{
+        try{
+          await navigator.clipboard.write([new ClipboardItem({ "image/png": b })]);
+          toast("Copied to clipboard");
+        }catch(err){ toast("Copy not supported here \u2014 use Save instead"); }
+      }, "image/png");
+    }catch(err){ toast("Could not create image"); }
+    closePngPop();
+  });
+  pop.querySelector('[data-act="save"]').addEventListener("click", ()=>{
+    try{
+      const cv = buildCanvas(); if(!cv){ closePngPop(); return; }
+      cv.toBlob(b => dlBlob(filename, b), "image/png");
+      toast("Saved as " + filename);
+    }catch(err){ toast("Could not create image"); }
+    closePngPop();
+  });
+  pngPopOutside = e => { if(pngPopEl && !pngPopEl.contains(e.target) && e.target !== anchorBtn) closePngPop(); };
+  pngPopEsc = e => { if(e.key === "Escape") closePngPop(); };
+  setTimeout(()=>{ document.addEventListener("click", pngPopOutside, true); }, 0);
+  document.addEventListener("keydown", pngPopEsc);
+}
 function dlBlob(name, blob){
   if(demoSuppressDownloads){ demoToast("Saved: " + name); return; }
   const a = document.createElement("a");
@@ -1243,46 +1312,8 @@ function chartPngCanvas(id, title){
   g.drawImage(src, pad, titleH + pad);
   return out;
 }
-function exportChartPng(id, name, title){
-  const out = chartPngCanvas(id, title); if(!out) return;
-  out.toBlob(b => dlBlob("PAC_" + name + "_" + stampDate() + ".png", b), "image/png");
-}
-/* Email client. "gmail" opens a Gmail compose tab, which is what most people
-   actually use; "mailto" hands off to the desktop client. A blocked popup
-   falls back to mailto rather than silently doing nothing. */
-function openCompose(subject, body, opts){
-  opts = opts || {};
-  const su = encodeURIComponent(subject || "");
-  const bd = encodeURIComponent(String(body || "").slice(0, 1800));
-  if((CONFIG.emailMode || "gmail") === "gmail"){
-    const w = window.open("https://mail.google.com/mail/?view=cm&fs=1&tf=1&su=" + su + "&body=" + bd,
-                          "_blank", "noopener");
-    if(w) return true;
-  }
-  // Mid-demo, silently launching the desktop mail client would hijack the
-  // screen, so the caller can opt out of the fallback.
-  if(opts.noMailtoFallback) return false;
-  location.href = "mailto:?subject=" + su + "&body=" + bd;
-  return true;
-}
-async function emailCanvas(canvas, subject, bodyText){
-  let copied = false;
-  const inDemo = typeof demoSuppressDownloads !== "undefined" && demoSuppressDownloads;
-  try{
-    if(canvas && navigator.clipboard && window.ClipboardItem){
-      const blob = await new Promise(res=>canvas.toBlob(res, "image/png"));
-      await navigator.clipboard.write([ new ClipboardItem({ "image/png": blob }) ]);
-      copied = true;
-    }
-  }catch(err){}
-  const note = copied ? "(The chart image is on your clipboard \u2014 paste it here with Cmd+V / Ctrl+V.)\n\n" : "";
-  const body = note + (bodyText || "") + "\n\nScope: " + aiScopeSummary();
-  const ok = openCompose(subject, body, { noMailtoFallback: inDemo });
-  if(typeof demoToast === "function" && inDemo){
-    demoToast(ok ? (copied ? "Gmail draft opened \u00b7 image copied to clipboard" : "Gmail draft opened")
-                 : "Popup blocked \u2014 allow popups to open Gmail");
-  }
-  return copied;
+function exportChartPng(id, name, title, btn){
+  openPngPop(btn, () => chartPngCanvas(id, title), "PAC_" + name + "_" + stampDate() + ".png");
 }
 function roundRect(g, x, y, w, h, r){
   g.beginPath();
@@ -1326,27 +1357,11 @@ function kpisPngCanvas(){
   return out;
 }
 function exportKpisPng(){
-  const cv = kpisPngCanvas(); if(!cv) return;
-  cv.toBlob(b => dlBlob("PAC_KPIs_" + stampDate() + ".png", b), "image/png");
+  openPngPop($("kpiPng"), () => kpisPngCanvas(), "PAC_KPIs_" + stampDate() + ".png");
 }
 document.querySelectorAll(".pngbtn[data-chart]").forEach(btn =>
-  btn.addEventListener("click", () => exportChartPng(btn.dataset.chart, btn.dataset.name, btn.dataset.title)));
+  btn.addEventListener("click", () => exportChartPng(btn.dataset.chart, btn.dataset.name, btn.dataset.title, btn)));
 $("kpiPng").addEventListener("click", exportKpisPng);
-document.querySelectorAll(".mailbtn").forEach(btn=>{
-  if(btn.id === "kpiMail") return;
-  const png = btn.previousElementSibling;                  // adjacent pngbtn carries the tile info
-  btn.addEventListener("click", ()=>{
-    const cv = chartPngCanvas(png.dataset.chart, png.dataset.title);
-    emailCanvas(cv, CONFIG.clientName + " \u2014 " + png.dataset.title + " \u00b7 " + stampDate(),
-      png.dataset.title + " from the " + CONFIG.clientName + " Receiving Quality Dashboard.\nDate range: " + dLabel($("fFrom").value) + " \u2013 " + dLabel($("fTo").value) + ".");
-  });
-});
-$("kpiMail").addEventListener("click", ()=>{
-  // Pass the rendered KPI canvas so the image lands on the clipboard, same as
-  // the chart tiles - previously this passed null and copied nothing.
-  emailCanvas(kpisPngCanvas(), CONFIG.clientName + " \u2014 Key Metrics \u00b7 " + stampDate(),
-    "Key receiving-quality metrics, " + dLabel($("fFrom").value) + " \u2013 " + dLabel($("fTo").value) + ".");
-});
 
 /* ---------- data loading ---------- */
 function num(x){ const v=parseFloat(x); return isFinite(v)?v:0; }
@@ -1458,8 +1473,10 @@ $("btnReset").addEventListener("click", ()=>{ resetAllFilters(); buildThead(); b
 for(const id of ["fFrom","fTo","fDisp","fType"])
   $(id).addEventListener("change", ()=>{ chartSel = null; render(); });
 
-if(!CONFIG.showJsonLoader){
-  document.querySelector('button[onclick*="fileIn"]').style.display = "none";
+// Hidden by default in the HTML now that it shares a row with Refresh Data;
+// this makes it visible again for debugging when CONFIG.showJsonLoader is true.
+if(CONFIG.showJsonLoader){
+  document.querySelector('button[onclick*="fileIn"]').style.display = "";
 }
 
 /* ================= Full-dashboard snapshot (PNG / PDF) ================= */
@@ -1633,7 +1650,7 @@ function aiOpen(title, sub, bodyHtml){
       '<div id="aiScope"></div>' +
       '<div class="seg" id="aiSeg" style="margin-bottom:12px"><button data-m="quick" class="on">Quick take</button><button data-m="detailed">Detailed</button></div>' +
       '<div class="aibody" id="aiBody"></div>' +
-      '<div class="airow"><span class="aisub">AI-generated \u2014 verify before acting</span><span><button id="aiPngBtn" title="Download this assessment as a PNG">&#8681; PNG</button> <button id="aiMail" title="Email this assessment">&#9993; Email</button> <button id="aiCopy">Copy</button> <button id="aiClose">Close</button></span></div></div>';
+      '<div class="airow"><span class="aisub">AI-generated \u2014 verify before acting</span><span><button id="aiPngBtn" title="Download this assessment as a PNG">&#8681; PNG</button> <button id="aiCopy">Copy</button> <button id="aiClose">Close</button></span></div></div>';
     document.body.appendChild(ov);
     const aiHush = ()=>{ if(window.speechSynthesis) speechSynthesis.cancel();
       document.querySelectorAll("#aiBody .spkw.on").forEach(x=>x.classList.remove("on"));
@@ -1697,17 +1714,33 @@ function aiOpen(title, sub, bodyHtml){
       while((n = walker.nextNode())) textNodes.push(n);
       let idx = 0; const offsets = [];                  // [spokenStart, spokenEnd, wordIndex]
       let spoken = "";
+      /* A line break in the source (heading -> bullets, bullet -> bullet,
+         section -> section) was being flattened to the same single space as
+         any other word gap, so headings like "Assessment" ran straight into
+         the text that followed with no pause. Track when a gap contained a
+         newline and, right before the next word is spoken, force a sentence
+         boundary so the TTS engine actually pauses there. */
+      let pendingBreak = false;
       for(const tn of textNodes){
         const frag = document.createDocumentFragment();
         for(const tok of tn.textContent.split(/(\s+)/)){
           if(!tok) continue;
-          if(/^\s+$/.test(tok)){ frag.appendChild(document.createTextNode(tok)); continue; }
+          if(/^\s+$/.test(tok)){
+            if(tok.indexOf("\n") > -1) pendingBreak = true;
+            frag.appendChild(document.createTextNode(tok)); continue;
+          }
           const sp = document.createElement("span");
           sp.className = "spkw"; sp.dataset.i = idx; sp.textContent = tok;
           frag.appendChild(sp);
           if(!/^[\u2022\-\u2013\u2014]+$/.test(tok)){   // bullets/bare dashes aren't spoken
             const sw = spokenWord(tok).trim();
-            if(sw){ offsets.push([spoken.length, spoken.length + sw.length, idx]); spoken += sw + " "; }
+            if(sw){
+              if(pendingBreak && spoken && !/[.!?:]\s*$/.test(spoken)){
+                spoken = spoken.replace(/\s+$/, "") + ". ";   // force a pause at the boundary
+              }
+              pendingBreak = false;
+              offsets.push([spoken.length, spoken.length + sw.length, idx]); spoken += sw + " ";
+            }
           }
           idx++;
         }
@@ -1763,14 +1796,8 @@ function aiOpen(title, sub, bodyHtml){
       aiMode = b.dataset.m; aiRenderBody();
     }));
     document.getElementById("aiPngBtn").addEventListener("click", ()=>{
-      const cv = aiPngCanvas(); if(!cv) return;
-      cv.toBlob(b => dlBlob("PAC_AI_" + $("aiTitle").textContent.replace(/\W+/g,"_") + "_" + stampDate() + ".png", b), "image/png");
-    });
-    document.getElementById("aiMail").addEventListener("click", ()=>{
-      const plain = (aiTexts[aiMode]||"").replace(/==|\*\*|\*/g,"");
-      emailCanvas(aiPngCanvas(),
-        CONFIG.clientName + " \u2014 AI Assessment: " + $("aiTitle").textContent + " \u00b7 " + stampDate(),
-        plain);
+      openPngPop(document.getElementById("aiPngBtn"), () => aiPngCanvas(),
+        "PAC_AI_" + $("aiTitle").textContent.replace(/\W+/g,"_") + "_" + stampDate() + ".png");
     });
   }
   $("aiTitle").textContent = title; $("aiSub").textContent = sub;
@@ -2396,10 +2423,12 @@ async function runDemo(){
       say:"That is the real snapshot, exactly as it would be saved." },
     { run: async ()=>{ demoPrevHide(); await pause(210); await demoClick($("dashPdfBtn")); },
       say:"The same thing as a single page PDF, ready to drop into the quality review pack." },
-    { run: async ()=>{ await demoClick($("kpiMail")); },
-      say:"And the envelope on any tile opens a ready made email, with the figures and the active filters already in the body, and the tile image copied to your clipboard to paste in. Watch the new tab open." },
+    { run: async ()=>{ await demoClick($("kpiPng")); await pause(300); },
+      say:"And every PNG button now offers a choice: copy the image straight to your clipboard, or save it as a file." },
+    { run: async ()=>{ const c = document.querySelector('.pngpop [data-act="copy"]'); if(c) await demoClick(c, {scroll:false}); },
+      say:"Copy, and it is ready to paste straight into an email, a chat, or a slide." },
     { run: async ()=>{ demoCursorHide(); demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); },
-      say:"Live data. Filtered any way you need it. Read by an assistant that understands the context. And out the door as a spreadsheet, an image, a PDF, or an email. Powered by Alpha TransForm." }
+      say:"Live data. Filtered any way you need it. Read by an assistant that understands the context. And out the door as a spreadsheet, an image, or a PDF. Powered by Alpha TransForm." }
   ];
 
   for(const st of steps){
