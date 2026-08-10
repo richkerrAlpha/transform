@@ -226,7 +226,8 @@ header .actions{display:flex;gap:10px;flex-wrap:wrap}
 .seg{display:inline-flex;border:1px solid #CBD5DD;border-radius:8px;overflow:hidden;flex:none}
 .seg button{border:none;background:#fff;color:var(--muted);font-size:12px;font-weight:700;padding:7px 10px;cursor:pointer;transition:.15s}
 .seg button.on{background:var(--steel);color:#fff}
-.tgtspin{width:56px;border:1px solid #CBD5DD;border-radius:6px;padding:2px 5px;font-size:11px;font-weight:700;color:var(--ink);background:#fff}
+.tgtspin{width:66px;border:1px solid #CBD5DD;border-radius:6px;padding:2px 5px;font-size:11px;font-weight:700;color:var(--ink);background:#fff}
+.millHiddenNote{font-size:11px;color:var(--muted);font-style:italic;padding:2px 4px 0;text-align:right}
 .tilebtns{display:flex;gap:6px;align-items:center;flex:none;margin-left:auto}
 /* All three tile buttons share one look: light fill, accent border, accent
    text. Previously the AI button was solid steel and the other two were white,
@@ -306,7 +307,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.34",
+  version: "3.36",
   updated: "Aug 10, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -468,7 +469,7 @@ const DATA = [];
     <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
     <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
     <div class="card c6"><h3><span>Inspector Volume</span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Volume" data-title="Inspector Volume" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
-    <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small>top by inspected footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
+    <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small style="display:inline-flex;align-items:center;gap:5px">top by inspected footage \u00b7 hide under <input type="number" id="millMinSpin" class="tgtspin" min="0" step="100" title="Mills with less inspected footage than this are hidden from the chart"> ft</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
     <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
     <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
       <span style="display:flex;align-items:center;gap:16px">
@@ -800,8 +801,13 @@ function render(){
                     ticks:{ callback:v=>(100*v).toFixed(0)+"%" } } },
       plugins:{ legend:{ position:"bottom" } }}});
 
-  /* mills — horizontal, top 14 */
-  const mi = AGG.mills = [...groupSum(S, r=>r.mill, ["fInsp","fRej"])].sort((a,b)=>b[1].fInsp-a[1].fInsp).slice(0,14);
+  /* mills — horizontal, top 14, with an opt-in "hide under Nft" threshold so a
+     long tail of near-zero mills doesn't crowd out the ones that matter. Off
+     (0) by default - a small mill can still be exactly what someone needs to
+     see, so nothing is hidden unless the user asks for it. */
+  const millAll = [...groupSum(S, r=>r.mill, ["fInsp","fRej"])].sort((a,b)=>b[1].fInsp-a[1].fInsp);
+  const millHiddenCount = millMinFt > 0 ? millAll.filter(x=>x[1].fInsp < millMinFt).length : 0;
+  const mi = AGG.mills = millAll.filter(x=>x[1].fInsp >= millMinFt).slice(0,14);
   mkChart("chMills", { type:"bar",
     data:{ labels: mi.map(x=>x[0]),
       datasets:[
@@ -810,6 +816,14 @@ function render(){
     options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false,
       scales:{ x:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
       plugins:{ legend:{ position:"bottom" } }}});
+  { const note = document.querySelector("#chMills").closest(".card").querySelector(".millHiddenNote");
+    if(millHiddenCount > 0){
+      const txt = millHiddenCount + " mill" + (millHiddenCount>1?"s":"") + " under " + fmt(millMinFt) + " ft hidden";
+      if(note) note.textContent = txt;
+      else { const n = document.createElement("div"); n.className = "millHiddenNote"; n.textContent = txt;
+             document.querySelector("#chMills").closest(".chartbox").after(n); }
+    } else if(note) note.remove();
+  }
 
   /* alloys — true rejected */
   const al = AGG.alloys = [...groupSum(S.filter(r=>r.tRej>0), r=>r.alloy, ["tRej"])].sort((a,b)=>b[1].tRej-a[1].tRej);
@@ -1110,6 +1124,21 @@ try{
   if(isFinite(saved) && saved >= 0 && saved <= 0.5) rateTarget = saved;
 }catch(err){}
 $("tgtSpin").value = parseFloat((rateTarget * 100).toFixed(1));
+/* ---------- per-tile "hide small mills" threshold, Vendor/Mill Performance chart only ---------- */
+let millMinFt = 0;   // 0 = show everything; nothing is hidden until the user opts in
+try{
+  const savedMin = parseFloat(localStorage.getItem("pacMillMinFt"));
+  if(isFinite(savedMin) && savedMin >= 0) millMinFt = savedMin;
+}catch(err){}
+$("millMinSpin").value = millMinFt;
+$("millMinSpin").addEventListener("change", ()=>{
+  let v = parseFloat($("millMinSpin").value);
+  if(!isFinite(v) || v < 0) v = 0;
+  $("millMinSpin").value = v;
+  millMinFt = v;
+  try{ localStorage.setItem("pacMillMinFt", millMinFt); }catch(err){}
+  render();
+});
 (function initQaToggle(){
   const cb = $("qaToggle"); if(!cb) return;
   cb.checked = qaEnabled();
@@ -1468,6 +1497,12 @@ function transformInstance(inst){
 function adoptInstances(list){
   rows = list.map(transformInstance).filter(r=>r.id);
   buildFilters(); render(); scanQualityAlerts();
+  // Defensive: if anything about the first paint after a large synchronous
+  // re-render (KPIs + 6 charts + table, all in the same tick) causes the
+  // banner's very first display toggle not to visually "take", this cheap
+  // redundant call a beat later corrects it without the user having to touch
+  // the toggle at all. Harmless if the first call already worked correctly.
+  setTimeout(scanQualityAlerts, 60);
 }
 
 /* ---------------------------------------------------------------------
@@ -1523,6 +1558,8 @@ function qaDemoRestoreState(){
 }
 function scanQualityAlerts(){
   const box = $("qaBanner"), list = $("qaList"), count = $("qaCount"), rlink = $("qaResolvedLink");
+  if(window.QA_DEBUG) console.log("[QA] scanQualityAlerts: rows=" + rows.length + " enabled=" + qaEnabled() +
+    " boxFound=" + !!box + " boxShowingBefore=" + (box && box.classList.contains("show")));
   if(!box || !rows.length) { if(box) box.classList.remove("show"); return; }
   if(!qaEnabled()){ box.classList.remove("show"); return; }
 
@@ -1548,6 +1585,8 @@ function scanQualityAlerts(){
   const resolved = qaResolvedSet();
   const active = found.filter(a => !resolved.has(a.id));
   const dismissed = found.filter(a => resolved.has(a.id));
+  if(window.QA_DEBUG) console.log("[QA] found=" + found.length + " active=" + active.length +
+    " dismissed=" + dismissed.length + " resolvedIds=" + JSON.stringify([...resolved]));
 
   if(!active.length){
     box.classList.remove("show");
@@ -1779,7 +1818,10 @@ const AI_TILES = {
   chInsp:    { title:"Inspector Volume",
     guidance:"IMPORTANT: this tile measures inspection ACTIVITY VOLUME only, never inspector job performance. Do not praise or criticize any inspector for finding many or few defects. Zero defects found is NOT evidence of good work; it can equally mean defects were missed. Unusually low or high reject rates for an inspector are flags about the SUPPLIER MIX (mills and material they happened to receive) or sampling coverage, not about the inspector. Frame all findings accordingly.",
     data:()=>({ inspectors: (AGG.inspectors||[]).map(i=>({inspector:i[0], inspected:Math.round(i[1].fInsp), rejected:Math.round(i[1].fRej), ratePct: i[1].fInsp? +(100*i[1].fRej/i[1].fInsp).toFixed(2):0})) }) },
-  chMills:   { title:"Mill Performance",        data:()=>({ mills: (AGG.mills||[]).map(m=>({mill:m[0], inspected:Math.round(m[1].fInsp), rejected:Math.round(m[1].fRej), ratePct: m[1].fInsp? +(100*m[1].fRej/m[1].fInsp).toFixed(2):0})) }) },
+  chMills:   { title:"Mill Performance",
+    guidance:"If hiddenBelowFt is non-null, the person has chosen to hide mills with less inspected footage than that value - mention this filter is active when it materially affects the picture (e.g. a small but concerning mill could be hidden), but do not treat it as a data quality problem.",
+    data:()=>({ mills: (AGG.mills||[]).map(m=>({mill:m[0], inspected:Math.round(m[1].fInsp), rejected:Math.round(m[1].fRej), ratePct: m[1].fInsp? +(100*m[1].fRej/m[1].fInsp).toFixed(2):0})),
+    hiddenBelowFt: millMinFt > 0 ? millMinFt : null }) },
   chAlloy:   { title:"Alloy Rejections",        data:()=>({ heldFootageByAlloy: (AGG.alloys||[]).map(a=>({alloy:a[0], heldFt:Math.round(a[1].tRej)})) }) }
 };
 function aiScopeSummary(){
