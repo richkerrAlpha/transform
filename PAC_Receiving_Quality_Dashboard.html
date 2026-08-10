@@ -240,7 +240,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.10",
+  version: "3.12",
   updated: "Aug 7, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -2239,20 +2239,25 @@ async function runDemo(){
       say:"Welcome to the PAC Stainless Receiving Quality Dashboard. Everything you are about to see is live production data. It was pulled straight from Alpha TransForm the moment this page loaded." },
     { run:()=>demoPoint($("btnApi")),
       say:"There is no overnight batch, and no spreadsheet to refresh. One button re-queries the API, and the whole dashboard rebuilds in about a second." },
-    { run: async ()=>{ await demoPoint($("themeSel")); demoHi($("themeSel")); },
-      say:"Presentation matters, because a dashboard nobody wants to look at is a dashboard nobody opens. This selector holds fifteen color schemes." },
-    { run:()=>demoSet($("themeSel"), "navy"),      say:"Navy and gold." },
-    { run:()=>demoSet($("themeSel"), "claret"),    say:"Claret and gold." },
-    { run:()=>demoSet($("themeSel"), "astros"),    say:"There is even a set of Houston team colors, for the days when that matters more than it should." },
-    { run:()=>demoSet($("themeSel"), "steel"),     say:"And back to PAC's own steel blue. Whatever you pick is remembered next time you open it." },
+    { run: async ()=>{ await demoPoint($("themeSel")); demoHi($("themeSel")); demoExpand($("themeSel"), 6); },
+      say:"Fifteen color schemes are built in." },
+    { run: async ()=>{ demoCollapse($("themeSel")); await demoSet($("themeSel"), "gold"); },
+      say:"Black and gold." },
+    { run:()=>demoSet($("themeSel"), "astros"),    say:"One of the Houston team sets." },
+    { run: async ()=>{ await demoSet($("themeSel"), "steel"); demoClearHi(); },
+      say:"And back to PAC's own default." },
     { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(600);
                        await demoSet($("fontSel"), "m"); demoClearHi(); },
       say:"Text size adjusts the same way. That matters when this is running on a shop floor monitor rather than a laptop." },
 
     /* ===== FILTER BAR ===== */
-    { run: async ()=>{ demoHi(document.querySelector(".dategroup")); await demoClick(seg2()[1]);
+    { run: async ()=>{ demoClearHi(); await demoClick($("filterToggle")); },
+      say:"The whole filter bar collapses behind this button whenever you want more room for the charts. On a phone it starts collapsed for exactly that reason." },
+    { run: async ()=>{ await demoClick($("filterToggle")); demoHi(document.querySelector(".dategroup")); },
+      say:"One tap brings it back." },
+    { run: async ()=>{ await demoClick(seg2()[1]);
                        await demoPoint($("fPeriod")); demoExpand($("fPeriod"), 9); },
-      say:"Next, the filter bar. Period mode opens a list of fourteen ready made ranges. For example, last quarter, or this month." },
+      say:"Period mode opens a list of fourteen ready made ranges. For example, last quarter, or this month." },
     { run: async ()=>{ demoCollapse($("fPeriod")); await demoSet($("fPeriod"), "thisyear"); },
       say:"Choosing this year recalculates every metric and every chart." },
     { run:()=>demoSet($("fPeriod"), "lastmonth"),

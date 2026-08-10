@@ -49,7 +49,44 @@ header .actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
 .btn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;transition:.15s}
 .btn:hover{background:rgba(255,255,255,.28)}
 #fileIn{display:none}
-.filters{position:sticky;top:0;z-index:50;background:var(--card);box-shadow:var(--shadow);padding:12px 28px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+/* The filter panel is now toggle-driven at every width, not just on phones -
+   collapsing it manually is useful on a laptop too when you want more chart
+   on screen. Desktop starts OPEN (matches prior behaviour, no regression);
+   phones start CLOSED (that was the original complaint). See initFilterOpen. */
+/* Chevron sits right next to the "Filters" word, not pushed to the far edge
+   of a full-width bar - and the whole bar changes appearance when open, so
+   the state reads at a glance instead of depending on a small rotating arrow. */
+#filterToggle{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  position:sticky;top:0;z-index:51;background:var(--card);box-shadow:var(--shadow);
+  padding:10px 28px;cursor:pointer;user-select:none;border:0;border-left:4px solid transparent;
+  width:100%;font:inherit;color:inherit;transition:background .18s ease,border-color .18s ease}
+#filterToggle .ftLeft{display:flex;align-items:center;gap:7px}
+#filterToggle .ftIcon{font-size:14px}
+#filterToggle .ftText{font-weight:800;font-size:13px;color:var(--steel);letter-spacing:.2px}
+#filterToggle .ftChev{transition:transform .22s ease;color:var(--muted);font-size:11px;display:inline-flex}
+#filterToggle .ftBadge{background:var(--accent);color:#fff;border-radius:999px;font-size:11px;font-weight:800;
+  padding:2px 8px;display:none}
+#filterToggle .ftBadge.show{display:inline-block}
+#filterToggle:hover{background:color-mix(in srgb, var(--accent) 6%, var(--card))}
+#filterToggle.open{background:color-mix(in srgb, var(--accent) 12%, var(--card));border-left-color:var(--accent)}
+#filterToggle.open .ftChev{transform:rotate(180deg);color:var(--accent)}
+#filterToggle.open .ftText{color:var(--accent)}
+.filters{position:sticky;top:41px;z-index:50;background:var(--card);box-shadow:var(--shadow);padding:12px 28px;
+  display:none;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.filters.open{display:flex}
+@media(max-width:760px){
+  /* On a phone the same panel wraps onto six or more lines and, being sticky,
+     never scrolls away - it just sits there eating the screen. Non-sticky
+     here, so once opened it scrolls away with the page like everything else
+     instead of staying pinned above the charts. */
+  #filterToggle{padding:11px 16px}
+  .filters{position:static;top:auto;box-shadow:none;padding:10px 16px 14px}
+  .filters label{width:100%}
+  .filters .dategroup{width:100%;flex-direction:column;align-items:flex-start}
+  .filters .msel{width:100%}
+  .filters .msel-btn{width:100%}
+  #btnReset{width:100%}
+}
 .filters label{display:flex;flex-direction:column;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;gap:4px}
 .filters input,.filters select{border:1px solid #CBD5DD;border-radius:8px;padding:7px 9px;font-size:13px;background:#fff;color:var(--ink);min-width:120px}
 .msel{position:relative}
@@ -193,7 +230,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "1.2",
+  version: "1.7",
   updated: "Aug 7, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -271,7 +308,11 @@ const DATA = [];
   </div>
 </header>
 
-<div class="filters">
+<button type="button" id="filterToggle" aria-expanded="false" aria-controls="filterPanel">
+  <span class="ftLeft"><span class="ftIcon">&#9881;</span><span class="ftText" id="ftText">Show Filters</span><span class="ftChev">&#9660;</span></span>
+  <span class="ftBadge" id="ftBadge"></span>
+</button>
+<div class="filters" id="filterPanel">
   <div class="dategroup">
     <label>Date Range
       <div class="seg" id="dateSeg">
@@ -723,6 +764,7 @@ function render(){
   scopeRows = S;
   renderTable();
   syncTileScopes();
+  updateFilterToggle();
 
   $("foot").textContent = `${CONFIG.clientName} · ${CONFIG.title} · ${fmt(rows.length)} submissions loaded · footage prorated from Quantity (ft) by piece counts, matching the Excel R2 methodology \u00b7 Powered by Alpha TransForm`;
 }
@@ -1392,7 +1434,7 @@ async function refreshFromApi(interactive){
   }finally{ $("btnApi").innerHTML = "&#8635; Refresh from API"; }
 }
 $("btnApi").addEventListener("click", ()=>refreshFromApi(true));
-$("btnReset").addEventListener("click", ()=>{ chartSel = null; tSort = {key:null, dir:-1}; tFilt = {}; exportSel = new Set(); buildThead(); buildFilters(); render(); });
+$("btnReset").addEventListener("click", ()=>{ resetAllFilters(); buildThead(); buildFilters(); render(); });
 for(const id of ["fFrom","fTo","fDisp","fType"])
   $(id).addEventListener("change", ()=>{ chartSel = null; render(); });
 
@@ -1980,6 +2022,43 @@ function demoHi(id){
   const el = typeof id==="string" ? $(id) : id;
   if(el){ el.classList.add("demo-hi"); el.scrollIntoView({behavior:"smooth", block:"center"}); }
 }
+function updateFilterToggle(){
+  const btn = $("filterToggle"); if(!btn) return;
+  const badge = $("ftBadge");
+  let n = 0;
+  for(const key in MSEL){ const m = MSEL[key]; if(m.choice.size !== m.values.length) n++; }
+  for(const id of ["fDisp","fType"]){ const e = $(id); if(e && e.value && e.value !== "All") n++; }
+  const per = $("fPeriod");
+  if(per && per.value && per.value !== "all") n++;
+  else {
+    const from = $("fFrom").value, to = $("fTo").value;
+    if(rows.length){
+      const ds = rows.map(r=>r.date).filter(Boolean).sort();
+      if((from && from > ds[0]) || (to && to < ds[ds.length-1])) n++;
+    }
+  }
+  if(n > 0){ badge.textContent = String(n); badge.classList.add("show"); }
+  else { badge.classList.remove("show"); }
+}
+function setFilterPanelOpen(open){
+  const panel = $("filterPanel"), btn = $("filterToggle"), txt = $("ftText");
+  if(!panel || !btn) return;
+  panel.classList.toggle("open", open);
+  btn.classList.toggle("open", open);
+  btn.setAttribute("aria-expanded", open ? "true" : "false");
+  if(txt) txt.textContent = open ? "Hide Filters" : "Show Filters";
+}
+(function initFilterToggle(){
+  const btn = $("filterToggle");
+  if(!btn) return;
+  btn.addEventListener("click", ()=>{
+    setFilterPanelOpen(!$("filterPanel").classList.contains("open"));
+  });
+  // Desktop keeps today's behaviour (panel visible on load); a phone-width
+  // screen starts collapsed, since that was the actual complaint. 760px
+  // matches the CSS breakpoint above.
+  setFilterPanelOpen(window.innerWidth > 760);
+})();
 function demoClearHi(){ document.querySelectorAll(".demo-hi").forEach(e=>e.classList.remove("demo-hi")); }
 
 /* ---------- virtual mouse pointer ----------
@@ -2134,23 +2213,30 @@ function demoCursorHide(){
 
 /* Full reset to the dashboard's opening state - filters, sort, selection,
    chart linking and target - so a demo never narrates the wrong numbers. */
+/* Shared by the real Reset button and the guided demo, so the two can never
+   drift apart the way they had - the button previously left every checklist
+   filter and the period preset untouched. */
+function resetAllFilters(){
+  chartSel = null; tSort = {key:null, dir:-1}; tFilt = {}; exportSel = new Set();
+  const lt = $("linkToggle"); if(lt) lt.checked = false;
+  for(const key in MSEL){                     // re-tick every checkbox list
+    const m = MSEL[key];
+    m.choice = new Set(m.values);
+    const p = $(m.panel);
+    if(p){ p.querySelectorAll(".msChk").forEach(c=>c.checked = true);
+           const all = p.querySelector(".msAllChk"); if(all){ all.checked = true; all.indeterminate = false; }
+           p.style.display = "none"; }
+    msUpdateBtn(m);
+  }
+  ["fDisp","fType"].forEach(id=>{ const e = $(id); if(e) e.value = "All"; });
+  const seg = document.querySelectorAll("#dateSeg button");
+  if(seg[1]) seg[1].click();                  // period mode
+  const per = $("fPeriod"); if(per){ per.value = "all"; per.dispatchEvent(new Event("change")); }
+}
 function demoResetState(){
   try{
-    chartSel = null; tSort = {key:null, dir:-1}; tFilt = {}; exportSel = new Set();
-    const lt = $("linkToggle"); if(lt) lt.checked = false;
-    for(const key in MSEL){                     // re-tick every checkbox list
-      const m = MSEL[key];
-      m.choice = new Set(m.values);
-      const p = $(m.panel);
-      if(p){ p.querySelectorAll(".msChk").forEach(c=>c.checked = true);
-             const all = p.querySelector(".msAllChk"); if(all){ all.checked = true; all.indeterminate = false; }
-             p.style.display = "none"; }
-      msUpdateBtn(m);
-    }
-    ["fDisp","fType"].forEach(id=>{ const e = $(id); if(e) e.value = "All"; });
-    const seg = document.querySelectorAll("#dateSeg button");
-    if(seg[1]) seg[1].click();                  // period mode
-    const per = $("fPeriod"); if(per){ per.value = "all"; per.dispatchEvent(new Event("change")); }
+    setFilterPanelOpen(true);          // demo needs the panel visible, phone or not
+    resetAllFilters();
     const t = $("tgtSpin");
     if(t){ t.value = parseFloat((CONFIG.rejectionRateTarget*100).toFixed(1)); t.dispatchEvent(new Event("change")); }
     buildThead(); render();
@@ -2185,13 +2271,14 @@ async function runDemo(){
     /* ---------------- ACT 2 - presentation ---------------- */
     { run: async ()=>{ demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); await pause(280);
                        await demoPoint($("themeSel")); demoHi($("themeSel")); },
-      say:"A word on presentation, because a dashboard nobody wants to look at is a dashboard nobody opens. This selector holds fifteen color schemes." },
-    { run: async ()=>{ await demoSet($("themeSel"), "navy"); },   say:"Navy and gold." },
-    { run: async ()=>{ await demoSet($("themeSel"), "claret"); }, say:"Claret and gold." },
+      say:"Fifteen color schemes are built in." },
+    { run: async ()=>{ demoExpand($("themeSel"), 6); await pause(500); demoCollapse($("themeSel"));
+                       await demoSet($("themeSel"), "gold"); },
+      say:"Black and gold." },
     { run: async ()=>{ await demoSet($("themeSel"), "astros"); },
-      say:"There is even a set of Houston team colors, for the days when that matters more than it should." },
+      say:"One of the Houston team sets." },
     { run: async ()=>{ await demoSet($("themeSel"), "steel"); },
-      say:"And back to PAC's own steel blue palette. Whatever you pick is remembered next time." },
+      say:"And back to PAC's own default." },
     { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(350); await demoSet($("fontSel"), "m"); demoClearHi(); },
       say:"Text size adjusts the same way, which matters when this is on a shop floor monitor rather than a laptop." },
     { run: async ()=>{ demoHi(chartCard("chMonthly")); await demoSet($("tgtSpin"), 3); },
@@ -2200,9 +2287,15 @@ async function runDemo(){
       say:"Back to five percent." },
 
     /* ---------------- ACT 3 - filtering ---------------- */
-    { run: async ()=>{ demoHi(document.querySelector(".dategroup")); await demoClick(seg2()[1]);
-                       await demoSet($("fPeriod"), "thisyear"); },
-      say:"Filtering is built for how quality teams actually work. Period mode gives one click access to fourteen presets: this week, last quarter, year to date, last thirty days. Selecting this year recalculates every supplier figure." },
+    { run: async ()=>{ demoClearHi(); await demoClick($("filterToggle")); },
+      say:"The whole filter bar collapses behind this button whenever you want more room for the charts. On a phone it starts collapsed for exactly that reason." },
+    { run: async ()=>{ await demoClick($("filterToggle")); demoHi(document.querySelector(".dategroup")); },
+      say:"One tap brings it back." },
+    { run: async ()=>{ await demoClick(seg2()[1]);
+                       await demoPoint($("fPeriod")); demoExpand($("fPeriod"), 9); },
+      say:"Period mode opens a list of fourteen ready made ranges. For example, last quarter, or this month." },
+    { run: async ()=>{ demoCollapse($("fPeriod")); await demoSet($("fPeriod"), "thisyear"); },
+      say:"Choosing this year recalculates every supplier figure." },
     { run: async ()=>{ await demoSet($("fPeriod"), "lastquarter"); },
       say:"Last quarter, and the rankings reorder themselves. This is how you check whether a supplier conversation from three months ago actually changed anything." },
     { run: async ()=>{ demoHi($("millSel")); await demoClick($("millBtn"));
