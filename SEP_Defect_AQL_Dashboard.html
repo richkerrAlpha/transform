@@ -64,6 +64,60 @@ header .sub{font-size:13px;opacity:.85;margin-top:3px}
   border-radius:6px;padding:8px 10px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer}
 .pngpop button:hover{background:#EDF4F8}
 .hdr-sel option{color:var(--ink)}
+.demobtn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:8px;
+  padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer;transition:.15s;white-space:nowrap}
+.demobtn:hover{background:#fff;color:var(--steel);border-color:#fff}
+/* -------------------- Quality Alert banner -------------------- */
+#qaBanner{display:none;margin:0 28px 18px;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+#qaBanner.show{display:block}
+.qaHead{display:flex;align-items:center;gap:9px;background:#FBECEC;border:1px solid #F0C4C4;border-bottom:0;
+  border-radius:12px 12px 0 0;padding:10px 16px;font-size:12.5px;font-weight:800;color:#9A2A2A;letter-spacing:.2px}
+.qaHead .qaCount{background:#C1121F;color:#fff;border-radius:999px;font-size:11px;font-weight:800;padding:1px 8px}
+.qaList{border:1px solid #F0C4C4;border-top:0;border-radius:0 0 12px 12px;background:#FFF7F7}
+.qaItem{display:flex;align-items:flex-start;gap:12px;padding:11px 16px;border-top:1px solid #F5DADA}
+.qaItem:first-child{border-top:0}
+.qaText{flex:1;font-size:13px;line-height:1.5;color:#3A2222;cursor:pointer}
+.qaText b{color:#9A2A2A}
+.qaText:hover{text-decoration:underline}
+.qaActions{display:flex;gap:6px;flex:none}
+.qaBtn{border:1px solid #E3B6B6;background:#fff;color:#7A2626;border-radius:7px;padding:5px 10px;
+  font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap}
+.qaBtn:hover{background:#9A2A2A;color:#fff;border-color:#9A2A2A}
+.qaResolvedLink{font-size:11.5px;color:var(--muted);text-decoration:underline;cursor:pointer;
+  padding:8px 16px;display:block}
+.hdr-toggle{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#fff;
+  cursor:pointer;user-select:none;white-space:nowrap}
+.hdr-toggle input{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;margin:0}
+/* -------------------- Demo & Learning menu -------------------- */
+.demoMenuWrap{position:relative;display:inline-flex}
+.demoMenu{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:990;background:#fff;
+  border:1px solid #CBD5DD;border-radius:10px;box-shadow:0 12px 30px rgba(0,0,0,.24);padding:6px;min-width:210px}
+.demoMenu.open{display:block}
+.demoMenu button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:0;
+  border-radius:7px;padding:9px 11px;font-size:12.5px;font-weight:700;color:var(--ink);cursor:pointer}
+.demoMenu button:hover{background:#EDF4F8}
+.demoMenu button:disabled{opacity:.4;cursor:default;pointer-events:none}
+.demoMenu hr{border:0;border-top:1px solid #E6ECF0;margin:5px 2px}
+/* -------------------- Learning Mode banner -------------------- */
+#lrnBanner{display:none;margin:0 28px 18px;border-radius:12px;background:#EEF1FC;border:1px solid #C9D0F5;
+  padding:12px 16px;font-size:13px;color:#2B3380;display:none;align-items:center;gap:10px;flex-wrap:wrap}
+#lrnBanner.show{display:flex}
+#lrnBanner b{color:#1E2570}
+#lrnBanner .lrnLive{margin-left:auto;background:#2B3380;color:#fff;border:0;border-radius:7px;
+  padding:7px 13px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+#lrnBanner .lrnLive:hover{background:#1E2570}
+/* -------------------- tour-start confirm -------------------- */
+#lrnConfirm{display:none;position:fixed;inset:0;z-index:995;background:rgba(15,20,35,.5);
+  align-items:center;justify-content:center}
+#lrnConfirm.show{display:flex}
+#lrnConfirm .box{background:#fff;border-radius:14px;padding:26px 28px;max-width:380px;text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,.3)}
+#lrnConfirm h4{margin:0 0 8px;font-size:16px;color:var(--steel)}
+#lrnConfirm p{margin:0 0 18px;font-size:13px;color:var(--muted);line-height:1.5}
+#lrnConfirm .row{display:flex;gap:10px;justify-content:center}
+#lrnConfirm button{border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid #CBD5DD}
+#lrnConfirm .go{background:var(--steel);color:#fff;border-color:var(--steel)}
+#lrnConfirm .skip{background:#fff;color:var(--ink)}
 .poweredby{font-size:11px;color:rgba(255,255,255,.7);white-space:nowrap;margin-left:auto;display:flex;align-items:center;gap:6px}
 .poweredby img{height:22px;display:block;filter:brightness(0) invert(1);opacity:.92}
 @media(max-width:760px){ .poweredby{margin-left:0} }
@@ -133,8 +187,12 @@ header .actions{display:flex;gap:10px;flex-wrap:wrap}
 .filters .reset{background:var(--steel);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer}
 .filters .reset:hover{background:var(--steel2)}
 .wrap{max-width:1440px;margin:0 auto;padding:22px 28px 60px}
-.kpis{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:12px;margin-bottom:22px}
-@media(max-width:1200px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.kpirow{display:flex;align-items:flex-start;gap:12px;margin-bottom:22px}
+.kpirow .kpis{flex:1;min-width:0}
+.kpirow .kpiActions{flex:none;margin-top:2px}
+.kpis{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:12px}
+@media(max-width:760px){ .kpirow{flex-direction:column} .kpirow .kpiActions{align-self:flex-end} }
+@media(max-width:1200px){.kpirow{flex-direction:column}.kpirow .kpiActions{align-self:flex-end}.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:560px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .kpi{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:14px 16px;border-top:4px solid var(--accent);transition:transform .18s ease,box-shadow .18s ease;cursor:default;display:flex;flex-direction:column;justify-content:space-between;min-height:104px}
 .kpi:hover{transform:translateY(-4px) scale(1.04);box-shadow:0 10px 24px rgba(27,73,101,.25);z-index:2;position:relative}
@@ -183,7 +241,7 @@ header .actions{display:flex;gap:10px;flex-wrap:wrap}
 #thead th.sth{cursor:pointer;user-select:none;white-space:nowrap}
 #thead th.sth:hover{color:var(--accent)}
 #thead th.sth .arr{font-size:9px;margin-left:3px;opacity:.9}
-#thead .frow th{padding:3px 6px 6px;background:transparent}
+#thead .frow th{padding:3px 6px 6px;background:var(--steel)}
 #thead .frow input{width:100%;min-width:52px;box-sizing:border-box;border:1px solid #CBD5DD;border-radius:5px;padding:3px 6px;font-size:11px;font-weight:500;color:var(--ink);background:#fff}
 #thead .frow input::placeholder{color:#B4BEC7;font-weight:400}
 .perdates{align-self:flex-end;padding-bottom:9px;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
@@ -215,12 +273,6 @@ header .actions{display:flex;gap:10px;flex-wrap:wrap}
 #demoStart .note{color:#DDE6EE;font-size:14px;font-weight:600}
 .chkcol{width:34px;text-align:center}
 .chkcol input[type=checkbox]{width:15px;height:15px;margin:0;accent-color:var(--steel);cursor:pointer}
-#thead th.sth{cursor:pointer;user-select:none;white-space:nowrap}
-#thead th.sth:hover{color:var(--accent)}
-#thead th.sth .arr{font-size:9px;margin-left:3px;opacity:.9}
-#thead .frow th{padding:3px 6px 6px;background:transparent}
-#thead .frow input{width:100%;min-width:52px;box-sizing:border-box;border:1px solid #CBD5DD;border-radius:5px;padding:3px 6px;font-size:11px;font-weight:500;color:var(--ink);background:#fff}
-#thead .frow input::placeholder{color:#B4BEC7;font-weight:400}
 .perdates{align-self:flex-end;padding-bottom:9px;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
 .dategroup{display:flex;gap:14px;align-items:flex-end;border:1px solid #B7C6D0;border-radius:10px;padding:7px 12px 8px;background:#F7FAFC}
 .seg{display:inline-flex;border:1px solid #CBD5DD;border-radius:8px;overflow:hidden;flex:none}
@@ -263,8 +315,9 @@ header .actions{display:flex;gap:10px;flex-wrap:wrap}
 .pngbtn:hover{background:var(--steel);color:#fff;border-color:var(--steel)}
 .chartbox{position:relative;height:300px}
 .chartbox.tall{height:380px}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-th{background:var(--steel);color:#fff;padding:8px 10px;text-align:left;font-weight:700;white-space:nowrap;position:sticky;top:0}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px}
+thead{position:sticky;top:0;z-index:5}
+th{background:var(--steel);color:#fff;padding:8px 10px;text-align:left;font-weight:700;white-space:nowrap}
 td{padding:7px 10px;border-bottom:1px solid #E6ECF0;white-space:nowrap}
 tbody tr.rowhold td{background:#FBE9EB}
 tbody tr.rowrelease td{background:#E9F5EE}
@@ -296,8 +349,8 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:24px}
 const CONFIG = {
   clientName: "Southeast Poultry",
   title: "Defect & AQL Dashboard",
-  version: "1.13",
-  updated: "Aug 8, 2026",
+  version: "1.18",
+  updated: "Aug 11, 2026",
   /* DEFECT RATE TARGET. Observed aggregate on Bone Check data is ~0.83%, so 1%
      is a working default, NOT a Southeast Poultry standard. Confirm with QA
      before this dashboard is used to judge anyone. Users can adjust live. */
@@ -347,6 +400,16 @@ const DATA = [];
   <button class="btn refreshCorner" id="btnApi" title="Pulls live submissions from Alpha TransForm">&#8635; Refresh Data</button>
   <div class="actions">
     <div class="toolbar">
+      <span class="demoMenuWrap">
+        <button class="demobtn" id="demoMenuBtn" title="Guided tour and sample data for exploring the dashboard">&#9654;&nbsp; Demo &amp; Learning</button>
+        <div class="demoMenu" id="demoMenu">
+          <button id="menuShowDemo">&#9654; Show Demo</button>
+          <hr>
+          <button id="menuLearning">&#127891; Enter Learning Mode</button>
+          <button id="menuLive" disabled>&#128225; Switch to Live Data</button>
+        </div>
+      </span>
+      <span class="hdr-div"></span>
       <button class="btn" onclick="document.getElementById('fileIn').click()" title="Load a TransForm JSON export" style="display:none">&#8683; Load JSON export</button>
       <input type="file" id="fileIn" accept=".json">
       <span class="hdr-div"></span>
@@ -354,6 +417,9 @@ const DATA = [];
         <button class="hdr-btn" id="dashPngBtn" title="Save the entire dashboard as a PNG image">&#8681; PNG</button>
         <button class="hdr-btn" id="dashPdfBtn" title="Save the entire dashboard as a PDF">&#8681; PDF</button>
       </span>
+      <span class="hdr-div"></span>
+      <label class="hdr-toggle" title="Show or hide the Quality Alert banner on load">
+        <input type="checkbox" id="qaToggle" checked> Quality Alerts</label>
       <select id="themeSel" class="hdr-sel" title="Color scheme"></select>
       <select id="fontSel" class="hdr-sel" title="Text size">
         <option value="s">Aa Small</option>
@@ -438,17 +504,27 @@ const DATA = [];
 </div>
 
 <div class="wrap">
-  <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
-    <span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Download the KPI cards as a PNG image">&#8681; PNG</button></span>
+  <div id="qaBanner"><div class="qaHead"><span>&#9888; Quality Alert</span><span class="qaCount" id="qaCount"></span></div>
+  <div class="qaList" id="qaList"></div>
+  <div class="qaResolvedLink" id="qaResolvedLink" style="display:none"></div></div>
+<div id="lrnBanner"><span>&#127891; <b>Learning Mode</b> \u2014 the numbers below are sample data for exploring the dashboard, not real submissions.</span>
+  <button class="lrnLive" id="lrnLiveBtn">Switch to Live Data</button></div>
+<div id="lrnConfirm"><div class="box">
+  <h4>Sample data loaded</h4>
+  <p>Want a guided, narrated walkthrough of what this dashboard can do, or would you rather explore on your own first?</p>
+  <div class="row"><button class="go" id="lrnStartTour">Start the Tour</button><button class="skip" id="lrnSkipTour">Just Explore</button></div>
+</div></div>
+<div class="kpirow">
+    <div class="kpis" id="kpis"></div>
+    <span class="tilebtns kpiActions"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Copy or save the KPI cards as a PNG image">&#8681; PNG</button></span>
   </div>
-  <div class="kpis" id="kpis"></div>
   <div class="grid">
-    <div class="card c8"><h3><span>Defect Rate by Product <small id="wkNote">red above target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chProdRate" data-name="Defect_Rate_by_Product" data-title="Defect Rate by Product" title="Download as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chProdRate"></canvas></div></div>
-    <div class="card c4"><h3><span>Defect Types <small>all checks</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chDefects" data-name="Defect_Types" data-title="Defect Types" title="Download as PNG">&#8681;</button></span></h3><div class="chartbox"><canvas id="chDefects"></canvas></div></div>
-    <div class="card c6"><h3><span>Monthly Defect Rate <small><span style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.25"> % target</span></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Defect_Rate" data-title="Monthly Defect Rate" title="Download as PNG">&#8681;</button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
-    <div class="card c6"><h3><span>Checks by Inspector <small>volume and defects found</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInspector" data-name="Checks_by_Inspector" data-title="Checks by Inspector" title="Download as PNG">&#8681;</button></span></h3><div class="chartbox"><canvas id="chInspector"></canvas></div></div>
-    <div class="card c7 c8"><h3><span>Volume vs Defect Rate <small>each point is a product</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chScatter" data-name="Volume_vs_Defect_Rate" data-title="Volume vs Defect Rate" title="Download as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chScatter"></canvas></div></div>
-    <div class="card c4"><h3><span>Checks by Form <small>source contribution</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chSource" data-name="Checks_by_Form" data-title="Checks by Form" title="Download as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chSource"></canvas></div></div>
+    <div class="card c8"><h3><span>Defect Rate by Product <small id="wkNote">red above target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chProdRate" data-name="Defect_Rate_by_Product" data-title="Defect Rate by Product" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chProdRate"></canvas></div></div>
+    <div class="card c4"><h3><span>Defect Types <small>all checks</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chDefects" data-name="Defect_Types" data-title="Defect Types" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox"><canvas id="chDefects"></canvas></div></div>
+    <div class="card c6"><h3><span>Monthly Defect Rate <small><span style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.25"> % target</span></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Defect_Rate" data-title="Monthly Defect Rate" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
+    <div class="card c6"><h3><span>Checks by Inspector <small>volume and defects found</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInspector" data-name="Checks_by_Inspector" data-title="Checks by Inspector" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox"><canvas id="chInspector"></canvas></div></div>
+    <div class="card c7 c8"><h3><span>Volume vs Defect Rate <small>each point is a product</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chScatter" data-name="Volume_vs_Defect_Rate" data-title="Volume vs Defect Rate" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chScatter"></canvas></div></div>
+    <div class="card c4"><h3><span>Checks by Form <small>source contribution</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chSource" data-name="Checks_by_Form" data-title="Checks by Form" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chSource"></canvas></div></div>
     <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
       <span style="display:flex;align-items:center;gap:16px">
         <div class="msel" id="expSel">
@@ -689,6 +765,132 @@ function setStatus(msg){
   }
   el.textContent = msg; el.style.display = msg ? "block" : "none";
 }
+/* ---------------------------------------------------------------------
+   Quality Alert banner - deterministic only, no AI call. Runs once per
+   full data load against ALL rows, not the current filtered view. Only
+   checks with a recorded sample size (fRecv) can produce a rate - matches
+   the same restriction chMonthly already applies, since AQL checks with
+   no sample size cannot be prorated into a rate at all.
+--------------------------------------------------------------------- */
+const QA_OUTLIER_RATIO = 1.8;
+const QA_STORE_KEY = "sepQaResolved";
+const QA_ENABLED_KEY = "sepQaEnabled";
+function qaEnabled(){
+  try{ const v = localStorage.getItem(QA_ENABLED_KEY); return v === null ? true : v === "1"; }
+  catch(err){ return true; }
+}
+function qaResolvedSet(){
+  try{ return new Set(JSON.parse(localStorage.getItem(QA_STORE_KEY) || "[]")); }
+  catch(err){ return new Set(); }
+}
+function qaSaveResolved(set){
+  try{ localStorage.setItem(QA_STORE_KEY, JSON.stringify([...set])); }catch(err){}
+}
+function qaResolve(id){ const s = qaResolvedSet(); s.add(id); qaSaveResolved(s); scanQualityAlerts(); }
+function qaUnresolve(id){ const s = qaResolvedSet(); s.delete(id); qaSaveResolved(s); scanQualityAlerts(); }
+
+let qaDemoSnapshot = null;
+function qaDemoForceState(){
+  try{ qaDemoSnapshot = { enabled: localStorage.getItem(QA_ENABLED_KEY), resolved: localStorage.getItem(QA_STORE_KEY) }; }
+  catch(err){ qaDemoSnapshot = { enabled: null, resolved: null }; }
+  try{ localStorage.setItem(QA_ENABLED_KEY, "1"); localStorage.setItem(QA_STORE_KEY, "[]"); }catch(err){}
+  const cb = $("qaToggle"); if(cb) cb.checked = true;
+  scanQualityAlerts();
+}
+function qaDemoRestoreState(){
+  if(!qaDemoSnapshot) return;
+  try{
+    if(qaDemoSnapshot.enabled === null) localStorage.removeItem(QA_ENABLED_KEY); else localStorage.setItem(QA_ENABLED_KEY, qaDemoSnapshot.enabled);
+    if(qaDemoSnapshot.resolved === null) localStorage.removeItem(QA_STORE_KEY); else localStorage.setItem(QA_STORE_KEY, qaDemoSnapshot.resolved);
+  }catch(err){}
+  qaDemoSnapshot = null;
+  const cb = $("qaToggle"); if(cb) cb.checked = qaEnabled();
+  scanQualityAlerts();
+}
+
+function scanQualityAlerts(){
+  const box = $("qaBanner"), list = $("qaList"), count = $("qaCount"), rlink = $("qaResolvedLink");
+  if(!box || !rows.length) { if(box) box.classList.remove("show"); return; }
+  if(!qaEnabled()){ box.classList.remove("show"); return; }
+
+  const withPieces = rows.filter(r=>r.fRecv!=null && r.fRecv>0);
+  const mo = [...groupSum(withPieces, r=>monthStart(r.date), ["fRecv","fRej"])]
+    .filter(m => m[1].fRecv > 0)
+    .map(m => ({ month:m[0], rate: m[1].fRej / m[1].fRecv, checked:Math.round(m[1].fRecv), defects:Math.round(m[1].fRej) }));
+
+  const found = [];
+  mo.forEach((m, i) => {
+    const others = mo.filter((_, j) => j !== i);
+    if(!others.length) return;
+    const avgOthers = others.reduce((a,x)=>a+x.rate,0) / others.length;
+    if(m.rate > rateTarget && avgOthers > 0 && m.rate >= avgOthers * QA_OUTLIER_RATIO){
+      found.push({
+        id: "month:" + m.month,
+        text: "<b>" + dLabel(m.month) + "</b> defect rate is <b>" + (100*m.rate).toFixed(1) + "%</b> \u2014 about " +
+              (m.rate/avgOthers).toFixed(1) + "x the average of the rest of the period (" + (100*avgOthers).toFixed(1) + "%).",
+        month: m.month
+      });
+    }
+  });
+
+  const resolved = qaResolvedSet();
+  const active = found.filter(a => !resolved.has(a.id));
+  const dismissed = found.filter(a => resolved.has(a.id));
+
+  if(!active.length){
+    box.classList.remove("show");
+    if(dismissed.length){
+      box.classList.add("show");
+      list.innerHTML = "";
+      count.textContent = "0"; count.style.display = "none";
+      box.querySelector(".qaHead span:first-child").innerHTML = "&#9989; No active alerts";
+      box.querySelector(".qaHead").style.background = "#EAF6EE";
+      box.querySelector(".qaHead").style.borderColor = "#BFE3C8";
+      box.querySelector(".qaHead").style.color = "#1F6B37";
+      box.querySelector(".qaList").style.borderColor = "#BFE3C8";
+    } else { return; }
+  } else {
+    box.classList.add("show");
+    count.style.display = "";
+    count.textContent = String(active.length);
+    box.querySelector(".qaHead span:first-child").innerHTML = "&#9888; Quality Alert";
+    box.querySelector(".qaHead").style.background = "";
+    box.querySelector(".qaHead").style.borderColor = "";
+    box.querySelector(".qaHead").style.color = "";
+    box.querySelector(".qaList").style.borderColor = "";
+  }
+
+  list.innerHTML = active.map(a =>
+    '<div class="qaItem"><span class="qaText" data-month="' + a.month + '">' + a.text + '</span>' +
+    '<span class="qaActions"><button class="qaBtn" data-resolve="' + a.id + '">Resolved</button></span></div>'
+  ).join("");
+
+  list.querySelectorAll(".qaText").forEach(el => el.addEventListener("click", () => {
+    const seg = document.querySelectorAll("#dateSeg button");
+    if(seg[1]) seg[1].click();
+    const per = $("fPeriod"); if(per){ per.value = "all"; per.dispatchEvent(new Event("change")); }
+    chartSel = { kind:"month", value: el.dataset.month }; renderTable();
+    const card = document.getElementById("chMonthly"); if(card) card.closest(".card").scrollIntoView({behavior:"smooth", block:"center"});
+  }));
+  list.querySelectorAll("[data-resolve]").forEach(btn => btn.addEventListener("click", (e) => {
+    e.stopPropagation(); qaResolve(btn.dataset.resolve);
+  }));
+
+  if(dismissed.length){
+    rlink.style.display = "block";
+    rlink.textContent = dismissed.length + " resolved alert" + (dismissed.length>1?"s":"") + " \u2014 show";
+    rlink.onclick = () => {
+      list.innerHTML += dismissed.map(a =>
+        '<div class="qaItem" style="opacity:.6"><span class="qaText" data-month="' + a.month + '">' + a.text + '</span>' +
+        '<span class="qaActions"><button class="qaBtn" data-unresolve="' + a.id + '">Un-resolve</button></span></div>'
+      ).join("");
+      list.querySelectorAll("[data-unresolve]").forEach(btn => btn.addEventListener("click", (e) => {
+        e.stopPropagation(); qaUnresolve(btn.dataset.unresolve);
+      }));
+      rlink.style.display = "none";
+    };
+  } else { rlink.style.display = "none"; }
+}
 function render(){
   const S = rows.filter(inScope);
   if(!rows.length){
@@ -880,11 +1082,13 @@ function syncTileScopes(){
     s.innerHTML = "<b>Showing:</b> " + escHtml(txt);
     s.style.display = hide ? "none" : "";
   });
-  const k = document.querySelector(".kpis");
-  if(k && k.parentElement){
-    let s = k.parentElement.querySelector(".tilescope");
-    if(!s){ s = document.createElement("div"); s.className = "tilescope";
-            k.parentElement.insertBefore(s, k); }
+  const kr = document.querySelector(".kpirow");
+  if(kr && kr.parentElement){
+    let s = kr.previousElementSibling;
+    if(!s || !s.classList.contains("tilescope")){
+      s = document.createElement("div"); s.className = "tilescope";
+      kr.parentElement.insertBefore(s, kr);
+    }
     s.innerHTML = "<b>Showing:</b> " + escHtml(txt);
     s.style.display = hide ? "none" : "";
   }
@@ -1123,6 +1327,66 @@ try{
   if(isFinite(saved) && saved >= 0 && saved <= 0.5) rateTarget = saved;
 }catch(err){}
 $("tgtSpin").value = parseFloat((rateTarget * 100).toFixed(1));
+
+/* ------------------------------------------------------------------
+   Learning Mode. Loads a fixed, realistic sample dataset through the
+   EXACT same path real data uses (rows -> buildFilters -> render), so
+   every chart, KPI, filter, and the AI all work identically on it -
+   nothing downstream needs to know the difference. The one thing that
+   must never be ambiguous: this is fake data, and it stays visibly
+   labeled as such the whole time it is active.
+------------------------------------------------------------------ */
+const LEARNING_ROWS = [{"id": "LEARN-15", "subId": "LEARN-SUB-5", "date": "2026-05-03", "created": "2026-05-03 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Foreign Material", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 2, "Bloody Spots": 0}, "fRecv": 147, "fInsp": 1, "fRej": 2, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-0", "subId": "LEARN-SUB-0", "date": "2026-05-04", "created": "2026-05-04 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-4", "subId": "LEARN-SUB-1", "date": "2026-05-04", "created": "2026-05-04 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-12", "subId": "LEARN-SUB-4", "date": "2026-05-07", "created": "2026-05-07 09:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Dark Meat AQL", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-10", "subId": "LEARN-SUB-3", "date": "2026-05-09", "created": "2026-05-09 08:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Skin", "defects": {"Bones": 0, "Skin": 1, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 67, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-13", "subId": "LEARN-SUB-4", "date": "2026-05-09", "created": "2026-05-09 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 1}, "fRecv": 93, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-18", "subId": "LEARN-SUB-6", "date": "2026-05-10", "created": "2026-05-10 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 93, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-16", "subId": "LEARN-SUB-5", "date": "2026-05-13", "created": "2026-05-13 09:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-19", "subId": "LEARN-SUB-6", "date": "2026-05-17", "created": "2026-05-17 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-2", "subId": "LEARN-SUB-0", "date": "2026-05-18", "created": "2026-05-18 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-6", "subId": "LEARN-SUB-2", "date": "2026-05-18", "created": "2026-05-18 09:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-1", "subId": "LEARN-SUB-0", "date": "2026-05-19", "created": "2026-05-19 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 1}, "fRecv": 89, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-14", "subId": "LEARN-SUB-4", "date": "2026-05-19", "created": "2026-05-19 09:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-9", "subId": "LEARN-SUB-3", "date": "2026-05-20", "created": "2026-05-20 08:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Foreign Material", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 1, "Bloody Spots": 0}, "fRecv": 80, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-8", "subId": "LEARN-SUB-2", "date": "2026-05-21", "created": "2026-05-21 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Hard Cartilage", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 1, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 145, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-17", "subId": "LEARN-SUB-5", "date": "2026-05-22", "created": "2026-05-22 08:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Hard Cartilage", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 2, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 94, "fInsp": 1, "fRej": 2, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-22", "subId": "LEARN-SUB-7", "date": "2026-05-24", "created": "2026-05-24 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Foreign Material", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 1, "Bloody Spots": 0}, "fRecv": 76, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-3", "subId": "LEARN-SUB-1", "date": "2026-05-25", "created": "2026-05-25 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-7", "subId": "LEARN-SUB-2", "date": "2026-05-25", "created": "2026-05-25 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Hard Cartilage", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 2, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 108, "fInsp": 1, "fRej": 2, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-20", "subId": "LEARN-SUB-6", "date": "2026-05-25", "created": "2026-05-25 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Bones", "defects": {"Bones": 1, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 62, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-5", "subId": "LEARN-SUB-1", "date": "2026-05-26", "created": "2026-05-26 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-11", "subId": "LEARN-SUB-3", "date": "2026-05-26", "created": "2026-05-26 09:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Dark Meat AQL", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-21", "subId": "LEARN-SUB-7", "date": "2026-05-27", "created": "2026-05-27 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Bones", "defects": {"Bones": 1, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 132, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-27", "subId": "LEARN-SUB-9", "date": "2026-06-02", "created": "2026-06-02 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Foreign Material", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 1, "Bloody Spots": 0}, "fRecv": 145, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-33", "subId": "LEARN-SUB-11", "date": "2026-06-03", "created": "2026-06-03 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Foreign Material", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 1, "Bloody Spots": 0}, "fRecv": 87, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-25", "subId": "LEARN-SUB-8", "date": "2026-06-04", "created": "2026-06-04 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 1}, "fRecv": 135, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-29", "subId": "LEARN-SUB-9", "date": "2026-06-04", "created": "2026-06-04 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-34", "subId": "LEARN-SUB-11", "date": "2026-06-06", "created": "2026-06-06 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Hard Cartilage", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 1, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 118, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-31", "subId": "LEARN-SUB-10", "date": "2026-06-07", "created": "2026-06-07 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-40", "subId": "LEARN-SUB-13", "date": "2026-06-07", "created": "2026-06-07 09:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-41", "subId": "LEARN-SUB-13", "date": "2026-06-15", "created": "2026-06-15 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Bones", "defects": {"Bones": 2, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 132, "fInsp": 1, "fRej": 2, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-23", "subId": "LEARN-SUB-7", "date": "2026-06-17", "created": "2026-06-17 09:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-37", "subId": "LEARN-SUB-12", "date": "2026-06-17", "created": "2026-06-17 08:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Bone Check", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Skin", "defects": {"Bones": 0, "Skin": 1, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 70, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-28", "subId": "LEARN-SUB-9", "date": "2026-06-18", "created": "2026-06-18 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-42", "subId": "LEARN-SUB-14", "date": "2026-06-18", "created": "2026-06-18 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-26", "subId": "LEARN-SUB-8", "date": "2026-06-19", "created": "2026-06-19 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Skin", "defects": {"Bones": 0, "Skin": 1, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 67, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-36", "subId": "LEARN-SUB-12", "date": "2026-06-19", "created": "2026-06-19 08:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 1}, "fRecv": 66, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-38", "subId": "LEARN-SUB-12", "date": "2026-06-20", "created": "2026-06-20 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Skin", "defects": {"Bones": 0, "Skin": 1, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 132, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-39", "subId": "LEARN-SUB-13", "date": "2026-06-20", "created": "2026-06-20 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-30", "subId": "LEARN-SUB-10", "date": "2026-06-22", "created": "2026-06-22 08:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Bone Check", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Bones", "defects": {"Bones": 1, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 103, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-24", "subId": "LEARN-SUB-8", "date": "2026-06-23", "created": "2026-06-23 09:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-35", "subId": "LEARN-SUB-11", "date": "2026-06-23", "created": "2026-06-23 09:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-32", "subId": "LEARN-SUB-10", "date": "2026-06-28", "created": "2026-06-28 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-55", "subId": "LEARN-SUB-18", "date": "2026-07-01", "created": "2026-07-01 08:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Hard Cartilage", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 1, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 68, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-47", "subId": "LEARN-SUB-15", "date": "2026-07-03", "created": "2026-07-03 09:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Dark Meat AQL", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-45", "subId": "LEARN-SUB-15", "date": "2026-07-04", "created": "2026-07-04 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Hard Cartilage", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 1, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 86, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-49", "subId": "LEARN-SUB-16", "date": "2026-07-04", "created": "2026-07-04 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 1}, "fRecv": 107, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-57", "subId": "LEARN-SUB-19", "date": "2026-07-04", "created": "2026-07-04 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Bones", "defects": {"Bones": 2, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 93, "fInsp": 1, "fRej": 2, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-52", "subId": "LEARN-SUB-17", "date": "2026-07-08", "created": "2026-07-08 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Foreign Material", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 1, "Bloody Spots": 0}, "fRecv": 102, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-53", "subId": "LEARN-SUB-17", "date": "2026-07-09", "created": "2026-07-09 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Skin", "defects": {"Bones": 0, "Skin": 2, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 120, "fInsp": 1, "fRej": 2, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-43", "subId": "LEARN-SUB-14", "date": "2026-07-10", "created": "2026-07-10 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-60", "subId": "LEARN-SUB-20", "date": "2026-07-12", "created": "2026-07-12 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Hard Cartilage", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 3, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 139, "fInsp": 1, "fRej": 3, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-59", "subId": "LEARN-SUB-19", "date": "2026-07-13", "created": "2026-07-13 08:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Bones", "defects": {"Bones": 1, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 115, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-50", "subId": "LEARN-SUB-16", "date": "2026-07-14", "created": "2026-07-14 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Hard Cartilage", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 1, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 65, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-62", "subId": "LEARN-SUB-20", "date": "2026-07-18", "created": "2026-07-18 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Skin", "defects": {"Bones": 0, "Skin": 2, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": 108, "fInsp": 1, "fRej": 2, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-58", "subId": "LEARN-SUB-19", "date": "2026-07-20", "created": "2026-07-20 09:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-48", "subId": "LEARN-SUB-16", "date": "2026-07-21", "created": "2026-07-21 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Foreign Material", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 2, "Bloody Spots": 0}, "fRecv": 150, "fInsp": 1, "fRej": 2, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-56", "subId": "LEARN-SUB-18", "date": "2026-07-21", "created": "2026-07-21 09:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-44", "subId": "LEARN-SUB-14", "date": "2026-07-22", "created": "2026-07-22 09:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-46", "subId": "LEARN-SUB-15", "date": "2026-07-22", "created": "2026-07-22 09:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-51", "subId": "LEARN-SUB-17", "date": "2026-07-22", "created": "2026-07-22 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 2}, "fRecv": 112, "fInsp": 1, "fRej": 2, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-61", "subId": "LEARN-SUB-20", "date": "2026-07-24", "created": "2026-07-24 09:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-54", "subId": "LEARN-SUB-18", "date": "2026-07-27", "created": "2026-07-27 09:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Dark Meat AQL", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-79", "subId": "LEARN-SUB-26", "date": "2026-08-01", "created": "2026-08-01 09:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-70", "subId": "LEARN-SUB-23", "date": "2026-08-02", "created": "2026-08-02 08:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Bone Check", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 1}, "fRecv": 119, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-76", "subId": "LEARN-SUB-25", "date": "2026-08-02", "created": "2026-08-02 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-81", "subId": "LEARN-SUB-27", "date": "2026-08-03", "created": "2026-08-03 09:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-67", "subId": "LEARN-SUB-22", "date": "2026-08-08", "created": "2026-08-08 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 13}, "fRecv": 140, "fInsp": 1, "fRej": 13, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-74", "subId": "LEARN-SUB-24", "date": "2026-08-11", "created": "2026-08-11 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 10}, "fRecv": 109, "fInsp": 1, "fRej": 10, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-82", "subId": "LEARN-SUB-27", "date": "2026-08-13", "created": "2026-08-13 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 10}, "fRecv": 108, "fInsp": 1, "fRej": 10, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-64", "subId": "LEARN-SUB-21", "date": "2026-08-15", "created": "2026-08-15 09:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-72", "subId": "LEARN-SUB-24", "date": "2026-08-15", "created": "2026-08-15 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 11}, "fRecv": 126, "fInsp": 1, "fRej": 11, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-63", "subId": "LEARN-SUB-21", "date": "2026-08-18", "created": "2026-08-18 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-73", "subId": "LEARN-SUB-24", "date": "2026-08-21", "created": "2026-08-21 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-65", "subId": "LEARN-SUB-21", "date": "2026-08-22", "created": "2026-08-22 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-68", "subId": "LEARN-SUB-22", "date": "2026-08-23", "created": "2026-08-23 09:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Dark Meat AQL", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-75", "subId": "LEARN-SUB-25", "date": "2026-08-23", "created": "2026-08-23 08:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Foreign Material", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 1, "Bloody Spots": 0}, "fRecv": 129, "fInsp": 1, "fRej": 1, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-69", "subId": "LEARN-SUB-23", "date": "2026-08-25", "created": "2026-08-25 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-71", "subId": "LEARN-SUB-23", "date": "2026-08-25", "created": "2026-08-25 09:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Dark Meat AQL", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "REJ", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 1}, "fRecv": null, "fInsp": 1, "fRej": 1, "tRej": 1, "holdTag": "", "flags": []}, {"id": "LEARN-83", "subId": "LEARN-SUB-27", "date": "2026-08-25", "created": "2026-08-25 09:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-66", "subId": "LEARN-SUB-22", "date": "2026-08-27", "created": "2026-08-27 09:00:00", "mill": "TRAINING-A", "productCode": "TRAINING-A", "alloy": "Dark Meat AQL", "inspector": "Trainee 1", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-80", "subId": "LEARN-SUB-26", "date": "2026-08-27", "created": "2026-08-27 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 3", "account": "trainee@example.com", "type": "Day", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 10}, "fRecv": 110, "fInsp": 1, "fRej": 10, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-77", "subId": "LEARN-SUB-25", "date": "2026-08-28", "created": "2026-08-28 09:00:00", "mill": "TRAINING-C", "productCode": "TRAINING-C", "alloy": "Dark Meat AQL", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "ACC", "reason": "None", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 0}, "fRecv": null, "fInsp": 1, "fRej": 0, "tRej": 0, "holdTag": "", "flags": []}, {"id": "LEARN-78", "subId": "LEARN-SUB-26", "date": "2026-08-28", "created": "2026-08-28 08:00:00", "mill": "TRAINING-B", "productCode": "TRAINING-B", "alloy": "Bone Check", "inspector": "Trainee 2", "account": "trainee@example.com", "type": "Night", "location": "", "disp": "", "reason": "Bloody Spots", "defects": {"Bones": 0, "Skin": 0, "Hard Cartilage": 0, "Foreign Material": 0, "Bloody Spots": 10}, "fRecv": 115, "fInsp": 1, "fRej": 10, "tRej": 0, "holdTag": "", "flags": []}];
+let learningMode = false;
+
+function setLearningBanner(on){
+  const b = $("lrnBanner"); if(!b) return;
+  b.classList.toggle("show", on);
+}
+function setDemoMenuLiveState(){
+  const live = $("menuLive"); if(live) live.disabled = !learningMode;
+}
+function enterLearningMode(){
+  learningMode = true;
+  resetAllFilters();
+  rows = LEARNING_ROWS.slice();
+  buildFilters(); render(); scanQualityAlerts();
+  setLearningBanner(true);
+  setDemoMenuLiveState();
+  $("lrnConfirm").classList.add("show");
+}
+function exitLearningMode(){
+  learningMode = false;
+  setLearningBanner(false);
+  setDemoMenuLiveState();
+  refreshFromApi(true);
+}
+
+(function initDemoMenu(){
+  const btn = $("demoMenuBtn"), menu = $("demoMenu");
+  if(!btn || !menu) return;
+  btn.addEventListener("click", (e)=>{
+    e.stopPropagation();
+    menu.classList.toggle("open");
+  });
+  document.addEventListener("click", (e)=>{
+    if(menu.classList.contains("open") && !menu.contains(e.target) && e.target !== btn) menu.classList.remove("open");
+  });
+  $("menuShowDemo").addEventListener("click", ()=>{ menu.classList.remove("open"); startDemo(); });
+  $("menuLearning").addEventListener("click", ()=>{ menu.classList.remove("open"); enterLearningMode(); });
+  $("menuLive").addEventListener("click", ()=>{ menu.classList.remove("open"); exitLearningMode(); });
+  $("lrnLiveBtn").addEventListener("click", exitLearningMode);
+  $("lrnStartTour").addEventListener("click", ()=>{ $("lrnConfirm").classList.remove("show"); startDemo(); });
+  $("lrnSkipTour").addEventListener("click", ()=>{ $("lrnConfirm").classList.remove("show"); });
+})();
+(function initQaToggle(){
+  const cb = $("qaToggle"); if(!cb) return;
+  cb.checked = qaEnabled();
+  cb.addEventListener("change", ()=>{
+    try{ localStorage.setItem(QA_ENABLED_KEY, cb.checked ? "1" : "0"); }catch(err){}
+    scanQualityAlerts();
+  });
+})();
 $("tgtSpin").addEventListener("change", ()=>{
   let v = parseFloat($("tgtSpin").value);
   if(!isFinite(v) || v < 0) v = CONFIG.rejectionRateTarget * 100;
@@ -1182,22 +1446,24 @@ function openPngPop(anchorBtn, buildCanvas, filename){
   pngPopEl = pop;
   pop.querySelector('[data-act="copy"]').addEventListener("click", ()=>{
     try{
-      const cv = buildCanvas(); if(!cv){ closePngPop(); return; }
+      const cv = buildCanvas();
+      if(!cv){ toast("Could not find this chart to export \u2014 try refreshing the page"); closePngPop(); return; }
       cv.toBlob(async b=>{
         try{
           await navigator.clipboard.write([new ClipboardItem({ "image/png": b })]);
           toast("Copied to clipboard");
         }catch(err){ toast("Copy not supported here \u2014 use Save instead"); }
       }, "image/png");
-    }catch(err){ toast("Could not create image"); }
+    }catch(err){ toast("Could not create image: " + err.message); }
     closePngPop();
   });
   pop.querySelector('[data-act="save"]').addEventListener("click", ()=>{
     try{
-      const cv = buildCanvas(); if(!cv){ closePngPop(); return; }
+      const cv = buildCanvas();
+      if(!cv){ toast("Could not find this chart to export \u2014 try refreshing the page"); closePngPop(); return; }
       cv.toBlob(b => dlBlob(filename, b), "image/png");
       toast("Saved as " + filename);
-    }catch(err){ toast("Could not create image"); }
+    }catch(err){ toast("Could not create image: " + err.message); }
     closePngPop();
   });
   pngPopOutside = e => { if(pngPopEl && !pngPopEl.contains(e.target) && e.target !== anchorBtn) closePngPop(); };
@@ -1344,6 +1610,16 @@ function wrapCanvasText(text, font, maxWidth, maxLines){
   if(cur) lines.push(cur);
   return lines.slice(0, maxLines);
 }
+/* Stamped onto every exported image while Learning Mode is active, so a
+   downloaded file or a screenshot can never be mistaken for real production
+   data once it has left the dashboard. */
+function stampLearningWatermark(g, dpr, w, y){
+  if(!learningMode) return 0;
+  g.fillStyle = "#2B3380";
+  g.font = "800 " + Math.round(11 * dpr) + "px Arial";
+  g.fillText("\u26A0 SAMPLE DATA \u2014 Learning Mode, not real production data", Math.round(20*dpr), y);
+  return Math.round(16 * dpr);
+}
 function chartPngCanvas(id, title){
   const c = charts[id]; if(!c) return null;
   const src = c.canvas;
@@ -1354,27 +1630,30 @@ function chartPngCanvas(id, title){
      is indistinguishable from the full data set. */
   const scope = aiScopeSummary();
   const scopeLines = wrapCanvasText(scope, Math.round(9.5 * dpr) + "px Arial", src.width - pad, 2);
-  const titleH = Math.round(34 * dpr) + scopeLines.length * Math.round(13 * dpr);
+  const wmH = learningMode ? Math.round(20 * dpr) : 0;
+  const titleH = Math.round(34 * dpr) + scopeLines.length * Math.round(13 * dpr) + wmH;
   const out = document.createElement("canvas");
   out.width = src.width + pad * 2; out.height = src.height + titleH + pad * 2;
   const g = out.getContext("2d");
   g.fillStyle = "#FFFFFF"; g.fillRect(0, 0, out.width, out.height);
+  stampLearningWatermark(g, dpr, out.width, pad + Math.round(10 * dpr));
   g.fillStyle = cssVar("--steel", "#1B4965");
   g.font = "700 " + Math.round(15 * dpr) + "px Arial";
-  g.fillText(title, pad, pad + Math.round(14 * dpr));
+  g.fillText(title, pad, pad + wmH + Math.round(14 * dpr));
   const stamp = CONFIG.clientName + " \u00b7 " + stampDate();
   g.fillStyle = cssVar("--muted", "#6C7A89");
   g.font = Math.round(10 * dpr) + "px Arial";
-  g.fillText(stamp, out.width - g.measureText(stamp).width - pad, pad + Math.round(14 * dpr));
+  g.fillText(stamp, out.width - g.measureText(stamp).width - pad, pad + wmH + Math.round(14 * dpr));
   g.font = Math.round(9.5 * dpr) + "px Arial";
   scopeLines.forEach((ln, i)=>{
-    g.fillText((i === 0 ? "Showing: " : "") + ln, pad, pad + Math.round(30 * dpr) + i * Math.round(13 * dpr));
+    g.fillText((i === 0 ? "Showing: " : "") + ln, pad, pad + wmH + Math.round(30 * dpr) + i * Math.round(13 * dpr));
   });
   g.drawImage(src, pad, titleH + pad);
   return out;
 }
 function exportChartPng(id, name, title, btn){
-  openPngPop(btn, () => chartPngCanvas(id, title), "PAC_" + name + "_" + stampDate() + ".png");
+  const prefix = learningMode ? "SAMPLE_" : "PAC_";
+  openPngPop(btn, () => chartPngCanvas(id, title), prefix + name + "_" + stampDate() + ".png");
 }
 function roundRect(g, x, y, w, h, r){
   g.beginPath();
@@ -1386,13 +1665,15 @@ function kpisPngCanvas(){
   if(!cards.length) return null;
   const S = 2;                                   // render scale for crispness
   const W = 226 * S, H = 112 * S, GAP = 14 * S, PAD = 22 * S, R = 12 * S;
+  const wmH = learningMode ? 26 * S : 0;
   const out = document.createElement("canvas");
   out.width = PAD * 2 + cards.length * W + (cards.length - 1) * GAP;
-  out.height = PAD * 2 + H;
+  out.height = PAD * 2 + H + wmH;
   const g = out.getContext("2d");
   g.fillStyle = cssVar("--bg", "#F1F5F8"); g.fillRect(0, 0, out.width, out.height);
+  stampLearningWatermark(g, S, out.width, PAD * 0.7);
   cards.forEach((card, i) => {
-    const x = PAD + i * (W + GAP), y = PAD;
+    const x = PAD + i * (W + GAP), y = PAD + wmH;
     roundRect(g, x, y, W, H, R); g.fillStyle = "#FFFFFF"; g.fill();
     // top accent border matching the live card (accent / red / green)
     g.save(); roundRect(g, x, y, W, H, R); g.clip();
@@ -1418,7 +1699,8 @@ function kpisPngCanvas(){
   return out;
 }
 function exportKpisPng(){
-  openPngPop($("kpiPng"), () => kpisPngCanvas(), "PAC_KPIs_" + stampDate() + ".png");
+  const prefix = learningMode ? "SAMPLE_" : "PAC_";
+  openPngPop($("kpiPng"), () => kpisPngCanvas(), prefix + "KPIs_" + stampDate() + ".png");
 }
 document.querySelectorAll(".pngbtn[data-chart]").forEach(btn =>
   btn.addEventListener("click", () => exportChartPng(btn.dataset.chart, btn.dataset.name, btn.dataset.title, btn)));
@@ -1556,7 +1838,7 @@ function adoptPayload(payload){
   }
   out.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
   rows = out;
-  buildFilters(); render();
+  buildFilters(); render(); scanQualityAlerts();
 }
 function adoptInstances(list){ adoptPayload(list); }
 $("fileIn").addEventListener("change", ev=>{
@@ -1811,7 +2093,7 @@ function aiOpen(title, sub, bodyHtml){
       '<div id="aiScope"></div>' +
       '<div class="seg" id="aiSeg" style="margin-bottom:12px"><button data-m="quick" class="on">Quick take</button><button data-m="detailed">Detailed</button></div>' +
       '<div class="aibody" id="aiBody"></div>' +
-      '<div class="airow"><span class="aisub">AI-generated \u2014 verify before acting</span><span><button id="aiPngBtn" title="Download this assessment as a PNG">&#8681; PNG</button> <button id="aiCopy">Copy</button> <button id="aiClose">Close</button></span></div></div>';
+      '<div class="airow"><span class="aisub">AI-generated \u2014 verify before acting</span><span><button id="aiPngBtn" title="Copy or save this assessment as a PNG">&#8681; PNG</button> <button id="aiCopy">Copy</button> <button id="aiClose">Close</button></span></div></div>';
     document.body.appendChild(ov);
     const aiHush = ()=>{ if(window.speechSynthesis) speechSynthesis.cancel();
       document.querySelectorAll("#aiBody .spkw.on").forEach(x=>x.classList.remove("on"));
@@ -1957,8 +2239,9 @@ function aiOpen(title, sub, bodyHtml){
       aiMode = b.dataset.m; aiRenderBody();
     }));
     document.getElementById("aiPngBtn").addEventListener("click", ()=>{
+      const prefix = learningMode ? "SAMPLE_" : "PAC_";
       openPngPop(document.getElementById("aiPngBtn"), () => aiPngCanvas(),
-        "PAC_AI_" + $("aiTitle").textContent.replace(/\W+/g,"_") + "_" + stampDate() + ".png");
+        prefix + "AI_" + $("aiTitle").textContent.replace(/\W+/g,"_") + "_" + stampDate() + ".png");
     });
   }
   $("aiTitle").textContent = title; $("aiSub").textContent = sub;
@@ -2458,6 +2741,7 @@ async function runDemo(){
   const pause = ms => new Promise(r=>setTimeout(r, ms));
   demoCursorInit();
   demoSuppressDownloads = true;
+  qaDemoForceState();
   let demoOpenDD = null;             // a shown-but-not-yet-hidden fake dropdown, if any
 
   const steps = [
@@ -2467,8 +2751,12 @@ async function runDemo(){
       say:"Welcome to the Southeast Poultry Defect and AQL Dashboard. Everything here is live inspection data, pulled straight from Alpha TransForm the moment this page loaded." },
     { run:()=>demoPoint($("btnApi")),
       say:"It merges several inspection forms into one view. Bone checks and dark meat AQL checks arrive as separate apps on the floor, and land here as a single set of numbers." },
+    { run: async ()=>{ demoClearHi(); const b = $("qaBanner"); await demoPoint(b); demoHi(b); },
+      say:"And right at the top, the dashboard checks itself. Any period whose defect rate is a real statistical outlier gets flagged here automatically, before anyone has to go hunting through the charts to find it." },
+    { run: async ()=>{ demoClearHi(); },
+      say:"A Resolved button dismisses an alert once it has been reviewed, and a checkbox in the header turns the whole feature off if you would rather monitor quality your own way." },
     { run:()=>demoPoint(document.querySelector(".kpis")),
-      say:"Eight metrics summarize inspection quality. For example, Pieces Checked, or the overall Defect Rate." },
+      say:"Eight metrics summarize inspection quality. For example, Pieces Checked, or the overall Defect Rate. Its AI and PNG buttons sit right beside the tiles, not above them, so the row stays compact." },
     { run:()=>demoPoint(chartCard("chProdRate")),
       say:"The main chart ranks products by defect rate, worst first, with anything above target in red. Only checks that recorded a sample size can produce a rate, so the number you see always has a real denominator behind it." },
 
@@ -2493,7 +2781,7 @@ async function runDemo(){
                        demoOpenDD = demoShowOptions($("fPeriod"), "all", 10); },
       say:"Next, the filter bar. Period mode opens a list of sixteen ready made ranges, from today and yesterday out to full history. For example, last quarter, or this month." },
     { run: async ()=>{ await demoSet($("fPeriod"), "all"); },
-      say:"Choosing a range recalculates every metric and every chart." },
+      say:"Selecting a time period, or setting a specific date range, causes the charts and KPIs to instantly update." },
     { run: async ()=>{ demoHi($("millSel")); await demoClick($("millBtn"));
                        $("millPanel").style.display = "block"; await pause(210);
                        const boxes = $("millPanel").querySelectorAll(".msChk");
@@ -2581,30 +2869,39 @@ async function runDemo(){
     // Any dropdown preview opened during this step has now been narrated over,
     // so it can close before the next step begins.
     if(demoOpenDD){ demoHideOptions(demoOpenDD); demoOpenDD = null; }
+    if(typeof closePngPop === "function") closePngPop();   // a PNG popover left open from this step must not survive into the next
   }
   demoSuppressDownloads = false;
+  qaDemoRestoreState();
   demoCursorHide(); demoClearHi(); $("demoCap").style.display = "none";
 }
+/* The single entry point for starting the guided tour, callable from
+   anywhere (the ?demo=1 overlay button, or the Demo & Learning menu) -
+   previously this logic was only ever wired inline to one specific button,
+   so triggering it from any OTHER control threw a ReferenceError. */
+async function startDemo(){
+  const ov = $("demoStart"); if(ov) ov.remove();
+  if(!$("demoCap")){ const cap = document.createElement("div"); cap.id = "demoCap"; document.body.appendChild(cap); }
+  await ensureVoices();                                    // voice list loads async in some browsers
+  const t0 = Date.now();                                   // wait for live data, unless we already have some (e.g. Learning Mode)
+  while(rows.length===0 && Date.now()-t0 < 15000) await new Promise(r=>setTimeout(r,400));
+  demoResetState();
+  runDemo();
+}
 (function initDemo(){
-  if(new URLSearchParams(location.search).get("demo") !== "1") return;
-  const cap = document.createElement("div"); cap.id = "demoCap"; document.body.appendChild(cap);
-  const ov = document.createElement("div"); ov.id = "demoStart";
-  ov.innerHTML = '<button id="demoGo">&#9654;&nbsp; Start narrated demo</button><div class="note">Turn your volume up \u00b7 press Esc to stop</div>';
-  document.body.appendChild(ov);
   if(window.speechSynthesis) speechSynthesis.getVoices();   // warm the voice list
   document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ demoStop = true;
     if(window.speechSynthesis) speechSynthesis.cancel();
     demoSuppressDownloads = false;
+    qaDemoRestoreState();
     if(typeof demoCursorHide === "function") demoCursorHide();
     demoClearHi(); const c=$("demoCap"); if(c) c.style.display="none"; } });
-  document.getElementById("demoGo").addEventListener("click", async ()=>{
-    ov.remove();
-    await ensureVoices();                                    // voice list loads async in some browsers
-    const t0 = Date.now();                                   // wait for the live data to land
-    while(rows.length===0 && Date.now()-t0 < 15000) await new Promise(r=>setTimeout(r,400));
-    demoResetState();
-    runDemo();
-  });
+  if(new URLSearchParams(location.search).get("demo") !== "1") return;
+  if(!$("demoCap")){ const cap = document.createElement("div"); cap.id = "demoCap"; document.body.appendChild(cap); }
+  const ov = document.createElement("div"); ov.id = "demoStart";
+  ov.innerHTML = '<button id="demoGo">&#9654;&nbsp; Start narrated demo</button><div class="note">Turn your volume up \u00b7 press Esc to stop</div>';
+  document.body.appendChild(ov);
+  document.getElementById("demoGo").addEventListener("click", startDemo);
 })();
 buildThead(); buildFilters(); render();
 if(CONFIG.autoRefreshOnLoad && CONFIG.api.proxyUrl){
