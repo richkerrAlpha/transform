@@ -191,9 +191,22 @@ header .actions{display:flex;gap:10px;flex-wrap:wrap}
 .kpi.alert{border-top-color:var(--red)}
 .kpi.good{border-top-color:var(--green)}
 .kpi h4{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
-.kpi .v{margin-top:auto}
+.kpi .v{margin-top:auto;display:flex;align-items:baseline;gap:5px}
 .kpi .v{font-size:clamp(15px,1.5vw,24px);font-weight:800;color:var(--steel);white-space:nowrap}
-.kpi .u{display:block;font-size:10.5px;line-height:1.3;color:var(--muted);font-weight:600;margin:4px 0 0;white-space:normal;overflow-wrap:anywhere}
+/* Extra context used to sit as flowing text under the value, wrapping to a
+   different number of lines tile to tile and throwing off the row's
+   alignment. It is now an info icon that reveals the same text on hover,
+   so every tile is the same height whether or not it has anything extra
+   to say. */
+.kpi .infoIcon{flex:none;width:15px;height:15px;border-radius:50%;background:var(--muted);color:#fff;
+  font-size:10px;font-weight:800;font-style:normal;line-height:15px;text-align:center;cursor:help;
+  position:relative;opacity:.55}
+.kpi .infoIcon:hover{opacity:1}
+.kpi .infoTip{display:none;position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  background:#1B2733;color:#fff;font-size:11px;font-weight:600;line-height:1.4;padding:7px 10px;
+  border-radius:7px;white-space:normal;width:max-content;max-width:190px;text-align:center;
+  box-shadow:0 8px 20px rgba(0,0,0,.28);z-index:30}
+.kpi .infoIcon:hover .infoTip{display:block}
 .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
 .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
 .card h3{font-size:14px;font-weight:800;color:var(--steel);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
@@ -341,13 +354,22 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:24px}
 const CONFIG = {
   clientName: "Southeast Poultry",
   title: "Defect & AQL Dashboard",
-  version: "1.22",
+  version: "1.24",
   updated: "Aug 11, 2026",
   /* DEFECT RATE TARGET. Observed aggregate on Bone Check data is ~0.83%, so 1%
      is a working default, NOT a Southeast Poultry standard. Confirm with QA
      before this dashboard is used to judge anyone. Users can adjust live. */
   rejectionRateTarget: 0.01,
   brand: { steel:"#557A38", steel2:"#729A4C", accent:"#A0672E", red:"#C1121F",
+           // Reserved for "normal, not flagged" bars on threshold charts.
+           // steel and accent both get overwritten per theme, and several
+           // themes (Razorbacks, Chiefs) use a steel or accent that is
+           // itself a shade of red - if normal bars used that color, they
+           // would be visually indistinguishable from bars actually
+           // flagged as above target. neutral is fixed and never swapped
+           // by applyTheme, so "red" only ever means one thing on these
+           // charts, regardless of which theme is active.
+           neutral:"#4F7396",
            green:"#198038", gold:"#E9C46A", ink:"#2A2E24",
            series:["#557A38","#A0672E","#729A4C","#C1121F","#8C6D3F","#4E7033",
                    "#F4845F","#2C6E8F","#8D99AE","#40916C","#B5838D","#5E60CE",
@@ -506,11 +528,11 @@ const DATA = [];
     <span class="tilebtns kpiActions"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Copy or save the KPI cards as a PNG image">&#8681; PNG</button></span>
   </div>
   <div class="grid">
-    <div class="card c8"><h3><span>Defect Rate by Product <small id="wkNote">red above target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chProdRate" data-name="Defect_Rate_by_Product" data-title="Defect Rate by Product" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chProdRate"></canvas></div></div>
+    <div class="card c8"><h3><span>Defect Rate by Product <small><span style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="prodTgtSpin" class="tgtspin" min="0" max="50" step="0.25"> % target &middot; only checks with a recorded sample size</span></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chProdRate" data-name="Defect_Rate_by_Product" data-title="Defect Rate by Product" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chProdRate"></canvas></div></div>
     <div class="card c4"><h3><span>Defect Types <small>all checks</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chDefects" data-name="Defect_Types" data-title="Defect Types" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox"><canvas id="chDefects"></canvas></div></div>
     <div class="card c6"><h3><span>Monthly Defect Rate <small><span style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.25"> % target</span></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Defect_Rate" data-title="Monthly Defect Rate" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
     <div class="card c6"><h3><span>Checks by Inspector <small>volume and defects found</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInspector" data-name="Checks_by_Inspector" data-title="Checks by Inspector" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox"><canvas id="chInspector"></canvas></div></div>
-    <div class="card c7 c8"><h3><span>Volume vs Defect Rate <small>each point is a product</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chScatter" data-name="Volume_vs_Defect_Rate" data-title="Volume vs Defect Rate" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chScatter"></canvas></div></div>
+    <div class="card c7 c8"><h3><span>Volume vs Defect Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="scatterTgtSpin" class="tgtspin" min="0" max="50" step="0.25"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chScatter" data-name="Volume_vs_Defect_Rate" data-title="Volume vs Defect Rate" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chScatter"></canvas></div></div>
     <div class="card c4"><h3><span>Checks by Form <small>source contribution</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chSource" data-name="Checks_by_Form" data-title="Checks by Form" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chSource"></canvas></div></div>
     <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
       <span style="display:flex;align-items:center;gap:16px">
@@ -810,7 +832,7 @@ function scanQualityAlerts(){
     const others = mo.filter((_, j) => j !== i);
     if(!others.length) return;
     const avgOthers = others.reduce((a,x)=>a+x.rate,0) / others.length;
-    if(m.rate > rateTarget && avgOthers > 0 && m.rate >= avgOthers * QA_OUTLIER_RATIO){
+    if(m.rate > monthlyRateTarget && avgOthers > 0 && m.rate >= avgOthers * QA_OUTLIER_RATIO){
       found.push({
         id: "month:" + m.month,
         text: "<b>" + dLabel(m.month) + "</b> defect rate is <b>" + (100*m.rate).toFixed(1) + "%</b> \u2014 about " +
@@ -905,7 +927,7 @@ function render(){
     .map(x=>({ product:x[0], pieces:x[1].fRecv, defects:x[1].fRej, checks:x[1].fInsp,
                rate:x[1].fRej/x[1].fRecv }));
   const rated = prodStats.filter(x=>x.checks >= MINCHK);
-  const above = rated.filter(x=>x.rate > rateTarget);
+  const above = rated.filter(x=>x.rate > prodRateTarget);
   const worst = rated.slice().sort((a,b)=>b.rate-a.rate)[0];
   const flagged = S.filter(r=>r.flags && r.flags.length).length;
 
@@ -923,25 +945,23 @@ function render(){
     ["Pieces Checked", fmt(pieces), "", ""],
     ["Defects Found", fmt(defects), "", defects? "alert":"good"],
     ["Defect Rate", pct(overallRate), fmt(withPieces.length)+" checks w/ sample size",
-      overallRate>rateTarget?"alert":"good"],
+      overallRate>prodRateTarget?"alert":"good"],
     ["AQL Reject Rate", evaluated.length? pct(rejRate) : "\u2014",
       evaluated.length? fmt(rejCount)+" of "+fmt(evaluated.length)+" evaluated" : "no ACC/REJ recorded", rejCount? "alert":"good"],
     ["Products Above Target", fmt(above.length), "of "+fmt(rated.length)+" rated", above.length? "alert":"good"],
     ["Worst Product Rate", worst? pct(worst.rate) : "\u2014", worst? ("product "+worst.product.split(" \u00b7 ")[0]) : "",
-      worst && worst.rate>rateTarget ? "alert":"good"],
+      worst && worst.rate>prodRateTarget ? "alert":"good"],
     ["Hold Tags", fmt(holds), "", holds? "alert":"good"],
-  ].map(([t,v,u,cls])=>`<div class="kpi ${cls}"><h4>${t}</h4><div class="v">${v}<span class="u">${u}</span></div></div>`).join("");
+  ].map(([t,v,u,cls])=>`<div class="kpi ${cls}"><h4>${t}</h4><div class="v">${v}${u?`<span class="infoIcon">i<span class="infoTip">${u}</span></span>`:""}</div></div>`).join("");
 
   /* HERO — defect rate by product */
   const prod = prodStats.slice().sort((a,b)=>b.rate-a.rate);
   AGG.prodRate = prod.map(p=>({ product:p.product, pieces:Math.round(p.pieces),
     defects:Math.round(p.defects), checks:p.checks, ratePct:+(100*p.rate).toFixed(2) }));
-  $("wkNote").textContent = "red above " + (100*rateTarget).toFixed(100*rateTarget % 1 ? 1 : 0) +
-    "% target \u00b7 only checks with a recorded sample size";
   mkChart("chProdRate", { type:"bar",
     data:{ labels: prod.map(p=>p.product),
       datasets:[{ label:"Defect rate", data: prod.map(p=>p.rate),
-        backgroundColor: prod.map(p=>p.rate > rateTarget ? B.red+"CC" : B.steel+"CC"), borderRadius:4 }]},
+        backgroundColor: prod.map(p=>p.rate > prodRateTarget ? B.red+"CC" : B.neutral+"CC"), borderRadius:4 }]},
     options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false,
       scales:{ x:{ beginAtZero:true, ticks:{ callback:v=>(100*v).toFixed(1)+"%" } } },
       plugins:{ legend:{ display:false },
@@ -961,7 +981,7 @@ function render(){
         tooltip:{ callbacks:{ label:c=>` ${c.label}: ${fmt(c.parsed)} defects` } } }}});
 
   /* Monthly defect rate vs target */
-  const TGT = rateTarget;
+  const TGT = monthlyRateTarget;
   const mo = [...groupSum(withPieces, r=>monthStart(r.date), ["fRecv","fRej"])].sort((a,b)=>a[0].localeCompare(b[0]));
   AGG.monthly = mo;
   const moRates = mo.map(m=>m[1].fRecv? m[1].fRej/m[1].fRecv:0);
@@ -971,7 +991,7 @@ function render(){
         { type:"line", label:"Target", data:mo.map(()=>TGT),
           borderColor:B.red, borderWidth:1.5, borderDash:[6,5], pointRadius:0, fill:false },
         { type:"bar", label:"Defect rate", data:moRates,
-          backgroundColor: moRates.map(v=>v > TGT ? B.red+"CC" : B.steel+"CC"), borderRadius:5 } ]},
+          backgroundColor: moRates.map(v=>v > TGT ? B.red+"CC" : B.neutral+"CC"), borderRadius:5 } ]},
     options:{ responsive:true, maintainAspectRatio:false,
       scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>(100*v).toFixed(1)+"%" } } },
       plugins:{ legend:{ display:false },
@@ -988,7 +1008,7 @@ function render(){
     data:{ labels: insp.map(x=>x[0]),
       datasets:[
         { label:"Checks", data: insp.map(x=>x[1].fInsp), backgroundColor:B.steel+"CC", borderRadius:5, yAxisID:"y" },
-        { label:"Defects found", data: insp.map(x=>x[1].fRej), backgroundColor:B.accent+"CC", borderRadius:5, yAxisID:"y" } ]},
+        { label:"Defects found", data: insp.map(x=>x[1].fRej), backgroundColor:B.neutral+"CC", borderRadius:5, yAxisID:"y" } ]},
     options:{ responsive:true, maintainAspectRatio:false,
       scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
       plugins:{ legend:{ position:"bottom", labels:{ boxWidth:11, font:{ size:10.5 } } } }}});
@@ -998,8 +1018,8 @@ function render(){
   AGG.scatter = scat.map(p=>({ product:p.product, pieces:Math.round(p.x), ratePct:+(100*p.y).toFixed(2), checks:p.checks }));
   mkChart("chScatter", { type:"scatter",
     data:{ datasets:[{ label:"Products", data: scat, pointRadius:6, pointHoverRadius:8,
-      pointBackgroundColor: scat.map(p=>p.y > rateTarget ? B.red+"CC" : B.steel+"CC"),
-      pointBorderColor: scat.map(p=>p.y > rateTarget ? B.red : B.steel) }]},
+      pointBackgroundColor: scat.map(p=>p.y > scatterRateTarget ? B.red+"CC" : B.neutral+"CC"),
+      pointBorderColor: scat.map(p=>p.y > scatterRateTarget ? B.red : B.neutral) }]},
     options:{ responsive:true, maintainAspectRatio:false,
       scales:{ x:{ beginAtZero:true, title:{ display:true, text:"Pieces checked" }, ticks:{ callback:v=>fmt(v) } },
                y:{ beginAtZero:true, title:{ display:true, text:"Defect rate" }, ticks:{ callback:v=>(100*v).toFixed(1)+"%" } } },
@@ -1217,7 +1237,7 @@ function renderTable(){
       <td>${r.inspector||""}</td><td>${r.account||""}</td><td>${r.type||""}</td><td>${r.location||""}</td>
       <td style="text-align:right">${r.fRecv==null? "\u2014" : fmt(r.fRecv)}</td>
       <td style="text-align:right;color:${r.fRej? "var(--red)":"inherit"}">${fmt(r.fRej)}</td>
-      <td style="text-align:right;font-weight:600;color:${(r.fRecv>0 && r.fRej/r.fRecv>rateTarget)? "var(--red)":"inherit"}">${r.fRecv>0? (100*r.fRej/r.fRecv).toFixed(2)+"%" : "\u2014"}</td>
+      <td style="text-align:right;font-weight:600;color:${(r.fRecv>0 && r.fRej/r.fRecv>prodRateTarget)? "var(--red)":"inherit"}">${r.fRecv>0? (100*r.fRej/r.fRecv).toFixed(2)+"%" : "\u2014"}</td>
       <td>${r.disp? `<span class="pill ${r.disp==="REJ"?"hold":"release"}">${r.disp}</span>` : ""}</td>
       <td>${r.reason||""}${(r.flags&&r.flags.length)? ` <span title="${r.flags.join("; ")}" style="cursor:help">\u26a0</span>`:""}</td></tr>`;
   }).join("");
@@ -1308,12 +1328,24 @@ function applyFont(key, redraw){
 })();
 
 /* ---------- adjustable rejection-rate target ---------- */
-let rateTarget = CONFIG.rejectionRateTarget;
+/* Each threshold chart gets its OWN independent target - Defect Rate by
+   Product, Monthly Defect Rate, and Volume vs Defect Rate can each be set
+   differently (e.g. 5% for one, 2.5% for another), rather than one shared
+   number controlling all three. */
+let prodRateTarget = CONFIG.rejectionRateTarget;
+let monthlyRateTarget = CONFIG.rejectionRateTarget;
+let scatterRateTarget = CONFIG.rejectionRateTarget;
 try{
-  const saved = parseFloat(localStorage.getItem("pacTarget"));
-  if(isFinite(saved) && saved >= 0 && saved <= 0.5) rateTarget = saved;
+  const p = parseFloat(localStorage.getItem("sepProdTarget"));
+  if(isFinite(p) && p >= 0 && p <= 0.5) prodRateTarget = p;
+  const m = parseFloat(localStorage.getItem("sepMonthlyTarget"));
+  if(isFinite(m) && m >= 0 && m <= 0.5) monthlyRateTarget = m;
+  const s = parseFloat(localStorage.getItem("sepScatterTarget"));
+  if(isFinite(s) && s >= 0 && s <= 0.5) scatterRateTarget = s;
 }catch(err){}
-$("tgtSpin").value = parseFloat((rateTarget * 100).toFixed(1));
+$("prodTgtSpin").value = parseFloat((prodRateTarget * 100).toFixed(1));
+$("tgtSpin").value = parseFloat((monthlyRateTarget * 100).toFixed(1));
+$("scatterTgtSpin").value = parseFloat((scatterRateTarget * 100).toFixed(1));
 
 /* ------------------------------------------------------------------
    Learning Mode. Loads a fixed, realistic sample dataset through the
@@ -1399,15 +1431,21 @@ function exitLearningMode(){
     scanQualityAlerts();
   });
 })();
-$("tgtSpin").addEventListener("change", ()=>{
-  let v = parseFloat($("tgtSpin").value);
-  if(!isFinite(v) || v < 0) v = CONFIG.rejectionRateTarget * 100;
-  if(v > 50) v = 50;
-  $("tgtSpin").value = v;
-  rateTarget = v / 100;
-  try{ localStorage.setItem("pacTarget", rateTarget); }catch(err){}
-  render();
-});
+function wireTargetSpin(id, storageKey, setter){
+  $(id).addEventListener("change", ()=>{
+    let v = parseFloat($(id).value);
+    if(!isFinite(v) || v < 0) v = CONFIG.rejectionRateTarget * 100;
+    if(v > 50) v = 50;
+    $(id).value = v;
+    setter(v / 100);
+    try{ localStorage.setItem(storageKey, v / 100); }catch(err){}
+    render();
+    scanQualityAlerts();   // the monthly target in particular can change what counts as an outlier
+  });
+}
+wireTargetSpin("prodTgtSpin", "sepProdTarget", v => prodRateTarget = v);
+wireTargetSpin("tgtSpin", "sepMonthlyTarget", v => monthlyRateTarget = v);
+wireTargetSpin("scatterTgtSpin", "sepScatterTarget", v => scatterRateTarget = v);
 
 /* ---------- export (XLSX / CSV / JSON) ---------- */
 const EXPORT_COLS = [
@@ -2023,14 +2061,14 @@ const AI_TILES = {
     data:()=>AGG.kpis },
   chProdRate: { title:"Defect Rate by Product",
     guidance:"Rates for products with few checks are statistically weak \u2014 flag any extreme rate built on a small sample as low-confidence rather than a definitive product problem. Prioritize products combining meaningful volume with above-target rates. Note that a defect rate near 1% is normal in poultry deboning; do not treat small deviations as alarming.",
-    data:()=>({ targetPct: 100*rateTarget, minChecksToRate:10, products: AGG.prodRate }) },
+    data:()=>({ targetPct: 100*prodRateTarget, minChecksToRate:10, products: AGG.prodRate }) },
   chScatter: { title:"Volume vs Defect Rate",
     guidance:"Each point is a product: x = pieces checked (volume), y = defect rate. The quadrant needing attention is high volume AND above-target rate. High rate at tiny volume is a data-confidence question, not necessarily a product problem.",
-    data:()=>({ targetPct: 100*rateTarget, products: AGG.scatter }) },
+    data:()=>({ targetPct: 100*scatterRateTarget, products: AGG.scatter }) },
   chDefects: { title:"Defect Types",
     data:()=>({ defectCounts: AGG.defectMix||[] }) },
   chMonthly: { title:"Monthly Defect Rate",
-    data:()=>({ targetPct: 100*rateTarget,
+    data:()=>({ targetPct: 100*monthlyRateTarget,
       months: (AGG.monthly||[]).map(m=>({ month:m[0], pieces:Math.round(m[1].fRecv),
         defects:Math.round(m[1].fRej), ratePct: m[1].fRecv? +(100*m[1].fRej/m[1].fRecv).toFixed(2):0 })) }) },
   chInspector: { title:"Checks by Inspector",
@@ -2078,7 +2116,7 @@ function aiContext(){
     fullDatasetRange: { from: ds[0]||"", to: ds[ds.length-1]||"" },
     activeFilters: aiScopeSummary(),
     analysisScopeNote: "You are analyzing ONLY the dateRange slice. Data outside it exists (see fullDatasetRange) but is NOT visible to you.",
-    rejectionRateTargetPct: 100*rateTarget,
+    rejectionRateTargetPct: 100*prodRateTarget,
     submissionsInScope: scopeRows.length,
     note:"Footage figures are prorated feet. Held footage = rejected footage still on Hold disposition. Inspector figures measure activity volume, not job performance; anomalous inspector reject rates usually reflect supplier mix, not inspector quality." };
 }
@@ -2335,26 +2373,28 @@ function aiPngCanvas(){
     }
     if(cur.length) opsLines.push(cur);
   }
-  const headH = 92, footH = 44;
+  const wmH = learningMode ? 22 : 0;   // extra room for the "Sample Data" watermark, if active
+  const headH = 92 + wmH, footH = 44;
   const H = headH + opsLines.length * lineH + footH + pad;
   cv.width = W * S; cv.height = H * S; g.scale(S, S);
   g.fillStyle = "#FFFFFF"; g.fillRect(0, 0, W, H);
+  stampLearningWatermark(g, 1, W, 18);   // dpr=1: this canvas already applies its own uniform scale above
   // header: icon, title, pill
-  g.font = "30px Arial"; g.fillText($("aiIcon").textContent || "", pad, 48);
+  g.font = "30px Arial"; g.fillText($("aiIcon").textContent || "", pad, 48 + wmH);
   g.fillStyle = cssVar("--steel", "#1B4965"); g.font = "800 24px Arial";
-  g.fillText($("aiTitle").textContent, pad + 44, 44);
+  g.fillText($("aiTitle").textContent, pad + 44, 44 + wmH);
   g.fillStyle = cssVar("--muted", "#6C7A89"); g.font = "600 12px Arial";
-  g.fillText($("aiSub").textContent, pad + 44, 64);
+  g.fillText($("aiSub").textContent, pad + 44, 64 + wmH);
   const pill = $("aiStatus").textContent;
   if(pill){
     g.font = "800 12px Arial";
     const pw = g.measureText(pill.toUpperCase()).width + 24;
     const px = W - pad - pw;
-    roundRect(g, px, 30, pw, 26, 13);
+    roundRect(g, px, 30 + wmH, pw, 26, 13);
     const cls = $("aiStatus").className;
     g.fillStyle = cls.includes("crit") ? "#FDE8EA" : cls.includes("warn") ? "#FFF6E0" : "#E7F5E9"; g.fill();
     g.fillStyle = cls.includes("crit") ? "#A4121F" : cls.includes("warn") ? "#8A6100" : "#1E7B34";
-    g.fillText(pill.toUpperCase(), px + 12, 48);
+    g.fillText(pill.toUpperCase(), px + 12, 48 + wmH);
   }
   // body
   let y = headH + 18;
@@ -2406,7 +2446,7 @@ const aiCache = new Map();                             // (tile+filters) -> prom
 function aiFilterSig(){
   const sel = k => [...MSEL[k].choice].sort().join(",");
   return [ $("fFrom").value, $("fTo").value, sel("mill"), sel("insp"), sel("alloy"), sel("reason"),
-           $("fDisp").value, $("fType").value, rateTarget ].join("|");
+           $("fDisp").value, $("fType").value, prodRateTarget, monthlyRateTarget, scatterRateTarget ].join("|");
 }
 function aiRequestCached(tileKey){
   const key = tileKey + "\u0001" + aiFilterSig();
@@ -2792,7 +2832,7 @@ async function runDemo(){
     { run: async ()=>{ await demoSet($("themeSel"), "hogs"); },   say:"Razorbacks." },
     { run: async ()=>{ await demoSet($("themeSel"), "royals"); }, say:"Royals." },
     { run: async ()=>{ await demoSet($("themeSel"), "sep"); demoClearHi(); },
-      say:"And back to Southeast Poultry's own colors, taken from the logo. Whatever you pick is remembered next time." },
+      say:"And back to Southeast Poultry's own colors. Whatever you pick is remembered next time." },
     { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(350); await demoSet($("fontSel"), "m"); },
       say:"Text size adjusts the same way. That matters when this is running on a plant floor monitor rather than a laptop." },
 
@@ -2826,7 +2866,7 @@ async function runDemo(){
     { run: async ()=>{ demoClearHi(); demoHi(chartCard("chProdRate")); await demoPoint(chartCard("chProdRate")); },
       say:"The main chart ranks products by defect rate, worst first, with anything above target in red. Only checks that recorded a sample size can produce a rate, so the number you see always has a real denominator behind it." },
     { run: async ()=>{ demoClearHi(); demoHi(chartCard("chDefects")); await demoPoint(chartCard("chDefects")); },
-      say:"The defect mix shows what is actually being found, across every form. Bones, skin, hard cartilage, bloody spots." },
+      say:"The defect mix shows what is actually being found, across every form. Bones. Skin. Hard cartilage. Bloody spots." },
     { run: async ()=>{ demoClearHi(); demoHi(chartCard("chMonthly")); await demoPoint(chartCard("chMonthly")); },
       say:"Monthly defect rate against target, over time." },
     { run: async ()=>{ await demoSet($("tgtSpin"), 0.5); },
@@ -2850,6 +2890,11 @@ async function runDemo(){
         const card = chartCard("chProdRate");
         const b = card && card.querySelector(".aibtn");
         if(b) await demoClick(b);
+        // The AI card is a full-screen overlay that now covers everything,
+        // including wherever the cursor was last pointing - it serves no
+        // purpose floating over it, so hide it until there is a real target
+        // to point at again inside the card itself.
+        const cur = $("demoCur"); if(cur) cur.style.display = "none";
         const t0 = Date.now();
         while(!aiTexts.quick && Date.now()-t0 < 25000 && !demoStop) await pause(280);
         if(aiTexts.quick && !demoStop){
