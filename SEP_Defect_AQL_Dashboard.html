@@ -354,7 +354,7 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:24px}
 const CONFIG = {
   clientName: "Southeast Poultry",
   title: "Defect & AQL Dashboard",
-  version: "1.24",
+  version: "1.25",
   updated: "Aug 11, 2026",
   /* DEFECT RATE TARGET. Observed aggregate on Bone Check data is ~0.83%, so 1%
      is a working default, NOT a Southeast Poultry standard. Confirm with QA
@@ -417,10 +417,10 @@ const DATA = [];
       <span class="demoMenuWrap">
         <button class="demobtn" id="demoMenuBtn" title="Guided tour and sample data for exploring the dashboard">&#9654;&nbsp; Demo &amp; Learning</button>
         <div class="demoMenu" id="demoMenu">
-          <button id="menuShowDemo">&#9654; Show Demo</button>
+          <button id="menuShowDemo">&#9654; Demo Mode</button>
           <hr>
-          <button id="menuLearning">&#127891; Enter Learning Mode</button>
-          <button id="menuLive" disabled>&#128225; Switch to Live Data</button>
+          <button id="menuLearning">&#127891; Learning Mode</button>
+          <button id="menuLive">&#128225; Live Data</button>
         </div>
       </span>
       <span class="hdr-div"></span>
@@ -528,12 +528,12 @@ const DATA = [];
     <span class="tilebtns kpiActions"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="kpiPng" title="Copy or save the KPI cards as a PNG image">&#8681; PNG</button></span>
   </div>
   <div class="grid">
-    <div class="card c8"><h3><span>Defect Rate by Product <small><span style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="prodTgtSpin" class="tgtspin" min="0" max="50" step="0.25"> % target &middot; only checks with a recorded sample size</span></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chProdRate" data-name="Defect_Rate_by_Product" data-title="Defect Rate by Product" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chProdRate"></canvas></div></div>
-    <div class="card c4"><h3><span>Defect Types <small>all checks</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chDefects" data-name="Defect_Types" data-title="Defect Types" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox"><canvas id="chDefects"></canvas></div></div>
-    <div class="card c6"><h3><span>Monthly Defect Rate <small><span style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.25"> % target</span></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Defect_Rate" data-title="Monthly Defect Rate" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
-    <div class="card c6"><h3><span>Checks by Inspector <small>volume and defects found</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInspector" data-name="Checks_by_Inspector" data-title="Checks by Inspector" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox"><canvas id="chInspector"></canvas></div></div>
-    <div class="card c7 c8"><h3><span>Volume vs Defect Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="scatterTgtSpin" class="tgtspin" min="0" max="50" step="0.25"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chScatter" data-name="Volume_vs_Defect_Rate" data-title="Volume vs Defect Rate" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chScatter"></canvas></div></div>
-    <div class="card c4"><h3><span>Checks by Form <small>source contribution</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chSource" data-name="Checks_by_Form" data-title="Checks by Form" title="Copy or save as PNG">&#8681;</button></span></h3><div class="chartbox tall"><canvas id="chSource"></canvas></div></div>
+    <div class="card c8"><h3><span>Defect Rate by Product <small><span style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="prodTgtSpin" class="tgtspin" min="0" max="50" step="0.25"> % target &middot; only checks with a recorded sample size</span></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chProdRate" data-name="Defect_Rate_by_Product" data-title="Defect Rate by Product" title="Copy or save as PNG">&#8681; PNG</button></span></h3><div class="chartbox tall"><canvas id="chProdRate"></canvas></div></div>
+    <div class="card c4"><h3><span>Defect Types <small>all checks</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chDefects" data-name="Defect_Types" data-title="Defect Types" title="Copy or save as PNG">&#8681; PNG</button></span></h3><div class="chartbox"><canvas id="chDefects"></canvas></div></div>
+    <div class="card c6"><h3><span>Monthly Defect Rate <small><span style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.25"> % target</span></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Defect_Rate" data-title="Monthly Defect Rate" title="Copy or save as PNG">&#8681; PNG</button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
+    <div class="card c6"><h3><span>Checks by Inspector <small>volume and defects found</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInspector" data-name="Checks_by_Inspector" data-title="Checks by Inspector" title="Copy or save as PNG">&#8681; PNG</button></span></h3><div class="chartbox"><canvas id="chInspector"></canvas></div></div>
+    <div class="card c7 c8"><h3><span>Volume vs Defect Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="scatterTgtSpin" class="tgtspin" min="0" max="50" step="0.25"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chScatter" data-name="Volume_vs_Defect_Rate" data-title="Volume vs Defect Rate" title="Copy or save as PNG">&#8681; PNG</button></span></h3><div class="chartbox tall"><canvas id="chScatter"></canvas></div></div>
+    <div class="card c4"><h3><span>Checks by Form <small>source contribution</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chSource" data-name="Checks_by_Form" data-title="Checks by Form" title="Copy or save as PNG">&#8681; PNG</button></span></h3><div class="chartbox tall"><canvas id="chSource"></canvas></div></div>
     <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
       <span style="display:flex;align-items:center;gap:16px">
         <div class="msel" id="expSel">
@@ -1362,9 +1362,6 @@ function setLearningBanner(on){
   const b = $("lrnBanner"); if(!b) return;
   b.classList.toggle("show", on);
 }
-function setDemoMenuLiveState(){
-  const live = $("menuLive"); if(live) live.disabled = !learningMode;
-}
 /* A small "Sample Data" pill on every chart tile's title, plus one above the
    KPI row - unlike the scope note (which only shows when a filter narrows
    the view), this must be visible any time learningMode is on, regardless
@@ -1397,13 +1394,11 @@ function enterLearningMode(){
   rows = LEARNING_ROWS.slice();
   buildFilters(); render(); scanQualityAlerts();
   setLearningBanner(true);
-  setDemoMenuLiveState();
   syncLearningBadges();
 }
 function exitLearningMode(){
   learningMode = false;
   setLearningBanner(false);
-  setDemoMenuLiveState();
   syncLearningBadges();
   refreshFromApi(true);
 }
