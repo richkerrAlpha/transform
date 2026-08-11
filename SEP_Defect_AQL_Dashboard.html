@@ -353,7 +353,7 @@ footer{text-align:center;font-size:12px;color:var(--muted);padding:24px}
 const CONFIG = {
   clientName: "Southeast Poultry",
   title: "Defect & AQL Dashboard",
-  version: "1.20",
+  version: "1.21",
   updated: "Aug 11, 2026",
   /* DEFECT RATE TARGET. Observed aggregate on Bone Check data is ~0.83%, so 1%
      is a working default, NOT a Southeast Poultry standard. Confirm with QA
@@ -2857,12 +2857,15 @@ async function runDemo(){
       say:"And checks by form, so you can see how much of the picture comes from bone checks versus dark meat AQL." },
 
     /* ===== ACT 5 - AI DEEP DIVE (back on the hero chart) ===== */
-    { run: async ()=>{ demoClearHi(); demoHi(chartCard("chProdRate"));
-                       const b = chartCard("chProdRate").querySelector(".aibtn"); await demoPoint(b); },
+    { run: async ()=>{ demoClearHi();
+                       const card = chartCard("chProdRate"); demoHi(card);
+                       const b = card && card.querySelector(".aibtn");
+                       if(b) await demoPoint(b); },
       say:"Every tile includes a built in AI analyst. One click, and the dashboard reads the product ranking for itself. Listen." },
     { run: async ()=>{
-        const b = chartCard("chProdRate").querySelector(".aibtn");
-        if(b) await demoClick(b, {scroll:false});
+        const card = chartCard("chProdRate");
+        const b = card && card.querySelector(".aibtn");
+        if(b) await demoClick(b);
         const t0 = Date.now();
         while(!aiTexts.quick && Date.now()-t0 < 25000 && !demoStop) await pause(280);
         if(aiTexts.quick && !demoStop){
@@ -2882,7 +2885,7 @@ async function runDemo(){
 
     /* ===== ACT 6 - THE LIST, with a REAL chart click ===== */
     { run: async ()=>{ demoClearHi(); demoHi(chartCard("chProdRate")); await demoPoint(chartCard("chProdRate")); },
-      say:"With chart linking on, clicking any bar filters the check list below to just those records. Watch this one." },
+      say:"With chart linking on, clicking any product in this chart filters the check list below to just those records. Watch." },
     { run: async ()=>{
         // The functional demonstration (the list actually filtering) must
         // happen regardless of whether the cursor animation itself lands
@@ -2898,6 +2901,11 @@ async function runDemo(){
         demoHi(tableCard);
         tableCard.scrollIntoView({behavior:"smooth", block:"center"});
         await pause(500);
+        // Named narration, built from whatever product actually got clicked -
+        // this is real data (or real sample data), so it is never hardcoded.
+        if(top){
+          await demoSay("After clicking " + top + " in this chart, the list below now only shows " + top + " inspections.");
+        }
       } },
     { run: async ()=>{ demoClearHi(); const th = document.querySelector('#thead th[data-key="defRate"]');
                        if(th) await demoClick(th, {scroll:false});
@@ -2908,9 +2916,12 @@ async function runDemo(){
       say:"Tick the specific checks you want to raise, and the export follows your selection rather than the whole table." },
     { run: async ()=>{ await demoClick($("expBtn")); $("expPanel").style.display = "block"; await pause(210);
                        const x = $("expPanel").querySelector('[data-fmt="xlsx"]');
-                       if(x) await demoClick(x, {fast:true, scroll:false}); },
+                       if(x) await demoClick(x, {fast:true, scroll:false});
+                       $("expPanel").style.display = "none"; },
       say:"Export them as an Excel workbook, a CSV, or raw JSON. The file is built right here in the browser." },
-    { run: async ()=>{ $("expPanel").style.display = "none"; chartSel = null; renderTable(); } },
+    { run: async ()=>{ demoPrevRows("SEP_Checks_selection.xlsx", exportScope(), 8); },
+      say:"And this is the workbook it just wrote - the selected checks, every column, ready to attach to a follow up." },
+    { run: async ()=>{ demoPrevHide(); await pause(210); chartSel = null; renderTable(); } },
 
     /* ===== ACT 7 - SHARING, with the REAL exported images ===== */
     { run: async ()=>{ demoClearHi();
@@ -2921,14 +2932,14 @@ async function runDemo(){
                        const cv = chartPngCanvas("chProdRate", "Defect Rate by Product");
                        demoPrevCanvas("Defect_Rate_by_Product.png", cv); },
       say:"Here is the actual file it produces." },
-    { run: async ()=>{ await pause(1400); demoPrevHide(); } },
+    { run: async ()=>{ await pause(3200); demoPrevHide(); } },
     { run: async ()=>{ window.scrollTo({top:0, behavior:"smooth"}); await pause(350);
                        demoHi($("dashPngBtn")); },
       say:"Or capture the whole dashboard at once, as one high resolution image, or a single page PDF for the food safety review pack." },
     { run: async ()=>{ demoClearHi();
                        const cv = dashboardCanvas();
                        demoPrevCanvas("Dashboard_Snapshot.png", cv); } },
-    { run: async ()=>{ await pause(1600); demoPrevHide();
+    { run: async ()=>{ await pause(3400); demoPrevHide();
                        demoCursorHide(); window.scrollTo({top:0, behavior:"smooth"}); },
       say:"Live inspection data from several forms at once, filtered any way you need it, read by an assistant that understands the context, and out the door as a spreadsheet, an image, or a PDF." },
     { run: async ()=>{ await demoPoint($("demoMenuBtn")); demoHi($("demoMenuBtn")); },
