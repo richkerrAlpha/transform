@@ -307,7 +307,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.48",
+  version: "3.49",
   updated: "Aug 12, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -940,17 +940,52 @@ let chartSel = null;      // {kind, value} set by clicking a chart element
 let scopeRows = [];       // rows matching the global filters (set by render)
 
 /* Selected-element highlighting: a click filters the list, but gave no
-   visual sign on the chart itself of which bar or slice was active. A
-   dataset-level borderColor/borderWidth array approach didn't reliably
+   visual sign on the chart itself of which bar, slice, or point was active.
+   A dataset-level borderColor/borderWidth array approach didn't reliably
    render (likely a borderRadius interaction), so this draws the highlight
    directly on the canvas using the chart's own rendered element geometry -
    independent of any dataset border-property quirks, and guaranteed to be
    on top of everything else since it runs after the normal draw pass. */
 const SEL_BORDER_COLOR = "#F0B429";
+const SEL_BORDER_COLOR_ALT = "#2563EB";   // used instead when the element's own
+                                            // fill is itself gold/orange/yellow,
+                                            // where the default would barely show
 const SEL_BORDER_WIDTH = 5;
 const selHighlights = {};
 function registerSelHighlight(id, kind, keys, datasetIdxs){
   selHighlights[id] = { kind, keys, datasetIdxs };
+}
+function hexToHSL(hex){
+  if(!hex || typeof hex !== "string") return null;
+  hex = hex.trim().replace("#", "");
+  if(hex.length === 8) hex = hex.slice(0, 6);   // drop an alpha suffix like "CC"
+  if(hex.length === 3) hex = hex.split("").map(c=>c+c).join("");
+  if(hex.length !== 6 || /[^0-9a-fA-F]/.test(hex)) return null;   // not a hex color (rgba(), named color, etc.) - skip the check
+  const r = parseInt(hex.slice(0,2),16)/255, g = parseInt(hex.slice(2,4),16)/255, b = parseInt(hex.slice(4,6),16)/255;
+  const max = Math.max(r,g,b), min = Math.min(r,g,b);
+  let h, s, l = (max+min)/2;
+  if(max === min){ h = s = 0; }
+  else {
+    const d = max - min;
+    s = l > 0.5 ? d/(2-max-min) : d/(max+min);
+    if(max === r) h = (g-b)/d + (g<b ? 6 : 0);
+    else if(max === g) h = (b-r)/d + 2;
+    else h = (r-g)/d + 4;
+    h /= 6;
+  }
+  return { h: h*360, s: s*100, l: l*100 };
+}
+function pickHighlightColor(elementColor){
+  const hsl = hexToHSL(elementColor);
+  if(!hsl) return SEL_BORDER_COLOR;
+  // warm gold/orange/yellow range, vivid enough that a gold outline would
+  // blend into the fill rather than stand out against it
+  const clashes = hsl.h >= 25 && hsl.h <= 65 && hsl.s >= 30 && hsl.l >= 30 && hsl.l <= 85;
+  return clashes ? SEL_BORDER_COLOR_ALT : SEL_BORDER_COLOR;
+}
+function elementFillColor(chart, di, idx){
+  const bg = chart.data.datasets[di] && chart.data.datasets[di].backgroundColor;
+  return Array.isArray(bg) ? bg[idx] : bg;
 }
 const selectionHighlightPlugin = {
   id: "selectionHighlight",
@@ -959,21 +994,30 @@ const selectionHighlightPlugin = {
     if(!chartSel || chartSel.kind !== h.kind) return;
     const idx = h.keys.indexOf(chartSel.value); if(idx < 0) return;
     const ctx = chart.ctx;
-    ctx.save();
-    ctx.strokeStyle = SEL_BORDER_COLOR;
-    ctx.lineWidth = SEL_BORDER_WIDTH;
-    ctx.lineJoin = "round";
-    ctx.shadowColor = "rgba(0,0,0,.35)"; ctx.shadowBlur = 3;
     h.datasetIdxs.forEach(di=>{
       const meta = chart.getDatasetMeta(di); if(!meta || meta.hidden) return;
       const el = meta.data[idx]; if(!el) return;
       const p = el.getProps ? el.getProps(["x","y","base","width","height","startAngle","endAngle","outerRadius","innerRadius"], true) : el;
+      const color = pickHighlightColor(elementFillColor(chart, di, idx));
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = SEL_BORDER_WIDTH;
+      ctx.lineJoin = "round";
+      ctx.shadowColor = "rgba(0,0,0,.35)"; ctx.shadowBlur = 3;
       if(typeof p.startAngle === "number"){
-        // doughnut/pie slice
-        const midR = (p.outerRadius + p.innerRadius) / 2;
+        // doughnut/pie slice - trace the slice's own outline (outer arc,
+        // inner arc, the two straight edges connecting them) rather than a
+        // thick stroke, which fills the ring instead of outlining it
+        const cx = p.x ?? el.x, cy = p.y ?? el.y;
         ctx.beginPath();
-        ctx.lineWidth = Math.max(SEL_BORDER_WIDTH, p.outerRadius - p.innerRadius);
-        ctx.arc(p.x ?? el.x, p.y ?? el.y, midR, p.startAngle, p.endAngle);
+        ctx.arc(cx, cy, p.outerRadius, p.startAngle, p.endAngle);
+        ctx.arc(cx, cy, p.innerRadius, p.endAngle, p.startAngle, true);
+        ctx.closePath();
+        ctx.stroke();
+      } else if(el.options && typeof el.options.radius === "number"){
+        // scatter/line point - radius lives under el.options, not exposed via getProps
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, el.options.radius + 4, 0, 2*Math.PI);
         ctx.stroke();
       } else if(typeof p.x === "number" && typeof p.y === "number"){
         // bar element - p.height/p.width are inconsistently populated across
@@ -997,12 +1041,12 @@ const selectionHighlightPlugin = {
           w = p.width; hgt = p.height; cx = p.x; cy = p.y;
         }
         if(w != null && hgt != null && !isNaN(cx) && !isNaN(cy) && !isNaN(w) && !isNaN(hgt)){
-          const pad = 1;   // draw just outside the fill so gold reads as an outline, not an overlay
+          const pad = 1;   // draw just outside the fill so the outline reads clearly, not as an overlay
           ctx.strokeRect(cx - w/2 - pad, cy - hgt/2 - pad, w + pad*2, hgt + pad*2);
         }
       }
+      ctx.restore();
     });
-    ctx.restore();
   }
 };
 Chart.register(selectionHighlightPlugin);
