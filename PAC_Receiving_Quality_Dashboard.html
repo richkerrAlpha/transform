@@ -307,8 +307,8 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.40",
-  updated: "Aug 10, 2026",
+  version: "3.48",
+  updated: "Aug 12, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
   // Default quality target: monthly rejection rate above this fraction is flagged red
@@ -759,6 +759,7 @@ function render(){
   const rf = $("fFrom").value, rt = $("fTo").value;
   $("wkNote").textContent = (rf && rt) ? dLabel(rf)+" → "+dLabel(rt)
     : (wk.length? dLabel(wk[0][0])+" → "+dLabel(wk[wk.length-1][0]) : "");
+  const wkKeys = wk.map(w=>w[0]);
   mkChart("chWeekly", { type:"bar",
     data:{ labels: wk.map(w=>dLabel(w[0])),
       datasets:[
@@ -769,12 +770,14 @@ function render(){
     options:{ responsive:true, maintainAspectRatio:false,
       scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
       plugins:{ legend:{ position:"bottom" } } }});
+  registerSelHighlight("chWeekly", "week", wkKeys, [1]);
 
   /* monthly rate — bars above the CONFIG.rejectionRateTarget flag red */
   const TGT = rateTarget;
   const mo = [...groupSum(S, r=>monthStart(r.date), ["fInsp","fRej"])].sort((a,b)=>a[0].localeCompare(b[0]));
   AGG.monthly = mo;
   const moRates = mo.map(m=>m[1].fInsp? m[1].fRej/m[1].fInsp:0);
+  const moKeys = mo.map(m=>m[0]);
   mkChart("chMonthly", { type:"bar",
     data:{ labels: mo.map(m=>dLabel(m[0])),
       datasets:[
@@ -788,6 +791,7 @@ function render(){
       plugins:{ legend:{ display:false },
         tooltip:{ filter:c=>c.dataset.type!=="line",
           callbacks:{ label:c=>pct(c.parsed.y) + (c.parsed.y > TGT ? "  \u26a0 above target" : "") } } }}});
+  registerSelHighlight("chMonthly", "month", moKeys, [1]);
 
   /* reasons doughnut (true rejected). Gate on actually HAVING held footage
      (matching how the alloy chart does it) rather than on having a reason
@@ -796,15 +800,18 @@ function render(){
      chart's total silently falls short of the True Rejected KPI. */
   const re = AGG.reasons = [...groupSum(S.filter(r=>r.tRej>0), r=>reasonLabel(r), ["tRej"])]
     .sort((a,b)=>b[1].tRej-a[1].tRej);
+  const reKeys = re.map(x=>x[0]);
   mkChart("chReasons", { type:"doughnut",
     data:{ labels: re.map(x=>x[0]),
       datasets:[{ data: re.map(x=>x[1].tRej), backgroundColor:B.series, borderWidth:2, borderColor:"#fff" }]},
     options:{ responsive:true, maintainAspectRatio:false, cutout:"55%",
       plugins:{ legend:{ position:"bottom", labels:{ boxWidth:11, font:{ size:10.5 } } },
         tooltip:{ callbacks:{ label:c=>` ${c.label}: ${fmt(c.parsed)} ft` } } }}});
+  registerSelHighlight("chReasons", "reason", reKeys, [0]);
 
   /* inspectors — bars + rate line (line dataset first) */
   const ins = AGG.inspectors = [...groupSum(S, r=>r.inspector, ["fInsp","fRej"])].sort((a,b)=>b[1].fInsp-a[1].fInsp);
+  const insKeys = ins.map(x=>x[0]);
   mkChart("chInsp", { type:"bar",
     data:{ labels: ins.map(x=>x[0]),
       datasets:[
@@ -818,6 +825,7 @@ function render(){
                y1:{ beginAtZero:true, position:"right", grid:{ drawOnChartArea:false },
                     ticks:{ callback:v=>(100*v).toFixed(0)+"%" } } },
       plugins:{ legend:{ position:"bottom" } }}});
+  registerSelHighlight("chInsp", "inspector", insKeys, [1]);
 
   /* mills — horizontal, top 14, with an opt-in "hide under Nft" threshold so a
      long tail of near-zero mills doesn't crowd out the ones that matter. Off
@@ -826,6 +834,7 @@ function render(){
   const millAll = [...groupSum(S, r=>r.mill, ["fInsp","fRej"])].sort((a,b)=>b[1].fInsp-a[1].fInsp);
   const millHiddenCount = millMinFt > 0 ? millAll.filter(x=>x[1].fInsp < millMinFt).length : 0;
   const mi = AGG.mills = millAll.filter(x=>x[1].fInsp >= millMinFt).slice(0,14);
+  const miKeys = mi.map(x=>x[0]);
   mkChart("chMills", { type:"bar",
     data:{ labels: mi.map(x=>x[0]),
       datasets:[
@@ -834,6 +843,7 @@ function render(){
     options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false,
       scales:{ x:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
       plugins:{ legend:{ position:"bottom" } }}});
+  registerSelHighlight("chMills", "mill", miKeys, [0,1]);
   { const note = document.querySelector("#chMills").closest(".card").querySelector(".millHiddenNote");
     if(millHiddenCount > 0){
       const txt = millHiddenCount + " mill" + (millHiddenCount>1?"s":"") + " under " + fmt(millMinFt) + " ft hidden";
@@ -845,6 +855,7 @@ function render(){
 
   /* alloys — true rejected */
   const al = AGG.alloys = [...groupSum(S.filter(r=>r.tRej>0), r=>r.alloy, ["tRej"])].sort((a,b)=>b[1].tRej-a[1].tRej);
+  const alKeys = al.map(x=>x[0]);
   mkChart("chAlloy", { type:"bar",
     data:{ labels: al.map(x=>x[0]),
       datasets:[{ label:"True rejected (ft)", data:al.map(x=>x[1].tRej),
@@ -852,6 +863,7 @@ function render(){
     options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false,
       scales:{ x:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
       plugins:{ legend:{ display:false } }}});
+  registerSelHighlight("chAlloy", "alloy", alKeys, [0]);
 
   /* chart-click -> list linking (active when the toggle in the list header is on) */
   hook("chWeekly","week", wk.map(x=>x[0]));
@@ -927,6 +939,83 @@ function syncTileScopes(){
 let chartSel = null;      // {kind, value} set by clicking a chart element
 let scopeRows = [];       // rows matching the global filters (set by render)
 
+/* Selected-element highlighting: a click filters the list, but gave no
+   visual sign on the chart itself of which bar or slice was active. A
+   dataset-level borderColor/borderWidth array approach didn't reliably
+   render (likely a borderRadius interaction), so this draws the highlight
+   directly on the canvas using the chart's own rendered element geometry -
+   independent of any dataset border-property quirks, and guaranteed to be
+   on top of everything else since it runs after the normal draw pass. */
+const SEL_BORDER_COLOR = "#F0B429";
+const SEL_BORDER_WIDTH = 5;
+const selHighlights = {};
+function registerSelHighlight(id, kind, keys, datasetIdxs){
+  selHighlights[id] = { kind, keys, datasetIdxs };
+}
+const selectionHighlightPlugin = {
+  id: "selectionHighlight",
+  afterDatasetsDraw(chart){
+    const h = selHighlights[chart.canvas.id]; if(!h) return;
+    if(!chartSel || chartSel.kind !== h.kind) return;
+    const idx = h.keys.indexOf(chartSel.value); if(idx < 0) return;
+    const ctx = chart.ctx;
+    ctx.save();
+    ctx.strokeStyle = SEL_BORDER_COLOR;
+    ctx.lineWidth = SEL_BORDER_WIDTH;
+    ctx.lineJoin = "round";
+    ctx.shadowColor = "rgba(0,0,0,.35)"; ctx.shadowBlur = 3;
+    h.datasetIdxs.forEach(di=>{
+      const meta = chart.getDatasetMeta(di); if(!meta || meta.hidden) return;
+      const el = meta.data[idx]; if(!el) return;
+      const p = el.getProps ? el.getProps(["x","y","base","width","height","startAngle","endAngle","outerRadius","innerRadius"], true) : el;
+      if(typeof p.startAngle === "number"){
+        // doughnut/pie slice
+        const midR = (p.outerRadius + p.innerRadius) / 2;
+        ctx.beginPath();
+        ctx.lineWidth = Math.max(SEL_BORDER_WIDTH, p.outerRadius - p.innerRadius);
+        ctx.arc(p.x ?? el.x, p.y ?? el.y, midR, p.startAngle, p.endAngle);
+        ctx.stroke();
+      } else if(typeof p.x === "number" && typeof p.y === "number"){
+        // bar element - p.height/p.width are inconsistently populated across
+        // chart configs (present on some, null on others), so rather than
+        // conditionally trusting them, always derive the value-axis span
+        // from the bar's own value position and the scale's own zero pixel.
+        // vScale.axis ("x" or "y") reliably tells us which orientation this
+        // bar is, regardless of what the axis is actually named (chInsp
+        // pairs its bar with a "y" scale while a line dataset owns "y1").
+        const vScale = meta.vScale;
+        let cx, cy, w, hgt;
+        if(vScale && vScale.axis === "y"){
+          const zeroPix = vScale.getPixelForValue(0);
+          hgt = Math.abs(zeroPix - p.y); cy = (p.y + zeroPix) / 2;
+          w = p.width; cx = p.x;
+        } else if(vScale && vScale.axis === "x"){
+          const zeroPix = vScale.getPixelForValue(0);
+          w = Math.abs(zeroPix - p.x); cx = (p.x + zeroPix) / 2;
+          hgt = p.height; cy = p.y;
+        } else {
+          w = p.width; hgt = p.height; cx = p.x; cy = p.y;
+        }
+        if(w != null && hgt != null && !isNaN(cx) && !isNaN(cy) && !isNaN(w) && !isNaN(hgt)){
+          const pad = 1;   // draw just outside the fill so gold reads as an outline, not an overlay
+          ctx.strokeRect(cx - w/2 - pad, cy - hgt/2 - pad, w + pad*2, hgt + pad*2);
+        }
+      }
+    });
+    ctx.restore();
+  }
+};
+Chart.register(selectionHighlightPlugin);
+function refreshSelectionHighlights(){
+  for(const id in selHighlights){
+    const c = charts[id]; if(!c) continue;
+    c.update("none");   // redraw immediately, no animation - a highlight-only
+                         // change has no reason to tween, and skipping the
+                         // transition avoids the plugin ever seeing a
+                         // mid-animation, incompletely-populated element
+  }
+}
+
 function hook(id, kind, keys){
   const c = charts[id]; if(!c) return;
   c.options.onClick = (e, els)=>{
@@ -934,6 +1023,7 @@ function hook(id, kind, keys){
     const v = keys[els[0].index];
     chartSel = (chartSel && chartSel.kind===kind && chartSel.value===v) ? null : {kind, value:v};  // click again to clear
     renderTable();
+    refreshSelectionHighlights();
   };
   c.options.onHover = (e, els)=>{
     e.native.target.style.cursor = ($("linkToggle").checked && els.length) ? "pointer" : "default";
@@ -958,7 +1048,7 @@ function selLabel(){
   const v = (chartSel.kind==="week" || chartSel.kind==="month") ? dLabel(chartSel.value) : chartSel.value;
   return (names[chartSel.kind]||"") + v;
 }
-function clearSel(){ chartSel = null; renderTable(); }
+function clearSel(){ chartSel = null; renderTable(); refreshSelectionHighlights(); }
 /* ---------- Excel-style per-column sort + filter for the list ---------- */
 const TCOLS = [
   { key:"date",      label:"Date",           num:false, get:r=>dLabel(r.date), raw:r=>r.date||"" },
@@ -1079,7 +1169,7 @@ function syncSelAll(F){
   const base = $("tblNote").textContent.replace(/ \u00b7 \d+ selected for export$/, "");
   $("tblNote").textContent = base + (inView > 0 ? " \u00b7 " + inView + " selected for export" : "");
 }
-$("linkToggle").addEventListener("change", ()=>{ if(!$("linkToggle").checked) chartSel = null; renderTable(); });
+$("linkToggle").addEventListener("change", ()=>{ if(!$("linkToggle").checked) chartSel = null; renderTable(); refreshSelectionHighlights(); });
 
 /* ---------- view preferences: color scheme + text size ---------- */
 const THEMES = {
@@ -1226,22 +1316,27 @@ function openPngPop(anchorBtn, buildCanvas, filename){
   pngPopEl = pop;
   pop.querySelector('[data-act="copy"]').addEventListener("click", ()=>{
     try{
-      const cv = buildCanvas(); if(!cv){ closePngPop(); return; }
+      // buildCanvas() returning nothing (chart not found, canvas not ready)
+      // used to close the popover with zero feedback - the click LOOKED like
+      // it did nothing at all. Now it always says something.
+      const cv = buildCanvas();
+      if(!cv){ toast("Could not find this chart to export \u2014 try refreshing the page"); closePngPop(); return; }
       cv.toBlob(async b=>{
         try{
           await navigator.clipboard.write([new ClipboardItem({ "image/png": b })]);
           toast("Copied to clipboard");
         }catch(err){ toast("Copy not supported here \u2014 use Save instead"); }
       }, "image/png");
-    }catch(err){ toast("Could not create image"); }
+    }catch(err){ toast("Could not create image: " + err.message); }
     closePngPop();
   });
   pop.querySelector('[data-act="save"]').addEventListener("click", ()=>{
     try{
-      const cv = buildCanvas(); if(!cv){ closePngPop(); return; }
+      const cv = buildCanvas();
+      if(!cv){ toast("Could not find this chart to export \u2014 try refreshing the page"); closePngPop(); return; }
       cv.toBlob(b => dlBlob(filename, b), "image/png");
       toast("Saved as " + filename);
-    }catch(err){ toast("Could not create image"); }
+    }catch(err){ toast("Could not create image: " + err.message); }
     closePngPop();
   });
   pngPopOutside = e => { if(pngPopEl && !pngPopEl.contains(e.target) && e.target !== anchorBtn) closePngPop(); };
@@ -1655,7 +1750,7 @@ function scanQualityAlerts(){
     const seg = document.querySelectorAll("#dateSeg button");
     if(seg[1]) seg[1].click();
     const per = $("fPeriod"); if(per){ per.value = "all"; per.dispatchEvent(new Event("change")); }
-    chartSel = { kind:"month", value: el.dataset.month }; renderTable();
+    chartSel = { kind:"month", value: el.dataset.month }; renderTable(); refreshSelectionHighlights();
     const card = document.getElementById("chMonthly"); if(card) card.closest(".card").scrollIntoView({behavior:"smooth", block:"center"});
   }));
   list.querySelectorAll("[data-resolve]").forEach(btn => btn.addEventListener("click", (e) => {
@@ -2232,8 +2327,14 @@ async function aiRequest(tileKey){
     quick = qm.split("===DETAILED===")[0].trim();
     detailed = qm.split("===DETAILED===")[1].trim();
   } else {
-    detailed = txt;
-    quick = txt.split(/(?<=[.!?])\s+/).slice(0,3).join(" ");
+    // The model didn't follow the required ===QUICK===/===DETAILED=== format.
+    // This used to silently fall back to treating whatever text DID come
+    // back as the assessment - and since the prompt's own DATA block is
+    // JSON, an off-format reply from the model could itself be JSON-shaped,
+    // which then got copied/exported as if it were a real assessment.
+    // Surfacing this as an explicit error means a malformed response is
+    // always caught here, not mistaken for valid content downstream.
+    throw new Error("AI response did not follow the expected format and could not be parsed. Raw response: " + txt.slice(0, 300));
   }
   return { st, quick, detailed };
 }
@@ -2665,7 +2766,7 @@ async function runDemo(){
     { run: async ()=>{ await demoClick($("linkToggle")); },
       say:"Now let's verify the assistant's suspicion ourselves. Chart linking is switched on." },
     { run: async ()=>{ await demoClickBar("chMonthly", "Jul");
-                       chartSel = {kind:"month", value:"2026-07"}; renderTable();
+                       chartSel = {kind:"month", value:"2026-07"}; renderTable(); refreshSelectionHighlights();
                        await pause(280);
                        demoHi(document.querySelector(".tscroll").closest(".card")); },
       say:"Clicking the July bar filters the submission list below to just that month's receipts." },
