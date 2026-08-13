@@ -307,7 +307,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.49",
+  version: "3.50",
   updated: "Aug 12, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
@@ -768,6 +768,10 @@ function render(){
         { type:"bar", label:"Inspected (ft)", data:wk.map(w=>w[1].fInsp),
           backgroundColor:B.accent+"CC", borderRadius:4, yAxisID:"y" } ]},
     options:{ responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:"index", intersect:false },   // default nearest+intersect left a
+                                                        // dead zone at each bar's own center
+                                                        // once the weekly view's many, narrow
+                                                        // bars packed close enough together
       scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
       plugins:{ legend:{ position:"bottom" } } }});
   registerSelHighlight("chWeekly", "week", wkKeys, [1]);
