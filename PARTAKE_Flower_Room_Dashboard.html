@@ -2449,14 +2449,14 @@ function demoSay(text){
       if(demoStop) return;
       await new Promise(res=>{
         const u = new SpeechSynthesisUtterance(part);
-        u.rate = 1.26; u.pitch = 1.0;          // ~30% quicker than the original pace
+        u.rate = 1.42; u.pitch = 1.0;          // streamlined pace - quicker than the original
         if(v) u.voice = v;
         u.onend = ()=>res(); u.onerror = ()=>res();
         speechSynthesis.speak(u);
       });
-      await new Promise(res=>setTimeout(res, 260));   // beat between sentences
+      await new Promise(res=>setTimeout(res, 150));   // beat between sentences
     }
-    await new Promise(res=>setTimeout(res, 200));
+    await new Promise(res=>setTimeout(res, 120));
   })();
 }
 function demoHi(id){
@@ -2678,17 +2678,17 @@ async function runDemo(){
        1. HEADER
        =================================================================== */
     { do:()=>{ window.scrollTo({top:0, behavior:"smooth"}); },
-      say:"Welcome to the Partake Cannabis Flower Room Compliance Dashboard. Everything you are about to see is live production data, pulled straight from Alpha TransForm." },
+      say:"Welcome to the Partake Cannabis Flower Room Compliance Dashboard. Since we don't have any actual data yet, this demo shows sample data." },
     { run:()=>demoPoint($("btnApi")),
       say:"There is no overnight batch, and no spreadsheet to refresh. One button re-queries the API, and the whole dashboard rebuilds in about a second." },
     { run: async ()=>{ await demoPoint($("themeSel")); demoHi($("themeSel"));
                        demoOpenDD = demoShowOptions($("themeSel"), "steel"); },
-      say:"Fifteen color schemes are built in, including Edmonton's own major league teams." },
+      say:"Fifteen color schemes are built-in, including Edmonton's own major league teams." },
     { run: async ()=>{ await demoSet($("themeSel"), "oilers"); },
       say:"The Oilers." },
     { run: async ()=>{ await demoSet($("themeSel"), "steel"); demoClearHi(); },
       say:"And back to Partake's own default." },
-    { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(700);
+    { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(450);
                        await demoSet($("fontSel"), "m"); demoClearHi(); },
       say:"Text size adjusts the same way, which matters when this is running on a grow room tablet rather than a laptop." },
 
@@ -2715,7 +2715,7 @@ async function runDemo(){
                        $("roomPanel").style.display = "none"; demoClearHi();
                        await demoPoint($("btnReset")); demoHi($("btnReset")); },
       say:"One reset button clears every filter at once, so nobody has to hunt for the setting that is quietly hiding half their data." },
-    { run: async ()=>{ await demoClick($("btnReset")); demoClearHi(); await pause(200); },
+    { run: async ()=>{ await demoClick($("btnReset")); demoClearHi(); await pause(150); },
       say:"Back to the full picture, all rooms and all time, so the rest of this tour matches what you would actually see on first load." },
 
     /* ===================================================================
@@ -2723,7 +2723,7 @@ async function runDemo(){
        =================================================================== */
     { run: async ()=>{ await demoPoint(document.querySelector(".kpis")); demoHi(document.querySelector(".kpis")); },
       say:"Eight key metrics summarize compliance at a glance: overall rate, failed checks, and a pass rate for each of the five monitored categories, from room environment through pesticide compliance." },
-    { run: async ()=>{ demoClearHi(); await pause(200); } },
+    { run: async ()=>{ demoClearHi(); await pause(150); } },
 
     /* ===================================================================
        4. CHARTS, STRICTLY IN PAGE ORDER
@@ -2737,17 +2737,17 @@ async function runDemo(){
 
     /* --- AI analyst, demonstrated on the calibration tile --- */
     { run: async ()=>{ const b = chartCard("chCalibration").querySelector(".aibtn"); await demoPoint(b, {scroll:false}); },
-      say:"Every tile has a built in AI analyst. One click, and it reads this chart's own data for itself. Listen." },
+      say:"Every tile has a built-in AI analyst. One click, and it reads this chart's own data for itself. Listen." },
     { run: async ()=>{
         const b = chartCard("chCalibration").querySelector(".aibtn");
         if(b) await demoClick(b, {scroll:false});
         const t0 = Date.now();
-        while(!aiTexts.quick && Date.now()-t0 < 25000 && !demoStop) await pause(280);
+        while(!aiTexts.quick && Date.now()-t0 < 16000 && !demoStop) await pause(280);
         if(aiTexts.quick && !demoStop){
-          await pause(500);
+          await pause(350);
           const s = document.getElementById("aiSpeak"); if(s) s.click();
           while(window.speechSynthesis && speechSynthesis.speaking && !demoStop) await pause(210);
-          await pause(300);
+          await pause(200);
         }
       } },
     { run:()=>demoPoint($("aiScope"), {scroll:false}),
@@ -2758,17 +2758,17 @@ async function runDemo(){
     { run:()=>demoPoint($("aiVoiceSel"), {scroll:false}),
       say:"It reads aloud in whichever voice you prefer, and the card copies out as formatted text straight from here." },
     { run: async ()=>{ const c = document.getElementById("aiClose");
-                       if(c) await demoClick(c, {scroll:false}); await pause(250); } },
+                       if(c) await demoClick(c, {scroll:false}); await pause(180); } },
 
     /* --- individual chart PNG export, demonstrated on the same tile --- */
     { run: async ()=>{ const b = document.querySelector('.pngbtn[data-chart="chCalibration"]'); await demoPoint(b, {scroll:false}); },
       say:"Any single tile exports on its own, stamped with the Partake name and the active date range." },
-    { run: async ()=>{ const b = document.querySelector('.pngbtn[data-chart="chCalibration"]'); if(b) await demoClick(b, {scroll:false}); await pause(250); },
+    { run: async ()=>{ const b = document.querySelector('.pngbtn[data-chart="chCalibration"]'); if(b) await demoClick(b, {scroll:false}); await pause(180); },
       say:"Copy it to the clipboard, or save it as a file." },
     { run: async ()=>{ closePngPop();
                        demoPrevCanvas("Component_Calibration.png", chartPngCanvas("chCalibration","Component Calibration \u2014 Compliance")); },
       say:"And here is the calibration chart on its own, exactly as that file would look, ready to drop into a slide." },
-    { run: async ()=>{ demoPrevHide(); demoClearHi(); await pause(250); } },
+    { run: async ()=>{ demoPrevHide(); demoClearHi(); await pause(180); } },
 
     { run: async ()=>{ await demoPoint(chartCard("chWeekly")); demoHi(chartCard("chWeekly")); },
       say:"Weekly Master Grower Review, the sign-off that either finds no issues or confirms an issue was resolved." },
@@ -2776,7 +2776,7 @@ async function runDemo(){
       say:"Logs by room shows which rooms are logging, and each room's own composite pass rate across all five categories." },
     { run: async ()=>{ demoClearHi(); await demoPoint(chartCard("chPesticide")); demoHi(chartCard("chPesticide")); },
       say:"And pesticide applications. The hard rule is no pesticide after the first appearance of flower bloom, tracked here as a straightforward compliance rate rather than buried in a log nobody reviews." },
-    { run: async ()=>{ demoClearHi(); await pause(200); } },
+    { run: async ()=>{ demoClearHi(); await pause(150); } },
 
     /* ===================================================================
        5. THE TABLE
@@ -2787,7 +2787,7 @@ async function runDemo(){
       say:"Switched on, so clicking a chart narrows this list to just the matching log books." },
     { run: async ()=>{ await demoClickBar("chCalibration", "Temperature Probe");
                        chartSel = {kind:"comptype", value:"Temperature Probe"}; renderTable(); refreshSelectionHighlights();
-                       await pause(300); },
+                       await pause(200); },
       say:"Clicking Temperature Probe filters the list to the log books with an out of calibration temperature probe." },
     { run: async ()=>{ chartSel = null; renderTable(); refreshSelectionHighlights(); },
       say:"Clear the selection, and every column still sorts and filters entirely on its own." },
@@ -2797,7 +2797,7 @@ async function runDemo(){
       say:"Start date, oldest first, with one click on the header." },
     { run: async ()=>{ const inp = document.querySelector('#thead .frow input[data-fkey="anyIssue"]');
                        if(inp) await demoPoint(inp, {scroll:false});
-                       tFilt = { anyIssue: "Yes" }; buildThead(); renderTable(); await pause(300); },
+                       tFilt = { anyIssue: "Yes" }; buildThead(); renderTable(); await pause(200); },
       say:"And every column filters as you type. Yes here, and only the log books with an open issue surface, ready to review with the Master Grower." },
     { run: async ()=>{ tFilt = {}; buildThead(); renderTable(); },
       say:"Clear that, and back to the full list." },
@@ -2811,22 +2811,22 @@ async function runDemo(){
       say:"Export as an Excel workbook, a CSV, or raw JSON. The file is built right here in the browser." },
     { run: async ()=>{ demoPrevRows("PARTAKE_LogBooks_selection.xlsx", exportScope(), 8); },
       say:"And here is the actual workbook it just wrote: the three selected log books, every column, ready to attach to a follow up email." },
-    { run: async ()=>{ demoPrevHide(); demoClearHi(); await pause(250); } },
+    { run: async ()=>{ demoPrevHide(); demoClearHi(); await pause(180); } },
 
     /* ===================================================================
        6. BACK TO THE TOP — WHOLE-DASHBOARD OUTPUT
        =================================================================== */
-    { run: async ()=>{ window.scrollTo({top:0, behavior:"smooth"}); await pause(700);
+    { run: async ()=>{ window.scrollTo({top:0, behavior:"smooth"}); await pause(450);
                        await demoPoint($("dashPngBtn")); },
       say:"Finally, back to the top. These two buttons capture everything we just walked through, all at once." },
-    { run: async ()=>{ await demoClick($("dashPngBtn")); await pause(250); },
+    { run: async ()=>{ await demoClick($("dashPngBtn")); await pause(180); },
       say:"The whole dashboard, every metric and all six charts, renders into one image." },
     { run: async ()=>{ closePngPop();
                        demoPrevCanvas("PARTAKE_Dashboard_Snapshot.png", dashboardCanvas()); },
       say:"That is the real snapshot, exactly as it would be saved, ready for a compliance review pack." },
-    { run: async ()=>{ demoPrevHide(); await pause(250); },
+    { run: async ()=>{ demoPrevHide(); await pause(180); },
       say:"The PDF button next to it produces the same page as a single, printable file." },
-    { run: async ()=>{ await demoClick($("kpiPng")); await pause(300); },
+    { run: async ()=>{ await demoClick($("kpiPng")); await pause(200); },
       say:"And every PNG button offers a choice: copy the image straight to your clipboard, or save it as a file. Here, just the KPI row." },
     { run: async ()=>{ const c = document.querySelector('.pngpop [data-act="copy"]'); if(c) await demoClick(c, {scroll:false}); },
       say:"Copy, and it is ready to paste straight into an email, a chat, or a slide." },
