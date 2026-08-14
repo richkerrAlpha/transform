@@ -346,7 +346,7 @@ const CONFIG = {
                    "#40916C","#2C6E8F","#8D99AE","#B5838D","#5E60CE","#F4845F",
                    "#D62828","#606C38"] },
   // Deploy PARTAKE_TransForm_Proxy.gs as a Web App ("Anyone"), paste its /exec URL here.
-  api: { proxyUrl:"", apiKey:"", formId:"PARTAKE_FLOWER_ROOM_MLB",
+  api: { proxyUrl:"https://script.google.com/macros/s/AKfycbzKi4A472RSlWurcaf7SnDF4h6i4FH58GJogt7rL0O97eaB6kjFaAW711GKAiGxtNRlDQ/exec", apiKey:"", formId:"PARTAKE_FLOWER_ROOM_MLB",
          host:"https://transform.alphasoftware.com",
          endpoint:"transformAPIVersion1.a5svc/GetFormDataArrayForFormId", pageSize:200 },
   autoRefreshOnLoad: false,
@@ -2329,13 +2329,19 @@ async function aiRequest(tileKey){
   else st = txt.includes("==") ? "WARNING" : "OK";
   txt = aiClean(txt, anonMaps);
   let quick = "", detailed = "";
-  const qm = txt.split("===QUICK===")[1];
-  if(qm && qm.includes("===DETAILED===")){
-    quick = qm.split("===DETAILED===")[0].trim();
-    detailed = qm.split("===DETAILED===")[1].trim();
+  // Lenient markers: accept 1-3 equals signs and any case, since models
+  // occasionally drift from the exact "===QUICK===" string (seen in
+  // practice as "=QUick=") even when the prompt states it explicitly.
+  const QUICK_RE = /={1,3}\s*QUICK\s*={1,3}/i;
+  const DETAILED_RE = /={1,3}\s*DETAILED\s*={1,3}/i;
+  const qMatch = QUICK_RE.exec(txt);
+  const dMatch = DETAILED_RE.exec(txt);
+  if(qMatch && dMatch && dMatch.index > qMatch.index){
+    quick = txt.slice(qMatch.index + qMatch[0].length, dMatch.index).trim();
+    detailed = txt.slice(dMatch.index + dMatch[0].length).trim();
   } else {
-    // The model didn't follow the required ===QUICK===/===DETAILED=== format.
-    // This used to silently fall back to treating whatever text DID come
+    // The model didn't follow the required QUICK/DETAILED format at all -
+    // this used to silently fall back to treating whatever text DID come
     // back as the assessment - and since the prompt's own DATA block is
     // JSON, an off-format reply from the model could itself be JSON-shaped,
     // which then got copied/exported as if it were a real assessment.
@@ -2358,13 +2364,14 @@ const AI_RULES =
   "Use inline emphasis in BOTH versions: **bold** for the most important figures and names, *italics* for caveats and interpretive comments, and ==highlight== around the single most critical finding (at most once or twice). No other markdown. ";
 function aiBuildPrompt(mode, cur){
   const shape =
-    "Start your ENTIRE reply with one line declaring overall severity: 'STATUS: CRITICAL' (urgent issue or likely data error demanding immediate action), 'STATUS: WARNING' (needs attention soon), or 'STATUS: OK' (within target, nothing alarming). Then continue with BOTH versions, using exactly these markers:\n" +
+    "Start your ENTIRE reply with one line declaring overall severity: 'STATUS: CRITICAL' (urgent issue or likely data error demanding immediate action), 'STATUS: WARNING' (needs attention soon), or 'STATUS: OK' (within target, nothing alarming). Then continue with BOTH versions, using EXACTLY these markers, copied character-for-character with three equals signs on each side and no other punctuation - do not shorten, abbreviate, or paraphrase them:\n" +
     "===QUICK===\n2-3 plain sentences: the single most important takeaway and one recommended action. No bullets, no headers.\n" +
     "===DETAILED===\n" +
     "**Assessment**\nThen 2-4 short bullet points (start each with '- ').\n" +
     "**Watch items**\nThen 1-3 bullets on anomalies or data-quality concerns (e.g., extreme rates from tiny inspected quantities suggest data-entry errors).\n" +
     "**Recommended next steps**\nThen 2-4 action bullets a quality manager could take, with urgency scaled to data recency.\n" +
-    "Be specific: name weeks, rooms, instrument types, monitors, and figures from the data. Detailed section under 200 words.\n";
+    "Be specific: name weeks, rooms, instrument types, monitors, and figures from the data. Detailed section under 200 words.\n" +
+    "Example of the required shape (write your own content, but match this structure exactly):\nSTATUS: WARNING\n===QUICK===\n[2-3 sentences here]\n===DETAILED===\n**Assessment**\n- [bullet]\n";
   return AI_RULES + shape + cur.tileGuide + "\nDATA:\n" + cur.dataBlock;
 }
 async function aiFetch(prompt){
