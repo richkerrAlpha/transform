@@ -336,7 +336,7 @@ const CONFIG = {
   clientName: "TFC Poultry",
   title: "Daily CCP Compliance Dashboard",
   version: "1.0",
-  updated: "Aug 13, 2026",
+  updated: "Aug 14, 2026",
   // Each CCP category has its own critical limit, driving pass/fail
   // classification for every check within it.
   limits: { tempMaxF: 45, chlorineMinPPM: 150, chlorineMaxPPM: 200 },
@@ -632,11 +632,8 @@ document.addEventListener("click", (e)=>{
     if(!$(MSEL[key].sel).contains(e.target)) $(MSEL[key].panel).style.display = "none";
   if(!$("expSel").contains(e.target)) $("expPanel").style.display = "none";
 });
-/* A hold can sit pending review with no reason assigned yet - especially
-   recent ones. Excluding those from the reasons chart used to make it look
-   like the held footage did not exist, when it was really just uncategorized.
-   Both the chart build and its click-matching route through this one
-   function so they can never drift out of sync with each other. */
+/* Date range and MSEL checklist filters both route through this one function
+   so they can never drift out of sync with each other. */
 function inScope(r){
   const f=$("fFrom").value, t=$("fTo").value;
   if(f && r.date < f) return false;
@@ -1836,9 +1833,9 @@ if(CONFIG.showJsonLoader){
 function dashboardCanvas(){
   const W = 1560, M = 40, S = 2;                    // logical layout, drawn at 2x
   const charts6 = [
-    ["chWeekly","Weekly Footage \u2014 Inspected vs Rejected"], ["chMonthly","Monthly Rejection Rate"],
-    ["chReasons","Rejection Reasons (held ft)"],  ["chInsp","Inspector Volume"],
-    ["chMills","Mill Performance (top 14)"],       ["chAlloy","Alloy Rejections (held ft)"]
+    ["chTemp","CCP3 Product Temperature \u2014 Pass Rate"], ["chChlorine","Chlorine Monitoring \u2014 Pass Rate"],
+    ["chMetal","Metal Detector \u2014 Seed Detection Rate"],  ["chXray","X-Ray Equipment \u2014 Detection Rate"],
+    ["chMonitor","Logs by Monitor"],       ["chRecords","Records Acceptable \u2014 Verification Rate"]
   ];
   const kpi = kpisPngCanvas();
   const colW = (W - M*2 - 24) / 2;
@@ -1862,10 +1859,10 @@ function dashboardCanvas(){
   // header band
   g.fillStyle = cssVar("--steel", "#1B4965"); g.fillRect(0, 0, W, headH - 26);
   g.fillStyle = cssVar("--accent", "#62B6CB"); g.font = "800 30px Arial";
-  g.fillText("Receiving Quality Dashboard", M, 46);
+  g.fillText("Daily CCP Compliance Dashboard", M, 46);
   g.fillStyle = "rgba(255,255,255,.92)"; g.font = "600 14px Arial";
   g.fillText(CONFIG.clientName + " \u00b7 " + dLabel($("fFrom").value) + " \u2013 " + dLabel($("fTo").value) +
-             " \u00b7 " + fmt(scopeRows.length) + " submissions \u00b7 Rev " + CONFIG.version, M, 72);
+             " \u00b7 " + fmt(scopeRows.length) + " daily logs \u00b7 Rev " + CONFIG.version, M, 72);
   g.fillStyle = "rgba(255,255,255,.75)"; g.font = "600 12px Arial";
   const gen = "Generated " + new Date().toLocaleString();
   g.fillText(gen, W - M - g.measureText(gen).width, 72);
@@ -2338,14 +2335,14 @@ async function aiRequest(tileKey){
   return { st, quick, detailed };
 }
 const AI_RULES =
-  "You are a quality engineering analyst reviewing receiving-inspection data for a stainless steel pipe and tube distributor. " +
+  "You are a food-safety quality assurance analyst reviewing Critical Control Point (CCP) monitoring data for a turkey thigh deboning plant. " +
   "TIME AWARENESS \u2014 strict rules: context.todaysDate is today; the analyzed range ends context.dataEndsDaysAgo days ago. " +
   "(1) NEVER call the analyzed period 'recent', 'current', 'ongoing', or 'lately' unless dataEndsDaysAgo is 45 or less; otherwise name it by its actual dates (e.g. 'during May\u2013June 2026'). " +
   "(2) You can see ONLY the dateRange slice. Never claim or imply anything about performance outside it \u2014 good results inside the window say NOTHING about what happened after it ended. Do not write phrases like 'continue the excellent performance' about a window that ended months ago; instead say performance WAS strong during that period and recommend re-running this analysis on current data before drawing present-day conclusions. " +
   "(3) If dataEndsDaysAgo > 45, at least one recommendation should be to check whether the pattern (good or bad) persisted in the months after the window. " +
   "(4) Urgency scales with recency: month-old-plus anomalies get verification and lessons-learned framing, not this-week action items, and severity STATUS should reflect that an old spike alone is rarely CRITICAL today. " +
   "Entity names are tokenized for privacy. Tokens look like CLIENT_1, MONITOR_2. When referring to a specific entity, use the exact numbered token from the data \u2014 NEVER write a generic placeholder like MONITOR_n, and never invent token numbers not present in the data. When speaking generally, use plain words like 'the affected monitors' or 'the CCP checks' instead of tokens. Tokens will be substituted back to real names later. " +
-  "context.activeFilters describes the user's active filter selections; the interface already displays them, so do NOT repeat the full filter list, but keep your analysis framed within that scope and refer to it naturally when relevant (e.g. 'within this inspector's submissions'). " +
+  "context.activeFilters describes the user's active filter selections; the interface already displays them, so do NOT repeat the full filter list, but keep your analysis framed within that scope and refer to it naturally when relevant (e.g. 'within this monitor's logs'). " +
   "When writing date or number ranges in prose, prefer the word 'through' (e.g. 'January through June 2026') over a dash. " +
   "Use inline emphasis in BOTH versions: **bold** for the most important figures and names, *italics* for caveats and interpretive comments, and ==highlight== around the single most critical finding (at most once or twice). No other markdown. ";
 function aiBuildPrompt(mode, cur){
@@ -2659,23 +2656,27 @@ async function runDemo(){
 
   const steps = [
 
-    /* ===== HEADER ===== */
+    /* ===================================================================
+       1. HEADER
+       =================================================================== */
     { do:()=>{ window.scrollTo({top:0, behavior:"smooth"}); },
-      say:"Welcome to the TFC Poultry Daily CCP Compliance Dashboard. Everything you are about to see is live production data. It was pulled straight from Alpha TransForm the moment this page loaded." },
+      say:"Welcome to the TFC Poultry Daily CCP Compliance Dashboard. Everything you are about to see is live production data, pulled straight from Alpha TransForm." },
     { run:()=>demoPoint($("btnApi")),
       say:"There is no overnight batch, and no spreadsheet to refresh. One button re-queries the API, and the whole dashboard rebuilds in about a second." },
     { run: async ()=>{ await demoPoint($("themeSel")); demoHi($("themeSel"));
                        demoOpenDD = demoShowOptions($("themeSel"), "steel"); },
-      say:"Fifteen color schemes are built in, including the state's own major league teams." },
+      say:"Fifteen color schemes are built in, including Minnesota's own major league teams." },
     { run: async ()=>{ await demoSet($("themeSel"), "wild"); },
       say:"The Wild." },
     { run: async ()=>{ await demoSet($("themeSel"), "steel"); demoClearHi(); },
       say:"And back to TFC's own default." },
-    { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(600);
+    { run: async ()=>{ await demoSet($("fontSel"), "l"); await pause(700);
                        await demoSet($("fontSel"), "m"); demoClearHi(); },
-      say:"Text size adjusts the same way. That matters when this is running on a plant floor monitor rather than a laptop." },
+      say:"Text size adjusts the same way, which matters when this is running on a plant floor monitor rather than a laptop." },
 
-    /* ===== FILTER BAR ===== */
+    /* ===================================================================
+       2. FILTER BAR
+       =================================================================== */
     { run: async ()=>{ demoClearHi(); await demoClick($("filterToggle")); },
       say:"The whole filter bar collapses behind this button whenever you want more room for the charts. On a phone it starts collapsed for exactly that reason." },
     { run: async ()=>{ await demoClick($("filterToggle")); demoHi(document.querySelector(".dategroup")); },
@@ -2683,125 +2684,136 @@ async function runDemo(){
     { run: async ()=>{ await demoClick(seg2()[1]);
                        await demoPoint($("fPeriod"));
                        demoOpenDD = demoShowOptions($("fPeriod"), "all", 10); },
-      say:"Period mode opens a list of sixteen ready made ranges, from today and yesterday out to full history. For example, last quarter, or this month." },
-    { run: async ()=>{ await demoSet($("fPeriod"), "thisyear"); },
-      say:"Selecting a time period, or setting a specific date range, causes the charts and KPIs to instantly update." },
-    { run:()=>demoSet($("fPeriod"), "lastmonth"),
-      say:"Last month, and the entire dashboard follows. Or switch back to date mode and pick any custom window you like." },
-    { run: async ()=>{ demoHi($("monitorSel")); await demoClick($("monitorBtn"));
+      say:"Period mode opens a list of ready made ranges, from today and yesterday out to full history." },
+    { run: async ()=>{ await demoSet($("fPeriod"), "thismonth"); },
+      say:"Selecting a time period causes the charts and KPIs to instantly update." },
+    { run: async ()=>{ demoClearHi(); demoHi($("monitorSel")); await demoClick($("monitorBtn"));
                        $("monitorPanel").style.display = "block"; await pause(210);
                        const boxes = $("monitorPanel").querySelectorAll(".msChk");
                        if(boxes[0]) await demoClick(boxes[0], {fast:true, scroll:false}); },
-      say:"Every major filter is a check list style filter tool. Untick a monitor, and their logs drop out of every chart and every metric instantly. Shift works the same way." },
+      say:"Every major filter is a check list style tool. Untick a monitor, and their logs drop out of every chart and every metric instantly. Shift works the same way." },
     { run: async ()=>{ const all = $("monitorPanel").querySelector(".msAllChk");
                        if(all && !all.checked) await demoClick(all, {fast:true, scroll:false});
-                       $("monitorPanel").style.display = "none";
+                       $("monitorPanel").style.display = "none"; demoClearHi();
                        await demoPoint($("btnReset")); demoHi($("btnReset")); },
-      say:"One reset button clears every filter at once. Nobody ever has to hunt for the setting that is quietly hiding half their data." },
-    { run: async ()=>{ await demoSet($("fPeriod"), "all"); demoClearHi(); },
-      say:"Let's restore all monitors, and all time, because today we are reviewing overall compliance." },
+      say:"One reset button clears every filter at once, so nobody has to hunt for the setting that is quietly hiding half their data." },
+    { run: async ()=>{ await demoClick($("btnReset")); demoClearHi(); await pause(200); },
+      say:"Back to the full picture, all monitors and all time, so the rest of this tour matches what you would actually see on first load." },
 
-    /* ===== KPI ROW ===== */
+    /* ===================================================================
+       3. KPI ROW
+       =================================================================== */
     { run: async ()=>{ await demoPoint(document.querySelector(".kpis")); demoHi(document.querySelector(".kpis")); },
-      say:"Eight key metrics summarize CCP compliance. For example, Overall CCP Pass Rate, or Records Acceptable. Its AI and PNG buttons sit right beside the tiles, not above them, so the row stays compact." },
+      say:"Eight key metrics summarize CCP compliance at a glance: overall pass rate, records acceptable, failed checks, and a pass rate for each of the four CCP categories." },
+    { run: async ()=>{ demoClearHi(); await pause(200); } },
 
-    /* ===== CHARTS, IN PAGE ORDER ===== */
-    { run: async ()=>{ demoClearHi(); await demoPoint(chartCard("chTemp")); demoHi(chartCard("chTemp")); },
-      say:"The first chart tracks CCP3 product temperature pass rate, week by week. The critical limit is forty five degrees Fahrenheit or below, so any week that dips under ninety five percent pass turns red immediately." },
-    { run: async ()=>{ await demoPoint(chartCard("chChlorine")); demoHi(chartCard("chChlorine")); },
-      say:"Beside it, chlorine monitoring. The critical limit is a window, one fifty to two hundred parts per million, so both too low and too high count as a failure." },
-    { run: async ()=>{ const b = chartCard("chChlorine").querySelector(".aibtn"); await demoPoint(b); },
-      say:"Every tile has a built in AI analyst. One click, and the dashboard reads the chlorine data for itself. Listen." },
+    /* ===================================================================
+       4. CHARTS, STRICTLY IN PAGE ORDER
+       =================================================================== */
+    { run: async ()=>{ await demoPoint(chartCard("chTemp")); demoHi(chartCard("chTemp")); },
+      say:"First, CCP3 product temperature. The critical limit is forty five degrees Fahrenheit or below, so any week whose pass rate dips under ninety five percent turns the bar red." },
+    { run: async ()=>{ demoClearHi(); await demoPoint(chartCard("chChlorine")); demoHi(chartCard("chChlorine")); },
+      say:"Next, chlorine monitoring. Here the critical limit is a window, one hundred fifty to two hundred parts per million, so both too low and too high count as a failure." },
+
+    /* --- AI analyst, demonstrated on the chlorine tile --- */
+    { run: async ()=>{ const b = chartCard("chChlorine").querySelector(".aibtn"); await demoPoint(b, {scroll:false}); },
+      say:"Every tile has a built in AI analyst. One click, and it reads this chart's own data for itself. Listen." },
     { run: async ()=>{
         const b = chartCard("chChlorine").querySelector(".aibtn");
         if(b) await demoClick(b, {scroll:false});
         const t0 = Date.now();
         while(!aiTexts.quick && Date.now()-t0 < 25000 && !demoStop) await pause(280);
         if(aiTexts.quick && !demoStop){
-          await pause(560);
+          await pause(500);
           const s = document.getElementById("aiSpeak"); if(s) s.click();
           while(window.speechSynthesis && speechSynthesis.speaking && !demoStop) await pause(210);
-          await pause(350);
+          await pause(300);
         }
       } },
     { run:()=>demoPoint($("aiScope"), {scroll:false}),
-      say:"Notice the scope line at the top of the card. The assistant is told exactly which date range and filters are active. It can never quietly analyze something other than what you are looking at." },
+      say:"The scope line at the top of the card shows exactly which date range and filters were active. The assistant can never quietly analyze something other than what you are looking at." },
     { run: async ()=>{ const seg = document.querySelectorAll("#aiSeg button");
                        if(seg[1]) await demoClick(seg[1], {scroll:false}); },
-      say:"A quick take for the meeting. And one click away, a detailed assessment, with the specific weeks and figures spelled out. Both arrived in a single call, so switching is instant." },
+      say:"A quick take for the meeting, and one click away, a detailed assessment with the specific weeks and figures spelled out. Both arrived in the same call, so switching is instant." },
     { run:()=>demoPoint($("aiVoiceSel"), {scroll:false}),
-      say:"It reads aloud in whichever voice you prefer, highlighting each word as it speaks, and the card copies as formatted text straight from here." },
+      say:"It reads aloud in whichever voice you prefer, and the card copies out as formatted text straight from here." },
     { run: async ()=>{ const c = document.getElementById("aiClose");
-                       if(c) await demoClick(c, {scroll:false}); await pause(210); } },
+                       if(c) await demoClick(c, {scroll:false}); await pause(250); } },
 
-    /* tile PNG - shown as an actual popup image */
-    { run: async ()=>{ const b = document.querySelector('.pngbtn[data-chart="chChlorine"]'); await demoClick(b); },
-      say:"Any single tile exports as a presentation ready image, stamped with the TFC name and the active date range." },
-    { run: async ()=>{ demoPrevCanvas("Chlorine_Pass_Rate.png", chartPngCanvas("chChlorine","Chlorine Monitoring — Pass Rate")); },
-      say:"Here is the actual file it just produced. Drop that straight into a slide deck." },
-    { run: async ()=>{ demoPrevHide(); await pause(210); } },
+    /* --- individual chart PNG export, demonstrated on the same tile --- */
+    { run: async ()=>{ const b = document.querySelector('.pngbtn[data-chart="chChlorine"]'); await demoPoint(b, {scroll:false}); },
+      say:"Any single tile exports on its own, stamped with the TFC name and the active date range." },
+    { run: async ()=>{ const b = document.querySelector('.pngbtn[data-chart="chChlorine"]'); if(b) await demoClick(b, {scroll:false}); await pause(250); },
+      say:"Copy it to the clipboard, or save it as a file." },
+    { run: async ()=>{ closePngPop();
+                       demoPrevCanvas("Chlorine_Pass_Rate.png", chartPngCanvas("chChlorine","Chlorine Monitoring \u2014 Pass Rate")); },
+      say:"And here is the chlorine chart on its own, exactly as that file would look, ready to drop into a slide." },
+    { run: async ()=>{ demoPrevHide(); demoClearHi(); await pause(250); } },
 
-    /* remaining charts, still in page order */
     { run: async ()=>{ await demoPoint(chartCard("chMetal")); demoHi(chartCard("chMetal")); },
-      say:"Below, metal detector seed detection, broken out by seed type. All three, ferrous, non-ferrous, and stainless, must detect on every check, so each is tracked separately rather than averaged into one number that could hide a problem." },
-    { run: async ()=>{ await demoPoint(chartCard("chXray")); demoHi(chartCard("chXray")); },
-      say:"X-ray equipment detection rate, the same week by week view." },
-    { run: async ()=>{ await demoPoint(chartCard("chMonitor")); demoHi(chartCard("chMonitor")); },
-      say:"Logs by monitor shows who is logging, and each monitor's composite pass rate." },
-    { run: async ()=>{ await demoPoint(chartCard("chRecords")); demoHi(chartCard("chRecords")); demoClearHi(); },
+      say:"Metal detector seed detection, broken out by seed type. All three, ferrous, non-ferrous, and stainless, must detect on every check, so each is tracked separately rather than averaged into one number that could hide a problem." },
+    { run: async ()=>{ demoClearHi(); await demoPoint(chartCard("chXray")); demoHi(chartCard("chXray")); },
+      say:"X-ray equipment, the same weekly detection rate view." },
+    { run: async ()=>{ demoClearHi(); await demoPoint(chartCard("chMonitor")); demoHi(chartCard("chMonitor")); },
+      say:"Logs by monitor shows who is logging, and each monitor's own composite pass rate across all four categories." },
+    { run: async ()=>{ demoClearHi(); await demoPoint(chartCard("chRecords")); demoHi(chartCard("chRecords")); },
       say:"And records acceptable, the daily verification sign-off, tracked separately from the checks themselves." },
+    { run: async ()=>{ demoClearHi(); await pause(200); } },
 
-    /* ===== THE TABLE ===== */
+    /* ===================================================================
+       5. THE TABLE
+       =================================================================== */
+    { run: async ()=>{ await demoPoint(document.querySelector(".tscroll").closest(".card")); demoHi(document.querySelector(".tscroll").closest(".card")); },
+      say:"Below the charts, every daily log in scope. Let's drill into one category ourselves. First, chart linking." },
     { run: async ()=>{ await demoClick($("linkToggle")); },
-      say:"Now let's drill into one of these categories ourselves. Chart linking is switched on." },
+      say:"Switched on, so clicking a chart narrows this list to just the matching logs." },
     { run: async ()=>{ await demoClickBar("chMetal", "Ferrous");
                        chartSel = {kind:"seedtype", value:"Ferrous"}; renderTable(); refreshSelectionHighlights();
-                       await pause(280);
-                       demoHi(document.querySelector(".tscroll").closest(".card")); },
-      say:"Clicking Ferrous filters the log list below to just the days that had a ferrous seed failure." },
-    { run: async ()=>{ chartSel = null; renderTable(); refreshSelectionHighlights(); demoClearHi(); },
-      say:"Clear the selection, and every column still sorts and filters on its own." },
+                       await pause(300); },
+      say:"Clicking Ferrous filters the list to the days that had a ferrous seed failure." },
+    { run: async ()=>{ chartSel = null; renderTable(); refreshSelectionHighlights(); },
+      say:"Clear the selection, and every column still sorts and filters entirely on its own." },
     { run: async ()=>{ const th = document.querySelector('#thead th[data-key="date"]');
                        if(th) await demoClick(th, {scroll:false});
                        tSort = {key:"date", dir:1}; buildThead(); renderTable(); },
-      say:"Date, oldest first." },
+      say:"Date, oldest first, with one click on the header." },
     { run: async ()=>{ const inp = document.querySelector('#thead .frow input[data-fkey="recordsAcceptable"]');
                        if(inp) await demoPoint(inp, {scroll:false});
-                       tFilt = { recordsAcceptable: "No" }; buildThead(); renderTable(); },
-      say:"And every column filters. Type No here, and only the days whose records needed a corrective action note surface, ready to review with the shift lead." },
-    { run: async ()=>{ tFilt = {}; buildThead(); renderTable();
-                       const tb = document.querySelector(".tscroll");
-                       if(tb) tb.scrollTo({top: 220, behavior:"smooth"}); await pause(500); },
-      say:"Notice the column headers stay put while the list scrolls, the same way frozen panes work in a spreadsheet, so it is always clear which number belongs to which column." },
-    { run: async ()=>{ const tb = document.querySelector(".tscroll");
-                       if(tb) tb.scrollTo({top: 0, behavior:"smooth"}); await pause(400); } },
+                       tFilt = { recordsAcceptable: "No" }; buildThead(); renderTable(); await pause(300); },
+      say:"And every column filters as you type. No here, and only the days whose records needed a corrective action note surface, ready to review with the shift lead." },
+    { run: async ()=>{ tFilt = {}; buildThead(); renderTable(); },
+      say:"Clear that, and back to the full list." },
     { run: async ()=>{ const boxes = document.querySelectorAll("#tbody .rowChk");
                        for(const i of [0,1,2]) if(boxes[i]) await demoClick(boxes[i], {fast:true, scroll:false}); },
-      say:"Tick the specific rows you want to raise, and the export follows your selection, rather than the whole table." },
+      say:"Tick specific rows to raise, and the export follows your selection rather than the whole table." },
     { run: async ()=>{ await demoClick($("expBtn")); $("expPanel").style.display = "block"; await pause(210);
                        const x = $("expPanel").querySelector('[data-fmt="xlsx"]');
                        if(x) await demoClick(x, {fast:true, scroll:false});
                        $("expPanel").style.display = "none"; },
-      say:"Export those rows as an Excel workbook, a CSV, or raw JSON. The file is built right here in the browser." },
+      say:"Export as an Excel workbook, a CSV, or raw JSON. The file is built right here in the browser." },
     { run: async ()=>{ demoPrevRows("TFC_Logs_selection.xlsx", exportScope(), 8); },
-      say:"And this is the workbook it just wrote. The selected logs, every column, ready to attach to a follow up email." },
-    { run: async ()=>{ demoPrevHide(); await pause(210); },
-      say:"From a category level chart, to the exact days and monitors behind it, in under a minute." },
+      say:"And here is the actual workbook it just wrote: the three selected logs, every column, ready to attach to a follow up email." },
+    { run: async ()=>{ demoPrevHide(); demoClearHi(); await pause(250); } },
 
-    /* ===== BACK TO THE HEADER FOR WHOLE-DASHBOARD OUTPUT ===== */
-    { run: async ()=>{ demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); await pause(600);
-                       await demoClick($("dashPngBtn")); },
-      say:"Finally, back to the top. The whole dashboard captures at once. Every metric, and all six charts, rendered into a single high resolution image." },
-    { run: async ()=>{ const c = dashboardCanvas(); demoPrevCanvas("TFC_Dashboard_Snapshot.png", c); },
-      say:"That is the real snapshot, exactly as it would be saved." },
-    { run: async ()=>{ demoPrevHide(); await pause(210); await demoClick($("dashPdfBtn")); },
-      say:"The same thing as a single page PDF, ready to drop into the compliance review pack." },
+    /* ===================================================================
+       6. BACK TO THE TOP — WHOLE-DASHBOARD OUTPUT
+       =================================================================== */
+    { run: async ()=>{ window.scrollTo({top:0, behavior:"smooth"}); await pause(700);
+                       await demoPoint($("dashPngBtn")); },
+      say:"Finally, back to the top. These two buttons capture everything we just walked through, all at once." },
+    { run: async ()=>{ await demoClick($("dashPngBtn")); await pause(250); },
+      say:"The whole dashboard, every metric and all six charts, renders into one image." },
+    { run: async ()=>{ closePngPop();
+                       demoPrevCanvas("TFC_Dashboard_Snapshot.png", dashboardCanvas()); },
+      say:"That is the real snapshot, exactly as it would be saved, ready for a compliance review pack." },
+    { run: async ()=>{ demoPrevHide(); await pause(250); },
+      say:"The PDF button next to it produces the same page as a single, printable file." },
     { run: async ()=>{ await demoClick($("kpiPng")); await pause(300); },
-      say:"And every PNG button now offers a choice: copy the image straight to your clipboard, or save it as a file." },
+      say:"And every PNG button offers a choice: copy the image straight to your clipboard, or save it as a file. Here, just the KPI row." },
     { run: async ()=>{ const c = document.querySelector('.pngpop [data-act="copy"]'); if(c) await demoClick(c, {scroll:false}); },
       say:"Copy, and it is ready to paste straight into an email, a chat, or a slide." },
     { run: async ()=>{ demoCursorHide(); demoClearHi(); window.scrollTo({top:0, behavior:"smooth"}); },
-      say:"Live data. Filtered any way you need it. Read by an assistant that understands the CCP context. And out the door as a spreadsheet, an image, or a PDF. Powered by Alpha TransForm." }
+      say:"Live data, filtered any way you need it, read by an assistant that understands the CCP context, and out the door as a spreadsheet, an image, or a PDF. Powered by Alpha TransForm." }
   ];
 
   for(const st of steps){
@@ -2959,7 +2971,13 @@ function exitLearningMode(){
   document.body.appendChild(ov);
   document.getElementById("demoGo").addEventListener("click", ()=>{ ov.remove(); startDemo(); });
 })();
-buildThead(); buildFilters(); render();
+buildThead();
+// TEMPORARY: TFC is still a prospect - no real submissions exist in the
+// TransForm form yet, so Live Data would always come back empty. Defaults
+// into Learning Mode instead so the dashboard opens populated. Once TFC has
+// real production data, remove this and let the normal buildFilters()/
+// render() (or autoRefreshOnLoad) path take over.
+enterLearningMode();
 if(CONFIG.autoRefreshOnLoad && CONFIG.api.proxyUrl){
   refreshFromApi(false);
 }
