@@ -329,6 +329,8 @@ button{cursor:pointer}
   padding:5px 11px;font-size:12px;font-weight:700;color:var(--muted);
 }
 .selclear:hover{border-color:var(--ink);color:var(--ink)}
+.loghead{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+#logExportMenu{min-width:236px}
 .logwrap{max-height:480px;overflow:auto;border-radius:0 0 var(--radius) var(--radius)}
 table{border-collapse:collapse;width:100%;font-size:12.5px}
 thead th{
@@ -363,7 +365,7 @@ tbody tr.expanded{background:#EAF0F5}
   pointer-events:none;transition:opacity .35s ease}
 .demoveil.on{opacity:1}
 .demobar{
-  position:fixed;left:0;right:0;bottom:0;z-index:70;transform:translateY(120%);
+  position:fixed;left:0;right:0;bottom:0;z-index:130;transform:translateY(120%);
   transition:transform .35s ease;background:var(--ink);color:var(--onink);
   border-top:4px solid var(--accent);padding:14px 18px calc(14px + env(safe-area-inset-bottom));
   display:flex;gap:16px;align-items:center;
@@ -381,7 +383,7 @@ tbody tr.expanded{background:#EAF0F5}
   border-radius:7px;padding:6px 8px;font-size:12.5px;font-weight:600;
 }
 .demobar .ctrl select option{color:#111}
-.demoprog{position:fixed;left:0;bottom:0;height:3px;background:var(--accent);z-index:71;width:0;
+.demoprog{position:fixed;left:0;bottom:0;height:3px;background:var(--accent);z-index:131;width:0;
   transition:width .3s linear}
 
 /* ---------- live config ---------- */
@@ -520,6 +522,9 @@ tbody tr.expanded{background:#EAF0F5}
 
 /* ---------- AI assessment card ---------- */
 .aimodal{position:fixed;inset:0;z-index:105;display:none;background:rgba(8,18,28,.62);padding:26px}
+body.demoing .aimodal,body.demoing .mapmodal{padding-bottom:120px}
+/* a spotlit modal is already above the veil - do not double up the dimming */
+.mapmodal.spot,.aimodal.spot{box-shadow:none !important}
 .aimodal.on{display:flex;align-items:center;justify-content:center}
 .aicard{
   background:var(--panel);border-radius:12px;box-shadow:var(--pop);
@@ -613,7 +618,9 @@ tbody tr.expanded{background:#EAF0F5}
   body{background:#fff}
   .card,.kpi,.assess{break-inside:avoid;box-shadow:none}
   .charts{grid-template-columns:repeat(2,1fr)}
-  .logwrap{max-height:none;overflow:visible}
+  /* The crime log has its own export menu (Excel / CSV / TSV / JSON); printing
+     hundreds of rows behind the charts made the PDF unusable. */
+  #card-log{display:none !important}
 }
 
 /* ---- Leaflet 1.9.4 ---- */
@@ -1477,12 +1484,24 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div class="cardhead">
       <div><h2>Daily crime log</h2>
         <div class="hint">One row per incident. Select a row for the full report, or click any chart element to narrow this list.</div></div>
-      <span class="hint" id="logCount"></span>
+      <div class="loghead">
+        <span class="hint" id="logCount"></span>
+        <div class="menuwrap">
+          <button class="iconbtn" id="btnLogExport" aria-haspopup="true" aria-expanded="false">&#8681; Export log</button>
+          <div class="menupop" id="logExportMenu" role="menu">
+            <button data-log="xlsx" role="menuitem">Excel workbook (.xlsx)</button>
+            <button data-log="csv" role="menuitem">CSV (.csv)</button>
+            <button data-log="tsv" role="menuitem">Tab delimited (.txt)</button>
+            <button data-log="json" role="menuitem">JSON (.json)</button>
+            <div class="mnote">Exports the rows currently shown, including any chart selection.</div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="selstrip" id="selstrip" hidden>
-      <span class="lead">Chart selection</span>
+      <span class="lead">Active filters</span>
       <span id="selpills"></span>
-      <button class="selclear" id="selclear">Clear selection</button>
+      <button class="selclear" id="selclear">Clear all</button>
     </div>
     <div class="logwrap">
       <table id="logTable">
@@ -2392,8 +2411,36 @@ function periodRange(id) {
 const F = {
   period: "all", from: "", to: "",
   campus: new Set(), location: new Set(), geo: new Set(),
-  group: new Set(), cat: new Set(), hate: false
+  group: new Set(), cat: new Set(),
+  /* Dimensions with no control in the filter panel - they are set by clicking
+     a chart element, but they are ordinary filters in every other respect:
+     they narrow the tiles, the other charts, the log and the AI panel, and
+     they count towards the filter badge. */
+  bias: new Set(), lag: new Set(), month: new Set(),
+  hate: false
 };
+
+/* Every set-valued filter, and how to read that value off a record. */
+const SET_KEYS = ["campus", "location", "geo", "group", "cat", "bias", "lag", "month"];
+const CHART_ONLY_KEYS = ["bias", "lag", "month"];
+const FILTER_LABEL = {
+  campus: "Campus", location: "Location", geo: "Clery geography", group: "Offense group",
+  cat: "Offense", bias: "Bias", lag: "Reporting lag", month: "Month"
+};
+
+function valueForKey(r, k) {
+  switch (k) {
+    case "campus":   return r.campus;
+    case "location": return r.location;
+    case "geo":      return r.geography;
+    case "group":    return r.group;
+    case "cat":      return r.category;
+    case "bias":     return r.bias;
+    case "lag":      return lagBucketOf(r);
+    case "month":    return monthOf(r);
+  }
+  return "";
+}
 
 const MS = {};   // id -> control state
 
@@ -2482,17 +2529,26 @@ function paintMsButton(id) {
 const esc = s => String(s).replace(/[&<>"']/g, m =>
   ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
 
-/* Records passing every filter EXCEPT the named one - so each control can show
-   counts that reflect its siblings without zeroing out its own options. */
+/* Does this record pass every filter, optionally ignoring one dimension?
+   Excluding a dimension is what lets a control (or a chart) show its own full
+   set of options while still reflecting every other filter - otherwise
+   clicking one bar would leave that chart showing nothing but the bar. */
+function matchesFilters(r, except) {
+  if (except !== "date") {
+    if (F.from && r.reportDate < F.from) return false;
+    if (F.to && r.reportDate > F.to) return false;
+  }
+  for (let i = 0; i < SET_KEYS.length; i++) {
+    const k = SET_KEYS[i];
+    if (k === except) continue;
+    if (F[k].size && !F[k].has(valueForKey(r, k))) return false;
+  }
+  if (F.hate && !r.hateCrime) return false;
+  return true;
+}
+
 function passing(except) {
-  return records.filter(r =>
-    (except === "date" || ((!F.from || r.reportDate >= F.from) && (!F.to || r.reportDate <= F.to))) &&
-    (except === "campus"   || !F.campus.size   || F.campus.has(r.campus)) &&
-    (except === "location" || !F.location.size || F.location.has(r.location)) &&
-    (except === "geo"      || !F.geo.size      || F.geo.has(r.geography)) &&
-    (except === "group"    || !F.group.size    || F.group.has(r.group)) &&
-    (except === "cat"      || !F.cat.size      || F.cat.has(r.category)) &&
-    (!F.hate || r.hateCrime));
+  return records.filter(r => matchesFilters(r, except));
 }
 
 function countBy(rows, key) {
@@ -2554,23 +2610,20 @@ function rebuildControls() {
     .map(c => ({ value: c, label: c, count: catCounts.get(c) || 0 })));
 }
 
+/* One per active dimension, so three chart clicks across three charts read as
+   three filters - matching what the chips under the log show. */
 function activeFilterCount() {
-  return (F.period !== "all" && F.period !== "custom" ? 1 : 0)
-    + ((F.period === "custom" || F.period === "all") && (F.from || F.to) ? 1 : 0)
-    + (F.campus.size ? 1 : 0) + (F.location.size ? 1 : 0) + (F.geo.size ? 1 : 0)
-    + (F.group.size ? 1 : 0) + (F.cat.size ? 1 : 0) + (F.hate ? 1 : 0);
+  let n = 0;
+  if (F.period !== "all" && F.period !== "custom") n++;
+  else if (F.from || F.to) n++;
+  SET_KEYS.forEach(k => { if (F[k].size) n++; });
+  if (F.hate) n++;
+  return n;
 }
 
 function applyFilters() {
-  view = records.filter(r =>
-    (!F.from || r.reportDate >= F.from) &&
-    (!F.to || r.reportDate <= F.to) &&
-    (!F.campus.size || F.campus.has(r.campus)) &&
-    (!F.location.size || F.location.has(r.location)) &&
-    (!F.geo.size || F.geo.has(r.geography)) &&
-    (!F.group.size || F.group.has(r.group)) &&
-    (!F.cat.size || F.cat.has(r.category)) &&
-    (!F.hate || r.hateCrime));
+  view = passing(null);
+  logView = view;          // the log shows exactly what everything else counts
 }
 
 function onFilterChange(which) {
@@ -2578,18 +2631,16 @@ function onFilterChange(which) {
     F.period = "custom";
     document.getElementById("fPeriod").value = "custom";
   }
-  clearSelection(true);
   refresh();
 }
 
 function resetFilters(doRefresh) {
   F.period = "all"; F.from = ""; F.to = ""; F.hate = false;
-  ["campus", "location", "geo", "group", "cat"].forEach(k => F[k].clear());
+  SET_KEYS.forEach(k => F[k].clear());
   document.getElementById("fPeriod").value = "all";
   document.getElementById("fFrom").value = "";
   document.getElementById("fTo").value = "";
   document.getElementById("fHate").checked = false;
-  clearSelection(true);
   if (doRefresh !== false) refresh();
 }
 
@@ -2771,7 +2822,6 @@ function focusCampus(name, fit) {
   mapLevel = "campus"; mapCampus = name; mapFocus = null;
   F.campus = new Set([name]);
   F.location = new Set();
-  clearSelection(true);
   refresh();
   drawMarkers(fit !== false);
   renderMapSide();
@@ -2783,7 +2833,6 @@ function showAllCampuses() {
   const had = F.campus.size || F.location.size;
   F.campus = new Set();
   F.location = new Set();
-  if (had) clearSelection(true);
   refresh();
   drawMarkers(true);
   renderMapSide();
@@ -2917,7 +2966,6 @@ function drawBuildingPins(fit) {
       click("select");
       if (F.location.has(p.name)) F.location.delete(p.name); else F.location.add(p.name);
       mapFocus = p.name;
-      clearSelection(true);
       refresh();
       drawMarkers(false);
       renderMapSide();
@@ -2985,7 +3033,6 @@ function renderMapSide() {
       click("select");
       zoomToBuilding(n);
       if (F.location.has(n)) F.location.delete(n); else F.location.add(n);
-      clearSelection(true);
       refresh();
       drawMarkers(false);
       mapFocus = n;
@@ -3352,14 +3399,33 @@ function aiCopy() {
     btn.textContent = ok ? "Copied" : "Copy failed";
     setTimeout(() => { btn.textContent = "Copy"; }, 1600);
   };
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(full).then(() => done(true), () => done(false));
-  } else {
+
+  /* navigator.clipboard only exists in a secure context. Opened from disk over
+     file:// it is either missing or present-but-rejecting, which is why the
+     button was reporting failure - the old code treated a rejection as final
+     instead of falling back. Try the async API when it can work, and drop to
+     the execCommand path on any failure. */
+  const legacy = () => {
     try {
       const ta = document.createElement("textarea");
-      ta.value = full; document.body.appendChild(ta); ta.select();
-      document.execCommand("copy"); ta.remove(); done(true);
+      ta.value = full;
+      ta.setAttribute("readonly", "");
+      ta.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0;padding:0;border:0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      ta.setSelectionRange(0, full.length);       // iOS needs the explicit range
+      const ok = document.execCommand("copy");
+      ta.remove();
+      done(!!ok);
     } catch (e) { done(false); }
+  };
+
+  const secure = window.isSecureContext !== false && location.protocol !== "file:";
+  if (secure && navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(full).then(() => done(true), legacy);
+  } else {
+    legacy();
   }
 }
 
@@ -3378,6 +3444,222 @@ function wireAiCard() {
   document.getElementById("aiSpeak").addEventListener("click", () => { click(); aiToggleSpeech(); });
   document.getElementById("aiPngBtn").addEventListener("click", () => { click(); aiDownloadPng(); });
   document.getElementById("aiCopy").addEventListener("click", () => { click(); aiCopy(); });
+}
+
+/* ==========================================================================
+   16. CRIME LOG EXPORT
+
+   The daily crime log is the record people actually want to take away, so it
+   gets its own export menu rather than riding along in the dashboard PNG/PDF.
+
+   XLSX is written here by hand: a .xlsx is just a ZIP of XML parts, and a
+   store-only (uncompressed) ZIP is perfectly valid, so a real spreadsheet can
+   be produced in about sixty lines instead of pulling in a 400KB library that
+   would have to be inlined into this file.
+   ========================================================================== */
+
+/* ---------- tiny store-only ZIP ---------- */
+
+const CRC_TABLE = (function () {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) {
+    let c = n;
+    for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+
+function crc32(bytes) {
+  let c = 0xFFFFFFFF;
+  for (let i = 0; i < bytes.length; i++) c = CRC_TABLE[(c ^ bytes[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+
+function zipStore(files) {
+  const enc = new TextEncoder();
+  const chunks = [], central = [];
+  let offset = 0;
+
+  const u16 = n => [n & 255, (n >>> 8) & 255];
+  const u32 = n => [n & 255, (n >>> 8) & 255, (n >>> 16) & 255, (n >>> 24) & 255];
+
+  files.forEach(f => {
+    const name = enc.encode(f.name);
+    const data = enc.encode(f.data);
+    const crc = crc32(data);
+    const local = [].concat(
+      u32(0x04034b50), u16(20), u16(0), u16(0), u16(0), u16(0),
+      u32(crc), u32(data.length), u32(data.length),
+      u16(name.length), u16(0));
+    chunks.push(new Uint8Array(local), name, data);
+    central.push({ name: name, crc: crc, size: data.length, offset: offset });
+    offset += local.length + name.length + data.length;
+  });
+
+  const dir = [];
+  central.forEach(c => {
+    const head = [].concat(
+      u32(0x02014b50), u16(20), u16(20), u16(0), u16(0), u16(0), u16(0),
+      u32(c.crc), u32(c.size), u32(c.size),
+      u16(c.name.length), u16(0), u16(0), u16(0), u16(0), u32(0), u32(c.offset));
+    dir.push(new Uint8Array(head), c.name);
+  });
+  const dirBytes = dir.reduce((n, a) => n + a.length, 0);
+  const end = new Uint8Array([].concat(
+    u32(0x06054b50), u16(0), u16(0), u16(central.length), u16(central.length),
+    u32(dirBytes), u32(offset), u16(0)));
+
+  const all = chunks.concat(dir, [end]);
+  const total = all.reduce((n, a) => n + a.length, 0);
+  const out = new Uint8Array(total);
+  let p = 0;
+  all.forEach(a => { out.set(a, p); p += a.length; });
+  return new Blob([out], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+}
+
+const xmlEsc = s => String(s == null ? "" : s)
+  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  .replace(/"/g, "&quot;").replace(/'/g, "&apos;")
+  /* strip control characters Excel refuses to open */
+  .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, "");
+
+const colName = n => {
+  let s = "";
+  n++;
+  while (n > 0) { const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = (n - m - 1) / 26; }
+  return s;
+};
+
+function buildXlsx(cols, rows, sheetName) {
+  const cell = (r, c, v) => {
+    const ref = colName(c) + (r + 1);
+    if (typeof v === "number" && isFinite(v)) return '<c r="' + ref + '"><v>' + v + "</v></c>";
+    return '<c r="' + ref + '" t="inlineStr"><is><t xml:space="preserve">' +
+      xmlEsc(v) + "</t></is></c>";
+  };
+
+  let sheet = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">' +
+    '<sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" ' +
+    'activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>' +
+    "<sheetData>";
+  sheet += '<row r="1">' + cols.map((c, i) => cell(0, i, c)).join("") + "</row>";
+  rows.forEach((r, ri) => {
+    sheet += '<row r="' + (ri + 2) + '">' +
+      cols.map((c, ci) => cell(ri + 1, ci, r[c])).join("") + "</row>";
+  });
+  sheet += "</sheetData><autoFilter ref=\"A1:" + colName(cols.length - 1) + (rows.length + 1) +
+    "\"/></worksheet>";
+
+  return zipStore([
+    { name: "[Content_Types].xml",
+      data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+        '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+        '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>' +
+        '<Default Extension="xml" ContentType="application/xml"/>' +
+        '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' +
+        '<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>' +
+        "</Types>" },
+    { name: "_rels/.rels",
+      data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+        '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+        '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>' +
+        "</Relationships>" },
+    { name: "xl/workbook.xml",
+      data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+        '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' +
+        'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
+        '<sheets><sheet name="' + xmlEsc(sheetName || "Crime Log") +
+        '" sheetId="1" r:id="rId1"/></sheets></workbook>' },
+    { name: "xl/_rels/workbook.xml.rels",
+      data: '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+        '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
+        '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>' +
+        "</Relationships>" },
+    { name: "xl/worksheets/sheet1.xml", data: sheet }
+  ]);
+}
+
+/* ---------- shared helpers ---------- */
+
+function logStamp() {
+  return "WCCCD_Clery_Log_" + new Date().toISOString().slice(0, 10);
+}
+
+function dlBlob(name, blob) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+}
+
+/* Columns in the order the log shows them, then everything else. */
+function logColumns() {
+  if (!logView.length) return [];
+  const lead = LOG_COLS.map(c => c[0]);
+  const rest = Object.keys(logView[0]).filter(k => lead.indexOf(k) < 0);
+  return lead.concat(rest);
+}
+
+function exportLog(kind) {
+  if (!logView.length) return;
+  const cols = logColumns();
+  const rows = logView;
+
+  if (kind === "json") {
+    const payload = {
+      source: "WCCCD Clery Campus Safety Dashboard",
+      form: CONFIG.formId,
+      mode: mode,
+      scope: describeScope(),
+      exported: new Date().toISOString(),
+      count: rows.length,
+      reports: rows
+    };
+    dlBlob(logStamp() + ".json",
+      new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
+    return;
+  }
+
+  if (kind === "xlsx") {
+    dlBlob(logStamp() + ".xlsx", buildXlsx(cols, rows, "Daily Crime Log"));
+    return;
+  }
+
+  const tab = kind === "tsv";
+  const sep = tab ? "\t" : ",";
+  const cell = v => {
+    let s = v === undefined || v === null ? "" : String(v);
+    if (tab) return s.replace(/[\t\r\n]+/g, " ");
+    return '"' + s.replace(/"/g, '""') + '"';
+  };
+  const text = [cols.join(sep)]
+    .concat(rows.map(r => cols.map(c => cell(r[c])).join(sep)))
+    .join("\r\n");
+  dlBlob(logStamp() + (tab ? ".txt" : ".csv"),
+    /* the BOM keeps Excel from mangling accented names on double-click */
+    new Blob(["\ufeff" + text], { type: tab ? "text/tab-separated-values;charset=utf-8"
+                                            : "text/csv;charset=utf-8" }));
+}
+
+function wireLogExport() {
+  const btn = document.getElementById("btnLogExport");
+  const menu = document.getElementById("logExportMenu");
+  btn.addEventListener("click", e => {
+    e.stopPropagation();
+    const open = menu.classList.contains("open");
+    closeAllPops();
+    if (!open) { menu.classList.add("open"); btn.setAttribute("aria-expanded", "true"); click(); }
+  });
+  menu.addEventListener("click", e => {
+    const b = e.target.closest("[data-log]");
+    if (!b) { e.stopPropagation(); return; }
+    click();
+    closeAllPops();
+    exportLog(b.dataset.log);
+  });
 }
 
 /* ==========================================================================
@@ -3528,7 +3810,11 @@ const CHART_TITLE = {
   chartTrend: "Monthly reporting trend", chartCampus: "Reports by campus",
   chartBias: "Hate crime bias categories", chartLag: "Reporting lag"
 };
-const SELECTION = {};   // chartId -> Set of selected values
+/* Which filter dimension each chart drives when you click it. */
+const CHART_FILTER_KEY = {
+  chartCat: "cat", chartGeo: "geo", chartCampus: "campus",
+  chartBias: "bias", chartLag: "lag", chartTrend: "month"
+};
 
 const LAG_BUCKETS = [
   ["Same day", r => r.lagDays === 0],
@@ -3550,43 +3836,60 @@ function valueOf(rec, field) {
   return rec[field];
 }
 
+/* Clicking a chart element is a filter, not a separate drill-down: it narrows
+   the tiles, the other charts, the log and the AI panel, and it shows up in the
+   filter count. Click three elements across three charts and you have three
+   filters, on top of anything set in the panel above. */
 function toggleSelect(chartId, value) {
-  if (!value) return;
-  const set = SELECTION[chartId] || (SELECTION[chartId] = new Set());
+  const key = CHART_FILTER_KEY[chartId];
+  if (!key || value === undefined || value === null || value === "") return;
+  const set = F[key];
   if (set.has(value)) set.delete(value); else set.add(value);
-  if (!set.size) delete SELECTION[chartId];
   click("select");
-  renderCharts();          // repaint borders
-  applySelection(); renderLog(); renderSelStrip();
+  refresh();
 }
 
+/* Drops only the dimensions that have no control in the panel. Panel-backed
+   filters stay put so a map or dropdown choice is not silently undone. */
 function clearSelection(silent) {
-  Object.keys(SELECTION).forEach(k => delete SELECTION[k]);
-  if (!silent) { click(); applySelection(); renderCharts(); renderLog(); renderSelStrip(); }
+  let changed = false;
+  CHART_ONLY_KEYS.forEach(k => { if (F[k].size) { F[k].clear(); changed = true; } });
+  if (!silent) { click(); refresh(); }
+  return changed;
 }
 
-function applySelection() {
-  const keys = Object.keys(SELECTION);
-  logView = !keys.length ? view.slice()
-    : view.filter(r => keys.every(k => SELECTION[k].has(valueOf(r, CHART_FIELD[k]))));
+/* Records a given chart should plot: everything except that chart's own
+   dimension, so clicking one bar leaves the rest of its bars visible (dimmed)
+   instead of collapsing the chart to a single column. */
+function chartRows(chartId) {
+  return passing(CHART_FILTER_KEY[chartId] || null);
 }
 
+/* One removable chip per active filter, wherever it was set. */
 function renderSelStrip() {
-  const keys = Object.keys(SELECTION);
   const strip = document.getElementById("selstrip");
-  strip.hidden = !keys.length;
-  if (!keys.length) return;
   const pills = [];
-  keys.forEach(k => SELECTION[k].forEach(v => pills.push(
-    '<button class="selpill" data-chart="' + k + '" data-val="' + esc(v) + '">' +
-    '<span>' + esc(CHART_TITLE[k]) + ':</span>' +
-    esc(k === "chartTrend" ? mLabel(v) : v) + "</button>")));
+
+  if (F.from || F.to) {
+    const p = PERIODS.find(x => x.id === F.period);
+    const label = (p && p.id !== "custom" && p.id !== "all") ? p.label
+      : (F.from || "any") + " to " + (F.to || "any");
+    pills.push('<button class="selpill" data-kind="date"><span>Period:</span>' +
+      esc(label) + "</button>");
+  }
+  SET_KEYS.forEach(k => F[k].forEach(v => pills.push(
+    '<button class="selpill" data-kind="set" data-key="' + k + '" data-val="' + esc(v) + '">' +
+    "<span>" + esc(FILTER_LABEL[k]) + ":</span>" +
+    esc(k === "month" ? mLabel(v) : v) + "</button>")));
+  if (F.hate) pills.push('<button class="selpill" data-kind="hate"><span>Flag:</span>Hate crimes only</button>');
+
+  strip.hidden = !pills.length;
   document.getElementById("selpills").innerHTML = pills.join(" ");
 }
 
 /* Gold ring on the selected slices, muted fill on the rest. */
 function paint(chartId, values, base) {
-  const set = SELECTION[chartId];
+  const set = F[CHART_FILTER_KEY[chartId]];
   const cols = values.map((v, i) => Array.isArray(base) ? base[i % base.length] : base);
   if (!set || !set.size) return { bg: cols, border: cols.map(() => "transparent"), bw: 0 };
   return {
@@ -3682,9 +3985,10 @@ function clicker(id, labels) {
 }
 
 function renderCharts() {
-  const S = theme.series, v = view;
+  const S = theme.series;
 
   /* 1 - offenses by category */
+  const v = chartRows("chartCat");
   const catCounts = tally(v, "category");
   const catKeys = topN(catCounts, 12);
   const catBase = catKeys.map(k => VAWA_SET.has(k) ? S[1] : ARREST_SET.has(k) ? S[2]
@@ -3713,7 +4017,8 @@ function renderCharts() {
   }, catKeys.length);
 
   /* 2 - Clery geography */
-  const geoVals = GEO_ORDER.map(g => v.filter(r => r.geography === g).length);
+  const gv = chartRows("chartGeo");
+  const geoVals = GEO_ORDER.map(g => gv.filter(r => r.geography === g).length);
   const geoPaint = paint("chartGeo", GEO_ORDER, [S[0], S[4], S[2], S[1]]);
   draw("chartGeo", {
     type: "doughnut",
@@ -3727,37 +4032,38 @@ function renderCharts() {
         legend: { display: true, position: "right",
           labels: { color: "#152430", boxWidth: 12, padding: 10, font: { size: 11 } } },
         tooltip: { enabled: false, external: externalTip(dp => {
-          const rows = v.filter(r => r.geography === dp.label);
+          const rows = gv.filter(r => r.geography === dp.label);
           const note = dp.label === "On-Campus Student Housing"
             ? "WCCCD is a commuter district with no residential facilities, so this category stays at zero."
             : dp.label === "Non-Campus Property"
             ? "Non-campus reports carry no campus building; location is recorded as Off-Campus."
             : "Click the slice to filter the crime log.";
-          return detailCard(dp.label, rows.length, v.length, supporting(rows, v.length), note);
+          return detailCard(dp.label, rows.length, gv.length, supporting(rows, gv.length), note);
         }) }
       }
     })
   }, geoVals.some(x => x));
 
   /* 3 - monthly trend */
-  const months = [...new Set(v.map(monthOf))].sort();
-  const trendSel = SELECTION.chartTrend;
+  const tv = chartRows("chartTrend");
+  const months = [...new Set(tv.map(monthOf))].sort();
+  const trendSel = F.month;
   draw("chartTrend", {
     type: "line",
     data: {
       labels: months.map(mLabel),
       datasets: [
-        { label: "All reports", data: months.map(m => v.filter(r => monthOf(r) === m).length),
+        { label: "All reports", data: months.map(m => tv.filter(r => monthOf(r) === m).length),
           borderColor: S[0], backgroundColor: S[0] + "22", fill: true, tension: .32, borderWidth: 2.5,
           pointRadius: months.map(m => trendSel && trendSel.has(m) ? 6 : 2.5),
           pointBackgroundColor: months.map(m => trendSel && trendSel.has(m) ? theme.accent : S[0]),
           pointBorderColor: months.map(m => trendSel && trendSel.has(m) ? theme.accent : S[0]),
           pointHoverRadius: 6 },
         { label: "VAWA offenses",
-          data: months.map(m => v.filter(r => monthOf(r) === m && r.group === "VAWA Offense").length),
+          data: months.map(m => tv.filter(r => monthOf(r) === m && r.group === "VAWA Offense").length),
           borderColor: S[1], backgroundColor: "transparent", tension: .32, borderWidth: 2, pointRadius: 2 },
         { label: "Timely warnings",
-          data: months.map(m => v.filter(r => monthOf(r) === m && r.timelyWarning).length),
+          data: months.map(m => tv.filter(r => monthOf(r) === m && r.timelyWarning).length),
           borderColor: S[2], borderDash: [5, 4], backgroundColor: "transparent", tension: .32,
           borderWidth: 2, pointRadius: 2 }
       ]
@@ -3770,14 +4076,14 @@ function renderCharts() {
           labels: { color: "#152430", boxWidth: 14, padding: 12, font: { size: 11 } } },
         tooltip: { enabled: false, external: externalTip(dp => {
           const m = months[dp.dataIndex];
-          const rows = v.filter(r => monthOf(r) === m);
+          const rows = tv.filter(r => monthOf(r) === m);
           const prevM = months[dp.dataIndex - 1];
-          const prevN = prevM ? v.filter(r => monthOf(r) === prevM).length : null;
+          const prevN = prevM ? tv.filter(r => monthOf(r) === prevM).length : null;
           const extra = [];
           if (prevN !== null) extra.push(["Change on prior month",
             (rows.length - prevN >= 0 ? "+" : "") + (rows.length - prevN)]);
-          return detailCard(mLabel(m), rows.length, v.length,
-            extra.concat(supporting(rows, v.length)),
+          return detailCard(mLabel(m), rows.length, tv.length,
+            extra.concat(supporting(rows, tv.length)),
             "Click the point to filter the crime log to this month.");
         }) }
       }
@@ -3785,9 +4091,10 @@ function renderCharts() {
   }, months.length > 1, "Not enough months in range to plot a trend.");
 
   /* 4 - campus x geography */
-  const campuses = [...new Set(v.map(r => r.campus))].sort();
-  const geoUsed = GEO_ORDER.filter(g => v.some(r => r.geography === g));
-  const campSel = SELECTION.chartCampus;
+  const cv = chartRows("chartCampus");
+  const campuses = [...new Set(cv.map(r => r.campus))].sort();
+  const geoUsed = GEO_ORDER.filter(g => cv.some(r => r.geography === g));
+  const campSel = F.campus;
   draw("chartCampus", {
     type: "bar",
     data: {
@@ -3798,7 +4105,7 @@ function renderCharts() {
           ? fade(S[i * 2 % S.length]) : S[i * 2 % S.length]),
         borderColor: campuses.map(c => campSel && campSel.has(c) ? theme.accent : "transparent"),
         borderWidth: campSel && campSel.size ? 2 : 0,
-        data: campuses.map(c => v.filter(r => r.campus === c && r.geography === g).length),
+        data: campuses.map(c => cv.filter(r => r.campus === c && r.geography === g).length),
         borderRadius: 3, maxBarThickness: 46
       }))
     },
@@ -3815,8 +4122,8 @@ function renderCharts() {
           labels: { color: "#152430", boxWidth: 12, padding: 10, font: { size: 11 } } },
         tooltip: { enabled: false, external: externalTip(dp => {
           const c = campuses[dp.dataIndex];
-          const rows = v.filter(r => r.campus === c && r.geography === dp.dataset.label);
-          const all = v.filter(r => r.campus === c);
+          const rows = cv.filter(r => r.campus === c && r.geography === dp.dataset.label);
+          const all = cv.filter(r => r.campus === c);
           const loc = tally(rows, "location");
           const tl = topN(loc, 2).map(k => k + " (" + loc[k] + ")").join(", ");
           return detailCard(c + " - " + dp.dataset.label, rows.length, all.length,
@@ -3828,7 +4135,8 @@ function renderCharts() {
   }, campuses.length);
 
   /* 5 - bias categories */
-  const hateRows = v.filter(r => r.hateCrime && r.bias);
+  const bv = chartRows("chartBias");
+  const hateRows = bv.filter(r => r.hateCrime && r.bias);
   const biasCounts = tally(hateRows, "bias");
   const biasKeys = topN(biasCounts, 8);
   const biasPaint = paint("chartBias", biasKeys, S[1]);
@@ -3856,8 +4164,9 @@ function renderCharts() {
   }, biasKeys.length, "No reports in this range were flagged as bias-motivated.");
 
   /* 6 - reporting lag */
+  const lv = chartRows("chartLag");
   const lagKeys = LAG_BUCKETS.map(b => b[0]);
-  const lagVals = LAG_BUCKETS.map(b => v.filter(b[1]).length);
+  const lagVals = LAG_BUCKETS.map(b => lv.filter(b[1]).length);
   const lagPaint = paint("chartLag", lagKeys, [S[0], S[0], S[2], S[1], "#B3401F"]);
   draw("chartLag", {
     type: "bar",
@@ -3867,9 +4176,9 @@ function renderCharts() {
     options: baseOpts({
       onClick: clicker("chartLag", lagKeys),
       plugins: { legend: { display: false }, tooltip: { enabled: false, external: externalTip(dp => {
-        const rows = v.filter(r => lagBucketOf(r) === dp.label);
+        const rows = lv.filter(r => lagBucketOf(r) === dp.label);
         const cats = tally(rows, "category");
-        return detailCard(dp.label, rows.length, v.length,
+        return detailCard(dp.label, rows.length, lv.length,
           [["Top offenses", topN(cats, 2).map(k => k + " (" + cats[k] + ")").join(", ") || "-"]]
             .concat(supporting(rows, v.length, "cat")),
           dp.label === "Over 30 days"
@@ -3902,10 +4211,10 @@ function renderLog() {
     const x = a[sortKey], y = b[sortKey];
     return (x > y ? 1 : x < y ? -1 : 0) * sortDir;
   });
-  const sel = Object.keys(SELECTION).length;
+  const n = activeFilterCount();
   document.getElementById("logCount").textContent =
     rows.length + " report" + (rows.length === 1 ? "" : "s") +
-    (sel ? " of " + view.length + " in the filtered set" : "");
+    (n ? " \u00B7 " + n + " filter" + (n === 1 ? "" : "s") + " active" : "");
 
   const badge = r => r.group === "VAWA Offense" ? "vawa" : r.group === "Arrest / Referral" ? "arr"
     : r.group === "Hate Crime Only" ? "honly" : "crim";
@@ -4230,10 +4539,15 @@ function exportDashboardPng() {
     g.fillStyle = theme.ink; g.font = "700 13.5px Segoe UI, Arial";
     g.fillText(CHART_TITLE[id], x + 14, ty + 23);
     try {
-      const img = new Image();
-      img.src = charts[id].toBase64Image();
-      g.drawImage(img, x + 8, ty + 32, colW - 16, chartH - 6);
-    } catch (e) {}
+      /* Draw straight off the chart's own canvas. The previous version built a
+         `new Image()` from toBase64Image() and drew it on the next line, before
+         the browser had decoded it - which is why every chart came out blank
+         while the KPI tiles, drawn with plain canvas calls, came out fine. */
+      const src = charts[id].canvas;
+      if (src && src.width && src.height) {
+        g.drawImage(src, 0, 0, src.width, src.height, x + 8, ty + 32, colW - 16, chartH - 6);
+      }
+    } catch (e) { console.error("chart " + id + " did not draw into the PNG", e); }
   });
 
   g.fillStyle = "#66788A"; g.font = "11px Segoe UI, Arial";
@@ -4256,26 +4570,108 @@ function exportPdf() {
 
 /* ------------------------------------------------------------------ 12. DEMO */
 
+/* Each step may carry `act`, which drives the real control it is describing -
+   the tour actually picks a period, opens the map, clicks a chart, rather than
+   narrating over a static page. demoReset() puts everything back. */
 const SCRIPT = [
   { el: "topbar", cap: "This is the Clery Campus Safety Dashboard for Wayne County Community College District. It reads directly from the trilingual TransForm report your Campus Security Authorities file on their phones, in English, Spanish, or Arabic." },
   { el: "ribbon", cap: "Three data modes sit in the header. Live Data pulls current submissions from TransForm. Sample Data, which we are on now, loads a realistic set so you can explore before a single real report exists. Demo is the guided tour you are watching." },
-  { el: "filters", cap: "The filter bar drives everything below it. The period menu carries the ranges a compliance officer actually asks for: this month, last quarter, year to date, last year. Choosing one fills in the date pickers, and typing your own dates switches it to a custom range." },
-  { el: "filters", cap: "Campus, location, geography, offense group, and offense are all multi-select. Campus drives the location list, so choosing Downriver and Eastern shows only those two campuses' buildings and lots. Select a non-campus geography and the location control collapses to Off-Campus, because non-campus incidents have no district building." },
-  { el: "card-lag", cap: "Every chart carries an AI button. It opens an assessment card that opens with a severity flag, red, amber or green, so you know the verdict before reading a word. Quick take is the ten-second version, Detailed is the full read, the speaker button reads it aloud in the voice you picked, and it exports as a PNG you can drop straight into a board report." },
-  { el: "assess", cap: "The assessment panel reads the selection you have made. The alerts at the top are rules-based and always present: late filings, missing bias categories, serious offenses with no timely warning. Below them, the AI narrative explains what a Department of Education reviewer would look at first. You can switch the whole AI layer off with the toggle in the header." },
-  { el: "kpis", cap: "Eight compliance tiles. Reports filed, criminal offenses, VAWA offenses, and hate crimes are the counts that roll straight into your Annual Security Report. Each tile carries an information icon that opens the arithmetic behind the number and the records that drive it." },
+  { el: "filters", cap: "The filter bar drives everything below it. Watch the period menu: I am selecting this year, and the date pickers fill themselves in.",
+    act: () => demoPeriod("thisYear") },
+  { el: "kpis", cap: "Every tile and every chart recalculated the moment that period was applied. Setting your own dates in the two pickers does the same thing and switches the menu to a custom range.",
+    act: () => demoPeriod("all") },
+  { el: "filters", cap: "Campus, location, geography, offense group, and offense are all multi-select. I am opening the campus list and choosing Downriver and Eastern.",
+    act: () => demoPickCampuses(["Downriver Campus", "Eastern Campus"]) },
+  { el: "filters", cap: "The Campus Location list has narrowed to just those two campuses' buildings and lots. Select a non-campus geography and it collapses to Off-Campus, because non-campus incidents have no district building. Clearing the filters now.",
+    act: () => demoClearFilters() },
+  { el: "assess", cap: "The assessment panel reads whatever selection you have made. The alerts at the top are rules-based and always present: late filings, missing bias categories, serious offenses with no timely warning. Below them, the AI narrative explains what a Department of Education reviewer would look at first." },
+  { el: "kpis", cap: "Eight compliance tiles. Reports filed, criminal offenses, VAWA offenses, and hate crimes are the counts that roll straight into your Annual Security Report. Each tile carries an information icon that opens the arithmetic behind the number." },
   { el: "kpis", cap: "The right-hand tiles are the ones that get institutions in trouble: timely warnings issued, average days from incident to filing, same-day reporting rate, and how often police were notified. These are the numbers a program review asks about." },
   { el: "card-cat", cap: "Offenses by category, coloured by group. Note that larceny, simple assault, intimidation, and vandalism appear here only when bias-motivated, which is exactly how the statute treats them." },
   { el: "card-geo", cap: "Clery geography. Every report is tagged On-Campus, On-Campus Student Housing, Non-Campus Property, or Public Property, because the statute requires counts reported separately by location. As a commuter district, WCCCD has no student housing, so that slice stays empty." },
   { el: "card-trend", cap: "The monthly trend tracks all reports against VAWA offenses and timely warnings. A spike in reports with a flat warning line is exactly what an auditor would want explained." },
-  { el: "card-campus", cap: "Reports by campus, stacked by geography, across Downtown, Downriver, Eastern, Northwest, Ted Scott, and the Mary Ellen Stempfle University Center. Each campus needs its own statistics disclosure, and this is that view." },
+  { el: "card-campus", cap: "Reports by campus, stacked by geography, across all six locations. Each campus needs its own statistics disclosure, and this is that view." },
   { el: "card-bias", cap: "Hate crime bias categories. When a Campus Security Authority flags a report as bias-motivated, the form forces a category, and those land here for the hate crime tables." },
-  { el: "card-lag", cap: "Reporting lag, in days between the incident and the filing. Sexual offense and stalking reports naturally arrive later, but anything past thirty days is a training conversation. Every chart element is clickable, and hovering any bar or slice opens a card with the supporting detail behind it." },
-  { el: "filters", cap: "Under the campus filter is an incident map. It opens on the whole district, one pin per campus, sized and numbered by how many reports match your current filters." },
-  { el: "filters", cap: "Click a campus pin and the map zooms into that campus, with a pin on every building, lot and street frontage. Click a building to filter the dashboard down to it. Show all campuses takes you back out and clears both filters. Non-campus reports are counted separately, since off-site district property has no campus building to pin." },
-  { el: "card-log", cap: "At the bottom, the daily crime log, one row per incident. Click a chart element and this list narrows to just those reports, with a removable chip showing what you picked. Select any row for the full record: victims, weapons, police report number, who filed it, and the narrative." },
-  { el: "topbar", cap: "Finally, Export Dashboard produces a PNG of the whole board, a print-ready PDF, or a CSV of the filtered reports. The theme picker holds a dozen institutional palettes plus Detroit and Toledo team colours, and the voice menu beside it sets who narrates this tour. That is the tour. Switch to Live Data whenever your TransForm feed is ready." }
+  { el: "card-lag", cap: "Reporting lag, in days between the incident and the filing. I am clicking the over-thirty-days bar now.",
+    act: () => demoSelect("chartLag", "Over 30 days") },
+  { el: "card-log", cap: "That bar is now a filter on the whole dashboard, not just the list. The tiles recalculated, the other charts recalculated, and a removable chip appeared. I am adding a second one from the geography chart.",
+    act: () => demoSelect("chartGeo", "On-Campus") },
+  { el: "selstrip", cap: "Two chips, two filters, and they stack with anything set in the panel above. Note the lag chart still shows all five of its bars with the others dimmed, because a chart never filters itself out of view. Clearing them now.",
+    act: () => { resetFilters(true); } },
+  { el: "card-log", cap: "The log is one row per incident. Select any row for the full record: victims, weapons, police report number, who filed it, and the narrative. Its own export menu writes an Excel workbook, CSV, tab delimited, or JSON of exactly the rows on screen.",
+    act: () => demoOpenMenu("btnLogExport", "logExportMenu") },
+  { el: "mapModal", cap: "Under the campus filter is an incident map. I am opening it now: one pin per campus, sized and numbered by how many reports match the current filters.",
+    act: () => { closeAllPops(); openMap(); } },
+  { el: "mapModal", cap: "Clicking a campus pin zooms into it and filters the dashboard to that campus. Every building, lot and street frontage gets its own pin, and clicking one narrows further. Show all campuses backs out and clears the filter.",
+    act: () => demoFocusCampus("Curtis L. Ivery Downtown Campus") },
+  { el: "aiModal", cap: "Every chart and the tile row carry an AI button. It opens an assessment that leads with a severity flag, red, amber or green, so you get the verdict before reading a word. Quick take is the ten-second version, Detailed is the full read, the speaker button reads it aloud, and it exports as a PNG for a board report.",
+    act: () => demoOpenAi("chartLag") },
+  { el: "topbar", cap: "Finally, Export Dashboard produces a PNG of the whole board, a print-ready PDF, or a CSV. The theme picker holds a dozen institutional palettes plus Detroit and Toledo team colours, and the voice menu beside it sets who narrates this tour. That is the tour. Switch to Live Data whenever your TransForm feed is ready.",
+    act: () => demoReset() }
 ];
+
+/* ---------- the actions the tour performs ---------- */
+
+function demoPeriod(id) {
+  const per = document.getElementById("fPeriod");
+  per.value = id;
+  per.dispatchEvent(new Event("change"));
+}
+
+function demoPickCampuses(names) {
+  const c = MS.campus;
+  if (!c) return;
+  closeAllPops();
+  c.pop.classList.add("open");
+  c.btn.setAttribute("aria-expanded", "true");
+  names.forEach(n => {
+    const inp = [...c.list.querySelectorAll("input")].find(i => i.value === n);
+    if (inp && !inp.checked) { inp.checked = true; inp.dispatchEvent(new Event("change")); }
+  });
+  /* re-open: onFilterChange rebuilds the option list and closes the popup */
+  const c2 = MS.campus;
+  c2.pop.classList.add("open");
+  c2.btn.setAttribute("aria-expanded", "true");
+}
+
+function demoClearFilters() {
+  closeAllPops();
+  resetFilters(true);
+}
+
+function demoSelect(chartId, value) {
+  closeAllPops();
+  const key = CHART_FILTER_KEY[chartId];
+  if (key && !F[key].has(value)) toggleSelect(chartId, value);
+}
+
+function demoOpenMenu(btnId, menuId) {
+  closeAllPops();
+  const m = document.getElementById(menuId), b = document.getElementById(btnId);
+  if (m && b) { m.classList.add("open"); b.setAttribute("aria-expanded", "true"); }
+}
+
+function demoFocusCampus(name) {
+  if (!document.getElementById("mapModal").classList.contains("on")) openMap();
+  focusCampus(name);
+}
+
+function demoOpenAi(id) {
+  closeMap();
+  /* Without a reachable proxy the card would just show an error mid-demo, so
+     only open it when there is something to call. */
+  if (!aiOn || !CONFIG.proxyUrl) return;
+  aiOpen(id);
+}
+
+/* Put the dashboard back the way the tour found it. */
+function demoReset() {
+  aiClose();
+  closeMap();
+  closeAllPops();
+  clearSelection(true);
+  resetFilters(true);
+}
 
 let demoIdx = 0, demoTimer = null, demoPaused = false, demoOn = false;
 
@@ -4295,7 +4691,16 @@ function showStep(i) {
   document.getElementById("demoStep").textContent = (demoIdx + 1) + " / " + SCRIPT.length;
   document.getElementById("demoCap").textContent = s.cap;
   document.getElementById("demoprog").style.width = ((demoIdx + 1) / SCRIPT.length * 100) + "%";
-  spotlight(s.el);
+  /* Deferred deliberately. A click on Next is still bubbling up to the
+     document listener that closes open menus, so running the action inline
+     would open a dropdown and have it shut a moment later. Waiting a tick puts
+     the action after that, and gives a modal time to lay out before the
+     spotlight measures it. */
+  setTimeout(() => {
+    if (!demoOn || demoIdx !== i) return;
+    if (s.act) { try { s.act(); } catch (e) { console.error("demo step action failed", e); } }
+    setTimeout(() => { if (demoOn && demoIdx === i) spotlight(s.el); }, s.act ? 160 : 0);
+  }, s.act ? 60 : 0);
   clearTimeout(demoTimer);
   if (!demoPaused) {
     const started = demoIdx;
@@ -4313,6 +4718,7 @@ function showStep(i) {
 
 function startDemo() {
   demoOn = true; demoPaused = false; demoIdx = 0;
+  document.body.classList.add("demoing");
   document.getElementById("demoveil").classList.add("on");
   document.getElementById("demobar").classList.add("on");
   document.getElementById("demoPause").textContent = "Pause";
@@ -4322,6 +4728,8 @@ function startDemo() {
 function stopDemo(silent) {
   demoOn = false; clearTimeout(demoTimer);
   cancelSpeech();
+  document.body.classList.remove("demoing");
+  try { demoReset(); } catch (e) {}
   document.querySelectorAll(".spot").forEach(e => e.classList.remove("spot"));
   document.getElementById("demoveil").classList.remove("on");
   document.getElementById("demobar").classList.remove("on");
@@ -4332,9 +4740,8 @@ function stopDemo(silent) {
 /* ------------------------------------------------------------------ 13. WIRING */
 
 function refresh() {
-  rebuildControls();
   applyFilters();
-  applySelection();
+  rebuildControls();
   const badge = document.getElementById("fcount");
   const n = activeFilterCount();
   badge.textContent = n; badge.hidden = n === 0;
@@ -4471,7 +4878,6 @@ function init() {
     else if (F.period !== "custom") { F.from = a; F.to = b; }
     document.getElementById("fFrom").value = F.from;
     document.getElementById("fTo").value = F.to;
-    clearSelection(true);
     refresh();
   });
   ["fFrom", "fTo"].forEach(id => document.getElementById(id).addEventListener("change", e => {
@@ -4531,6 +4937,7 @@ function init() {
     b.addEventListener("click", () => { click(); aiOpen(b.dataset.ai); }));
   document.getElementById("btnKpiAi").addEventListener("click", () => { click(); aiOpen("kpis"); });
   wireAiCard();
+  wireLogExport();
   document.getElementById("btnAssess").addEventListener("click", () => { click(); runAssess(true); });
 
   /* KPI info cards */
@@ -4562,10 +4969,22 @@ function init() {
     expanded = expanded === tr.dataset.id ? null : tr.dataset.id;
     click(); renderLog();
   });
-  document.getElementById("selclear").addEventListener("click", () => clearSelection());
+  document.getElementById("selclear").addEventListener("click", () => { click(); resetFilters(true); });
   document.getElementById("selpills").addEventListener("click", e => {
     const p = e.target.closest(".selpill"); if (!p) return;
-    toggleSelect(p.dataset.chart, p.dataset.val);
+    click("select");
+    if (p.dataset.kind === "date") {
+      F.period = "all"; F.from = ""; F.to = "";
+      document.getElementById("fPeriod").value = "all";
+      document.getElementById("fFrom").value = "";
+      document.getElementById("fTo").value = "";
+    } else if (p.dataset.kind === "hate") {
+      F.hate = false;
+      document.getElementById("fHate").checked = false;
+    } else {
+      F[p.dataset.key].delete(p.dataset.val);
+    }
+    refresh();
   });
 
   /* campus map */
@@ -4620,7 +5039,14 @@ window.WCCCD = {
   get logView() { return logView; },
   get charts() { return charts; },
   get filters() { return F; },
-  get selection() { return SELECTION; },
+  get activeFilters() {
+    const o = {};
+    SET_KEYS.forEach(k => { if (F[k].size) o[k] = [...F[k]]; });
+    if (F.from || F.to) o.date = [F.from, F.to];
+    if (F.hate) o.hate = true;
+    return o;
+  },
+  filterCount: activeFilterCount,
   get theme() { return theme; },
   themes: THEMES,
   config: CONFIG,
