@@ -49,7 +49,7 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
   font-weight:700;letter-spacing:.08em;border-radius:3px;font-size:12px;line-height:1}
 .mode select{padding:0 8px;letter-spacing:normal;appearance:auto}
 .mode button.on{background:var(--go);border-color:var(--go);color:#fff}
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:26px 0 18px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:26px 0 18px}
 .kpi{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--navy);padding:14px 16px}
 .kpi.g{border-top-color:var(--go)} .kpi.s{border-top-color:var(--done1)} .kpi.r{border-top-color:var(--alert)}
 .kpi .n{font-size:34px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
@@ -119,6 +119,22 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .entries{font-size:10px;color:#8C97A8;font-weight:700}
 .st{font-weight:800;font-size:11px;letter-spacing:.08em}
 .st.done{color:var(--done1)}.st.next{color:var(--go)}.st.pend{color:#8C97A8}
+/* full-row status tint: steel = done, green = next, blue = pending */
+.oprow.done{background:#EDF0F3}
+.oprow.next{background:#E3F3E8}
+.oprow.pend{background:#E8F0FA}
+.oprow.done:hover{background:#E2E6EB}
+.oprow.next:hover{background:#D5EBDD}
+.oprow.pend:hover{background:#DCE8F7}
+[data-theme="dark"] .oprow.done{background:#242B35}
+[data-theme="dark"] .oprow.next{background:#1D3226}
+[data-theme="dark"] .oprow.pend{background:#1F2A3D}
+[data-theme="dark"] .oprow.done:hover{background:#2B333F}
+[data-theme="dark"] .oprow.next:hover{background:#24402F}
+[data-theme="dark"] .oprow.pend:hover{background:#263450}
+[data-theme="contrast"] .oprow.done{background:#E4E4E4}
+[data-theme="contrast"] .oprow.next{background:#C9EED7}
+[data-theme="contrast"] .oprow.pend{background:#CFE2FB}
 .dfoot{display:flex;justify-content:flex-end;margin-top:12px}
 .empty{padding:60px;text-align:center;color:#8C97A8;font-size:15px;background:var(--card);border:1px dashed var(--line)}
 
@@ -140,6 +156,26 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .fpills{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px;min-height:0}
 .fpill{background:var(--navy);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;border-radius:10px;padding:2px 10px}
 .fpill.none{background:var(--thbg);color:var(--muted)}
+.fico{position:relative;display:inline-flex;align-items:center;gap:3px;background:var(--navy);color:#fff;
+  border-radius:11px;padding:3px 8px 3px 6px;cursor:pointer;vertical-align:middle}
+.fico svg{width:11px;height:11px;display:block}
+.fico-n{font-size:10px;font-weight:800}
+.ficard{display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:90;background:var(--card);color:var(--text);
+  border:1px solid var(--line);border-top:3px solid var(--navy);box-shadow:0 8px 22px rgba(0,0,0,.18);
+  padding:9px 12px;min-width:220px;max-width:320px;text-align:left;cursor:default}
+.ficard b{display:block;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-bottom:5px}
+.ficard .fr{display:block;font-size:12px;font-weight:600;padding:2px 0;border-bottom:1px solid var(--rowline);white-space:normal}
+.ficard .fr:last-child{border-bottom:none}
+.fico:hover .ficard,.fico:focus .ficard,.fico.pin .ficard{display:block}
+/* whole-dashboard export: scope printed ONCE up top; tile badges suppressed as redundant */
+#expScope{display:none}
+.wrap.exporting #expScope{display:block;background:var(--card);border:1px solid var(--line);border-top:4px solid var(--navy);
+  padding:10px 14px;margin:14px 0;font-size:12.5px;font-weight:600;color:var(--text)}
+#expScope b{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-right:10px}
+.wrap.exporting .fico{display:none!important}
+/* single-element export: filter info appended under the tile image */
+.expfoot{border-top:1px solid var(--rowline);margin-top:10px;padding-top:8px;font-size:11.5px;font-weight:600;color:var(--muted2)}
+.expfoot b{color:var(--navy);font-weight:800;letter-spacing:.08em;font-size:10px;text-transform:uppercase;margin-right:8px}
 [data-theme="contrast"] .fpill.none{color:#FFFFFF}
 [data-theme="contrast"] .fpill{outline:1px solid #000}
 .vtag{font-size:9.5px;font-weight:800;letter-spacing:.14em;color:#fff;background:var(--navy);border-radius:3px;padding:3px 9px}
@@ -379,12 +415,12 @@ tr.rsel td{background:rgba(24,64,126,.07)}
 
 /* KPI info tooltips */
 .kpi{position:relative}
-.info{position:absolute;top:10px;right:12px;color:#8C97A8;cursor:help;font-size:14px;font-weight:700}
+.info{position:absolute;top:10px;right:12px;color:#8C97A8;cursor:pointer;font-size:14px;font-weight:700}
 .info .tip{display:none;position:absolute;right:0;top:22px;z-index:40;width:230px;background:var(--graphite);color:#fff;
   font-size:11.5px;font-weight:500;letter-spacing:0;text-transform:none;line-height:1.45;padding:10px 12px;border-radius:4px;
   box-shadow:0 4px 14px rgba(0,0,0,.25)}
 [data-theme="dark"] .info .tip{background:#000}
-.info:hover .tip{display:block}
+.info:hover .tip,.info.pin .tip{display:block}
 
 /* draggable panels + resizable chart cards */
 .panel{position:relative}
@@ -884,7 +920,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 <body>
 
 <header class="top"><div class="top-inner">
-  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v67</small></div>
+  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v72</small></div>
   <div class="mode">
     <span>TEXT:</span>
     <select id="fontSel" onchange="applyFontScale(this.value)" title="Overall text/UI size">
@@ -921,6 +957,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 </div></header>
 
 <div class="wrap">
+  <div id="expScope"></div>
   <div class="controls" id="controlsBar">
     <input type="text" id="q" placeholder="Search job, lot, customer&hellip;" oninput="render()">
     <div class="msel" id="ms-period"></div>
@@ -934,6 +971,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
     <label class="fcell">Qty &ge; <input type="number" id="fQtyMin" min="0" oninput="render()"> pcs</label>
     <label class="fcell"><input type="checkbox" id="hideDone" onchange="render()"> Hide completed</label>
     <button type="button" class="btn-reset" onclick="resetFilters()">&#8634; Reset</button>
+    <div class="fpills" id="barPills" style="grid-column:1/-1;display:none;margin:0"></div>
     <div class="hint" style="grid-column:1/-1">Filters drive everything below: KPIs, charts, job cards, summary, and export. Multi-select any combination.</div>
   </div>
 
@@ -1749,13 +1787,16 @@ function render(){
   const VL=viewList();
   const k={receiving:0,operations:0,shipping:0,complete:0};
   VL.forEach(j=>k[j.queue]!==undefined&&k[j.queue]++);
-  const inf=t=>`<span class="info">&#9432;<span class="tip">${t}</span></span>`;
+  const inf=t=>`<span class="info" onclick="event.stopPropagation();this.classList.toggle('pin')">&#9432;<span class="tip">${t}</span></span>`;
   document.getElementById('kpis').innerHTML=
     `<div class="kpi">${inf('Jobs in the current filtered view. Use Reset in the filter bar to see the whole shop.')}<div class="n">${VL.length}</div><div class="l">Jobs In View</div></div>
      <div class="kpi r">${inf('Jobs received into the system but with the Receiving step not yet marked complete. No operations can start until receiving is done.')}<div class="n">${k.receiving}</div><div class="l">In Receiving</div></div>
      <div class="kpi">${inf('Jobs actively moving through router operations. The next incomplete operation is shown in green on the job card.')}<div class="n">${k.operations}</div><div class="l">In Operations</div></div>
      <div class="kpi g">${inf('All operations are complete except shipping; the job is waiting in the Shipping queue to be claimed by the shipping team.')}<div class="n">${k.shipping}</div><div class="l">Shipping Queue</div></div>
-     <div class="kpi s">${inf('Shipping is done and the job has been submitted. Age shows total cycle time (received to shipped).')}<div class="n">${k.complete}</div><div class="l">Completed</div></div>`;
+     <div class="kpi s">${inf('Shipping is done and the job has been submitted. Age shows total cycle time (received to shipped).')}<div class="n">${k.complete}</div><div class="l">Completed</div></div>
+     <div class="kpi">${inf('Average lot quantity across jobs in view: total pieces divided by job count.')}<div class="n">${VL.length?Math.round(VL.reduce((s,j)=>s+(j.qty||0),0)/VL.length).toLocaleString():'&mdash;'}</div><div class="l">Avg Pieces / Job</div></div>
+     <div class="kpi">${inf('Average number of router operations per job in view. Longer routers mean more steps to shepherd.')}<div class="n">${VL.length?(VL.reduce((s,j)=>s+j.ops.length,0)/VL.length).toFixed(1):'&mdash;'}</div><div class="l">Avg Ops / Job</div></div>
+     <div class="kpi">${inf('Average recorded entries per operation (multiple entries happen with splits, rework, and multi-shift handoffs).')}<div class="n">${(()=>{const to=VL.reduce((s,j)=>s+j.ops.length,0);const tr=VL.reduce((s,j)=>s+j.ops.reduce((a,o)=>a+o.recs.length,0),0);return to?(tr/to).toFixed(1):'&mdash;';})()}</div><div class="l">Avg Entries / Op</div></div>`;
 
   try{ buildCharts(); }catch(e){ console.warn('charts unavailable:', e.message); }
   renderPills();
@@ -1796,7 +1837,7 @@ function render(){
         return '&mdash;';
       }).join('<br>')||'&mdash;';
       const ent=o.recs.length===1?'1 entry':o.recs.length+' entries';
-      return `<tr class="oprow" title="Click for operation detail" onclick="event.stopPropagation();openOp('${esc(j.job)}',${oi})"><td>${o.n}</td>
+      return `<tr class="oprow ${stc}" title="Click for operation detail" onclick="event.stopPropagation();openOp('${esc(j.job)}',${oi})"><td>${o.n}</td>
         <td>${esc(o.label)}<br><span class="entries${o.recs.length>1?' hot':''}">${o.recs.length?ent:'no entries yet'}</span></td>
         <td>${esc(o.type)}</td><td class="st ${stc}">${stt}</td>
         <td>${insp}</td><td>${dts}</td><td>${qs2}</td><td class="sigcell">${sigs}</td></tr>`;
@@ -1904,9 +1945,19 @@ function filterSummary(){
 }
 function renderPills(){
   const parts=filterSummary();
-  const html=parts.length?parts.map(t=>`<span class="fpill">${esc(t)}</span>`).join('')
-    :'<span class="fpill none">No filters &middot; showing all jobs</span>';
-  document.querySelectorAll('.fp').forEach(el=>el.innerHTML=html);
+  /* 1+2: conditions live in the filter panel itself; hidden entirely when clean */
+  const bar=document.getElementById('barPills');
+  if(bar){
+    bar.innerHTML=parts.map(t=>`<span class="fpill">${esc(t)}</span>`).join('');
+    bar.style.display=parts.length?'flex':'none';
+  }
+  /* 3: tiles show only a funnel badge; hover reveals the conditions card */
+  const ico=parts.length?`<span class="fico" tabindex="0" aria-label="This tile reflects the active filters" onclick="event.stopPropagation();this.classList.toggle('pin')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 4h18l-7 8.5V19l-4 2v-8.5L3 4z"/></svg>
+      <span class="fico-n">${parts.length}</span>
+      <span class="ficard"><b>Filtered view</b>${parts.map(t=>`<span class="fr">${esc(t)}</span>`).join('')}</span>
+    </span>`:'';
+  document.querySelectorAll('.fp').forEach(el=>{ el.innerHTML=ico; });
 }
 
 /* ---------------- summary table ---------------- */
@@ -2267,6 +2318,12 @@ document.addEventListener('click',()=>{const m=document.getElementById('expMen')
 async function exportDash(kind){
   if(typeof html2canvas!=='function') return;
   const el=document.querySelector('.wrap');
+  const scope=document.getElementById('expScope');
+  if(scope){
+    const parts=filterSummary();
+    scope.innerHTML='<b>Scope</b>'+(parts.length?parts.map(t=>esc(t)).join(' &middot; ')
+      :'All jobs &mdash; no filters')+' &nbsp;&middot;&nbsp; '+viewList().length+' jobs &nbsp;&middot;&nbsp; '+new Date().toLocaleString();
+  }
   el.classList.add('capturing');
   el.classList.add('exporting');
   try{
@@ -2392,11 +2449,17 @@ function pngMenuPick(mode){
   document.getElementById('pngMen').classList.remove('show');
   if(PNG_TARGET) pngPanel(PNG_TARGET,mode);
 }
-document.addEventListener('click',()=>{const m=document.getElementById('pngMen'); if(m) m.classList.remove('show');});
+document.addEventListener('click',()=>{const m=document.getElementById('pngMen'); if(m) m.classList.remove('show'); document.querySelectorAll('.fico.pin,.info.pin').forEach(f=>f.classList.remove('pin'));});
 window.addEventListener('scroll',()=>{const m=document.getElementById('pngMen'); if(m) m.classList.remove('show');},true);
 async function pngPanel(elId,mode){
   const el=document.getElementById(elId); if(!el||typeof html2canvas!=='function') return;
   el.classList.add('capturing');
+  /* single-element export carries its own filter context under the image */
+  const parts=filterSummary();
+  const foot=document.createElement('div');
+  foot.className='expfoot';
+  foot.innerHTML='<b>Filters</b>'+(parts.length?parts.map(t=>esc(t)).join(' &middot; '):'All jobs &mdash; none active');
+  el.appendChild(foot);
   try{
     const bg=getComputedStyle(el).backgroundColor;
     const canvas=await html2canvas(el,{backgroundColor:(bg&&bg!=='rgba(0, 0, 0, 0)')?bg:'#FFFFFF',scale:2,logging:false});
@@ -2414,7 +2477,7 @@ async function pngPanel(elId,mode){
       flashTool(elId,'Saved');
     }
   }catch(e){ alert('PNG export failed: '+e.message); }
-  finally{ el.classList.remove('capturing'); }
+  finally{ try{ el.removeChild(foot); }catch(x){} el.classList.remove('capturing'); }
 }
 function flashTool(elId,msg){
   const el=document.getElementById(elId); if(!el) return;
