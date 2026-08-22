@@ -120,21 +120,21 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .st{font-weight:800;font-size:11px;letter-spacing:.08em}
 .st.done{color:var(--done1)}.st.next{color:var(--go)}.st.pend{color:#8C97A8}
 /* full-row status tint: steel = done, green = next, blue = pending */
-.oprow.done{background:#EDF0F3}
-.oprow.next{background:#E3F3E8}
-.oprow.pend{background:#E8F0FA}
-.oprow.done:hover{background:#E2E6EB}
-.oprow.next:hover{background:#D5EBDD}
-.oprow.pend:hover{background:#DCE8F7}
-[data-theme="dark"] .oprow.done{background:#242B35}
-[data-theme="dark"] .oprow.next{background:#1D3226}
-[data-theme="dark"] .oprow.pend{background:#1F2A3D}
-[data-theme="dark"] .oprow.done:hover{background:#2B333F}
-[data-theme="dark"] .oprow.next:hover{background:#24402F}
-[data-theme="dark"] .oprow.pend:hover{background:#263450}
-[data-theme="contrast"] .oprow.done{background:#E4E4E4}
-[data-theme="contrast"] .oprow.next{background:#C9EED7}
-[data-theme="contrast"] .oprow.pend{background:#CFE2FB}
+.oprow.done{background:#DDE3E9}
+.oprow.next{background:#C3E5CF}
+.oprow.pend{background:#CBDDF4}
+.oprow.done:hover{background:#CFD8E0}
+.oprow.next:hover{background:#B0DBC0}
+.oprow.pend:hover{background:#BAD1F0}
+[data-theme="dark"] .oprow.done{background:#2C3542}
+[data-theme="dark"] .oprow.next{background:#1F4530}
+[data-theme="dark"] .oprow.pend{background:#25395C}
+[data-theme="dark"] .oprow.done:hover{background:#353F4E}
+[data-theme="dark"] .oprow.next:hover{background:#27543B}
+[data-theme="dark"] .oprow.pend:hover{background:#2D446E}
+[data-theme="contrast"] .oprow.done{background:#D6D6D6}
+[data-theme="contrast"] .oprow.next{background:#9FE0BA}
+[data-theme="contrast"] .oprow.pend{background:#AECBF8}
 .dfoot{display:flex;justify-content:flex-end;margin-top:12px}
 .empty{padding:60px;text-align:center;color:#8C97A8;font-size:15px;background:var(--card);border:1px dashed var(--line)}
 
@@ -203,6 +203,7 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .mpanel{display:none;position:absolute;left:0;top:calc(100% + 4px);z-index:60;background:var(--card);border:1px solid var(--line);
   box-shadow:0 8px 22px rgba(0,0,0,.18);min-width:230px;max-height:290px;overflow-y:auto;padding:6px 0}
 .msel.open .mpanel{display:block}
+.mpanel.up{top:auto;bottom:calc(100% + 4px)}
 .mpanel label{display:flex;gap:9px;align-items:center;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--text)}
 .mpanel label:hover{background:var(--hoverbg)}
 .btn-reset{box-sizing:border-box;height:40px;width:100%;background:var(--card);color:var(--alert);border:1.5px solid var(--alert);padding:0 16px;font-size:13px;font-weight:700;cursor:pointer;border-radius:3px}
@@ -478,6 +479,9 @@ tr.rsel td{background:rgba(24,64,126,.07)}
   #traveler{display:block;position:absolute;top:0;left:0;width:100%}
   @page{size:letter portrait;margin:.5in}
   .tmarkcell{width:1.1in;text-align:center;vertical-align:middle}
+#traveler tr.tv-done td{background:#E7EAEE!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#traveler tr.tv-next td{background:#D6EEDF!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+#traveler tr.tv-pend td{background:#E1EAF7!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .tmark{max-height:30px;max-width:1in;filter:grayscale(1)}
   .tinit{font-family:'Snell Roundhand','Segoe Script','Brush Script MT',cursive;font-size:16px;letter-spacing:1px;
     display:inline-block;min-width:.7in;border-bottom:1.5px solid #000;padding:1px 6px 0;transform:rotate(-2deg)}
@@ -920,7 +924,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 <body>
 
 <header class="top"><div class="top-inner">
-  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v72</small></div>
+  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v78</small></div>
   <div class="mode">
     <span>TEXT:</span>
     <select id="fontSel" onchange="applyFontScale(this.value)" title="Overall text/UI size">
@@ -936,13 +940,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
       <option value="dark">Dark Shop Floor</option>
       <option value="steel">Light Steel</option>
       <option value="contrast">High Contrast</option>
-      <option disabled>&mdash; Michigan Teams &mdash;</option>
-      <option value="lions">Detroit Lions</option>
-      <option value="tigers">Detroit Tigers</option>
-      <option value="redwings">Detroit Red Wings</option>
-      <option value="pistons">Detroit Pistons</option>
-      <option value="wolverines">Michigan Wolverines</option>
-      <option value="spartans">Michigan State Spartans</option>
+      <option disabled>&mdash; Team Themes &mdash;</option>
+      <option value="lions">Lions</option>
+      <option value="tigers">Tigers</option>
+      <option value="redwings">Red Wings</option>
+      <option value="pistons">Pistons</option>
+      <option value="wolverines">Wolverines</option>
+      <option value="spartans">Spartans</option>
     </select>
     <button type="button" id="filtBtn" onclick="toggleFilters()" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">Hide Filters</button>
     <button type="button" onclick="autoLayout()" title="Reset widget order and sizes" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">Auto-Layout</button>
@@ -1280,7 +1284,7 @@ function recolorCharts(){
 function toggleFilters(){
   const c=document.getElementById('controlsBar'),b=document.getElementById('filtBtn');
   const hide=c.style.display!=='none';
-  c.style.display=hide?'none':'flex';
+  c.style.display=hide?'none':'';   /* '' -> stylesheet grid applies */
   b.innerHTML=hide?'Show Filters':'Hide Filters';
   try{localStorage.setItem('emops_filters_hidden',hide?'1':'0')}catch(e){}
 }
@@ -1539,8 +1543,16 @@ function msOpen(key,e){
   e.stopPropagation();
   const host=document.getElementById('ms-'+key);
   const was=host.classList.contains('open');
-  document.querySelectorAll('.msel.open').forEach(x=>x.classList.remove('open'));
-  if(!was) host.classList.add('open');
+  document.querySelectorAll('.msel.open').forEach(x=>{x.classList.remove('open'); const pp=x.querySelector('.mpanel'); if(pp) pp.classList.remove('up');});
+  if(!was){
+    host.classList.add('open');
+    const p=host.querySelector('.mpanel');
+    if(p){
+      p.classList.remove('up');
+      const pr=p.getBoundingClientRect();
+      if(pr.height && pr.bottom>(window.innerHeight||800)-8) p.classList.add('up');
+    }
+  }
 }
 function msAll(key,on){
   MS[key].sel = on ? new Set(MS[key].opts.map(o=>o[0])) : new Set();
@@ -2066,6 +2078,7 @@ function openColMenu(key,e){
   men.style.left=Math.max(8,Math.min(r.left,(window.innerWidth||1200)-260))+'px';
   buildColMenu();
   men.classList.add('show');
+  flipMenuIfNeeded(men,r);
 }
 function buildColMenu(){
   const cf=COLF[COLMEN_KEY]; if(!cf) return;
@@ -2264,6 +2277,59 @@ document.addEventListener('click',function(ev){
 },true);
 document.addEventListener('DOMContentLoaded',sndLabel);
 
+/* ---------------- smart popup placement ----------------
+   Hover cards live inside scroll containers (jobs list) whose overflow clips them,
+   and fixed menus opened near the viewport bottom can run off screen.
+   On show: promote the card to position:fixed at viewport coords, flipping
+   up/down to whichever side has room, clamped horizontally. On hide: restore CSS. */
+function placePop(trig,card,prefer){
+  card.style.position='fixed'; card.style.display='block'; card.style.visibility='hidden';
+  card.style.top='0px'; card.style.left='0px'; card.style.right='auto'; card.style.bottom='auto';
+  const tr=trig.getBoundingClientRect();
+  const cw=card.offsetWidth||280, ch=card.offsetHeight||120;
+  const vw=window.innerWidth||1200, vh=window.innerHeight||800;
+  const roomAbove=tr.top-10, roomBelow=vh-tr.bottom-10;
+  let up = prefer==='up' ? (roomAbove>=ch || roomAbove>=roomBelow)
+                         : !(roomBelow>=ch || roomBelow>=roomAbove);
+  const top = up ? Math.max(8, tr.top-8-ch) : Math.min(Math.max(8,vh-ch-8), tr.bottom+8);
+  let left = tr.right-cw; if(left+cw>vw-8) left=vw-cw-8; if(left<8) left=8;
+  card.style.top=top+'px'; card.style.left=left+'px'; card.style.visibility='visible';
+}
+function resetPop(card){
+  ['position','display','visibility','top','left','right','bottom'].forEach(p=>card.style[p]='');
+}
+const POP_MAP=[['.spill','.sptip','up'],['.fico','.ficard','down'],['.info','.tip','down']];
+function popPair(t){
+  for(const [ts,cs,pref] of POP_MAP){
+    const trig=t.closest&&t.closest(ts);
+    if(trig){ const card=trig.querySelector(cs); if(card) return {trig,card,pref}; }
+  }
+  return null;
+}
+document.addEventListener('mouseover',ev=>{
+  const p=popPair(ev.target); if(!p) return;
+  if(ev.relatedTarget && p.trig.contains(ev.relatedTarget)) return; /* internal move */
+  placePop(p.trig,p.card,p.pref);
+});
+document.addEventListener('mouseout',ev=>{
+  const p=popPair(ev.target); if(!p) return;
+  if(ev.relatedTarget && p.trig.contains(ev.relatedTarget)) return;
+  if(p.trig.classList.contains('pin')) return;   /* stay while pinned */
+  resetPop(p.card);
+});
+/* pinned cards (tap on touchscreens) get placed too */
+document.addEventListener('click',ev=>{
+  const p=popPair(ev.target); if(!p) return;
+  if(p.trig.classList.contains('pin')) placePop(p.trig,p.card,p.pref);
+  else resetPop(p.card);
+});
+/* fixed menus: after opening, flip above the anchor if the bottom edge overflows */
+function flipMenuIfNeeded(men,anchorRect){
+  const mh=men.offsetHeight||0, vh=window.innerHeight||800;
+  if(anchorRect.bottom+4+mh>vh-8){
+    men.style.top=Math.max(8,anchorRect.top-4-mh)+'px';
+  }
+}
 let SPEAK_KA=null;
 function toggleSpeak(){
   if(!window.speechSynthesis){ alert('Speech is not supported in this browser.'); return; }
@@ -2309,6 +2375,7 @@ function openExpMenu(e){
   men.style.top=(r.bottom+4)+'px';
   men.style.left=Math.max(8,r.right-220)+'px';
   men.classList.add('show');
+  flipMenuIfNeeded(men,r);
 }
 function expPick(kind){
   document.getElementById('expMen').classList.remove('show');
@@ -2444,12 +2511,13 @@ function openPngMenu(elId,e){
   men.style.top=(r.bottom+4)+'px';
   men.style.left=Math.max(8, r.right-190)+'px';
   men.classList.add('show');
+  flipMenuIfNeeded(men,r);
 }
 function pngMenuPick(mode){
   document.getElementById('pngMen').classList.remove('show');
   if(PNG_TARGET) pngPanel(PNG_TARGET,mode);
 }
-document.addEventListener('click',()=>{const m=document.getElementById('pngMen'); if(m) m.classList.remove('show'); document.querySelectorAll('.fico.pin,.info.pin').forEach(f=>f.classList.remove('pin'));});
+document.addEventListener('click',()=>{const m=document.getElementById('pngMen'); if(m) m.classList.remove('show'); document.querySelectorAll('.fico.pin,.info.pin').forEach(f=>{f.classList.remove('pin'); const c=f.querySelector('.ficard,.tip'); if(c) resetPop(c);});});
 window.addEventListener('scroll',()=>{const m=document.getElementById('pngMen'); if(m) m.classList.remove('show');},true);
 async function pngPanel(elId,mode){
   const el=document.getElementById(elId); if(!el||typeof html2canvas!=='function') return;
@@ -2838,7 +2906,7 @@ function printTraveler(id){
       return `<span class="tibox"></span>`;
     }).join('<br>');
     const markCell = o.recs.length? marks : `<span class="tibox" title="Sign here"></span>`;
-    return `<tr><td style="text-align:center;font-weight:700">${o.n}</td>
+    return `<tr class="tv-${o.status==='done'?'done':o.status==='next'?'next':'pend'}"><td style="text-align:center;font-weight:700">${o.n}</td>
       <td>${esc(o.label)} <span style="font-size:9px;color:#555">(${o.recs.length} ${o.recs.length===1?'entry':'entries'})</span><br><span style="font-size:9px;color:#555">${esc(o.type)}</span></td>
       <td style="text-align:center;font-size:14px">${stt}</td>
       <td>${insp}</td><td>${dts}</td><td style="text-align:right">${qs}</td>
