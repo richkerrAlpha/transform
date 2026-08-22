@@ -845,7 +845,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 <body>
 
 <header class="top"><div class="top-inner">
-  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v49</small></div>
+  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v50</small></div>
   <div class="mode">
     <span>THEME:</span>
     <select id="themeSel" onchange="applyTheme(this.value)" style="background:transparent;color:#B9C6DE;border:1px solid #4A6396;padding:5px 8px;border-radius:3px;font-weight:700">
@@ -1094,11 +1094,22 @@ function genDemo(){
 const DEMO_JOBS = genDemo();
 
 async function fetchLiveJobs(){
-  /* TODO (LIVE): fetch + map to DEMO_JOBS shape. */
-  throw new Error("Live endpoint not configured yet");
+  const raw=await tfFetch();
+  const fills=Array.isArray(raw)?raw:(raw.items||raw.data||raw.fills||null);
+  if(!fills) throw new Error('Unexpected API response shape (keys: '+Object.keys(raw).slice(0,8).join(', ')+')');
+  return adaptTransformFills(fills);
+}
+function adaptTransformFills(fills){
+  /* MAPPING PENDING: needs one sample EMOPSProdQ fill JSON to bind field
+     names to the dashboard job shape (see DEMO_JOBS + OP_SCHEMA contract:
+     job, lot, customer, qty, received, queue, router, ops[].recs[] with
+     insp/shift/date/qty + sig/initialsSig/sigAt/initialsAt/opComplete...). */
+  if(fills.length) console.log('EMOPS adapter - sample fill for mapping:', JSON.stringify(fills[0]).slice(0,2000));
+  throw new Error('Connected ('+fills.length+' fills) but field mapping is not built yet - open the browser console, copy the "sample fill" line, and send it to Rich/Claude to finish the adapter.');
 }
 
 let MODE="demo", JOBS=[], OPEN={};
+try{ if(localStorage.getItem('emops_mode')==='live'&&getTFUrl()) MODE='live'; }catch(e){}
 const OPFILTER=new Set();   /* op-group filter driven by drill chart clicks */
 const SHIFTFILTER=new Set(); /* shift filter driven by shift chart clicks */
 function shiftClick(idx){
@@ -1334,6 +1345,7 @@ function wireResizePersist(){
     applyTheme(t);
     if(fh==='1') toggleFilters();
     restoreOrder(); wireDnD(); wireResizePersist(); wireResizeHandles(); syncOpGroupBtn(); setJobsView(JOBSVIEW);
+    if(MODE==='live'){ MODE='demo'; switchDataSource('live'); }
     /* self-healing cap: any class change on the job list (view switches)
        re-runs the measurement after layout settles */
     try{
@@ -2260,6 +2272,8 @@ function getMaxJobs(){ try{const v=parseInt(localStorage.getItem('emops_maxjobs'
 function getMaxRows(){ try{const v=parseInt(localStorage.getItem('emops_maxrows'),10);return v>0?v:0}catch(e){return 0} }
 function getStoredKey(){ try{return localStorage.getItem('emops_key')||''}catch(e){return ''} }
 function getStoredProxy(){ try{return localStorage.getItem('emops_proxy')||''}catch(e){return ''} }
+function getTFUrl(){ try{return localStorage.getItem('emops_tf_url')||''}catch(e){return ''} }
+function getTFKey(){ try{return localStorage.getItem('emops_tf_key')||''}catch(e){return ''} }
 
 function openSettings(){
   document.getElementById('setPop').classList.add('show');
@@ -2289,6 +2303,22 @@ function renderSettingsForm(){
     <div class="actions"><button type="button" class="btn grn" onclick="saveAISettings()">Save AI Settings</button></div>
     <div class="ok" id="setOk1"></div>
     <div class="sect">
+      <label>Alpha Transform Read API URL</label>
+      <input type="text" id="setTFUrl" placeholder="https://transform.alphasoftware.com/...  (fills endpoint for EMOPSProdQ)" value="${esc(getTFUrl())}">
+      <label>Alpha Transform Read API Key</label>
+      <input type="password" id="setTFKey" placeholder="TransForm API key" value="${esc(getTFKey())}">
+      <label>Data Source</label>
+      <div class="row">
+        <label class="chk" style="font-size:12.5px"><input type="radio" name="dsrc" value="demo" ${MODE==='demo'?'checked':''}> Demo data (500 seeded jobs)</label>
+        <label class="chk" style="font-size:12.5px"><input type="radio" name="dsrc" value="live" ${MODE==='live'?'checked':''}> Live (Transform Read API)</label>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn grn" onclick="saveTFSettings()">Save Transform Settings</button>
+        <button type="button" class="btn" onclick="testTFConn()">Test Connection</button>
+      </div>
+      <div class="ok" id="setOkTF"></div><div class="err" id="setErrTF"></div>
+    </div>
+    <div class="sect">
       <label>Change Password &mdash; New</label>
       <div class="row"><div><input type="password" id="setNew1" placeholder="New password"></div>
       <div><input type="password" id="setNew2" placeholder="Confirm"></div></div>
@@ -2305,6 +2335,59 @@ function saveAISettings(){
     if(p) localStorage.setItem('emops_proxy',p); else localStorage.removeItem('emops_proxy');
     document.getElementById('setOk1').textContent='Saved. AI buttons will use these immediately.';
   }catch(e){ document.getElementById('setOk1').textContent='Could not save: '+e.message; }
+}
+function saveTFSettings(){
+  const ok=document.getElementById('setOkTF'), err=document.getElementById('setErrTF');
+  ok.textContent=''; err.textContent='';
+  try{
+    const u=document.getElementById('setTFUrl').value.trim();
+    const k=document.getElementById('setTFKey').value.trim();
+    if(u) localStorage.setItem('emops_tf_url',u); else localStorage.removeItem('emops_tf_url');
+    if(k) localStorage.setItem('emops_tf_key',k); else localStorage.removeItem('emops_tf_key');
+    const pickedEl=document.querySelector('input[name="dsrc"]:checked');
+    const picked=pickedEl?pickedEl.value:'demo';
+    try{ localStorage.setItem('emops_mode',picked); }catch(e){}
+    ok.textContent='Saved.';
+    if(picked!==MODE) switchDataSource(picked);
+  }catch(e){ err.textContent='Could not save: '+e.message; }
+}
+async function tfFetch(){
+  const u=getTFUrl(), k=getTFKey();
+  if(!u) throw new Error('No Transform Read API URL saved in Settings.');
+  const headers={'Accept':'application/json'};
+  if(k){ headers['Authorization']='Bearer '+k; headers['X-API-KEY']=k; }
+  const res=await fetch(u,{headers});
+  if(!res.ok) throw new Error('HTTP '+res.status+' '+res.statusText);
+  return res.json();
+}
+async function testTFConn(){
+  const ok=document.getElementById('setOkTF'), err=document.getElementById('setErrTF');
+  ok.textContent='Testing...'; err.textContent='';
+  try{
+    const data=await tfFetch();
+    const n=Array.isArray(data)?data.length:(Array.isArray(data.items)?data.items.length:(Array.isArray(data.data)?data.data.length:null));
+    ok.textContent='Connected. '+(n!=null?(n+' records returned.'):('Response keys: '+Object.keys(data).slice(0,6).join(', ')));
+  }catch(e){
+    ok.textContent='';
+    err.textContent='Connection failed: '+e.message+(String(e.message).includes('Failed to fetch')?' (likely CORS - test from inside Transform reporting, where the dashboard is same-origin)':'');
+  }
+}
+async function switchDataSource(picked){
+  if(picked==='live'){
+    try{
+      const jobs=await fetchLiveJobs();
+      JOBS=jobs; MODE='live'; OPEN={};
+      resetFilters();
+      document.getElementById('setOkTF').textContent='Live data loaded: '+jobs.length+' jobs.';
+    }catch(e){
+      MODE='demo'; try{ localStorage.setItem('emops_mode','demo'); }catch(x){}
+      const r=document.querySelector('input[name="dsrc"][value="demo"]'); if(r) r.checked=true;
+      document.getElementById('setErrTF').textContent='Live load failed - staying on demo: '+e.message;
+    }
+  }else{
+    MODE='demo'; JOBS=DEMO_JOBS; OPEN={};
+    resetFilters();
+  }
 }
 async function savePw(){
   const a=document.getElementById('setNew1').value, b=document.getElementById('setNew2').value;
