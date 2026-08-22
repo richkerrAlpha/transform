@@ -225,6 +225,12 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .sev.good{background:var(--go)}
 .find .ft{font-size:13.5px;font-weight:700;color:var(--text)}
 .find .fd{font-size:12.5px;color:var(--muted2);line-height:1.5;margin-top:2px}
+.qtake{display:flex;gap:16px;align-items:flex-start;padding:10px 4px}
+.qicon{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;flex:0 0 54px;color:#fff}
+.qicon.good{background:var(--go)} .qicon.warning{background:#B8860B} .qicon.critical{background:#B23B2E}
+.qlabel{font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.qlabel.good{color:var(--go)} .qlabel.warning{color:#B8860B} .qlabel.critical{color:#B23B2E}
+.qphrase{font-size:16.5px;font-weight:650;color:var(--text);line-height:1.45;padding:3px 0}
 .aisum{font-size:13px;color:var(--muted2);background:var(--detailbg);border:1px solid var(--rowline);padding:12px;margin-bottom:12px;line-height:1.5}
 .aiload{display:flex;align-items:center;gap:12px;padding:26px 6px;color:var(--muted);font-size:13px}
 .aimeta{font-size:10.5px;color:#8C97A8;padding:8px 18px 14px;text-align:right}
@@ -852,7 +858,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 <body>
 
 <header class="top"><div class="top-inner">
-  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v55</small></div>
+  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v56</small></div>
   <div class="mode">
     <span>THEME:</span>
     <select id="themeSel" onchange="applyTheme(this.value)" style="background:transparent;color:#B9C6DE;border:1px solid #4A6396;padding:5px 8px;border-radius:3px;font-weight:700">
@@ -2070,6 +2076,9 @@ function speakable(s){
 }
 function aiSpeechText(){
   const parts=[];
+  const ql=document.querySelector('#aiBody .qlabel');
+  if(ql) parts.push('Overall: '+ql.textContent.trim()+'.');
+  document.querySelectorAll('#aiBody .qphrase').forEach(p=>parts.push(p.textContent.trim()+'.'));
   const sum=document.querySelector('#aiBody .aisum');
   if(sum) parts.push('Summary. '+sum.textContent.trim());
   document.querySelectorAll('#aiBody .find').forEach((f,i)=>{
@@ -2490,11 +2499,16 @@ function aiPrompt(scope,tier,filters){
       (widget?(" "+WIDGET_FOCUS[widget]):"")+
       (filters.length?(" The user filtered the view ("+filters.join('; ')+"); scope the analysis to this slice.")
                      :" This covers the whole current view.");
-  const n = tier==='quick' ? "3 to 5" : "5 to 9";
+  if(tier==='quick'){
+    return base+" Give an at-a-glance read. Respond with ONLY a JSON object, no markdown fences, no preamble: "+
+      '{"overall":"good|warning|critical","phrases":["short phrase"]} '+
+      "overall = the single status of this view. phrases = 1 to 3 punchy phrases, each 8 words or fewer, most important first, plain language, include a number when it matters. No sentences, no explanations. "+
+      ((!scope||scope.w)&&viewList().length>AI_MAX_JOBS ? ("NOTE: the view holds "+viewList().length+" jobs; you are given the "+AI_MAX_JOBS+" most-aged. ") : "")+
+      "Data:\n"+JSON.stringify(aiPayload(scope,tier));
+  }
   return base+" Respond with ONLY a JSON object, no markdown fences, no preamble: "+
     '{"summary":"one or two sentence overall read","findings":[{"severity":"critical|warning|info|good","title":"short headline","detail":"1-2 sentence specifics with numbers"}]} '+
-    "Give "+n+" findings ordered most severe first. "+
-    (tier==='deep'?"Include at least one concrete recommended action as a finding. ":"Keep it tight. ")+
+    "Give 3 to 5 findings ordered most severe first, including one concrete recommended action. Keep it tight. "+
     ((!scope||scope.w)&&viewList().length>AI_MAX_JOBS ? ("NOTE: the view holds "+viewList().length+" jobs; you are given the "+AI_MAX_JOBS+" most-aged. Frame findings accordingly. ") : "")+
     "Data:\n"+JSON.stringify(aiPayload(scope,tier));
 }
@@ -2526,6 +2540,19 @@ function aiTab(tier){
 function sevIcon(s){return s==='good'?'&#10004;':s==='info'?'&#8505;':'&#9888;';}
 function renderFindings(res,tier,ms){
   const body=document.getElementById('aiBody');
+  if(tier==='quick'&&Array.isArray(res.phrases)){
+    const ov=['good','warning','critical'].includes(res.overall)?res.overall:'warning';
+    const OVI={good:'&#10004;',warning:'&#9888;',critical:'&#10071;'};
+    const OVL={good:'Looking good',warning:'Needs attention',critical:'Action needed'};
+    body.innerHTML=`<div class="qtake">
+      <div class="qicon ${ov}">${OVI[ov]}</div>
+      <div class="qcol"><div class="qlabel ${ov}">${OVL[ov]}</div>
+      ${res.phrases.slice(0,3).map(p=>`<div class="qphrase">${esc(String(p))}</div>`).join('')}</div>
+    </div>`;
+    document.getElementById('aiMeta').innerHTML='Quick Take &middot; fast model'+
+      (ms?` &middot; ${(ms/1000).toFixed(1)}s`:'')+' &middot; cached for this filter set &middot; see Detailed for specifics';
+    return;
+  }
   const rows=(res.findings||[]).map(f=>{
     const sv=['critical','warning','info','good'].includes(f.severity)?f.severity:'info';
     return `<div class="find"><div class="sev ${sv}">${sevIcon(sv)}</div>
@@ -2552,6 +2579,13 @@ function parseAIJSON(raw){
     }
     if(s.lastIndexOf('}',k-1)===k) break;
   }
+  /* salvage complete quoted phrases from a truncated quick-take reply */
+  const om=s.match(/"overall"\s*:\s*"(good|warning|critical)"/);
+  if(om){
+    const ph=[...s.matchAll(/"((?:[^"\\]|\\.){3,80})"/g)].map(m=>m[1])
+      .filter(p=>!/overall|phrases|good|warning|critical/.test(p)).slice(0,3);
+    if(ph.length) return {overall:om[1], phrases:ph};
+  }
   /* last resort: render the raw text as a single finding instead of erroring */
   return { summary:null, findings:[{severity:'info', title:'Analysis (unformatted response)',
     detail:String(raw).replace(/```/g,'').trim().slice(0,1200)}] };
@@ -2565,7 +2599,7 @@ async function runAITier(){
   try{
     const t0=Date.now();
     const raw=await askAI(aiPrompt(AI_SCOPE,AI_TIER,filterSummary()),
-      AI_TIER==='quick'?700:1300,
+      AI_TIER==='quick'?300:1300,
       AI_TIER==='quick'?AI_MODEL_FAST:AI_MODEL_DEEP);
     const res=parseAIJSON(raw);
     AI_CACHE[sig]=res;
