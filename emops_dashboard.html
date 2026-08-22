@@ -225,6 +225,10 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .sev.good{background:var(--go)}
 .find .ft{font-size:13.5px;font-weight:700;color:var(--text)}
 .find .fd{font-size:12.5px;color:var(--muted2);line-height:1.5;margin-top:2px}
+.bul{display:flex;gap:11px;align-items:flex-start;padding:7px 4px;border-bottom:1px solid var(--line)}
+.bul:last-child{border-bottom:none}
+.bul .sev{flex:0 0 22px;width:22px;height:22px;font-size:12px}
+.bt{font-size:14.5px;font-weight:600;color:var(--text);line-height:1.5}
 .qtake{display:flex;gap:16px;align-items:flex-start;padding:10px 4px}
 .qicon{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;flex:0 0 54px;color:#fff}
 .qicon.good{background:var(--go)} .qicon.warning{background:#B8860B} .qicon.critical{background:#B23B2E}
@@ -858,7 +862,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 <body>
 
 <header class="top"><div class="top-inner">
-  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v56</small></div>
+  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v59</small></div>
   <div class="mode">
     <span>THEME:</span>
     <select id="themeSel" onchange="applyTheme(this.value)" style="background:transparent;color:#B9C6DE;border:1px solid #4A6396;padding:5px 8px;border-radius:3px;font-weight:700">
@@ -878,6 +882,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
     <button type="button" onclick="autoLayout()" title="Reset widget order and sizes" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">Auto-Layout</button>
     <button type="button" onclick="openSettings()" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">&#9881; Settings</button>
     <select id="voiceSel" title="Voices come from your browser + OS. Most natural: Edge (Microsoft Natural voices) or Chrome (Google voices). On a Mac you can also download higher-quality voices: System Settings > Accessibility > Spoken Content > System Voice > Manage Voices - add Enhanced/Premium or Siri voices, then reload." onchange="setVoice(this.value)" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 8px;font-weight:700;border-radius:3px;max-width:180px"><option value="">&#128266; Default voice</option></select>
+    <button type="button" id="sndBtn" onclick="toggleSnd()" title="UI sound effects on button clicks, chart selections, filters" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 12px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">&#128263; Sound Off</button>
     <button type="button" onclick="openExpMenu(event)" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">&#8681; Export &#9662;</button>
     <span>DATA:</span>
     <button type="button" id="mDemo" class="on" onclick="setMode('demo')">DEMO</button>
@@ -920,8 +925,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
   <div class="panel" id="p-jobsview" data-panel><span class="grip" draggable="true" title="Drag to reorder" style="top:16px">&#8942;&#8942;</span>
     <div class="jsurf">
     <div class="jbar" style="padding-left:34px">
-      <button type="button" class="vtabbtn grn on" id="tabSheet" onclick="setJobsView('sheet')">Spreadsheet View</button>
-      <button type="button" class="vtabbtn nav" id="tabFlow" onclick="setJobsView('flow')">Workflow View</button>
+      <button type="button" class="vtabbtn nav on" id="tabFlow" onclick="setJobsView('flow')">Workflow View</button>
+      <button type="button" class="vtabbtn grn" id="tabSheet" onclick="setJobsView('sheet')">Spreadsheet View</button>
       <div class="fpills fp" style="margin:0"></div>
       <span style="margin-left:auto"></span>
       <span id="sheetTools" style="display:flex;align-items:center;gap:12px">
@@ -981,6 +986,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
     <div class="tabs">
       <div class="tab on" id="tabQuick" onclick="aiTab('quick')">Quick Take</div>
       <div class="tab" id="tabDeep" onclick="aiTab('deep')">Detailed</div>
+      <div class="tab" id="tabReport" onclick="aiTab('report')">Report</div>
     </div>
     <div class="body" id="aiBody"></div>
     <div class="aimeta" id="aiMeta"></div>
@@ -1911,8 +1917,8 @@ function viewList(){
   return l;
 }
 function setSort(k){ SORT=(SORT.key===k)?{key:k,dir:-SORT.dir}:{key:k,dir:1}; renderSum(); }
-let JOBSVIEW='sheet';
-try{ JOBSVIEW=localStorage.getItem('emops_jobsview')||'sheet'; }catch(e){}
+let JOBSVIEW='flow';
+try{ JOBSVIEW=localStorage.getItem('emops_jobsview')||'flow'; }catch(e){}
 function setJobsView(v){
   JOBSVIEW=v;
   try{ localStorage.setItem('emops_jobsview',v); }catch(e){}
@@ -2079,6 +2085,11 @@ function aiSpeechText(){
   const ql=document.querySelector('#aiBody .qlabel');
   if(ql) parts.push('Overall: '+ql.textContent.trim()+'.');
   document.querySelectorAll('#aiBody .qphrase').forEach(p=>parts.push(p.textContent.trim()+'.'));
+  document.querySelectorAll('#aiBody .bul').forEach(b=>{
+    const sev=(b.querySelector('.sev')||{}).className||'';
+    const level=sev.includes('critical')?'Critical':sev.includes('warning')?'Warning':sev.includes('good')?'Good':'Note';
+    parts.push(level+'. '+((b.querySelector('.bt')||{}).textContent||'').trim()+'.');
+  });
   const sum=document.querySelector('#aiBody .aisum');
   if(sum) parts.push('Summary. '+sum.textContent.trim());
   document.querySelectorAll('#aiBody .find').forEach((f,i)=>{
@@ -2089,6 +2100,67 @@ function aiSpeechText(){
   });
   return speakable(parts.join(' '));
 }
+/* ---------------- UI sound effects ---------------- */
+let SND=false; try{ SND=localStorage.getItem('emops_snd')==='1'; }catch(e){}
+let SND_CTX=null;
+function sndCtx(){
+  if(!SND_CTX){ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return null; SND_CTX=new AC(); }
+  if(SND_CTX.state==='suspended'){ try{ SND_CTX.resume(); }catch(e){} }
+  return SND_CTX;
+}
+/* tiny synth: freq pairs = [startHz,endHz,ms,type] steps played in sequence */
+const SND_LIB={
+  tap:    [[880,880,45,'sine']],
+  toggle: [[620,620,45,'sine'],[880,880,55,'sine']],
+  select: [[520,780,80,'sine']],
+  open:   [[440,880,90,'sine']],
+  close:  [[700,340,90,'sine']],
+  good:   [[660,660,60,'sine'],[830,830,60,'sine'],[990,990,90,'sine']],
+  err:    [[190,160,150,'square']]
+};
+function snd(name){
+  if(!SND) return;
+  const ctx=sndCtx(); if(!ctx) return;
+  const steps=SND_LIB[name]||SND_LIB.tap;
+  let t=ctx.currentTime;
+  steps.forEach(s=>{
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=s[3]; o.frequency.setValueAtTime(s[0],t);
+    if(s[1]!==s[0]) o.frequency.exponentialRampToValueAtTime(Math.max(1,s[1]),t+s[2]/1000);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.exponentialRampToValueAtTime(0.07,t+0.008);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+s[2]/1000);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(t); o.stop(t+s[2]/1000+0.02);
+    t+=s[2]/1000;
+  });
+}
+function sndLabel(){
+  const b=document.getElementById('sndBtn'); if(!b) return;
+  b.innerHTML=SND?'&#128266; Sound On':'&#128263; Sound Off';
+  b.style.color=SND?'#7FD1A0':'#B9C6DE';
+}
+function toggleSnd(){
+  SND=!SND;
+  try{ localStorage.setItem('emops_snd',SND?'1':'0'); }catch(e){}
+  sndLabel();
+  if(SND) snd('good');   /* audible confirmation the moment it turns on */
+}
+/* one delegated listener covers buttons, tabs, rows, KPI tiles, chart canvases */
+document.addEventListener('click',function(ev){
+  if(!SND) return;
+  const t=ev.target;
+  if(!t||!t.closest) return;
+  if(t.closest('#sndBtn')) return;                       /* toggle plays its own */
+  if(t.closest('.x')){ snd('close'); return; }
+  if(t.closest('canvas')){ snd('select'); return; }      /* chart object clicks */
+  if(t.closest('.tab,.vtabbtn,input[type=radio],input[type=checkbox]')){ snd('toggle'); return; }
+  if(t.closest('.oprow,.job .jhead,.sum tbody tr,.kpi')){ snd('select'); return; }
+  if(t.closest('.msel summary,.msel .opt')){ snd('tap'); return; }
+  if(t.closest('button')){ snd('tap'); return; }
+},true);
+document.addEventListener('DOMContentLoaded',sndLabel);
+
 let SPEAK_KA=null;
 function toggleSpeak(){
   if(!window.speechSynthesis){ alert('Speech is not supported in this browser.'); return; }
@@ -2170,7 +2242,8 @@ async function exportDash(kind){
       }
       pdf.save('emops_dashboard_'+ds+'.pdf');
     }
-  }catch(e){ alert('Export failed: '+e.message); }
+    snd('good');
+  }catch(e){ snd('err'); alert('Export failed: '+e.message); }
   finally{ el.classList.remove('capturing'); el.classList.remove('exporting'); }
 }
 
@@ -2427,6 +2500,7 @@ async function switchDataSource(picked){
     }catch(e){
       MODE='demo'; try{ localStorage.setItem('emops_mode','demo'); }catch(x){}
       const r=document.querySelector('input[name="dsrc"][value="demo"]'); if(r) r.checked=true;
+      snd('err');
       document.getElementById('setErrTF').textContent='Live load failed - staying on demo: '+e.message;
     }
   }else{
@@ -2506,9 +2580,16 @@ function aiPrompt(scope,tier,filters){
       ((!scope||scope.w)&&viewList().length>AI_MAX_JOBS ? ("NOTE: the view holds "+viewList().length+" jobs; you are given the "+AI_MAX_JOBS+" most-aged. ") : "")+
       "Data:\n"+JSON.stringify(aiPayload(scope,tier));
   }
+  if(tier==='deep'){
+    return base+" Give a bullet briefing. Respond with ONLY a JSON object, no markdown fences, no preamble: "+
+      '{"bullets":[{"severity":"critical|warning|info|good","text":"one crisp line"}]} '+
+      "Give 4 to 6 bullets ordered most severe first, each a single line of 14 words or fewer with a concrete number where it matters. No sub-sentences, no elaboration. End with one action bullet starting with a verb. "+
+      ((!scope||scope.w)&&viewList().length>AI_MAX_JOBS ? ("NOTE: the view holds "+viewList().length+" jobs; you are given the "+AI_MAX_JOBS+" most-aged. ") : "")+
+      "Data:\n"+JSON.stringify(aiPayload(scope,tier));
+  }
   return base+" Respond with ONLY a JSON object, no markdown fences, no preamble: "+
     '{"summary":"one or two sentence overall read","findings":[{"severity":"critical|warning|info|good","title":"short headline","detail":"1-2 sentence specifics with numbers"}]} '+
-    "Give 3 to 5 findings ordered most severe first, including one concrete recommended action. Keep it tight. "+
+    "Give 4 to 7 findings ordered most severe first, including at least one concrete recommended action. "+
     ((!scope||scope.w)&&viewList().length>AI_MAX_JOBS ? ("NOTE: the view holds "+viewList().length+" jobs; you are given the "+AI_MAX_JOBS+" most-aged. Frame findings accordingly. ") : "")+
     "Data:\n"+JSON.stringify(aiPayload(scope,tier));
 }
@@ -2523,6 +2604,7 @@ function openAI(scope){
     (filterSummary().length? 'Filtered view ('+viewList().length+' jobs)' : 'Whole shop ('+viewList().length+' jobs)');
   document.getElementById('aiOv').classList.add('show');
   document.getElementById('aiPop').style.display='block';
+  snd('open');
   aiTab('quick');
 }
 function closeAI(){
@@ -2535,6 +2617,7 @@ function aiTab(tier){
   AI_TIER=tier;
   document.getElementById('tabQuick').classList.toggle('on',tier==='quick');
   document.getElementById('tabDeep').classList.toggle('on',tier==='deep');
+  document.getElementById('tabReport').classList.toggle('on',tier==='report');
   runAITier();
 }
 function sevIcon(s){return s==='good'?'&#10004;':s==='info'?'&#8505;':'&#9888;';}
@@ -2553,6 +2636,15 @@ function renderFindings(res,tier,ms){
       (ms?` &middot; ${(ms/1000).toFixed(1)}s`:'')+' &middot; cached for this filter set &middot; see Detailed for specifics';
     return;
   }
+  if(tier==='deep'&&Array.isArray(res.bullets)){
+    body.innerHTML=res.bullets.slice(0,7).map(b=>{
+      const sv=['critical','warning','info','good'].includes(b.severity)?b.severity:'info';
+      return `<div class="bul"><span class="sev ${sv}">${sevIcon(sv)}</span><span class="bt">${esc(String(b.text||''))}</span></div>`;
+    }).join('')||'<div class="aiload">No bullets returned.</div>';
+    document.getElementById('aiMeta').innerHTML='Detailed &middot; bullet briefing'+
+      (ms?` &middot; ${(ms/1000).toFixed(1)}s`:'')+' &middot; cached for this filter set &middot; see Report for the full write-up';
+    return;
+  }
   const rows=(res.findings||[]).map(f=>{
     const sv=['critical','warning','info','good'].includes(f.severity)?f.severity:'info';
     return `<div class="find"><div class="sev ${sv}">${sevIcon(sv)}</div>
@@ -2561,7 +2653,7 @@ function renderFindings(res,tier,ms){
   body.innerHTML=(res.summary?`<div class="aisum">${esc(res.summary)}</div>`:'')+
     (rows||'<div class="aiload">No findings returned.</div>');
   document.getElementById('aiMeta').innerHTML=
-    (tier==='quick'?'Quick Take &middot; fast model':'Detailed &middot; deep model')+
+    (tier==='quick'?'Quick Take &middot; fast model':tier==='deep'?'Detailed &middot; bullet briefing':'Report &middot; deep model')+
     (ms?` &middot; ${(ms/1000).toFixed(1)}s`:'')+' &middot; cached for this filter set';
 }
 function parseAIJSON(raw){
@@ -2595,12 +2687,12 @@ async function runAITier(){
   const sig=aiSig(AI_SCOPE,AI_TIER);
   if(AI_CACHE[sig]){ renderFindings(AI_CACHE[sig],AI_TIER,0); return; }
   body.innerHTML='<div class="aiload"><div class="spin show"></div>'+
-    (AI_TIER==='quick'?'Quick take on the way (usually a few seconds)&hellip;':'Running detailed analysis&hellip;')+'</div>';
+    (AI_TIER==='quick'?'Quick take on the way (usually a few seconds)&hellip;':AI_TIER==='deep'?'Building bullet briefing&hellip;':'Writing full report&hellip;')+'</div>';
   try{
     const t0=Date.now();
     const raw=await askAI(aiPrompt(AI_SCOPE,AI_TIER,filterSummary()),
-      AI_TIER==='quick'?300:1300,
-      AI_TIER==='quick'?AI_MODEL_FAST:AI_MODEL_DEEP);
+      AI_TIER==='quick'?300:(AI_TIER==='deep'?550:1400),
+      AI_TIER==='report'?AI_MODEL_DEEP:AI_MODEL_FAST);
     const res=parseAIJSON(raw);
     AI_CACHE[sig]=res;
     renderFindings(res,AI_TIER,Date.now()-t0);
