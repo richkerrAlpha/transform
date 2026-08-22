@@ -44,7 +44,10 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .brand{font-size:26px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
 .brand small{display:block;font-size:12px;font-weight:600;letter-spacing:.28em;color:#B9C6DE;margin-top:2px}
 .mode{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:12px}
-.mode button{border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px}
+.mode button,.mode select{box-sizing:border-box;height:34px;display:inline-flex;align-items:center;justify-content:center;
+  white-space:nowrap;border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:0 14px;cursor:pointer;
+  font-weight:700;letter-spacing:.08em;border-radius:3px;font-size:12px;line-height:1}
+.mode select{padding:0 8px;letter-spacing:normal;appearance:auto}
 .mode button.on{background:var(--go);border-color:var(--go);color:#fff}
 .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:26px 0 18px}
 .kpi{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--navy);padding:14px 16px}
@@ -862,10 +865,10 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 <body>
 
 <header class="top"><div class="top-inner">
-  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v59</small></div>
+  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v60</small></div>
   <div class="mode">
     <span>THEME:</span>
-    <select id="themeSel" onchange="applyTheme(this.value)" style="background:transparent;color:#B9C6DE;border:1px solid #4A6396;padding:5px 8px;border-radius:3px;font-weight:700">
+    <select id="themeSel" onchange="applyTheme(this.value)">
       <option value="erdman">Erdman Navy</option>
       <option value="dark">Dark Shop Floor</option>
       <option value="steel">Light Steel</option>
@@ -882,8 +885,8 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
     <button type="button" onclick="autoLayout()" title="Reset widget order and sizes" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">Auto-Layout</button>
     <button type="button" onclick="openSettings()" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">&#9881; Settings</button>
     <select id="voiceSel" title="Voices come from your browser + OS. Most natural: Edge (Microsoft Natural voices) or Chrome (Google voices). On a Mac you can also download higher-quality voices: System Settings > Accessibility > Spoken Content > System Voice > Manage Voices - add Enhanced/Premium or Siri voices, then reload." onchange="setVoice(this.value)" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 8px;font-weight:700;border-radius:3px;max-width:180px"><option value="">&#128266; Default voice</option></select>
-    <button type="button" id="sndBtn" onclick="toggleSnd()" title="UI sound effects on button clicks, chart selections, filters" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 12px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">&#128263; Sound Off</button>
-    <button type="button" onclick="openExpMenu(event)" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">&#8681; Export &#9662;</button>
+    <button type="button" id="sndBtn" onclick="toggleSnd()" title="UI sound effects on button clicks, chart selections, filters">&#128263; Sound Off</button>
+    <button type="button" onclick="openExpMenu(event)">&#8681; Export &#9662;</button>
     <span>DATA:</span>
     <button type="button" id="mDemo" class="on" onclick="setMode('demo')">DEMO</button>
     <button type="button" id="mLive" onclick="setMode('live')">LIVE</button>
