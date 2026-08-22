@@ -74,6 +74,11 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .job.shipq{border-left-color:#00C}
 .jhead{display:flex;align-items:center;gap:18px;padding:14px 18px;flex-wrap:wrap}
 .jnum{font-size:20px;font-weight:800}
+.jmeta{display:flex;gap:22px;flex-wrap:wrap;align-items:baseline}
+.jf{display:inline-flex;flex-direction:column;gap:1px}
+.jf b{font-size:13px;font-weight:800;color:var(--navy);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
+.jf i{font-style:normal;font-size:13px;font-weight:500;color:var(--text)}
+.jnumf i{font-weight:800;font-size:15px}
 .jnum span{color:#5A6472;font-weight:600;font-size:13px;margin-right:6px;letter-spacing:.12em}
 .jmeta{font-size:13px;color:var(--muted2);font-variant-numeric:tabular-nums}
 .chip{margin-left:12px;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:3px;color:#fff;background:var(--navy)}
@@ -257,6 +262,8 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
   padding:4px 12px;border-radius:6px;cursor:pointer;white-space:nowrap}
 .speakbtn.on{background:var(--go);color:#fff}
 .card.snapping{outline:2px dashed var(--go);outline-offset:3px}
+/* dashboard export: executive snapshot - no filter bar, no job lists */
+.wrap.exporting #controlsBar,.wrap.exporting #p-jobsview{display:none!important}
 /* Job Speed strip under the stage capsule */
 .spill{width:296px;box-sizing:border-box;display:flex;align-items:center;gap:8px;margin-top:5px;
   padding:3px 12px;border:1px solid var(--line);background:var(--card)}
@@ -845,7 +852,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 <body>
 
 <header class="top"><div class="top-inner">
-  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v50</small></div>
+  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v55</small></div>
   <div class="mode">
     <span>THEME:</span>
     <select id="themeSel" onchange="applyTheme(this.value)" style="background:transparent;color:#B9C6DE;border:1px solid #4A6396;padding:5px 8px;border-radius:3px;font-weight:700">
@@ -864,7 +871,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
     <button type="button" id="filtBtn" onclick="toggleFilters()" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">Hide Filters</button>
     <button type="button" onclick="autoLayout()" title="Reset widget order and sizes" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">Auto-Layout</button>
     <button type="button" onclick="openSettings()" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">&#9881; Settings</button>
-    <select id="voiceSel" title="Voice for the AI Speak feature" onchange="setVoice(this.value)" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 8px;font-weight:700;border-radius:3px;max-width:180px"><option value="">&#128266; Default voice</option></select>
+    <select id="voiceSel" title="Voices come from your browser + OS. Most natural: Edge (Microsoft Natural voices) or Chrome (Google voices). On a Mac you can also download higher-quality voices: System Settings > Accessibility > Spoken Content > System Voice > Manage Voices - add Enhanced/Premium or Siri voices, then reload." onchange="setVoice(this.value)" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 8px;font-weight:700;border-radius:3px;max-width:180px"><option value="">&#128266; Default voice</option></select>
     <button type="button" onclick="openExpMenu(event)" style="border:1px solid #4A6396;background:transparent;color:#B9C6DE;padding:5px 14px;cursor:pointer;font-weight:700;letter-spacing:.08em;border-radius:3px">&#8681; Export &#9662;</button>
     <span>DATA:</span>
     <button type="button" id="mDemo" class="on" onclick="setMode('demo')">DEMO</button>
@@ -1253,11 +1260,17 @@ function autoLayout(){
   SEC_DEFAULT.forEach(id=>{const el=document.getElementById(id); if(el) wrap.appendChild(el);});
   const tv=document.getElementById('traveler'); if(tv) wrap.appendChild(tv);
   const row=document.getElementById('chartsRow');
-  CHART_DEFAULT.forEach(id=>{const el=document.getElementById(id); if(el){el.style.width='';el.style.height='';row.appendChild(el);}});
+  /* uniform 2x2: each chart tile = exactly half the row width, equal heights */
+  const g=16;
+  const avail=row&&row.clientWidth?row.clientWidth:1216;
+  const half=Math.max(RZ.minW,Math.min(RZ.maxW,Math.floor((avail-g)/2)));
+  const h=320;
+  CHART_DEFAULT.forEach(id=>{const el=document.getElementById(id); if(el){
+    el.style.width=half+'px'; el.style.height=h+'px'; row.appendChild(el);}});
   try{
     localStorage.removeItem('emops_sec_order');
     localStorage.removeItem('emops_chart_order');
-    CHART_DEFAULT.forEach(id=>localStorage.removeItem('emops_size_'+id));
+    CHART_DEFAULT.forEach(id=>localStorage.setItem('emops_size_'+id,half+'px|'+h+'px'));
   }catch(e){}
   render();
 }
@@ -1741,8 +1754,14 @@ function render(){
     }).join('');
     return `<div class="${cls.join(' ')}" onclick="toggleJob('${esc(j.job)}')">
       <div class="jhead">
-        <div class="jnum"><span>JOB</span>${esc(j.job)}</div>
-        <div class="jmeta"><b>${esc(j.customer||'')}</b> &middot; Lot ${esc(j.lot)} &middot; Qty ${j.qty} &middot; Router: ${esc(j.router)} &middot; Received ${esc(j.received)}</div>
+        <span class="jf jnumf"><b>Job</b><i>${esc(j.job)}</i></span>
+        <div class="jmeta">
+          <span class="jf"><b>Customer</b><i>${esc(j.customer||'&mdash;')}</i></span>
+          <span class="jf"><b>Lot</b><i>${esc(j.lot)}</i></span>
+          <span class="jf"><b>Qty</b><i>${j.qty.toLocaleString()}</i></span>
+          <span class="jf"><b>Router</b><i>${esc(j.router)}</i></span>
+          <span class="jf"><b>Received</b><i>${esc(j.received)}</i></span>
+        </div>
         <div class="rcol">${cpillHTML(j)}${speedHTML(j)}</div>
       </div>
       <div class="rail">${rail}</div>
@@ -2013,9 +2032,17 @@ function populateVoices(){
   const score=v=>{
     let s=0;
     if(/^en[-_]US/i.test(v.lang)) s+=40; else if(/^en/i.test(v.lang)) s+=25;
-    if(v.localService) s+=12;
-    if(v.default) s+=8;
-    if(/natural|neural|premium|enhanced|siri|aria|jenny|guy|samantha|daniel|karen|alex/i.test(v.name)) s+=10;
+    /* natural-class voices first: Google (Chrome), Microsoft Online Natural (Edge),
+       Siri / Enhanced / Premium (macOS downloads). These are mostly NETWORK voices,
+       so no localService bonus - that's what buried them under legacy macOS voices. */
+    if(/google/i.test(v.name)) s+=34;
+    if(/online.*natural|natural.*online/i.test(v.name)) s+=36;
+    if(/natural|neural/i.test(v.name)) s+=26;
+    if(/siri|premium|enhanced/i.test(v.name)) s+=24;
+    if(/aria|jenny|guy|davis|jason|sonia|libby/i.test(v.name)) s+=10;
+    if(v.default) s+=3;
+    /* legacy macOS compact voices: keep available but below natural-class */
+    if(/^(samantha|alex|daniel|karen|fred|victoria|kathy|ralph|junior|vicki)$/i.test(v.name.trim())) s-=6;
     if(/novelty|whisper|bells|bahh|boing|bubbles|cellos|organ|trinoids|zarvox|albert|jester|wobble/i.test(v.name)) s-=50;
     return s;
   };
@@ -2053,6 +2080,7 @@ function aiSpeechText(){
   });
   return speakable(parts.join(' '));
 }
+let SPEAK_KA=null;
 function toggleSpeak(){
   if(!window.speechSynthesis){ alert('Speech is not supported in this browser.'); return; }
   if(speechSynthesis.speaking){ stopSpeak(); return; }
@@ -2067,8 +2095,15 @@ function toggleSpeak(){
   const b=document.getElementById('speakBtn');
   if(b){ b.classList.add('on'); b.innerHTML='&#9632; Stop'; }
   speechSynthesis.speak(u);
+  /* Chrome cuts off network voices (~15s) unless nudged; harmless elsewhere */
+  if(SPEAK_KA) clearInterval(SPEAK_KA);
+  SPEAK_KA=setInterval(()=>{
+    if(!speechSynthesis.speaking){ clearInterval(SPEAK_KA); SPEAK_KA=null; return; }
+    try{ speechSynthesis.pause(); speechSynthesis.resume(); }catch(e){}
+  },8000);
 }
 function stopSpeak(){
+  if(SPEAK_KA){ clearInterval(SPEAK_KA); SPEAK_KA=null; }
   if(window.speechSynthesis){ try{ speechSynthesis.cancel(); }catch(e){} }
   const b=document.getElementById('speakBtn');
   if(b){ b.classList.remove('on'); b.innerHTML='&#128266; Speak'; }
@@ -2100,6 +2135,7 @@ async function exportDash(kind){
   if(typeof html2canvas!=='function') return;
   const el=document.querySelector('.wrap');
   el.classList.add('capturing');
+  el.classList.add('exporting');
   try{
     const bg=themeVar('--pagebg','#F4F5F7');
     const safeScale=Math.min(1.5, Math.max(0.5, 24000/Math.max(el.scrollHeight,1)));
@@ -2126,7 +2162,7 @@ async function exportDash(kind){
       pdf.save('emops_dashboard_'+ds+'.pdf');
     }
   }catch(e){ alert('Export failed: '+e.message); }
-  finally{ el.classList.remove('capturing'); }
+  finally{ el.classList.remove('capturing'); el.classList.remove('exporting'); }
 }
 
 /* ---------------- operation detail popover ---------------- */
