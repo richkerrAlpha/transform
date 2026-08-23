@@ -60,6 +60,7 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .card{background:var(--card);border:1px solid var(--line);padding:14px 16px}
 .card h3{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px}
 .card .sub{font-size:11px;color:#8C97A8;margin-top:8px}
+[data-chartcard] .sub{padding-left:46px;min-height:20px}
 .cwrap{position:relative;height:190px}
 @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}}
 
@@ -144,6 +145,18 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .tileh .ttl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2)}
 .tilebtns{display:inline-flex;gap:6px;flex:0 0 auto;align-items:center}
+.dlbbtn{position:absolute;left:10px;bottom:8px;z-index:5;background:var(--card);border:1px solid var(--line);
+  color:var(--muted2);font-size:10px;font-weight:800;letter-spacing:.05em;padding:3px 7px;cursor:pointer;
+  border-radius:3px;opacity:.75}
+.dlbbtn:hover{opacity:1}
+.dlbbtn.on{background:var(--navy);color:#fff;border-color:var(--navy);opacity:.92}
+.wrap.exporting .dlbbtn,.capturing .dlbbtn{display:none!important}
+/* capture spacing: keep captions clear of x-axis labels in rendered PNGs */
+.capturing .cwrap{margin-bottom:16px}
+[data-chartcard].capturing .sub,.capturing [data-chartcard] .sub{margin-top:14px;padding-left:0;padding-top:6px;border-top:1px solid var(--rowline)}
+.capturing .expfoot{margin-top:14px}
+.wrap.exporting .cwrap{margin-bottom:16px}
+.wrap.exporting [data-chartcard] .sub{margin-top:14px;padding-left:0}
 .aibtn,.pngbtn{font-family:inherit;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:6px;
   border:1px solid var(--line);background:var(--card);color:var(--muted2);cursor:pointer;line-height:1.25;white-space:nowrap}
 .aibtn{color:var(--go);border-color:var(--go)}
@@ -924,7 +937,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 <body>
 
 <header class="top"><div class="top-inner">
-  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v78</small></div>
+  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v85</small></div>
   <div class="mode">
     <span>TEXT:</span>
     <select id="fontSel" onchange="applyFontScale(this.value)" title="Overall text/UI size">
@@ -984,13 +997,13 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
   <div class="panel" id="p-charts" data-panel><span class="grip" draggable="true" title="Drag to reorder">&#8942;&#8942;</span>
   <div class="charts" id="chartsRow">
     <div class="card panel" id="cc-donut" data-chartcard><h3 class="tileh"><span class="grip inflow" draggable="true" title="Drag to reorder">&#8942;&#8942;</span><span class="ttl">Routers: In Progress vs Completed</span><span class="tilebtns"><button type="button" class="aibtn" title="AI assessment of this tile" onclick="openAI({w:'donut'})">&#10024; AI</button><button type="button" class="pngbtn" title="Copy or save as PNG" onclick="openPngMenu('cc-donut',event)">&#8681; PNG &#9662;</button></span></h3><div class="fpills fp"></div>
-      <div class="cwrap"><canvas id="cDonut"></canvas></div></div>
+      <div class="cwrap"><canvas id="cDonut"></canvas></div><button type="button" class="dlbbtn" data-dlb="donut" onclick="toggleDLabels('donut')">123</button></div>
     <div class="card panel" id="cc-stage" data-chartcard><h3 class="tileh"><span class="grip inflow" draggable="true" title="Drag to reorder">&#8942;&#8942;</span><span class="ttl">Quantity by Stage</span><span class="tilebtns"><button type="button" class="aibtn" title="AI assessment of this tile" onclick="openAI({w:'stage'})">&#10024; AI</button><button type="button" class="pngbtn" title="Copy or save as PNG" onclick="openPngMenu('cc-stage',event)">&#8681; PNG &#9662;</button></span></h3><div class="fpills fp"></div>
-      <div class="cwrap"><canvas id="cStage"></canvas></div>
+      <div class="cwrap"><canvas id="cStage"></canvas></div><button type="button" class="dlbbtn" data-dlb="stage" onclick="toggleDLabels('stage')">123</button>
       <div class="sub">Click a bar to filter to that stage. Amber border = active filter.</div></div>
-    <div class="card panel" id="cc-shift" data-chartcard><h3 class="tileh"><span class="grip inflow" draggable="true" title="Drag to reorder">&#8942;&#8942;</span><span class="ttl">Quantity by Shift</span><span class="tilebtns"><button type="button" class="aibtn" title="AI assessment of this tile" onclick="openAI({w:'shift'})">&#10024; AI</button><button type="button" class="pngbtn" title="Copy or save as PNG" onclick="openPngMenu('cc-shift',event)">&#8681; PNG &#9662;</button></span></h3><div class="fpills fp"></div><div class="cwrap"><canvas id="cShift"></canvas></div><div class="sub">Pieces recorded per shift across all entries in view. Click a bar to filter to jobs worked on that shift.</div></div>
+    <div class="card panel" id="cc-shift" data-chartcard><h3 class="tileh"><span class="grip inflow" draggable="true" title="Drag to reorder">&#8942;&#8942;</span><span class="ttl">Quantity by Shift</span><span class="tilebtns"><button type="button" class="aibtn" title="AI assessment of this tile" onclick="openAI({w:'shift'})">&#10024; AI</button><button type="button" class="pngbtn" title="Copy or save as PNG" onclick="openPngMenu('cc-shift',event)">&#8681; PNG &#9662;</button></span></h3><div class="fpills fp"></div><div class="cwrap"><canvas id="cShift"></canvas></div><button type="button" class="dlbbtn" data-dlb="shift" onclick="toggleDLabels('shift')">123</button><div class="sub">Pieces recorded per shift across all entries in view. Click a bar to filter to jobs worked on that shift.</div></div>
     <div class="card panel" id="cc-drill" data-chartcard><h3 class="tileh"><span class="grip inflow" draggable="true" title="Drag to reorder">&#8942;&#8942;</span><span class="ttl"><span id="drillTitle">Operations Drill-down: Qty by Op Group</span></span><span class="tilebtns"><button type="button" class="pngbtn" id="opgBtn" title="Toggle grouping: router-specific op numbers vs op name across all routers" onclick="toggleOpGroup()">Group: Op # + Name</button><button type="button" class="aibtn" title="AI assessment of this tile" onclick="openAI({w:'drill'})">&#10024; AI</button><button type="button" class="pngbtn" title="Copy or save as PNG" onclick="openPngMenu('cc-drill',event)">&#8681; PNG &#9662;</button></span></h3><div class="fpills fp"></div>
-      <div class="cwrap"><canvas id="cDrill"></canvas></div>
+      <div class="cwrap"><canvas id="cDrill"></canvas></div><button type="button" class="dlbbtn" data-dlb="drill" onclick="toggleDLabels('drill')">123</button>
       <div class="sub" id="drillSub">Jobs in Operations, grouped by active op. Click a bar to filter to that op group.</div></div>
   </div></div>
 
@@ -1456,6 +1469,75 @@ function wireResizePersist(){
     }catch(e){}
   });
 })();
+/* ---------------- data labels (per-chart toggle) ---------------- */
+let DLB={donut:true,stage:true,shift:true,drill:true};
+try{ const s=localStorage.getItem('emops_dlabels'); if(s) DLB=Object.assign(DLB,JSON.parse(s)); }catch(e){}
+const DLB_CANVAS={cDonut:'donut',cStage:'stage',cShift:'shift',cDrill:'drill'};
+function chartByKey(k){ return {donut:chDonut,stage:chStage,shift:chShift,drill:chDrill}[k]; }
+function toggleDLabels(k){
+  DLB[k]=!DLB[k];
+  try{ localStorage.setItem('emops_dlabels',JSON.stringify(DLB)); }catch(e){}
+  syncDlbBtns();
+  const ch=chartByKey(k); if(ch) ch.update();
+}
+function syncDlbBtns(){
+  document.querySelectorAll('[data-dlb]').forEach(b=>{
+    b.classList.toggle('on', !!DLB[b.dataset.dlb]);
+    b.title=(DLB[b.dataset.dlb]?'Hide':'Show')+' data labels on this chart';
+  });
+}
+document.addEventListener('DOMContentLoaded',syncDlbBtns);
+const EMOPS_LABELS={
+  id:'emopsLabels',
+  afterDatasetsDraw(chart){
+    const key=DLB_CANVAS[chart.canvas&&chart.canvas.id];
+    if(!key||!DLB[key]) return;
+    const n=chart.data.labels?chart.data.labels.length:0;
+    if(!n) return;
+    const ctx=chart.ctx, area=chart.chartArea;
+    if(!area) return;
+    ctx.save();
+    ctx.font='700 11px system-ui,"Segoe UI",Arial';
+    const bodyColor=(getComputedStyle(document.body).color)||'#15181C';
+    chart.data.datasets.forEach((ds,di)=>{
+      const meta=chart.getDatasetMeta(di);
+      if(meta.hidden) return;
+      meta.data.forEach((el,ix)=>{
+        const raw=ds.data[ix];
+        const v=(raw&&typeof raw==='object')?(raw.y!=null?raw.y:raw.x):raw;
+        if(v==null) return;
+        const label=(+v).toLocaleString();
+        if(meta.type==='doughnut'||meta.type==='pie'){
+          if((el.endAngle-el.startAngle)<0.22) return;      /* slice too thin to label */
+          const p=el.tooltipPosition();
+          ctx.fillStyle='#FFFFFF';
+          ctx.textAlign='center'; ctx.textBaseline='middle';
+          ctx.fillText(label,p.x,p.y);
+        }else if(chart.options.indexAxis==='y'){            /* horizontal bars */
+          const w=ctx.measureText(label).width;
+          if(el.x+6+w>area.right-2){                        /* no room outside: inside, white */
+            ctx.fillStyle='#FFFFFF'; ctx.textAlign='right'; ctx.textBaseline='middle';
+            ctx.fillText(label,el.x-6,el.y);
+          }else{
+            ctx.fillStyle=bodyColor; ctx.textAlign='left'; ctx.textBaseline='middle';
+            ctx.fillText(label,el.x+6,el.y);
+          }
+        }else{                                              /* vertical bars / points */
+          if(el.y-6<area.top+12){                           /* bar reaches the top: inside, white */
+            ctx.fillStyle='#FFFFFF'; ctx.textAlign='center'; ctx.textBaseline='top';
+            ctx.fillText(label,el.x,el.y+4);
+          }else{
+            ctx.fillStyle=bodyColor; ctx.textAlign='center'; ctx.textBaseline='bottom';
+            ctx.fillText(label,el.x,el.y-4);
+          }
+        }
+      });
+    });
+    ctx.restore();
+  }
+};
+try{ Chart.register(EMOPS_LABELS); }catch(e){}
+
 let chDonut=null, chStage=null, chDrill=null;
 
 async function setMode(m){
@@ -2396,7 +2478,7 @@ async function exportDash(kind){
   try{
     const bg=themeVar('--pagebg','#F4F5F7');
     const safeScale=Math.min(1.5, Math.max(0.5, 24000/Math.max(el.scrollHeight,1)));
-    const canvas=await html2canvas(el,{backgroundColor:bg,scale:safeScale,logging:false});
+    const canvas=await html2canvas(el,{backgroundColor:bg,scale:safeScale,logging:false,onclone:cloneCanvasesAsImages});
     const d0=new Date(), ds=d0.getFullYear()+String(d0.getMonth()+1).padStart(2,'0')+String(d0.getDate()).padStart(2,'0');
     if(kind==='png'){
       const a=document.createElement('a');
@@ -2519,6 +2601,23 @@ function pngMenuPick(mode){
 }
 document.addEventListener('click',()=>{const m=document.getElementById('pngMen'); if(m) m.classList.remove('show'); document.querySelectorAll('.fico.pin,.info.pin').forEach(f=>{f.classList.remove('pin'); const c=f.querySelector('.ficard,.tip'); if(c) resetPop(c);});});
 window.addEventListener('scroll',()=>{const m=document.getElementById('pngMen'); if(m) m.classList.remove('show');},true);
+/* html2canvas renders retina Chart.js canvases larger than their CSS box,
+   spilling over content below. In the capture clone, swap every canvas for an
+   <img> snapshot pinned to the on-screen box size. */
+function cloneCanvasesAsImages(doc){
+  doc.querySelectorAll('canvas').forEach(cv=>{
+    const src=cv.id?document.getElementById(cv.id):null;
+    if(!src||!src.toDataURL) return;
+    let url; try{ url=src.toDataURL('image/png'); }catch(e){ return; }
+    const r=src.getBoundingClientRect();
+    const img=doc.createElement('img');
+    img.src=url;
+    img.width=Math.max(1,Math.round(r.width));
+    img.height=Math.max(1,Math.round(r.height));
+    img.style.cssText='display:block;width:'+r.width+'px;height:'+r.height+'px';
+    cv.parentNode.replaceChild(img,cv);
+  });
+}
 async function pngPanel(elId,mode){
   const el=document.getElementById(elId); if(!el||typeof html2canvas!=='function') return;
   el.classList.add('capturing');
@@ -2530,7 +2629,7 @@ async function pngPanel(elId,mode){
   el.appendChild(foot);
   try{
     const bg=getComputedStyle(el).backgroundColor;
-    const canvas=await html2canvas(el,{backgroundColor:(bg&&bg!=='rgba(0, 0, 0, 0)')?bg:'#FFFFFF',scale:2,logging:false});
+    const canvas=await html2canvas(el,{backgroundColor:(bg&&bg!=='rgba(0, 0, 0, 0)')?bg:'#FFFFFF',scale:2,logging:false,onclone:cloneCanvasesAsImages});
     const d=new Date(), ds=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
     if(mode==='copy'){
       if(!navigator.clipboard||!window.ClipboardItem){ alert('Clipboard image copy is not available in this browser. Use Save instead.'); return; }
