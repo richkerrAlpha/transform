@@ -151,12 +151,12 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .dlbbtn:hover{opacity:1}
 .dlbbtn.on{background:var(--navy);color:#fff;border-color:var(--navy);opacity:.92}
 .wrap.exporting .dlbbtn,.capturing .dlbbtn{display:none!important}
-/* capture spacing: keep captions clear of x-axis labels in rendered PNGs */
-.capturing .cwrap{margin-bottom:16px}
-[data-chartcard].capturing .sub,.capturing [data-chartcard] .sub{margin-top:14px;padding-left:0;padding-top:6px;border-top:1px solid var(--rowline)}
-.capturing .expfoot{margin-top:14px}
-.wrap.exporting .cwrap{margin-bottom:16px}
-.wrap.exporting [data-chartcard] .sub{margin-top:14px;padding-left:0}
+/* captures: interactive hint text is noise in a static image - drop it;
+   titles get the full width (header buttons are hidden during capture) */
+.capturing .sub,.wrap.exporting .sub{display:none!important}
+.capturing .cwrap,.wrap.exporting .cwrap{margin-bottom:10px}
+.capturing .expfoot{margin-top:12px}
+.capturing .ttl,.wrap.exporting .ttl{white-space:normal;overflow:visible;text-overflow:clip}
 .aibtn,.pngbtn{font-family:inherit;font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:6px;
   border:1px solid var(--line);background:var(--card);color:var(--muted2);cursor:pointer;line-height:1.25;white-space:nowrap}
 .aibtn{color:var(--go);border-color:var(--go)}
@@ -937,7 +937,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 <body>
 
 <header class="top"><div class="top-inner">
-  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v85</small></div>
+  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v87</small></div>
   <div class="mode">
     <span>TEXT:</span>
     <select id="fontSel" onchange="applyFontScale(this.value)" title="Overall text/UI size">
@@ -2605,18 +2605,20 @@ window.addEventListener('scroll',()=>{const m=document.getElementById('pngMen');
    spilling over content below. In the capture clone, swap every canvas for an
    <img> snapshot pinned to the on-screen box size. */
 function cloneCanvasesAsImages(doc){
-  doc.querySelectorAll('canvas').forEach(cv=>{
-    const src=cv.id?document.getElementById(cv.id):null;
-    if(!src||!src.toDataURL) return;
-    let url; try{ url=src.toDataURL('image/png'); }catch(e){ return; }
-    const r=src.getBoundingClientRect();
-    const img=doc.createElement('img');
-    img.src=url;
-    img.width=Math.max(1,Math.round(r.width));
-    img.height=Math.max(1,Math.round(r.height));
-    img.style.cssText='display:block;width:'+r.width+'px;height:'+r.height+'px';
-    cv.parentNode.replaceChild(img,cv);
-  });
+  try{
+    doc.querySelectorAll('canvas').forEach(cv=>{
+      try{
+        const src=cv.id?document.getElementById(cv.id):null;
+        if(!src) return;
+        const r=src.getBoundingClientRect();
+        const w=Math.max(1,Math.round(r.width)), h=Math.max(1,Math.round(r.height));
+        cv.width=w; cv.height=h;                       /* pin clone buffer to CSS box */
+        cv.style.width=w+'px'; cv.style.height=h+'px';
+        const ctx=cv.getContext('2d');
+        if(ctx&&src.width&&src.height) ctx.drawImage(src,0,0,w,h);  /* downscale live bitmap in */
+      }catch(inner){ /* leave this canvas as html2canvas found it */ }
+    });
+  }catch(e){ /* never let clone prep reject the capture */ }
 }
 async function pngPanel(elId,mode){
   const el=document.getElementById(elId); if(!el||typeof html2canvas!=='function') return;
@@ -2640,8 +2642,8 @@ async function pngPanel(elId,mode){
       const a=document.createElement('a');
       a.href=canvas.toDataURL('image/png');
       a.download='emops_'+elId+'_'+ds+'.png';
-      a.click();
-      flashTool(elId,'Saved');
+      document.body.appendChild(a); a.click(); a.remove();
+      try{ flashTool(elId,'Saved'); }catch(x){}
     }
   }catch(e){ alert('PNG export failed: '+e.message); }
   finally{ try{ el.removeChild(foot); }catch(x){} el.classList.remove('capturing'); }
