@@ -1817,7 +1817,7 @@
     {"section": 10, "label": "OP 27 TRAILING EDGE GRIND FIRST PIECE INSPECTION", "type": "First Piece Inspection", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 11, "label": "OP 28 VENFOR CONTROL ROUTER", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 12, "label": "OP 33 FINAL INSPECTION", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 13, "label": "OP 35 SHIPPING", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 13, "label": "OP 35 SHIPPING", "type": "Shipping-Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 14, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 15, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 16, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
