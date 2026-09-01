@@ -1426,7 +1426,7 @@
     {"section": 3, "label": "OP 25 GAUGE INSPECTION", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 4, "label": "OP 50 PARAMETER CHECK", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 5, "label": "OP 75 VERIFY INITIAL SETUP", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 6, "label": "OP 100 BRAZED TIP HOLE REPIAR PRODUCTION PROCEDURES (AS APPLICABLE)", "type": "Standard Form-Tip Hole Repair", "visible": "true", "machine_number": "true", "sub_type": ""},
+    {"section": 6, "label": "OP 100 BRAZED TIP HOLE REPAIR PRODUCTION PROCEDURES (AS APPLICABLE)", "type": "Standard Form-Tip Hole Repair", "visible": "true", "machine_number": "true", "sub_type": ""},
     {"section": 7, "label": "OP 125 BRAZED TIP HOLE REPAIR INSPECTION (AS APPLICABLE)", "type": "Standard Form-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 8, "label": "OP 150 BRAZED TIP HOLE REPAIR FIRST PIECE INSPECTION", "type": "First Piece Inspection", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 9, "label": "OP 175 UN-BRAZED TIP HOLE REPAIR PRODUCTION PROCEDURES (AS APPLICABLE)", "type": "Standard Form-Tip Hole Repair", "visible": "true", "machine_number": "true", "sub_type": ""},
