@@ -344,12 +344,41 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
   padding:4px 12px;border-radius:6px;cursor:pointer;white-space:nowrap}
 .speakbtn.on{background:var(--go);color:#fff}
 .card.snapping{outline:2px dashed var(--go);outline-offset:3px}
+/* ---- Pivot panel (v90) ---- */
+#cc-pivot{grid-column:1/-1}
+#cc-pivot .sub{padding-left:0}
+.pvbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:11.5px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px}
+.pvbar select{height:30px;border:1px solid var(--line);background:var(--card);color:var(--text);
+  font-size:12.5px;padding:0 6px;border-radius:3px;font-weight:600;text-transform:none;letter-spacing:normal;max-width:170px}
+.pvcap{display:none;font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:8px}
+.capturing .pvbar{display:none}
+.capturing .pvcap{display:block}
+.pvwrap{overflow:auto;max-height:360px;border:1px solid var(--line)}
+table.pv{border-collapse:collapse;width:100%;font-size:12.5px;font-variant-numeric:tabular-nums;table-layout:fixed}
+table.pv th,table.pv td{border:1px solid var(--rowline);padding:5px 9px;text-align:right;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;position:relative}
+table.pv th{background:var(--thbg);color:var(--muted2);font-size:11px;font-weight:800;letter-spacing:.08em;
+  text-transform:uppercase;position:sticky;top:0;z-index:2}
+table.pv th:first-child,table.pv td:first-child{text-align:left}
+table.pv td:first-child{font-weight:700;color:var(--muted2);background:var(--detailbg)}
+table.pv tr.pvtot td,table.pv td.pvtot{font-weight:800;background:var(--panelbg)}
+[data-theme="contrast"] table.pv th{color:#fff}
+.pvrz{position:absolute;top:0;right:-3px;width:7px;height:100%;cursor:col-resize;z-index:3;user-select:none}
+.pvrz:hover{background:var(--navy);opacity:.35}
+.capturing .pvrz{display:none}
+.capturing .pvwrap{max-height:none;overflow:visible}
+.pvdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:baseline}
+.pvflag{font-size:12px;margin-right:5px}
+.pvout{outline:2px solid var(--alert);outline-offset:-2px;font-weight:800}
+.pvout.hi{outline-color:var(--alert)} .pvout.lo{outline-color:#E8A13C}
+.pvempty{padding:18px 6px;color:var(--muted);font-size:13px}
 /* dashboard export: executive snapshot - no filter bar, no job lists */
 .wrap.exporting #controlsBar,.wrap.exporting #p-jobsview{display:none!important}
 /* Job Speed strip under the stage capsule */
-.spill{width:296px;box-sizing:border-box;display:flex;align-items:center;gap:8px;margin-top:5px;
-  padding:3px 12px;border:1px solid var(--line);background:var(--card)}
-.spill .spico{font-size:16px;display:inline-block;line-height:1}
+.spill{width:296px;box-sizing:border-box;display:flex;align-items:center;gap:10px;margin-top:5px;
+  padding:7px 12px;border:1px solid var(--line);background:var(--card)}
+.spill .spico{font-size:24px;display:inline-block;line-height:1;width:30px;text-align:center;position:relative}
 .spill .splbl{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2)}
 .spill .spval{margin-left:auto;font-size:12px;font-weight:800;font-variant-numeric:tabular-nums}
 .sp-slow{border-left:4px solid #C0392B}
@@ -363,7 +392,10 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
    Edge fades make the loop read as continuous motion, not a snap-back. */
 .sp-slow .spico{animation:spcrawl 6s linear infinite}
 .sp-avg .spico{animation:spwalk 2.4s linear infinite}
-.sp-fast .spico{animation:spdash 1.2s linear infinite;transform-origin:50% 80%}
+.sp-fast .spico{animation:splaunch 1.6s ease-in infinite;transform-origin:50% 60%}
+.sp-fast .spico::after{content:'';position:absolute;left:4px;bottom:-2px;width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle at 60% 40%, rgba(255,176,59,.75), rgba(230,74,25,.35) 55%, transparent 75%);
+  filter:blur(1px);animation:sptrail 1.6s ease-in infinite;pointer-events:none}
 @keyframes spcrawl{
   0%{transform:translateX(-9px) scaleX(-1);opacity:0}
   12%{transform:translateX(-6px) scaleX(-1) rotate(-2deg);opacity:1}
@@ -379,12 +411,19 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
   75%{transform:translateX(5px) translateY(0) scaleX(-1)}
   88%{transform:translateX(7px) translateY(-2px) scaleX(-1);opacity:1}
   100%{transform:translateX(9px) translateY(0) scaleX(-1);opacity:0}}
-@keyframes spdash{
-  0%{transform:translateX(-12px) scaleX(-1) skewX(0deg);opacity:0}
-  15%{transform:translateX(-7px) scaleX(-1.06) skewX(8deg);opacity:1}
-  55%{transform:translateX(4px) scaleX(-1.08) skewX(10deg)}
-  85%{transform:translateX(10px) scaleX(-1) skewX(4deg);opacity:1}
-  100%{transform:translateX(13px) scaleX(-1) skewX(0deg);opacity:0}}
+@keyframes splaunch{
+  0%{transform:translate(-9px,9px) rotate(6deg) scale(.9);opacity:0}
+  18%{transform:translate(-5px,5px) rotate(3deg) scale(.97);opacity:1}
+  45%{transform:translate(0,-1px) rotate(0deg) scale(1.02)}
+  50%{transform:translate(1px,-2px) rotate(-1deg) scale(1.03)}
+  55%{transform:translate(0,-3px) rotate(1deg) scale(1.03)}
+  80%{transform:translate(6px,-8px) rotate(-2deg) scale(1.05);opacity:1}
+  100%{transform:translate(10px,-13px) rotate(-3deg) scale(1.06);opacity:0}}
+@keyframes sptrail{
+  0%,35%{opacity:0}
+  55%{opacity:.55}
+  80%{opacity:.4}
+  100%{opacity:0}}
 @media (prefers-reduced-motion: reduce){ .spill .spico{animation:none!important} }
 .spill{position:relative;cursor:default}
 .sptip{display:none;position:absolute;right:0;bottom:calc(100% + 8px);width:310px;z-index:80;
@@ -937,7 +976,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 <body>
 
 <header class="top"><div class="top-inner">
-  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v87</small></div>
+  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v90</small></div>
   <div class="mode">
     <span>TEXT:</span>
     <select id="fontSel" onchange="applyFontScale(this.value)" title="Overall text/UI size">
@@ -1004,7 +1043,19 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
     <div class="card panel" id="cc-shift" data-chartcard><h3 class="tileh"><span class="grip inflow" draggable="true" title="Drag to reorder">&#8942;&#8942;</span><span class="ttl">Quantity by Shift</span><span class="tilebtns"><button type="button" class="aibtn" title="AI assessment of this tile" onclick="openAI({w:'shift'})">&#10024; AI</button><button type="button" class="pngbtn" title="Copy or save as PNG" onclick="openPngMenu('cc-shift',event)">&#8681; PNG &#9662;</button></span></h3><div class="fpills fp"></div><div class="cwrap"><canvas id="cShift"></canvas></div><button type="button" class="dlbbtn" data-dlb="shift" onclick="toggleDLabels('shift')">123</button><div class="sub">Pieces recorded per shift across all entries in view. Click a bar to filter to jobs worked on that shift.</div></div>
     <div class="card panel" id="cc-drill" data-chartcard><h3 class="tileh"><span class="grip inflow" draggable="true" title="Drag to reorder">&#8942;&#8942;</span><span class="ttl"><span id="drillTitle">Operations Drill-down: Qty by Op Group</span></span><span class="tilebtns"><button type="button" class="pngbtn" id="opgBtn" title="Toggle grouping: router-specific op numbers vs op name across all routers" onclick="toggleOpGroup()">Group: Op # + Name</button><button type="button" class="aibtn" title="AI assessment of this tile" onclick="openAI({w:'drill'})">&#10024; AI</button><button type="button" class="pngbtn" title="Copy or save as PNG" onclick="openPngMenu('cc-drill',event)">&#8681; PNG &#9662;</button></span></h3><div class="fpills fp"></div>
       <div class="cwrap"><canvas id="cDrill"></canvas></div><button type="button" class="dlbbtn" data-dlb="drill" onclick="toggleDLabels('drill')">123</button>
-      <div class="sub" id="drillSub">Jobs in Operations, grouped by active op. Click a bar to filter to that op group.</div></div>
+      <div class="sub" id="drillSub">Jobs in Operations, grouped by active op. Click a bar to filter to that op group.</div>
+    <div class="card panel" id="cc-pivot" data-chartcard><h3 class="tileh"><span class="grip inflow" draggable="true" title="Drag to reorder">&#8942;&#8942;</span><span class="ttl">Pivot Table</span><span class="tilebtns"><button type="button" class="aibtn" title="AI assessment of this tile" onclick="openAI({w:'pivot'})">&#10024; AI</button><button type="button" class="pngbtn" title="Copy or save as PNG" onclick="openPngMenu('cc-pivot',event)">&#8681; PNG &#9662;</button></span></h3>
+      <div class="pvbar">
+        <label>Rows <select id="pvRow" onchange="pvSet('row',this.value)"></select></label>
+        <label>Columns <select id="pvCol" onchange="pvSet('col',this.value)"></select></label>
+        <label>Values <select id="pvVal" onchange="pvSet('val',this.value)"></select></label>
+        <label>Agg <select id="pvAgg" onchange="pvSet('agg',this.value)"></select></label>
+        <label>Format <select id="pvFmt" onchange="pvSet('fmt',this.value)"></select></label>
+      </div>
+      <div class="pvcap" id="pvCap"></div>
+      <div class="pvwrap" id="pvWrap"></div>
+      <div class="sub">Pivot of the records in the current filtered view &mdash; pick Rows / Columns / Values like Excel. Drag a column edge to resize. Conditional formats: shading, color scale, data bars, traffic lights, flags, outliers.</div>
+    </div></div>
   </div></div>
 
   <div class="panel" id="p-jobsview" data-panel><span class="grip" draggable="true" title="Drag to reorder" style="top:16px">&#8942;&#8942;</span>
@@ -1116,7 +1167,18 @@ function genDemo(){
       base.hole=(entryIdx||0)+1;
       if(q!=null){ base.qtyMRB=Math.floor(q*R()*0.06); base.qtyAccepted=q-base.qtyMRB; }
     }
-    if(type==='Standard Operation'||type==='Standard Op With Hours'||type==='Shipping-Tip Hole Repair'||type==='Tip-Hole Repair'){
+    if(type==='4150 Process OP 15A'&&q!=null){ base.ceramicParts=Math.floor(q*R()*0.08); base.goodToRun=q-base.ceramicParts; }
+    if(type==='4150 Process OP 15B'&&q!=null){
+      base.hole1=Math.floor(q*(0.9+R()*0.2)); base.hole2=Math.floor(q*(0.9+R()*0.2));
+      base.hole3=Math.floor(q*(0.9+R()*0.2)); base.hole4=Math.floor(q*(0.9+R()*0.2));
+      base.totalHoles=base.hole1+base.hole2+base.hole3+base.hole4;
+      base.unmarkedProcessed=Math.floor(q*R()*0.04);
+    }
+    if(type==='4150 Process Cleaning OP'&&q!=null){
+      base.notProcessed=Math.floor(q*R()*0.05); base.nonConforming=Math.floor(q*R()*0.03);
+      base.conforming=q-base.notProcessed-base.nonConforming;
+    }
+    if(type==='Standard Operation'||type==='Standard Op With Hours'||type==='Shipping-Standard Operation'||type==='Shipping-Tip Hole Repair'||type==='Tip-Hole Repair'||type==='4150 Process OP 15A'||type==='4150 Process OP 15B'||type==='4150 Process Cleaning OP'){
       base.initials=initialsOf(who); base.initialsAt=stamp;
     }
     if(type==='First Piece Inspection'||type==='Sign-Off') base.sigAt=stamp;
@@ -1125,6 +1187,7 @@ function genDemo(){
   const ROUTERS=[
    ["AL-7 STD BLADE",[["OP 10 GAGE INSPECTION","Standard Operation"],["OP 20 TRAILING EDGE GRIND","Standard Op With Hours"],["OP 30 CLEAN","Standard Operation"],["OP 43 TE GRIND FIRST PIECE INSPECTION","First Piece Inspection"],["OP 47 QUALITY INSPECTION","Standard Operation"],["OP 50 SHIPPING","Shipping-Tip Hole Repair"]]],
    ["AL-5 SHORT BLADE",[["OP 12 GAGE INSPECTION","Standard Operation"],["OP 25 EDGE GRIND","Standard Op With Hours"],["OP 55 CLEAN","Standard Operation"],["OP 62 QUALITY INSPECTION","Standard Operation"],["OP 70 SHIPPING","Shipping-Tip Hole Repair"]]],
+   ["4150 PROCESS PCC",[["OP 5 RECEIVING","Standard Operation"],["OP 15A CERAMIC PRE-CHECK","4150 Process OP 15A"],["OP 15B PRE-INSPECT FOR HOLES","4150 Process OP 15B"],["OP 100 TIP HOLE PRODUCTION","Tip-Hole Repair"],["OP 175 CLEANING/FINAL VISUAL","4150 Process Cleaning OP"],["OP 275 SHIPPING","Shipping-Standard Operation"]]],
    ["TIP HOLE REPAIR",[["OP 10 INCOMING GAGE","Standard Operation"],["TIP HOLE SECTION","Tip-Hole Repair"],["OP 40 FINAL CLEAN","Standard Operation"],["SHIPPING TIP HOLE","Shipping-Tip Hole Repair"]]],
    ["FULL RECON",[["OP 10 GAGE INSPECTION","Standard Operation"],["OP 15 DISASSEMBLY","Standard Operation"],["OP 20 TRAILING EDGE GRIND","Standard Op With Hours"],["OP 30 CLEAN","Standard Operation"],["TIP HOLE SECTION","Tip-Hole Repair"],["OP 45 SIGN-OFF","Sign-Off"],["OP 47 QUALITY INSPECTION","Standard Operation"],["OP 50 SHIPPING","Shipping-Tip Hole Repair"]]]];
   const today=new Date(); today.setHours(0,0,0,0);
@@ -1164,7 +1227,7 @@ function genDemo(){
       if(queue==='receiving') status='pending';
       else if(idx<doneCount) status='done';
       else if(idx===doneCount&&queue!=='complete') status='next';
-      const hasQty=(type==='Standard Operation'||type==='Standard Op With Hours'||type==='Tip-Hole Repair'||type==='Shipping-Tip Hole Repair');
+      const hasQty=(type==='Standard Operation'||type==='Standard Op With Hours'||type==='Shipping-Standard Operation'||type==='Tip-Hole Repair'||type==='Shipping-Tip Hole Repair'||type==='4150 Process OP 15A'||type==='4150 Process OP 15B'||type==='4150 Process Cleaning OP');
       let oq=null, recs=[];
       if(status==='done'){
         if(hasQty&&R()<0.18) runQty=Math.max(0,runQty-(1+Math.floor(R()*8)));
@@ -1557,7 +1620,7 @@ const MS={
   staff:{label:'Staff',opts:[],sel:new Set()},
   age:{label:'Age',opts:[['0-2','0-2 days'],['3-7','3-7 days'],['8-14','8-14 days'],['15-9999','15+ days']],sel:new Set()},
   router:{label:'Router',opts:[],sel:new Set()},
-  speed:{label:'Speed',opts:[['slow','\u{1F422} Slow \u2014 Behind'],['avg','\u{1F6B6} Average \u2014 On par'],['fast','\u{1F406} Fast \u2014 Ahead'],['new','\u{1F423} New \u2014 unrated']],sel:new Set()},
+  speed:{label:'Speed',opts:[['slow','\u{1F422} Slow \u2014 Behind'],['avg','\u{1F6B6} Average \u2014 On par'],['fast','\u{1F680} Fast \u2014 Ahead'],['new','\u{1F423} New \u2014 unrated']],sel:new Set()},
   qty:{label:'Job Size',opts:[['0-249','Small (<250)'],['250-750','Medium (250-750)'],['751-1500','Large (751-1500)'],['1501-999999','XL (>1500)']],sel:new Set()}
 };
 /* -------- data period / date-range filter (received date) -------- */
@@ -1733,7 +1796,7 @@ function speedHTML(j){
   }
   const v=jobSpeed(j); if(v==null) return '';
   const b=speedBucket(v);
-  const icon=b==='slow'?'&#128034;':b==='avg'?'&#128694;':'&#128006;';
+  const icon=b==='slow'?'&#128034;':b==='avg'?'&#128694;':'&#128640;';
   const verdict=b==='slow'?'Behind':b==='avg'?'On par':'Ahead';
   const a=aging(j)||0;
   const ppd=ppdOf(j), med=medianPPD();
@@ -1876,6 +1939,146 @@ function buildDrill(){
 }
 
 /* ---------------- render ---------------- */
+
+/* ================= PIVOT TABLE (v90) ================= */
+const PV_DIMS={
+  customer:['Customer',(j,o,r)=>j.customer],
+  queue:['Queue',(j,o,r)=>j.queue.charAt(0).toUpperCase()+j.queue.slice(1)],
+  router:['Router',(j,o,r)=>j.router],
+  op:['Operation',(j,o,r)=>o.label],
+  optype:['Op Type',(j,o,r)=>o.type],
+  insp:['Inspector',(j,o,r)=>r.insp||'(none)'],
+  shift:['Shift',(j,o,r)=>r.shift?('Shift '+r.shift):'(none)'],
+  speed:['Job Speed',(j,o,r)=>{ if(isNewJob(j))return 'New'; const v=jobSpeed(j); if(v==null)return '(unrated)';
+    const b=speedBucket(v); return b==='slow'?'Behind':b==='avg'?'On par':'Ahead'; }],
+  month:['Month (entry)',(j,o,r)=>{ const p=String(r.date||'').split('/'); return p.length===3?('20'+p[2]+'-'+p[0]):'(no date)'; }]
+};
+const PV_VALS={entries:['Entries',null],qty:['Qty (pieces)',r=>r.qty],hours:['Hours',r=>r.hours]};
+const PV_AGGS={count:'Count',sum:'Sum',avg:'Average',min:'Min',max:'Max'};
+const PV_FMTS={none:'None',shade:'Shading',scale3:'Color Scale',bars:'Data Bars',lights:'Traffic Lights',flags:'Flags',outliers:'Flag Outliers'};
+let PV={row:'router',col:'optype',val:'qty',agg:'sum',fmt:'scale3'};
+try{ const s=localStorage.getItem('emops_pivot'); if(s) PV=Object.assign(PV,JSON.parse(s)); }catch(e){}
+let PVW={};            /* column widths, reset when dims change */
+function pvSet(k,v){
+  PV[k]=v;
+  if(k==='val'&&v==='entries') PV.agg='count';
+  if(k==='val'&&v!=='entries'&&PV.agg==='count') PV.agg='sum';
+  if(k==='row'||k==='col') PVW={};
+  try{ localStorage.setItem('emops_pivot',JSON.stringify(PV)); }catch(e){}
+  renderPivot();
+}
+function pvOptions(){
+  const fill=(id,map,cur,extra)=>{
+    const el=document.getElementById(id); if(!el) return;
+    let h=extra?'<option value="">'+extra+'</option>':'';
+    for(const k in map) h+='<option value="'+k+'"'+(cur===k?' selected':'')+'>'+(Array.isArray(map[k])?map[k][0]:map[k])+'</option>';
+    el.innerHTML=h; el.value=cur||'';
+  };
+  fill('pvRow',PV_DIMS,PV.row);
+  fill('pvCol',PV_DIMS,PV.col,'&mdash; none &mdash;');
+  fill('pvVal',PV_VALS,PV.val);
+  fill('pvAgg',PV_AGGS,PV.agg);
+  fill('pvFmt',PV_FMTS,PV.fmt);
+  const aggEl=document.getElementById('pvAgg');
+  if(aggEl) aggEl.disabled = PV.val==='entries';
+}
+function pvAggregate(list){
+  if(!list.length) return null;
+  if(PV.val==='entries'||PV.agg==='count') return list.length;
+  const nums=list.filter(x=>x!=null&&isFinite(x));
+  if(!nums.length) return null;
+  if(PV.agg==='sum') return nums.reduce((a,b)=>a+b,0);
+  if(PV.agg==='avg') return nums.reduce((a,b)=>a+b,0)/nums.length;
+  if(PV.agg==='min') return Math.min.apply(null,nums);
+  if(PV.agg==='max') return Math.max.apply(null,nums);
+  return nums.length;
+}
+function pvNum(x){ if(x==null) return ''; const v=(Math.round(x*10)/10); return (v%1?v.toFixed(1):v).toLocaleString(); }
+function renderPivot(){
+  const wrap=document.getElementById('pvWrap'); if(!wrap) return;
+  pvOptions();
+  const rowF=PV_DIMS[PV.row][1], colF=PV.col?PV_DIMS[PV.col][1]:null;
+  const valF=PV_VALS[PV.val][1];
+  const cells={}, rowSet=new Set(), colSet=new Set();
+  viewList().forEach(j=>{ (j.ops||[]).forEach(o=>{ (o.recs||[]).forEach(r=>{
+    const rk=String(rowF(j,o,r)), ck=colF?String(colF(j,o,r)):'Value';
+    rowSet.add(rk); colSet.add(ck);
+    const key=rk+'\u0001'+ck;
+    (cells[key]=cells[key]||[]).push(valF?valF(r):1);
+  });});});
+  const rows=[...rowSet].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  const cols=[...colSet].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  document.getElementById('pvCap').textContent =
+    PV_DIMS[PV.row][0]+(PV.col?' by '+PV_DIMS[PV.col][0]:'')+' \u2014 '+PV_AGGS[PV.agg]+' of '+PV_VALS[PV.val][0];
+  if(!rows.length){ wrap.innerHTML='<div class="pvempty">No records in the current view.</div>'; return; }
+  /* matrix + totals */
+  const M=rows.map(rk=>cols.map(ck=>pvAggregate(cells[rk+'\u0001'+ck]||[])));
+  const rowTot=rows.map((rk,ri)=>pvAggregate([].concat(...cols.map(ck=>cells[rk+'\u0001'+ck]||[]))));
+  const colTot=cols.map((ck,ci)=>pvAggregate([].concat(...rows.map(rk=>cells[rk+'\u0001'+ck]||[]))));
+  const grand=pvAggregate([].concat(...Object.values(cells)));
+  /* normalization over body cells */
+  const body=M.flat().filter(x=>x!=null);
+  const lo=Math.min.apply(null,body), hi=Math.max.apply(null,body);
+  const mean=body.reduce((a,b)=>a+b,0)/(body.length||1);
+  const sd=Math.sqrt(body.reduce((a,b)=>a+(b-mean)*(b-mean),0)/(body.length||1));
+  const pct=v=>hi===lo?0.5:(v-lo)/(hi-lo);
+  const scale3=p=>{ /* red -> yellow -> green */
+    const s=p<0.5?[218+ (250-218)*(p*2), 30+(212-30)*(p*2), 40+(76-40)*(p*2)]
+                 :[250+(25-250)*((p-0.5)*2), 212+(128-212)*((p-0.5)*2), 76+(56-76)*((p-0.5)*2)];
+    return 'rgb('+s.map(x=>Math.round(x)).join(',')+')';
+  };
+  function deco(v){
+    if(v==null||PV.fmt==='none') return ['',''];
+    const p=pct(v);
+    if(PV.fmt==='shade') return ['background:rgba(24,64,126,'+(0.06+p*0.5).toFixed(2)+');color:'+(p>0.62?'#fff':'inherit'),''];
+    if(PV.fmt==='scale3') return ['background:'+scale3(p)+';color:'+(p<0.25||p>0.8?'#fff':'#1C1F26'),''];
+    if(PV.fmt==='bars') return ['background:linear-gradient(to right,rgba(24,64,126,.38) '+(p*100).toFixed(0)+'%,transparent '+(p*100).toFixed(0)+'%)',''];
+    if(PV.fmt==='lights'){ const c=p>=0.67?'#198038':p>=0.34?'#E8A13C':'#da1e28';
+      return ['','<span class="pvdot" style="background:'+c+'"></span>']; }
+    if(PV.fmt==='flags'){ const c=p>=0.67?'#198038':p>=0.34?'#E8A13C':'#da1e28';
+      return ['','<span class="pvflag" style="color:'+c+'">&#9873;</span>']; }
+    if(PV.fmt==='outliers'&&sd>0){
+      if(v>mean+2*sd) return ['','',' pvout hi'];
+      if(v<mean-2*sd) return ['','',' pvout lo'];
+    }
+    return ['',''];
+  }
+  let h='<table class="pv"><colgroup><col style="width:'+(PVW[0]||170)+'px">';
+  cols.forEach((c,ci)=>h+='<col style="width:'+(PVW[ci+1]||110)+'px">');
+  h+='<col style="width:'+(PVW[cols.length+1]||110)+'px"></colgroup>';
+  h+='<tr><th>'+esc(PV_DIMS[PV.row][0])+'<span class="pvrz" data-ci="0"></span></th>';
+  cols.forEach((c,ci)=>h+='<th>'+esc(c)+'<span class="pvrz" data-ci="'+(ci+1)+'"></span></th>');
+  h+='<th>Total<span class="pvrz" data-ci="'+(cols.length+1)+'"></span></th></tr>';
+  rows.forEach((rk,ri)=>{
+    h+='<tr><td title="'+esc(rk)+'">'+esc(rk)+'</td>';
+    cols.forEach((ck,ci)=>{
+      const v=M[ri][ci], d=deco(v);
+      h+='<td class="'+(d[2]||'')+'" style="'+d[0]+'">'+(v==null?'':d[1]+pvNum(v))+'</td>';
+    });
+    h+='<td class="pvtot">'+pvNum(rowTot[ri])+'</td></tr>';
+  });
+  h+='<tr class="pvtot"><td>Total</td>';
+  colTot.forEach(v=>h+='<td>'+pvNum(v)+'</td>');
+  h+='<td>'+pvNum(grand)+'</td></tr></table>';
+  wrap.innerHTML=h;
+}
+/* Excel-style drag-to-resize columns */
+(function(){
+  let drag=null;
+  document.addEventListener('mousedown',e=>{
+    const g=e.target.closest&&e.target.closest('.pvrz'); if(!g) return;
+    const ci=+g.dataset.ci, col=document.querySelectorAll('#pvWrap colgroup col')[ci];
+    if(!col) return;
+    drag={ci,startX:e.clientX,startW:col.getBoundingClientRect().width,col};
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!drag) return;
+    const w=Math.max(56,Math.round(drag.startW+(e.clientX-drag.startX)));
+    drag.col.style.width=w+'px'; PVW[drag.ci]=w;
+  });
+  document.addEventListener('mouseup',()=>{ drag=null; });
+})();
 function render(){
   PPD_MED=null; SPD_RATES=null;
   const VL=viewList();
@@ -1960,6 +2163,7 @@ function render(){
     </div>`;
   }).join('');
   applyListCaps();
+  renderPivot();
 }
 function toggleJob(id){OPEN[id]=!OPEN[id];render();}
 function setView(v){
@@ -2881,7 +3085,7 @@ function aiSig(scope,tier){ const s=typeof scope==='string'?scope:(scope&&scope.
 
 function openAI(scope){
   AI_SCOPE=scope; AI_TIER='quick';
-  const WNAME={donut:'Routers: In Progress vs Completed',stage:'Quantity by Stage',shift:'Quantity by Shift',drill:'Op Group Drill-down',kpi:'Shop Vitals (KPIs)'};
+  const WNAME={donut:'Routers: In Progress vs Completed',stage:'Quantity by Stage',shift:'Quantity by Shift',drill:'Op Group Drill-down',kpi:'Shop Vitals (KPIs)',pivot:'Pivot Table'};
   document.getElementById('aiScope').textContent =
     (typeof scope==='string') ? ('Job '+scope) :
     (scope&&scope.w) ? (WNAME[scope.w]+(filterSummary().length?' - filtered view':'')) :
