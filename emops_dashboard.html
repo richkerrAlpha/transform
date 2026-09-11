@@ -222,7 +222,7 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .btn-reset{box-sizing:border-box;height:40px;width:100%;background:var(--card);color:var(--alert);border:1.5px solid var(--alert);padding:0 16px;font-size:13px;font-weight:700;cursor:pointer;border-radius:3px}
 .btn-reset:hover{background:var(--alert);color:#fff}
 /* custom resize handles */
-.charts .card{flex:0 0 auto;position:relative}
+.charts .card{flex:1 1 auto;position:relative;max-width:100%}
 .rz-r{position:absolute;top:0;right:-3px;width:8px;height:100%;cursor:ew-resize;z-index:25}
 .rz-b{position:absolute;left:0;bottom:-3px;height:8px;width:100%;cursor:ns-resize;z-index:25}
 .rz-c{position:absolute;right:-2px;bottom:-2px;width:16px;height:16px;cursor:nwse-resize;z-index:26;
@@ -345,7 +345,7 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .speakbtn.on{background:var(--go);color:#fff}
 .card.snapping{outline:2px dashed var(--go);outline-offset:3px}
 /* ---- Pivot panel (v90) ---- */
-#cc-pivot{grid-column:1/-1}
+#cc-pivot{flex-basis:100%;width:100%;min-width:240px;height:380px}
 #cc-pivot .sub{padding-left:0}
 .pvbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;font-size:11.5px;font-weight:700;
   letter-spacing:.06em;text-transform:uppercase;color:var(--muted2);margin-bottom:10px}
@@ -354,7 +354,7 @@ header.top{background:linear-gradient(to right,#000,var(--navy));color:#fff}
 .pvcap{display:none;font-size:12px;font-weight:700;color:var(--muted2);margin-bottom:8px}
 .capturing .pvbar{display:none}
 .capturing .pvcap{display:block}
-.pvwrap{overflow:auto;max-height:360px;border:1px solid var(--line)}
+.pvwrap{overflow:auto;flex:1 1 auto;min-height:80px;max-width:100%;border:1px solid var(--line)}
 table.pv{border-collapse:collapse;width:100%;font-size:12.5px;font-variant-numeric:tabular-nums;table-layout:fixed}
 table.pv th,table.pv td{border:1px solid var(--rowline);padding:5px 9px;text-align:right;white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis;position:relative}
@@ -368,6 +368,7 @@ table.pv tr.pvtot td,table.pv td.pvtot{font-weight:800;background:var(--panelbg)
 .pvrz:hover{background:var(--navy);opacity:.35}
 .capturing .pvrz{display:none}
 .capturing .pvwrap{max-height:none;overflow:visible}
+#cc-pivot.capturing,.capturing #cc-pivot{height:auto!important}
 .pvdot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:baseline}
 .pvflag{font-size:12px;margin-right:5px}
 .pvout{outline:2px solid var(--alert);outline-offset:-2px;font-weight:800}
@@ -976,7 +977,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
 <body>
 
 <header class="top"><div class="top-inner">
-  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v90</small></div>
+  <div class="brand">Erdman Machine<small>Operations &middot; Job Progress &middot; v91</small></div>
   <div class="mode">
     <span>TEXT:</span>
     <select id="fontSel" onchange="applyFontScale(this.value)" title="Overall text/UI size">
@@ -1043,7 +1044,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
     <div class="card panel" id="cc-shift" data-chartcard><h3 class="tileh"><span class="grip inflow" draggable="true" title="Drag to reorder">&#8942;&#8942;</span><span class="ttl">Quantity by Shift</span><span class="tilebtns"><button type="button" class="aibtn" title="AI assessment of this tile" onclick="openAI({w:'shift'})">&#10024; AI</button><button type="button" class="pngbtn" title="Copy or save as PNG" onclick="openPngMenu('cc-shift',event)">&#8681; PNG &#9662;</button></span></h3><div class="fpills fp"></div><div class="cwrap"><canvas id="cShift"></canvas></div><button type="button" class="dlbbtn" data-dlb="shift" onclick="toggleDLabels('shift')">123</button><div class="sub">Pieces recorded per shift across all entries in view. Click a bar to filter to jobs worked on that shift.</div></div>
     <div class="card panel" id="cc-drill" data-chartcard><h3 class="tileh"><span class="grip inflow" draggable="true" title="Drag to reorder">&#8942;&#8942;</span><span class="ttl"><span id="drillTitle">Operations Drill-down: Qty by Op Group</span></span><span class="tilebtns"><button type="button" class="pngbtn" id="opgBtn" title="Toggle grouping: router-specific op numbers vs op name across all routers" onclick="toggleOpGroup()">Group: Op # + Name</button><button type="button" class="aibtn" title="AI assessment of this tile" onclick="openAI({w:'drill'})">&#10024; AI</button><button type="button" class="pngbtn" title="Copy or save as PNG" onclick="openPngMenu('cc-drill',event)">&#8681; PNG &#9662;</button></span></h3><div class="fpills fp"></div>
       <div class="cwrap"><canvas id="cDrill"></canvas></div><button type="button" class="dlbbtn" data-dlb="drill" onclick="toggleDLabels('drill')">123</button>
-      <div class="sub" id="drillSub">Jobs in Operations, grouped by active op. Click a bar to filter to that op group.</div>
+      <div class="sub" id="drillSub">Jobs in Operations, grouped by active op. Click a bar to filter to that op group.</div></div>
     <div class="card panel" id="cc-pivot" data-chartcard><h3 class="tileh"><span class="grip inflow" draggable="true" title="Drag to reorder">&#8942;&#8942;</span><span class="ttl">Pivot Table</span><span class="tilebtns"><button type="button" class="aibtn" title="AI assessment of this tile" onclick="openAI({w:'pivot'})">&#10024; AI</button><button type="button" class="pngbtn" title="Copy or save as PNG" onclick="openPngMenu('cc-pivot',event)">&#8681; PNG &#9662;</button></span></h3>
       <div class="pvbar">
         <label>Rows <select id="pvRow" onchange="pvSet('row',this.value)"></select></label>
@@ -1055,7 +1056,7 @@ function(t){t.__bidiEngine__=t.prototype.__bidiEngine__=function(t){var n,r,i,a,
       <div class="pvcap" id="pvCap"></div>
       <div class="pvwrap" id="pvWrap"></div>
       <div class="sub">Pivot of the records in the current filtered view &mdash; pick Rows / Columns / Values like Excel. Drag a column edge to resize. Conditional formats: shading, color scale, data bars, traffic lights, flags, outliers.</div>
-    </div></div>
+    </div>
   </div></div>
 
   <div class="panel" id="p-jobsview" data-panel><span class="grip" draggable="true" title="Drag to reorder" style="top:16px">&#8942;&#8942;</span>
@@ -1427,10 +1428,14 @@ function autoLayout(){
   const h=320;
   CHART_DEFAULT.forEach(id=>{const el=document.getElementById(id); if(el){
     el.style.width=half+'px'; el.style.height=h+'px'; row.appendChild(el);}});
+  /* pivot: full row width below the 2x2, on the 40px height grid */
+  const pv=document.getElementById('cc-pivot'), pvh=380;
+  if(pv){ pv.style.width=Math.min(RZ.maxW,avail)+'px'; pv.style.height=pvh+'px'; row.appendChild(pv); }
   try{
     localStorage.removeItem('emops_sec_order');
     localStorage.removeItem('emops_chart_order');
     CHART_DEFAULT.forEach(id=>localStorage.setItem('emops_size_'+id,half+'px|'+h+'px'));
+    if(pv) localStorage.setItem('emops_size_cc-pivot',pv.style.width+'|'+pvh+'px');
   }catch(e){}
   render();
 }
