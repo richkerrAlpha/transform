@@ -295,6 +295,61 @@ tbody tr.link{cursor:pointer}
 .selchip{display:none;align-items:center;background:#E2F1F6;color:var(--steel);border:1px solid var(--accent);border-radius:99px;padding:2px 10px;font-size:11px;font-weight:700;margin-left:8px}
 footer{text-align:center;font-size:12px;color:var(--muted);padding:24px}
 @media(max-width:980px){.c8,.c6,.c4{grid-column:span 12}.chartbox{height:260px}}
+/* -------------------- chart type picker (every chart tile) -------------------- */
+.card h3{flex-wrap:wrap;gap:6px 10px}
+.ctype{-webkit-appearance:none;appearance:none;background:var(--card) url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6'%3E%3Cpath d='M0 0l4.5 6 4.5-6z' fill='%236C7A89'/%3E%3C/svg%3E") no-repeat right 7px center;
+  border:1.5px solid var(--accent);color:var(--steel);border-radius:7px;font:inherit;font-size:11px;font-weight:800;
+  padding:4px 22px 4px 8px;cursor:pointer;max-width:170px;text-overflow:ellipsis;transition:.15s}
+.ctype:hover{background-color:color-mix(in srgb, var(--accent) 12%, var(--card))}
+.ctype:focus-visible,.pvbar select:focus-visible,.pvbar button:focus-visible{outline:2px solid var(--steel);outline-offset:1px}
+.ctype optgroup{font-weight:800;color:var(--muted)}
+.ctype option{font-weight:600;color:var(--ink)}
+/* -------------------- pivot table pane -------------------- */
+.pvbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end;margin:0 0 10px;padding:10px 12px;
+  border:1px solid color-mix(in srgb, var(--accent) 35%, #DCE4EA);border-radius:10px;
+  background:color-mix(in srgb, var(--accent) 5%, var(--card))}
+.pvbar .pvf{display:flex;flex-direction:column;gap:4px;font-size:11px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.4px}
+.pvbar select{border:1px solid #CBD5DD;border-radius:8px;padding:6px 8px;font-size:12.5px;font-weight:500;
+  background:#fff;color:var(--ink);min-width:118px;text-transform:none;letter-spacing:0}
+.pvbar select:disabled{opacity:.5;cursor:not-allowed}
+.pvbar .pvsep{width:1px;align-self:stretch;background:color-mix(in srgb, var(--accent) 35%, #DCE4EA)}
+.pvbar .pvf.dim{opacity:.45}
+.pvbar .switch{align-self:center;margin-bottom:6px}
+.pvbtn{border:1px solid #CBD5DD;background:#fff;color:var(--steel);border-radius:8px;padding:6px 11px;font-size:12px;
+  font-weight:700;cursor:pointer;white-space:nowrap;align-self:flex-end}
+.pvbtn:hover{background:var(--steel);color:#fff;border-color:var(--steel)}
+.pvlegend{font-size:11.5px;color:var(--muted);margin:0 0 8px;display:flex;gap:6px 10px;flex-wrap:wrap;align-items:center;min-height:16px;line-height:1.5}
+.pvlegend .ico{vertical-align:-1px;margin:0 4px 0 6px}
+.pvsw{display:inline-block;width:64px;height:10px;border-radius:3px;border:1px solid #D5DEE5;vertical-align:-1px}
+.pvscroll{max-height:470px;overflow:auto;border:1px solid #E1E8ED;border-radius:8px}
+table.pvt{width:auto;table-layout:fixed;border-collapse:separate;border-spacing:0}
+.pvt thead{position:static}
+.pvt th{position:sticky;top:0;z-index:3;overflow:hidden;text-overflow:ellipsis;cursor:pointer;user-select:none}
+.pvt th.num{text-align:right}
+.pvt th.corner{left:0;z-index:4}
+.pvt th:hover{color:var(--accent)}
+.pvt th .arr{font-size:9px;margin-left:3px}
+.pvt .rz{position:absolute;top:0;right:0;width:7px;height:100%;cursor:col-resize;z-index:5;touch-action:none}
+.pvt .rz::after{content:"";position:absolute;top:22%;bottom:22%;right:0;width:1px;background:rgba(255,255,255,.3)}
+.pvt .rz:hover,.pvt .rz.on{background:rgba(255,255,255,.45)}
+.pvt td{overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.pvt td.pc{position:relative;text-align:right}
+.pvt td.rh{position:sticky;left:0;z-index:2;background:var(--card);font-weight:700;color:var(--ink);
+  box-shadow:inset -1px 0 0 #E1E8ED}
+.pvt td.ctot,.pvt tr.tot td{font-weight:800;background:color-mix(in srgb, var(--steel) 8%, var(--card))}
+.pvt tr.tot td{border-top:2px solid var(--steel)}
+.pvt tr.tot td.rh{background:color-mix(in srgb, var(--steel) 8%, var(--card))}
+.pvt.linkable td.cell{cursor:pointer}
+.pvt.linkable td.cell:hover{box-shadow:inset 0 0 0 2px var(--accent) !important}
+.pvt td.sel{box-shadow:inset 0 0 0 3px #F0B429 !important}
+.pvt .dbar{position:absolute;left:2px;top:4px;bottom:4px;border-radius:2px;z-index:0;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 75%, #fff), color-mix(in srgb, var(--accent) 20%, #fff))}
+.pvt .cv{position:relative;z-index:1}
+.pvt .ico{float:left;margin-top:2px}
+.pvt .omark{font-size:9px;margin-left:4px;position:relative;z-index:1}
+.pvt td.pvempty{text-align:left;color:var(--muted);font-style:italic;padding:18px 14px;white-space:normal}
+@media(max-width:760px){ .pvbar .pvf{width:calc(50% - 7px)} .pvbar select{min-width:0;width:100%} .pvbar .pvsep{display:none} }
 </style>
 </head>
 <body>
@@ -307,8 +362,8 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.50",
-  updated: "Aug 12, 2026",
+  version: "3.60",
+  updated: "Sep 17, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
   // Default quality target: monthly rejection rate above this fraction is flagged red
@@ -471,6 +526,25 @@ const DATA = [];
     <div class="card c6"><h3><span>Inspector Volume</span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Volume" data-title="Inspector Volume" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
     <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small style="display:inline-flex;align-items:center;gap:5px">top by inspected footage &#183; hide under <input type="number" id="millMinSpin" class="tgtspin" min="0" step="100" title="Mills with less inspected footage than this are hidden from the chart"> ft</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
     <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
+    <div class="card c12" id="pivotCard"><h3><span>Pivot Table <small id="pvNote"></small></span><span class="tilebtns"><div class="msel" id="pvExpSel"><button type="button" class="msel-btn" id="pvExpBtn" style="min-width:0;padding:5px 24px 5px 9px;font-size:12px;font-weight:700" title="Export the pivot as it is laid out">&#8681; Export</button><div class="msel-panel" id="pvExpPanel" style="left:auto;right:0;min-width:190px"><div class="ms-opt" data-fmt="xlsx">Excel workbook (.xlsx)</div><div class="ms-opt" data-fmt="csv">CSV (.csv)</div></div></div><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" id="pvPng" data-ai="pivot" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3>
+      <div class="pvbar">
+        <label class="pvf">Rows <select id="pvRow"></select></label>
+        <label class="pvf">Columns <select id="pvCol"></select></label>
+        <button type="button" class="pvbtn" id="pvSwap" title="Swap rows and columns">&#8644; Swap</button>
+        <label class="pvf">Values <select id="pvVal"></select></label>
+        <label class="pvf">Summarize by <select id="pvAgg"></select></label>
+        <label class="pvf">Show as <select id="pvShow"></select></label>
+        <span class="pvsep"></span>
+        <label class="pvf">Conditional formatting <select id="pvCf"></select></label>
+        <div class="pvf" id="pvDirBox">Higher is
+          <div class="seg" id="pvDir"><button type="button" data-d="good">Better</button><button type="button" data-d="bad">Worse</button></div>
+        </div>
+        <label class="switch" title="Show row and column grand totals"><input type="checkbox" id="pvTot"><span class="slider"></span><span>Totals</span></label>
+        <button type="button" class="pvbtn" id="pvReset" title="Back to the default layout">Reset layout</button>
+      </div>
+      <div class="pvlegend" id="pvLegend"></div>
+      <div class="pvscroll"><table class="pvt" id="pvTable"></table></div>
+    </div>
     <div class="card c12"><h3><span>Submissions in Scope <small id="tblNote"></small><span id="selChip" class="selchip"></span></span>
       <span style="display:flex;align-items:center;gap:16px">
         <div class="msel" id="expSel">
@@ -629,6 +703,7 @@ document.addEventListener("click", (e)=>{
   for(const key in MSEL)
     if(!$(MSEL[key].sel).contains(e.target)) $(MSEL[key].panel).style.display = "none";
   if(!$("expSel").contains(e.target)) $("expPanel").style.display = "none";
+  if($("pvExpSel") && !$("pvExpSel").contains(e.target)) $("pvExpPanel").style.display = "none";
 });
 /* A hold can sit pending review with no reason assigned yet - especially
    recent ones. Excluding those from the reasons chart used to make it look
@@ -683,30 +758,51 @@ const valueLabels = {
   id: "valueLabels",
   afterDatasetsDraw(c){
     const n = (c.data.labels || []).length;
-    if(n > 10) return;
     const ctx = c.ctx;
     const ink = getComputedStyle(document.documentElement).getPropertyValue("--ink").trim() || "#222";
+    const lift = (c.data.$ext && c.data.$ext.bar3d) ? 10 : 0;     // clear the 3-D top face
     ctx.save();
     ctx.font = "700 10px 'Segoe UI',Roboto,Arial,sans-serif";
     c.data.datasets.forEach((ds, di)=>{
       if(ds.label === "Target") return;                    // skip the dashed threshold line
       const meta = c.getDatasetMeta(di);
       if(meta.hidden) return;
+      if(ds.pointNames){                                   // scatter / bubble: name the points
+        if(ds.data.length > 15) return;
+        ctx.fillStyle = ink; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+        ctx.font = "600 9.5px 'Segoe UI',Roboto,Arial,sans-serif";
+        meta.data.forEach((el, i)=>{
+          const r = (el.options && el.options.radius) || 6;
+          ctx.fillText(String(ds.pointNames[i]).slice(0, 22), el.x + r + 4, el.y);
+        });
+        ctx.font = "700 10px 'Segoe UI',Roboto,Arial,sans-serif";
+        return;
+      }
+      if(n > 10 || ds.valueLabels === false) return;
       const horiz = c.options.indexAxis === "y";
       meta.data.forEach((el, i)=>{
-        const v = ds.data[i];
-        if(v == null || v === 0) return;                   // don't stamp zeros
-        const txt = /rate/i.test(ds.label||"") ? (100*v).toFixed(1)+"%" : fmt(v);
-        if(meta.type === "doughnut" || meta.type === "pie"){
+        let v = ds.data[i];
+        if(Array.isArray(v)) v = v[1] - v[0];              // floating bar (waterfall / funnel)
+        const given = ds.labelText ? ds.labelText[i] : null;
+        if(given === "") return;
+        if(given == null && (v == null || v === 0)) return;  // don't stamp zeros
+        const txt = given != null ? given : (/rate/i.test(ds.label||"") ? (100*v).toFixed(1)+"%" : fmt(v));
+        if(meta.type === "doughnut" || meta.type === "pie" || meta.type === "polarArea"){
           const p = el.tooltipPosition();
           ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
           ctx.fillText(txt, p.x, p.y);
+        } else if(ds.labelPos === "center" && el.getCenterPoint){
+          const p = el.getCenterPoint();
+          ctx.textAlign = "center"; ctx.textBaseline = "middle";
+          ctx.lineWidth = 2.5; ctx.strokeStyle = "rgba(15,25,35,.55)"; ctx.lineJoin = "round";
+          ctx.strokeText(txt, p.x, p.y);
+          ctx.fillStyle = "#fff"; ctx.fillText(txt, p.x, p.y);
         } else if(horiz){
           ctx.fillStyle = ink; ctx.textAlign = "left"; ctx.textBaseline = "middle";
-          ctx.fillText(txt, el.x + 5, el.y);
+          ctx.fillText(txt, el.x + 5 + lift, el.y);
         } else {
           ctx.fillStyle = ink; ctx.textAlign = "center"; ctx.textBaseline = "bottom";
-          ctx.fillText(txt, el.x, Math.max(el.y - 4, 12));
+          ctx.fillText(txt, el.x, Math.max(el.y - 4 - lift, 12));
         }
       });
     });
@@ -714,6 +810,643 @@ const valueLabels = {
   }
 };
 Chart.register(valueLabels);
+
+/* =====================================================================
+   Per-pane chart type picker. Every chart tile carries a dropdown that
+   lists only the chart types that suit that tile's data: a time series
+   never offers a pie, a single part-of-whole measure never offers a
+   scatter, and two measures in different units never share a radar.
+   Choices are saved per user (localStorage "pacChartTypes").
+   Each builder returns the Chart.js config PLUS the key order it drew in,
+   so chart-click list filtering and the selection outline keep working
+   whatever type is on screen (Pareto, funnel and waterfall re-sort).
+   Not offered on purpose: sunburst (no tile has a category hierarchy) and
+   histogram / box-and-whisker (every tile is pre-aggregated, so there is
+   no per-record distribution to bin).
+   ===================================================================== */
+const CT_GROUP_ORDER = ["Column & bar", "Line & area", "Part of whole", "Relationship", "Analysis"];
+let demoTypeStash = null;           // the guided demo runs on default types, then restores these
+let paneTypes = {};
+try{ paneTypes = JSON.parse(localStorage.getItem("pacChartTypes") || "{}") || {}; }catch(err){ paneTypes = {}; }
+const PANE_DATA = {};
+const ser = (label, data, unit, color, extra) => Object.assign({ label, data, unit, color }, extra || {});
+const perPoint = (n, a) => Array.from({ length:n }, (_, i) => B.series[i % B.series.length] + (a || ""));
+const unitFmt = (u, v) => v == null ? "" : u === "rate" ? pct(v) : fmt(v) + (u === "ft" ? " ft" : "");
+const tickFor = u => u === "rate" ? { callback:v=>(100*v).toFixed(0)+"%" } : { callback:v=>fmt(v) };
+
+function parseColor(c){
+  c = String(c || "").trim(); let m;
+  if(c[0] === "#"){
+    let h = c.slice(1);
+    if(h.length === 3) h = h.split("").map(x=>x+x).join("");
+    const a = h.length === 8 ? parseInt(h.slice(6, 8), 16) / 255 : 1;
+    return { r:parseInt(h.slice(0,2),16), g:parseInt(h.slice(2,4),16), b:parseInt(h.slice(4,6),16), a };
+  }
+  if((m = /rgba?\(([^)]+)\)/.exec(c))){
+    const p = m[1].split(",").map(parseFloat);
+    return { r:p[0], g:p[1], b:p[2], a: p.length > 3 ? p[3] : 1 };
+  }
+  return { r:120, g:130, b:140, a:1 };
+}
+function shadeColor(c, amt){            // amt > 0 lightens toward white, < 0 darkens
+  const o = parseColor(c);
+  const f = v => Math.round(amt >= 0 ? v + (255 - v) * amt : v * (1 + amt));
+  return `rgba(${f(o.r)},${f(o.g)},${f(o.b)},${o.a})`;
+}
+function mixColor(a, b, t){
+  const x = parseColor(a), y = parseColor(b); t = Math.max(0, Math.min(1, t));
+  const f = (p, q) => Math.round(p + (q - p) * t);
+  return `rgb(${f(x.r,y.r)},${f(x.g,y.g)},${f(x.b,y.b)})`;
+}
+function inkOn(c){
+  const o = parseColor(c);
+  return (0.299*o.r + 0.587*o.g + 0.114*o.b) / 255 > 0.62 ? "#1F2A33" : "#FFFFFF";
+}
+
+/* ---- canvas plugins used by the extra chart types ---- */
+/* 3-D column / bar: draws a lit top face and a shaded side face behind each
+   bar before the bars themselves paint, so neighbouring fronts occlude
+   correctly. Chart.js has no native 3-D; this is the lightweight version. */
+const bar3dPlugin = {
+  id:"bar3d",
+  beforeDatasetsDraw(c){
+    if(!(c.data.$ext && c.data.$ext.bar3d)) return;
+    const ctx = c.ctx; ctx.save();
+    c.data.datasets.forEach((ds, di)=>{
+      const meta = c.getDatasetMeta(di);
+      if(meta.hidden || meta.type !== "bar") return;
+      meta.data.forEach(el=>{
+        const p = el.getProps(["x","y","base","width","height","horizontal"], false);
+        let L, R, T, Bt;
+        if(p.horizontal){ L = Math.min(p.x, p.base); R = Math.max(p.x, p.base); T = p.y - p.height/2; Bt = p.y + p.height/2; }
+        else            { L = p.x - p.width/2; R = p.x + p.width/2; T = Math.min(p.y, p.base); Bt = Math.max(p.y, p.base); }
+        if(![L,R,T,Bt].every(isFinite) || R - L < 0.5) return;
+        const d = Math.max(3, Math.min(12, (p.horizontal ? (Bt - T) : (R - L)) * 0.35));
+        const col = el.options.backgroundColor;
+        ctx.fillStyle = shadeColor(col, 0.28);
+        ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L + d, T - d); ctx.lineTo(R + d, T - d); ctx.lineTo(R, T); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = shadeColor(col, -0.28);
+        ctx.beginPath(); ctx.moveTo(R, T); ctx.lineTo(R + d, T - d); ctx.lineTo(R + d, Bt - d); ctx.lineTo(R, Bt); ctx.closePath(); ctx.fill();
+      });
+    });
+    ctx.restore();
+  }
+};
+/* Dashed reference line (rejection-rate target, Pareto 80% line) on any
+   linear scale, horizontal or vertical. */
+const refLinePlugin = {
+  id:"refLine",
+  afterDatasetsDraw(c){
+    const o = c.data.$ext && c.data.$ext.refLine; if(!o || o.value == null) return;
+    const sc = c.scales[o.scale || "y"]; if(!sc) return;
+    const a = c.chartArea, ctx = c.ctx, px = sc.getPixelForValue(o.value);
+    ctx.save();
+    ctx.strokeStyle = o.color || B.red; ctx.lineWidth = 1.5; ctx.setLineDash([6, 5]);
+    ctx.beginPath();
+    if(sc.axis === "y"){ if(px < a.top - 1 || px > a.bottom + 1){ ctx.restore(); return; } ctx.moveTo(a.left, px); ctx.lineTo(a.right, px); }
+    else               { if(px < a.left - 1 || px > a.right + 1){ ctx.restore(); return; } ctx.moveTo(px, a.top); ctx.lineTo(px, a.bottom); }
+    ctx.stroke();
+    if(o.label){
+      ctx.setLineDash([]); ctx.fillStyle = o.color || B.red;
+      ctx.font = "700 10px 'Segoe UI',Roboto,Arial,sans-serif";
+      if(sc.axis === "y"){ ctx.textAlign = "right"; ctx.textBaseline = "bottom"; ctx.fillText(o.label, a.right - 2, px - 3); }
+      else { ctx.textAlign = "left"; ctx.textBaseline = "top"; ctx.fillText(o.label, px + 4, a.top + 2); }
+    }
+    ctx.restore();
+  }
+};
+/* Squarified treemap layout (Bruls et al.). Values must be > 0 and sorted
+   descending; returns one rect per value, in the same order. */
+function squarify(vals, x, y, w, h){
+  const total = vals.reduce((a, b)=>a + b, 0);
+  if(total <= 0 || w <= 0 || h <= 0) return vals.map(()=>null);
+  const area = vals.map(v => v / total * w * h);
+  const rects = []; let i = 0;
+  while(i < area.length){
+    const side = Math.min(w, h);
+    const worst = r => { const s = r.reduce((a,b)=>a+b,0), mx = Math.max(...r), mn = Math.min(...r);
+                         return Math.max(side*side*mx/(s*s), (s*s)/(side*side*mn)); };
+    const row = [area[i]]; let j = i + 1;
+    while(j < area.length && worst(row.concat(area[j])) <= worst(row)){ row.push(area[j]); j++; }
+    const s = row.reduce((a,b)=>a+b,0);
+    if(w >= h){ const cw = s / h; let cy = y; row.forEach(a=>{ const ch = a / cw; rects.push({ x, y:cy, w:cw, h:ch }); cy += ch; }); x += cw; w -= cw; }
+    else      { const rh = s / w; let cx = x; row.forEach(a=>{ const rw = a / rh; rects.push({ x:cx, y, w:rw, h:rh }); cx += rw; }); y += rh; h -= rh; }
+    i = j;
+  }
+  return rects;
+}
+/* Treemap drawn onto an empty bar chart's plot area, with its own hover
+   tooltip and hit-testing (Chart.js has no native treemap element). Clicks
+   route through the same chart.$pick() used by every other type. */
+const treemapPlugin = {
+  id:"treemapDraw",
+  afterDraw(c){
+    const t = c.data.$ext && c.data.$ext.treemap; if(!t) return;
+    const a = c.chartArea, ctx = c.ctx;
+    const rects = t.rects = squarify(t.values, a.left, a.top, a.right - a.left, a.bottom - a.top);
+    const tot = t.values.reduce((x, y)=>x + y, 0);
+    const font = "'Segoe UI',Roboto,Arial,sans-serif";
+    ctx.save();
+    rects.forEach((r, i)=>{
+      if(!r) return;
+      ctx.fillStyle = t.colors[i];
+      ctx.fillRect(r.x + 1, r.y + 1, Math.max(0, r.w - 2), Math.max(0, r.h - 2));
+      if(t.hover === i){ ctx.fillStyle = "rgba(255,255,255,.22)"; ctx.fillRect(r.x + 1, r.y + 1, r.w - 2, r.h - 2); }
+      if(r.w > 48 && r.h > 32){
+        ctx.save(); ctx.beginPath(); ctx.rect(r.x + 3, r.y + 3, r.w - 6, r.h - 6); ctx.clip();
+        ctx.fillStyle = inkOn(t.colors[i]); ctx.textAlign = "left"; ctx.textBaseline = "top";
+        ctx.font = "700 11px " + font; ctx.fillText(t.labels[i], r.x + 7, r.y + 6);
+        ctx.font = "600 10.5px " + font;
+        ctx.fillText(unitFmt(t.unit, t.values[i]) + "  \u00b7  " + pct(tot ? t.values[i] / tot : 0), r.x + 7, r.y + 21);
+        ctx.restore();
+      }
+    });
+    const h = selHighlights[c.canvas.id];
+    if(h && chartSel && chartSel.kind === h.kind){
+      const i = t.keys.indexOf(chartSel.value), r = rects[i];
+      if(r){ ctx.strokeStyle = pickHighlightColor(t.colors[i]); ctx.lineWidth = SEL_BORDER_WIDTH;
+             ctx.strokeRect(r.x + 3, r.y + 3, r.w - 6, r.h - 6); }
+    }
+    if(t.hover != null && rects[t.hover]){
+      const i = t.hover;
+      const lines = [t.labels[i], t.label + ": " + unitFmt(t.unit, t.values[i]), "Share: " + pct(tot ? t.values[i] / tot : 0)];
+      ctx.font = "600 11.5px " + font;
+      const bw = Math.max(...lines.map(l => ctx.measureText(l).width)) + 20, bh = lines.length * 16 + 12;
+      let bx = t.mx + 14, by = t.my + 12;
+      if(bx + bw > c.width) bx = t.mx - bw - 10;
+      if(by + bh > a.bottom) by = Math.max(a.top, t.my - bh - 8);
+      ctx.fillStyle = "rgba(20,28,36,.9)"; roundRect(ctx, bx, by, bw, bh, 6); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.textAlign = "left"; ctx.textBaseline = "top";
+      lines.forEach((l, k)=>{ ctx.font = (k ? "500 " : "700 ") + "11.5px " + font; ctx.fillText(l, bx + 10, by + 7 + k * 16); });
+    }
+    ctx.restore();
+  },
+  afterEvent(c, args){
+    const t = c.data.$ext && c.data.$ext.treemap; if(!t || !t.rects) return;
+    const e = args.event;
+    let idx = null;
+    if(e.type !== "mouseout"){
+      idx = t.rects.findIndex(r => r && e.x >= r.x && e.x <= r.x + r.w && e.y >= r.y && e.y <= r.y + r.h);
+      if(idx < 0) idx = null;
+    }
+    if(e.type === "click"){ if(idx != null && c.$pick) c.$pick(idx); return; }
+    if(idx !== t.hover || (idx != null && (t.mx !== e.x || t.my !== e.y))){
+      t.hover = idx; t.mx = e.x; t.my = e.y; args.changed = true;
+    }
+    c.canvas.style.cursor = (idx != null && $("linkToggle").checked) ? "pointer" : "default";
+  }
+};
+Chart.register(bar3dPlugin, refLinePlugin, treemapPlugin);
+
+/* ---- generic builders ---- */
+const pad3d = { layout:{ padding:{ top:14, right:16 } } };
+function bCatBars(d, series, o){
+  o = o || {};
+  const n = d.labels.length, single = series.length === 1;
+  let sets = series.map(s => s.data.slice());
+  if(o.pct){
+    const tot = d.labels.map((_, i) => sets.reduce((a, x) => a + (x[i] || 0), 0));
+    sets = sets.map(x => x.map((v, i) => tot[i] ? v / tot[i] : 0));
+  }
+  const unit = series[0].unit;
+  const datasets = series.map((s, k) => ({
+    label: s.label, data: sets[k], _raw: s.data, _unit: s.unit,
+    backgroundColor: single ? (s.colors || perPoint(n, "CC")) : s.color + "CC",
+    borderRadius: (o.three || o.stack) ? 0 : 4,
+    ...(o.pct ? { labelText: sets[k].map(v => v ? pct(v) : "") } : s.unit === "rate" ? { labelText: s.data.map(v => pct(v)) } : {}),
+    ...(o.stack ? { labelPos:"center" } : {})
+  }));
+  const vAxis = o.horiz ? "x" : "y", cAxis = o.horiz ? "y" : "x";
+  const scales = {};
+  scales[vAxis] = { beginAtZero:true, stacked:!!o.stack, ticks: tickFor(o.pct ? "rate" : unit), ...(o.pct ? { max:1 } : {}) };
+  scales[cAxis] = { stacked:!!o.stack };
+  const ext = { bar3d:!!o.three };
+  if(o.ref) ext.refLine = Object.assign({ scale:vAxis }, o.ref);
+  return {
+    cfg:{ type:"bar", data:{ labels:d.labels, datasets, $ext:ext },
+      options:{ responsive:true, maintainAspectRatio:false, indexAxis: o.horiz ? "y" : "x",
+        ...(o.three ? pad3d : {}),
+        ...(single ? {} : { interaction:{ mode:"index", intersect:false } }),
+        scales,
+        plugins:{ legend:{ display:!single, position:"bottom" },
+          tooltip:{ callbacks:{ label:c => {
+            const ds = c.dataset, raw = ds._raw[c.dataIndex];
+            return ` ${ds.label}: ${unitFmt(ds._unit, raw)}` + (o.pct ? `  (${pct(c.raw)})` : "");
+          } } } } } },
+    keys:d.keys, hi:series.map((_, k) => k), useBase:!!o.stack
+  };
+}
+function bArc(d, s, type){
+  const n = d.labels.length, tot = s.data.reduce((a, b) => a + b, 0);
+  return {
+    cfg:{ type, data:{ labels:d.labels, datasets:[{ label:s.label, data:s.data, _unit:s.unit,
+          backgroundColor: type === "polarArea" ? perPoint(n, "BB") : perPoint(n), borderWidth:2, borderColor:"#fff" }] },
+      options:{ responsive:true, maintainAspectRatio:false,
+        ...(type === "doughnut" ? { cutout:"55%" } : {}),
+        ...(type === "polarArea" ? { scales:{ r:{ ticks:{ display:false } } } } : {}),
+        plugins:{ legend:{ position:"bottom", labels:{ boxWidth:11, font:{ size:10.5 } } },
+          tooltip:{ callbacks:{ label:c => ` ${c.label}: ${unitFmt(s.unit, c.raw)}  (${pct(tot ? c.raw / tot : 0)})` } } } } },
+    keys:d.keys, hi:[0]
+  };
+}
+function bRadar(d, s){
+  const n = d.labels.length;
+  return {
+    cfg:{ type:"radar", data:{ labels:d.labels, datasets:[{ label:s.label, data:s.data, _unit:s.unit, valueLabels:false,
+          borderColor:B.steel, borderWidth:2, backgroundColor:B.accent + "44",
+          pointBackgroundColor: s.pointColors || perPoint(n), pointBorderColor:"#fff", pointRadius:5, pointHoverRadius:7 }] },
+      options:{ responsive:true, maintainAspectRatio:false,
+        scales:{ r:{ beginAtZero:true, ticks:{ ...tickFor(s.unit), backdropColor:"transparent", font:{ size:9 } },
+                     pointLabels:{ font:{ size:10 } } } },
+        plugins:{ legend:{ display:false },
+          tooltip:{ callbacks:{ label:c => ` ${s.label}: ${unitFmt(s.unit, c.raw)}` } } } } },
+    keys:d.keys, hi:[0]
+  };
+}
+function bLines(d, series, o){
+  o = o || {};
+  const n = d.labels.length;
+  const datasets = series.map((s, k) => ({
+    label:s.label, data:s.data, _unit:s.unit,
+    borderColor:s.color, borderWidth:2, tension:.3,
+    backgroundColor: o.area ? s.color + (o.stack ? "99" : "3A") : s.color,
+    fill: o.area ? ((o.stack && k > 0) ? "-1" : "origin") : false,
+    pointRadius: n > 40 ? 1.5 : 3.5, pointHoverRadius:6,
+    ...(s.pointColors ? { pointBackgroundColor:s.pointColors, pointBorderColor:s.pointColors } : {}),
+    ...(s.unit === "rate" ? { labelText:s.data.map(v => pct(v)) } : {})
+  }));
+  const ext = {};
+  if(o.ref) ext.refLine = Object.assign({ scale:"y" }, o.ref);
+  return {
+    cfg:{ type:"line", data:{ labels:d.labels, datasets, $ext:ext },
+      options:{ responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:"index", intersect:false },
+        scales:{ y:{ beginAtZero:true, stacked:!!o.stack, ticks:tickFor(series[0].unit) }, x:{ stacked:!!o.stack } },
+        plugins:{ legend:{ display:series.length > 1, position:"bottom" },
+          tooltip:{ callbacks:{ label:c => ` ${c.dataset.label}: ${unitFmt(c.dataset._unit, c.raw)}` } } } } },
+    keys:d.keys, hi:series.map((_, k) => k)
+  };
+}
+/* Column + line on a secondary axis (footage vs rate). */
+function bCombo(d, bar, line, o){
+  o = o || {};
+  const ext = {};
+  if(o.ref) ext.refLine = Object.assign({ scale:"y1" }, o.ref);
+  return {
+    cfg:{ type:"bar", data:{ labels:d.labels, $ext:ext, datasets:[
+        { type:"line", label:line.label, yAxisID:"y1", data:line.data, _unit:line.unit,
+          borderColor:B.red, backgroundColor:B.red, tension:.3, pointRadius:4,
+          ...(line.unit === "rate" ? { labelText:line.data.map(v => pct(v)) } : {}) },
+        { type:"bar", label:bar.label, yAxisID:"y", data:bar.data, _unit:bar.unit,
+          backgroundColor:bar.color + "CC", borderRadius:5 } ] },
+      options:{ responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:"index", intersect:false },
+        scales:{ y:{ beginAtZero:true, ticks:tickFor(bar.unit) },
+                 y1:{ beginAtZero:true, position:"right", grid:{ drawOnChartArea:false }, ticks:tickFor(line.unit) } },
+        plugins:{ legend:{ position:"bottom" },
+          tooltip:{ callbacks:{ label:c => ` ${c.dataset.label}: ${unitFmt(c.dataset._unit, c.raw)}` } } } } },
+    keys:d.keys, hi:[1]
+  };
+}
+function sortedDesc(d, s){
+  const idx = d.labels.map((_, i) => i).sort((a, b) => (s.data[b] || 0) - (s.data[a] || 0));
+  return { labels:idx.map(i => d.labels[i]), keys:idx.map(i => d.keys[i]), vals:idx.map(i => s.data[i] || 0) };
+}
+/* Pareto: sorted columns plus a cumulative-share line and an 80% marker. */
+function bPareto(d, s){
+  const o = sortedDesc(d, s), n = o.vals.length;
+  const tot = o.vals.reduce((a, b) => a + b, 0);
+  let run = 0; const cum = o.vals.map(v => (run += v, tot ? run / tot : 0));
+  return {
+    cfg:{ type:"bar", data:{ labels:o.labels, $ext:{ refLine:{ value:.8, scale:"y1", color:"#8A6100", label:"80%" } }, datasets:[
+        { type:"line", label:"Cumulative share", yAxisID:"y1", data:cum, _unit:"rate", valueLabels:false,
+          borderColor:B.red, backgroundColor:B.red, pointRadius:3, tension:0 },
+        { type:"bar", label:s.label, yAxisID:"y", data:o.vals, _unit:s.unit,
+          backgroundColor:perPoint(n, "CC"), borderRadius:4 } ] },
+      options:{ responsive:true, maintainAspectRatio:false,
+        interaction:{ mode:"index", intersect:false },
+        scales:{ y:{ beginAtZero:true, ticks:tickFor(s.unit) },
+                 y1:{ beginAtZero:true, max:1, position:"right", grid:{ drawOnChartArea:false }, ticks:tickFor("rate") },
+                 x:{ ticks:{ maxRotation:50, autoSkip:false, font:{ size:10 } } } },
+        plugins:{ legend:{ position:"bottom" },
+          tooltip:{ callbacks:{ label:c => ` ${c.dataset.label}: ${unitFmt(c.dataset._unit, c.raw)}` } } } } },
+    keys:o.keys, hi:[1]
+  };
+}
+/* Waterfall that builds the categories up to a total bar. */
+function bWaterfallTotal(d, s){
+  const o = sortedDesc(d, s), n = o.vals.length;
+  let cum = 0;
+  const data = o.vals.map(v => { const a = [cum, cum + v]; cum += v; return a; });
+  data.push([0, cum]);
+  const raw = o.vals.concat([cum]);
+  return {
+    cfg:{ type:"bar", data:{ labels:o.labels.concat(["Total"]), $ext:{}, datasets:[{
+        label:s.label, data, _raw:raw, _unit:s.unit, labelText:raw.map(v => fmt(v)), labelPos:"center",
+        backgroundColor:perPoint(n, "CC").concat([B.steel]), borderRadius:3 }] },
+      options:{ responsive:true, maintainAspectRatio:false,
+        scales:{ y:{ beginAtZero:true, ticks:tickFor(s.unit) }, x:{ ticks:{ maxRotation:50, autoSkip:false, font:{ size:10 } } } },
+        plugins:{ legend:{ display:false },
+          tooltip:{ callbacks:{ label:c => ` ${c.label}: ${unitFmt(s.unit, raw[c.dataIndex])}` } } } } },
+    keys:o.keys.concat([null]), hi:[0], useBase:true
+  };
+}
+/* Waterfall of period-to-period change (first bar is the starting level). */
+function bWaterfallChange(d, s, ref){
+  const v = s.data;
+  const data = v.map((x, i) => i ? [v[i-1], x] : [0, x]);
+  const colors = v.map((x, i) => !i ? B.steel + "CC" : (x > v[i-1] ? B.red + "CC" : B.green + "CC"));
+  const pts = (i) => { const dlt = v[i] - v[i-1]; return (dlt >= 0 ? "+" : "\u2212") + (100 * Math.abs(dlt)).toFixed(1) + " pts"; };
+  return {
+    cfg:{ type:"bar", data:{ labels:d.labels, $ext:{ refLine:Object.assign({ scale:"y" }, ref || {}) }, datasets:[{
+        label:"Change in " + s.label.toLowerCase(), data, backgroundColor:colors, borderRadius:3,
+        labelText:v.map((x, i) => i ? pts(i) : pct(x)), labelPos:"center" }] },
+      options:{ responsive:true, maintainAspectRatio:false,
+        scales:{ y:{ beginAtZero:true, ticks:tickFor("rate") } },
+        plugins:{ legend:{ display:false },
+          tooltip:{ callbacks:{ label:c => {
+            const i = c.dataIndex;
+            return i ? ` ${pct(v[i])}  (${pts(i)} vs prior)` : ` Starting level: ${pct(v[0])}`;
+          } } } } } },
+    keys:d.keys, hi:[0], useBase:true
+  };
+}
+function bFunnel(d, s){
+  const o = sortedDesc(d, s), n = o.vals.length, max = o.vals[0] || 1;
+  return {
+    cfg:{ type:"bar", data:{ labels:o.labels, $ext:{}, datasets:[{
+        label:s.label, data:o.vals.map(v => [(max - v) / 2, (max + v) / 2]), _unit:s.unit,
+        labelText:o.vals.map(v => fmt(v)), labelPos:"center",
+        backgroundColor:perPoint(n, "DD"), borderRadius:3, barPercentage:.96, categoryPercentage:.96 }] },
+      options:{ responsive:true, maintainAspectRatio:false, indexAxis:"y",
+        scales:{ x:{ display:false, min:0, max }, y:{ grid:{ display:false } } },
+        plugins:{ legend:{ display:false },
+          tooltip:{ callbacks:{ label:c => ` ${unitFmt(s.unit, o.vals[c.dataIndex])}  (${pct(o.vals[c.dataIndex] / max)} of largest)` } } } } },
+    keys:o.keys, hi:[0], useBase:true
+  };
+}
+function bTreemap(d, s){
+  const o = sortedDesc(d, s);
+  const keep = o.vals.map((v, i) => v > 0 ? i : -1).filter(i => i >= 0);
+  const vals = keep.map(i => o.vals[i]);
+  return {
+    cfg:{ type:"bar", data:{ labels:[], datasets:[], $ext:{ treemap:{
+          labels:keep.map(i => o.labels[i]), keys:keep.map(i => o.keys[i]), values:vals,
+          colors:perPoint(vals.length), unit:s.unit, label:s.label } } },
+      options:{ responsive:true, maintainAspectRatio:false, animation:false,
+        scales:{ x:{ display:false }, y:{ display:false } },
+        plugins:{ legend:{ display:false }, tooltip:{ enabled:false } } } },
+    keys:keep.map(i => o.keys[i]), hi:[]
+  };
+}
+/* Scatter (or bubble when rs is given) of two measures per category. */
+function bScatter(d, xs, ys, rs){
+  const n = d.labels.length;
+  const rmax = rs ? Math.max(1, ...rs.data) : 1;
+  const pts = d.labels.map((_, i) => ({ x:xs.data[i] || 0, y:ys.data[i] || 0,
+    ...(rs ? { r: 4 + 20 * Math.sqrt((rs.data[i] || 0) / rmax) } : {}) }));
+  const axis = (s) => ({ beginAtZero:true, ticks:tickFor(s.unit), title:{ display:true, text:s.label, font:{ size:11, weight:"700" } } });
+  return {
+    cfg:{ type: rs ? "bubble" : "scatter", data:{ datasets:[{
+        label:ys.label, data:pts, valueLabels:false, pointNames:d.labels,
+        backgroundColor:perPoint(n, rs ? "99" : "DD"), borderColor:perPoint(n), borderWidth:1.5,
+        ...(rs ? {} : { pointRadius:6, pointHoverRadius:8 }) }] },
+      options:{ responsive:true, maintainAspectRatio:false,
+        scales:{ x:axis(xs), y:axis(ys) },
+        plugins:{ legend:{ display:false },
+          tooltip:{ callbacks:{ label:c => {
+            const i = c.dataIndex;
+            const out = [d.labels[i], `${xs.label}: ${unitFmt(xs.unit, xs.data[i])}`, `${ys.label}: ${unitFmt(ys.unit, ys.data[i])}`];
+            if(rs) out.push(`${rs.label}: ${unitFmt(rs.unit, rs.data[i])}`);
+            return out;
+          } } } } } },
+    keys:d.keys, hi:[0]
+  };
+}
+
+/* ---- the original (default) configurations, unchanged ---- */
+function weeklyDefault(d){
+  return { cfg:{ type:"bar",
+    data:{ labels:d.labels, datasets:[
+      { type:"line", label:"Rejected (ft)", data:d.rej.data, borderColor:B.red,
+        backgroundColor:B.red, tension:.3, pointRadius:2, yAxisID:"y" },
+      { type:"bar", label:"Inspected (ft)", data:d.ins.data,
+        backgroundColor:B.accent+"CC", borderRadius:4, yAxisID:"y" } ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      interaction:{ mode:"index", intersect:false },   // default nearest+intersect left a
+                                                        // dead zone at each bar's own center
+                                                        // once the weekly view's many, narrow
+                                                        // bars packed close enough together
+      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
+      plugins:{ legend:{ position:"bottom" } } }}, keys:d.keys, hi:[1] };
+}
+/* monthly rate — bars above the rejection-rate target flag red */
+function monthlyDefault(d, three){
+  const TGT = d.tgt, moRates = d.rate.data;
+  return { cfg:{ type:"bar",
+    data:{ labels:d.labels, $ext:{ bar3d:!!three },
+      datasets:[
+        { type:"line", label:"Target", data:d.labels.map(()=>TGT),
+          borderColor:B.red, borderWidth:1.5, borderDash:[6,5], pointRadius:0, fill:false },
+        { type:"bar", label:"Rejection rate", data:moRates,
+          backgroundColor: moRates.map(v=>v > TGT ? B.red+"CC" : B.steel+"CC"),
+          borderRadius: three ? 0 : 5 } ]},
+    options:{ responsive:true, maintainAspectRatio:false, ...(three ? pad3d : {}),
+      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>(100*v).toFixed(0)+"%" } } },
+      plugins:{ legend:{ display:false },
+        tooltip:{ filter:c=>c.dataset.type!=="line",
+          callbacks:{ label:c=>pct(c.parsed.y) + (c.parsed.y > TGT ? "  \u26a0 above target" : "") } } }}},
+    keys:d.keys, hi:[1] };
+}
+function reasonsDefault(d){
+  return { cfg:{ type:"doughnut",
+    data:{ labels:d.labels,
+      datasets:[{ data:d.held.data, backgroundColor:B.series, borderWidth:2, borderColor:"#fff" }]},
+    options:{ responsive:true, maintainAspectRatio:false, cutout:"55%",
+      plugins:{ legend:{ position:"bottom", labels:{ boxWidth:11, font:{ size:10.5 } } },
+        tooltip:{ callbacks:{ label:c=>` ${c.label}: ${fmt(c.parsed)} ft` } } }}}, keys:d.keys, hi:[0] };
+}
+/* inspectors — bars + rate line (line dataset first) */
+function inspDefault(d){
+  return { cfg:{ type:"bar",
+    data:{ labels:d.labels,
+      datasets:[
+        { type:"line", label:"Rejection rate", yAxisID:"y1", data:d.rate.data,
+          borderColor:B.red, backgroundColor:B.red, tension:.3, pointRadius:4 },
+        { type:"bar", label:"Inspected (ft)", yAxisID:"y",
+          data:d.ins.data, backgroundColor:B.steel+"CC", borderRadius:5 } ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } },
+               y1:{ beginAtZero:true, position:"right", grid:{ drawOnChartArea:false },
+                    ticks:{ callback:v=>(100*v).toFixed(0)+"%" } } },
+      plugins:{ legend:{ position:"bottom" } }}}, keys:d.keys, hi:[1] };
+}
+function millsDefault(d){
+  return { cfg:{ type:"bar",
+    data:{ labels:d.labels,
+      datasets:[
+        { label:"Inspected (ft)", data:d.ins.data, backgroundColor:B.accent+"CC", borderRadius:4 },
+        { label:"Rejected (ft)", data:d.rej.data, backgroundColor:B.red+"CC", borderRadius:4 } ]},
+    options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false,
+      scales:{ x:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
+      plugins:{ legend:{ position:"bottom" } }}}, keys:d.keys, hi:[0,1] };
+}
+
+/* ---- per-pane menus: [key, label, group] ---- */
+const G_CB = "Column & bar", G_LA = "Line & area", G_PW = "Part of whole", G_RL = "Relationship", G_AN = "Analysis";
+const PANES = {
+  chWeekly: { kind:"week", def:"combo",
+    types:[ ["combo","Combo: column + line",G_CB], ["column","Clustered column",G_CB], ["column3d","3-D column",G_CB],
+            ["stack","Stacked column",G_CB], ["pct","100% stacked column",G_CB], ["bar","Clustered bar",G_CB],
+            ["line","Line",G_LA], ["area","Area",G_LA], ["stackArea","Stacked area",G_LA],
+            ["scatter","Scatter: inspected vs rejected",G_RL] ],
+    build(t, d){ const I = d.ins, R = d.rej, A = d.appr;
+      switch(t){
+        case "column":    return bCatBars(d, [I, R]);
+        case "column3d":  return bCatBars(d, [I, R], { three:true });
+        case "stack":     return bCatBars(d, [A, R], { stack:true });
+        case "pct":       return bCatBars(d, [A, R], { stack:true, pct:true });
+        case "bar":       return bCatBars(d, [I, R], { horiz:true });
+        case "line":      return bLines(d, [I, R]);
+        case "area":      return bLines(d, [I, R], { area:true });
+        case "stackArea": return bLines(d, [A, R], { area:true, stack:true });
+        case "scatter":   return bScatter(d, I, R);
+      }
+      return weeklyDefault(d); } },
+  chMonthly: { kind:"month", def:"column",
+    types:[ ["column","Column with target",G_CB], ["column3d","3-D column",G_CB], ["bar","Bar with target",G_CB],
+            ["combo","Combo: footage + rate",G_CB], ["line","Line",G_LA], ["area","Area",G_LA],
+            ["waterfall","Waterfall: month-to-month change",G_AN], ["radar","Spider (seasonal)",G_AN] ],
+    build(t, d){ const ref = { value:d.tgt, color:B.red, label:"Target " + pct(d.tgt) };
+      switch(t){
+        case "column3d":  return monthlyDefault(d, true);
+        case "bar":       return bCatBars(d, [d.rate], { horiz:true, ref });
+        case "combo":     return bCombo(d, d.ins, d.rate, { ref });
+        case "line":      return bLines(d, [d.rate], { ref });
+        case "area":      return bLines(d, [d.rate], { area:true, ref });
+        case "waterfall": return bWaterfallChange(d, d.rate, ref);
+        case "radar":     return bRadar(d, d.rate);
+      }
+      return monthlyDefault(d, false); } },
+  chReasons: { kind:"reason", def:"doughnut",
+    types:[ ["doughnut","Doughnut",G_PW], ["pie","Pie",G_PW], ["polar","Polar area",G_PW], ["treemap","Treemap",G_PW],
+            ["column","Column",G_CB], ["column3d","3-D column",G_CB], ["bar","Bar",G_CB], ["bar3d","3-D bar",G_CB],
+            ["pareto","Pareto",G_AN], ["funnel","Funnel",G_AN], ["waterfall","Waterfall to total",G_AN], ["radar","Spider",G_AN] ],
+    build(t, d){ const H = d.held;
+      switch(t){
+        case "pie":       return bArc(d, H, "pie");
+        case "polar":     return bArc(d, H, "polarArea");
+        case "treemap":   return bTreemap(d, H);
+        case "column":    return bCatBars(d, [H]);
+        case "column3d":  return bCatBars(d, [H], { three:true });
+        case "bar":       return bCatBars(d, [H], { horiz:true });
+        case "bar3d":     return bCatBars(d, [H], { horiz:true, three:true });
+        case "pareto":    return bPareto(d, H);
+        case "funnel":    return bFunnel(d, H);
+        case "waterfall": return bWaterfallTotal(d, H);
+        case "radar":     return bRadar(d, H);
+      }
+      return reasonsDefault(d); } },
+  chInsp: { kind:"inspector", def:"combo",
+    types:[ ["combo","Combo: footage + rate",G_CB], ["column","Clustered column",G_CB], ["column3d","3-D column",G_CB],
+            ["stack","Stacked column",G_CB], ["pct","100% stacked column",G_CB], ["bar","Clustered bar",G_CB],
+            ["pie","Pie: share of inspected ft",G_PW], ["doughnut","Doughnut: share of inspected ft",G_PW],
+            ["treemap","Treemap: inspected ft",G_PW],
+            ["scatter","Scatter: footage vs rate",G_RL], ["pareto","Pareto: inspected ft",G_AN] ],
+    build(t, d){ const I = d.ins, R = d.rej, A = d.appr;
+      switch(t){
+        case "column":   return bCatBars(d, [I, R]);
+        case "column3d": return bCatBars(d, [I, R], { three:true });
+        case "stack":    return bCatBars(d, [A, R], { stack:true });
+        case "pct":      return bCatBars(d, [A, R], { stack:true, pct:true });
+        case "bar":      return bCatBars(d, [I, R], { horiz:true });
+        case "pie":      return bArc(d, I, "pie");
+        case "doughnut": return bArc(d, I, "doughnut");
+        case "treemap":  return bTreemap(d, I);
+        case "scatter":  return bScatter(d, I, d.rate);
+        case "pareto":   return bPareto(d, I);
+      }
+      return inspDefault(d); } },
+  chMills: { kind:"mill", def:"bar",
+    types:[ ["bar","Clustered bar",G_CB], ["bar3d","3-D bar",G_CB], ["stackBar","Stacked bar",G_CB], ["pctBar","100% stacked bar",G_CB],
+            ["column","Clustered column",G_CB], ["column3d","3-D column",G_CB], ["combo","Combo: footage + rate",G_CB],
+            ["treemap","Treemap: inspected ft",G_PW],
+            ["scatter","Scatter: footage vs rate",G_RL], ["bubble","Bubble: size = rejected ft",G_RL],
+            ["pareto","Pareto: rejected ft",G_AN] ],
+    build(t, d){ const I = d.ins, R = d.rej, A = d.appr;
+      switch(t){
+        case "bar3d":    return bCatBars(d, [I, R], { horiz:true, three:true });
+        case "stackBar": return bCatBars(d, [A, R], { horiz:true, stack:true });
+        case "pctBar":   return bCatBars(d, [A, R], { horiz:true, stack:true, pct:true });
+        case "column":   return bCatBars(d, [I, R]);
+        case "column3d": return bCatBars(d, [I, R], { three:true });
+        case "combo":    return bCombo(d, I, d.rate);
+        case "treemap":  return bTreemap(d, I);
+        case "scatter":  return bScatter(d, I, d.rate);
+        case "bubble":   return bScatter(d, I, d.rate, R);
+        case "pareto":   return bPareto(d, R);
+      }
+      return millsDefault(d); } },
+  chAlloy: { kind:"alloy", def:"bar",
+    types:[ ["bar","Bar",G_CB], ["bar3d","3-D bar",G_CB], ["column","Column",G_CB], ["column3d","3-D column",G_CB],
+            ["pie","Pie",G_PW], ["doughnut","Doughnut",G_PW], ["polar","Polar area",G_PW], ["treemap","Treemap",G_PW],
+            ["pareto","Pareto",G_AN], ["funnel","Funnel",G_AN], ["waterfall","Waterfall to total",G_AN], ["radar","Spider",G_AN] ],
+    build(t, d){ const H = d.held;
+      switch(t){
+        case "bar3d":     return bCatBars(d, [H], { horiz:true, three:true });
+        case "column":    return bCatBars(d, [H]);
+        case "column3d":  return bCatBars(d, [H], { three:true });
+        case "pie":       return bArc(d, H, "pie");
+        case "doughnut":  return bArc(d, H, "doughnut");
+        case "polar":     return bArc(d, H, "polarArea");
+        case "treemap":   return bTreemap(d, H);
+        case "pareto":    return bPareto(d, H);
+        case "funnel":    return bFunnel(d, H);
+        case "waterfall": return bWaterfallTotal(d, H);
+        case "radar":     return bRadar(d, H);
+      }
+      return bCatBars(d, [H], { horiz:true }); } }    // single series: one colour per bar
+};
+function paneType(id){
+  const P = PANES[id], t = paneTypes[id];
+  return P.types.some(x => x[0] === t) ? t : P.def;
+}
+function drawPane(id){
+  const P = PANES[id], d = PANE_DATA[id]; if(!P || !d) return;
+  const t = paneType(id);
+  const sel = $("ct_" + id); if(sel && sel.value !== t) sel.value = t;
+  const out = P.build(t, d);
+  mkChart(id, out.cfg);
+  registerSelHighlight(id, P.kind, out.keys, out.hi, out.useBase);
+  hook(id, P.kind, out.keys);
+}
+function drawAllPanes(){ for(const id in PANES) drawPane(id); }
+(function initChartTypePickers(){
+  for(const id in PANES){
+    const P = PANES[id];
+    const png = document.querySelector('.pngbtn[data-chart="' + id + '"]'); if(!png) continue;
+    const box = png.parentElement;
+    const sel = document.createElement("select");
+    sel.className = "ctype"; sel.id = "ct_" + id;
+    sel.title = "Chart type"; sel.setAttribute("aria-label", "Chart type");
+    const groups = {};
+    P.types.forEach(([k, label, g]) => { (groups[g] = groups[g] || []).push([k, label]); });
+    CT_GROUP_ORDER.filter(g => groups[g]).forEach(g => {
+      const og = document.createElement("optgroup"); og.label = g;
+      groups[g].forEach(([k, label]) => { const o = document.createElement("option"); o.value = k; o.textContent = label; og.appendChild(o); });
+      sel.appendChild(og);
+    });
+    sel.value = paneType(id);
+    sel.addEventListener("change", ()=>{
+      if(demoTypeStash) demoTypeStash[id] = sel.value;           // changed mid-demo: keep it for afterwards
+      else { paneTypes[id] = sel.value;
+             try{ localStorage.setItem("pacChartTypes", JSON.stringify(paneTypes)); }catch(err){} }
+      if(!demoTypeStash) drawPane(id);
+      refreshSelectionHighlights();
+    });
+    box.insertBefore(sel, box.firstChild);            // AI button must stay directly before its PNG button
+  }
+})();
 
 function setStatus(msg){
   let el = $("statusBar");
@@ -760,94 +1493,62 @@ function render(){
   $("wkNote").textContent = (rf && rt) ? dLabel(rf)+" → "+dLabel(rt)
     : (wk.length? dLabel(wk[0][0])+" → "+dLabel(wk[wk.length-1][0]) : "");
   const wkKeys = wk.map(w=>w[0]);
-  mkChart("chWeekly", { type:"bar",
-    data:{ labels: wk.map(w=>dLabel(w[0])),
-      datasets:[
-        { type:"line", label:"Rejected (ft)", data:wk.map(w=>w[1].fRej), borderColor:B.red,
-          backgroundColor:B.red, tension:.3, pointRadius:2, yAxisID:"y" },
-        { type:"bar", label:"Inspected (ft)", data:wk.map(w=>w[1].fInsp),
-          backgroundColor:B.accent+"CC", borderRadius:4, yAxisID:"y" } ]},
-    options:{ responsive:true, maintainAspectRatio:false,
-      interaction:{ mode:"index", intersect:false },   // default nearest+intersect left a
-                                                        // dead zone at each bar's own center
-                                                        // once the weekly view's many, narrow
-                                                        // bars packed close enough together
-      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
-      plugins:{ legend:{ position:"bottom" } } }});
-  registerSelHighlight("chWeekly", "week", wkKeys, [1]);
+  PANE_DATA.chWeekly = { keys:wkKeys, labels:wk.map(w=>dLabel(w[0])),
+    ins: ser("Inspected (ft)", wk.map(w=>w[1].fInsp), "ft", B.accent),
+    rej: ser("Rejected (ft)",  wk.map(w=>w[1].fRej),  "ft", B.red),
+    appr:ser("Approved (ft)",  wk.map(w=>w[1].fInsp - w[1].fRej), "ft", B.green) };
 
-  /* monthly rate — bars above the CONFIG.rejectionRateTarget flag red */
+  /* monthly rate — bars above the rejection-rate target flag red */
   const TGT = rateTarget;
   const mo = [...groupSum(S, r=>monthStart(r.date), ["fInsp","fRej"])].sort((a,b)=>a[0].localeCompare(b[0]));
   AGG.monthly = mo;
   const moRates = mo.map(m=>m[1].fInsp? m[1].fRej/m[1].fInsp:0);
-  const moKeys = mo.map(m=>m[0]);
-  mkChart("chMonthly", { type:"bar",
-    data:{ labels: mo.map(m=>dLabel(m[0])),
-      datasets:[
-        { type:"line", label:"Target", data:mo.map(()=>TGT),
-          borderColor:B.red, borderWidth:1.5, borderDash:[6,5], pointRadius:0, fill:false },
-        { type:"bar", label:"Rejection rate", data:moRates,
-          backgroundColor: moRates.map(v=>v > TGT ? B.red+"CC" : B.steel+"CC"),
-          borderRadius:5 } ]},
-    options:{ responsive:true, maintainAspectRatio:false,
-      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>(100*v).toFixed(0)+"%" } } },
-      plugins:{ legend:{ display:false },
-        tooltip:{ filter:c=>c.dataset.type!=="line",
-          callbacks:{ label:c=>pct(c.parsed.y) + (c.parsed.y > TGT ? "  \u26a0 above target" : "") } } }}});
-  registerSelHighlight("chMonthly", "month", moKeys, [1]);
+  PANE_DATA.chMonthly = { keys:mo.map(m=>m[0]), labels:mo.map(m=>dLabel(m[0])), tgt:TGT,
+    rate: ser("Rejection rate", moRates, "rate", B.steel, {
+      colors: moRates.map(v=>v > TGT ? B.red+"CC" : B.steel+"CC"),
+      pointColors: moRates.map(v=>v > TGT ? B.red : B.steel) }),
+    ins: ser("Inspected (ft)", mo.map(m=>m[1].fInsp), "ft", B.steel),
+    rej: ser("Rejected (ft)",  mo.map(m=>m[1].fRej),  "ft", B.red) };
 
-  /* reasons doughnut (true rejected). Gate on actually HAVING held footage
+  /* reasons (true rejected). Gate on actually HAVING held footage
      (matching how the alloy chart does it) rather than on having a reason
      assigned - a hold pending review is real held footage even before
      someone has categorized why, and it needs to be countable here or the
      chart's total silently falls short of the True Rejected KPI. */
   const re = AGG.reasons = [...groupSum(S.filter(r=>r.tRej>0), r=>reasonLabel(r), ["tRej"])]
     .sort((a,b)=>b[1].tRej-a[1].tRej);
-  const reKeys = re.map(x=>x[0]);
-  mkChart("chReasons", { type:"doughnut",
-    data:{ labels: re.map(x=>x[0]),
-      datasets:[{ data: re.map(x=>x[1].tRej), backgroundColor:B.series, borderWidth:2, borderColor:"#fff" }]},
-    options:{ responsive:true, maintainAspectRatio:false, cutout:"55%",
-      plugins:{ legend:{ position:"bottom", labels:{ boxWidth:11, font:{ size:10.5 } } },
-        tooltip:{ callbacks:{ label:c=>` ${c.label}: ${fmt(c.parsed)} ft` } } }}});
-  registerSelHighlight("chReasons", "reason", reKeys, [0]);
+  PANE_DATA.chReasons = { keys:re.map(x=>x[0]), labels:re.map(x=>x[0]),
+    held: ser("Held footage (ft)", re.map(x=>x[1].tRej), "ft", B.steel2) };
 
-  /* inspectors — bars + rate line (line dataset first) */
+  /* inspectors — footage + rate */
   const ins = AGG.inspectors = [...groupSum(S, r=>r.inspector, ["fInsp","fRej"])].sort((a,b)=>b[1].fInsp-a[1].fInsp);
-  const insKeys = ins.map(x=>x[0]);
-  mkChart("chInsp", { type:"bar",
-    data:{ labels: ins.map(x=>x[0]),
-      datasets:[
-        { type:"line", label:"Rejection rate", yAxisID:"y1",
-          data: ins.map(x=>x[1].fInsp? x[1].fRej/x[1].fInsp:0),
-          borderColor:B.red, backgroundColor:B.red, tension:.3, pointRadius:4 },
-        { type:"bar", label:"Inspected (ft)", yAxisID:"y",
-          data: ins.map(x=>x[1].fInsp), backgroundColor:B.steel+"CC", borderRadius:5 } ]},
-    options:{ responsive:true, maintainAspectRatio:false,
-      scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } },
-               y1:{ beginAtZero:true, position:"right", grid:{ drawOnChartArea:false },
-                    ticks:{ callback:v=>(100*v).toFixed(0)+"%" } } },
-      plugins:{ legend:{ position:"bottom" } }}});
-  registerSelHighlight("chInsp", "inspector", insKeys, [1]);
+  PANE_DATA.chInsp = { keys:ins.map(x=>x[0]), labels:ins.map(x=>x[0]),
+    ins: ser("Inspected (ft)", ins.map(x=>x[1].fInsp), "ft", B.steel),
+    rej: ser("Rejected (ft)",  ins.map(x=>x[1].fRej),  "ft", B.red),
+    appr:ser("Approved (ft)",  ins.map(x=>x[1].fInsp - x[1].fRej), "ft", B.green),
+    rate:ser("Rejection rate", ins.map(x=>x[1].fInsp? x[1].fRej/x[1].fInsp:0), "rate", B.red) };
 
-  /* mills — horizontal, top 14, with an opt-in "hide under Nft" threshold so a
+  /* mills — top 14, with an opt-in "hide under Nft" threshold so a
      long tail of near-zero mills doesn't crowd out the ones that matter. Off
      (0) by default - a small mill can still be exactly what someone needs to
      see, so nothing is hidden unless the user asks for it. */
   const millAll = [...groupSum(S, r=>r.mill, ["fInsp","fRej"])].sort((a,b)=>b[1].fInsp-a[1].fInsp);
   const millHiddenCount = millMinFt > 0 ? millAll.filter(x=>x[1].fInsp < millMinFt).length : 0;
   const mi = AGG.mills = millAll.filter(x=>x[1].fInsp >= millMinFt).slice(0,14);
-  const miKeys = mi.map(x=>x[0]);
-  mkChart("chMills", { type:"bar",
-    data:{ labels: mi.map(x=>x[0]),
-      datasets:[
-        { label:"Inspected (ft)", data:mi.map(x=>x[1].fInsp), backgroundColor:B.accent+"CC", borderRadius:4 },
-        { label:"Rejected (ft)", data:mi.map(x=>x[1].fRej), backgroundColor:B.red+"CC", borderRadius:4 } ]},
-    options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false,
-      scales:{ x:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
-      plugins:{ legend:{ position:"bottom" } }}});
-  registerSelHighlight("chMills", "mill", miKeys, [0,1]);
+  PANE_DATA.chMills = { keys:mi.map(x=>x[0]), labels:mi.map(x=>x[0]),
+    ins: ser("Inspected (ft)", mi.map(x=>x[1].fInsp), "ft", B.accent),
+    rej: ser("Rejected (ft)",  mi.map(x=>x[1].fRej),  "ft", B.red),
+    appr:ser("Approved (ft)",  mi.map(x=>x[1].fInsp - x[1].fRej), "ft", B.green),
+    rate:ser("Rejection rate", mi.map(x=>x[1].fInsp? x[1].fRej/x[1].fInsp:0), "rate", B.red) };
+
+  /* alloys — true rejected */
+  const al = AGG.alloys = [...groupSum(S.filter(r=>r.tRej>0), r=>r.alloy, ["tRej"])].sort((a,b)=>b[1].tRej-a[1].tRej);
+  PANE_DATA.chAlloy = { keys:al.map(x=>x[0]), labels:al.map(x=>x[0]),
+    held: ser("True rejected (ft)", al.map(x=>x[1].tRej), "ft", B.steel2) };
+
+  /* draw every tile in its chosen chart type; this also wires chart-click
+     -> list linking and the selection outline for whatever type is showing */
+  drawAllPanes();
   { const note = document.querySelector("#chMills").closest(".card").querySelector(".millHiddenNote");
     if(millHiddenCount > 0){
       const txt = millHiddenCount + " mill" + (millHiddenCount>1?"s":"") + " under " + fmt(millMinFt) + " ft hidden";
@@ -857,29 +1558,10 @@ function render(){
     } else if(note) note.remove();
   }
 
-  /* alloys — true rejected */
-  const al = AGG.alloys = [...groupSum(S.filter(r=>r.tRej>0), r=>r.alloy, ["tRej"])].sort((a,b)=>b[1].tRej-a[1].tRej);
-  const alKeys = al.map(x=>x[0]);
-  mkChart("chAlloy", { type:"bar",
-    data:{ labels: al.map(x=>x[0]),
-      datasets:[{ label:"True rejected (ft)", data:al.map(x=>x[1].tRej),
-        backgroundColor:B.steel2+"CC", borderRadius:5 }]},
-    options:{ indexAxis:"y", responsive:true, maintainAspectRatio:false,
-      scales:{ x:{ beginAtZero:true, ticks:{ callback:v=>fmt(v) } } },
-      plugins:{ legend:{ display:false } }}});
-  registerSelHighlight("chAlloy", "alloy", alKeys, [0]);
-
-  /* chart-click -> list linking (active when the toggle in the list header is on) */
-  hook("chWeekly","week", wk.map(x=>x[0]));
-  hook("chMonthly","month", mo.map(x=>x[0]));
-  hook("chReasons","reason", re.map(x=>x[0]));
-  hook("chInsp","inspector", ins.map(x=>x[0]));
-  hook("chMills","mill", mi.map(x=>x[0]));
-  hook("chAlloy","alloy", al.map(x=>x[0]));
-
   /* table — newest 50 (respects chart selection when linking is on) */
   scopeRows = S;
   renderTable();
+  renderPivot();
   syncTileScopes();
   updateFilterToggle();
 
@@ -908,7 +1590,7 @@ function syncTileScopes(){
   const txt = aiScopeSummary();
   const escHtml = v => String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   document.querySelectorAll(".card").forEach(card=>{
-    if(!card.querySelector("canvas") && !card.querySelector(".kpis")) return;
+    if(!card.querySelector("canvas") && !card.querySelector(".kpis") && !card.querySelector(".pvt")) return;
     if(card.querySelector(".tscroll")) return;              // the list has its own note
     let s = card.querySelector(".tilescope");
     if(!s){
@@ -956,8 +1638,8 @@ const SEL_BORDER_COLOR_ALT = "#2563EB";   // used instead when the element's own
                                             // where the default would barely show
 const SEL_BORDER_WIDTH = 5;
 const selHighlights = {};
-function registerSelHighlight(id, kind, keys, datasetIdxs){
-  selHighlights[id] = { kind, keys, datasetIdxs };
+function registerSelHighlight(id, kind, keys, datasetIdxs, useBase){
+  selHighlights[id] = { kind, keys, datasetIdxs, useBase:!!useBase };
 }
 function hexToHSL(hex){
   if(!hex || typeof hex !== "string") return null;
@@ -1033,7 +1715,12 @@ const selectionHighlightPlugin = {
         // pairs its bar with a "y" scale while a line dataset owns "y1").
         const vScale = meta.vScale;
         let cx, cy, w, hgt;
-        if(vScale && vScale.axis === "y"){
+        if(h.useBase && typeof p.base === "number" && vScale){
+          // stacked / floating bars (waterfall, funnel) don't start at zero -
+          // measure from the bar's own base instead
+          if(vScale.axis === "y"){ hgt = Math.abs(p.base - p.y); cy = (p.y + p.base) / 2; w = p.width; cx = p.x; }
+          else { w = Math.abs(p.base - p.x); cx = (p.x + p.base) / 2; hgt = p.height; cy = p.y; }
+        } else if(vScale && vScale.axis === "y"){
           const zeroPix = vScale.getPixelForValue(0);
           hgt = Math.abs(zeroPix - p.y); cy = (p.y + zeroPix) / 2;
           w = p.width; cx = p.x;
@@ -1062,17 +1749,21 @@ function refreshSelectionHighlights(){
                          // transition avoids the plugin ever seeing a
                          // mid-animation, incompletely-populated element
   }
+  pvMarkSel();
 }
 
 function hook(id, kind, keys){
   const c = charts[id]; if(!c) return;
-  c.options.onClick = (e, els)=>{
-    if(!$("linkToggle").checked || !els.length) return;
-    const v = keys[els[0].index];
+  const pick = idx => {
+    if(!$("linkToggle").checked) return;
+    const v = keys[idx];
+    if(v == null) return;                                 // e.g. a waterfall's Total bar
     chartSel = (chartSel && chartSel.kind===kind && chartSel.value===v) ? null : {kind, value:v};  // click again to clear
     renderTable();
     refreshSelectionHighlights();
   };
+  c.$pick = pick;                                          // treemap tiles call this directly
+  c.options.onClick = (e, els)=>{ if(els.length) pick(els[0].index); };
   c.options.onHover = (e, els)=>{
     e.native.target.style.cursor = ($("linkToggle").checked && els.length) ? "pointer" : "default";
   };
@@ -1087,11 +1778,18 @@ function matchSel(r){
     case "inspector": return r.inspector === v;
     case "mill":      return r.mill === v;
     case "alloy":     return r.alloy === v && r.tRej > 0;    // matches the alloy chart (held footage)
+    case "pivot": {                                          // a pivot cell: its row and/or column item
+      const p = chartSel.pv;
+      if(p.rk != null && PV_DIMS[p.rd].get(r) !== p.rk) return false;
+      if(p.ck != null && PV_DIMS[p.cd].get(r) !== p.ck) return false;
+      return true;
+    }
   }
   return true;
 }
 function selLabel(){
   if(!chartSel) return "";
+  if(chartSel.kind === "pivot") return "Pivot: " + chartSel.text;
   const names = { week:"Week of ", month:"Month ", reason:"Reason: ", inspector:"Inspector: ", mill:"Mill: ", alloy:"Alloy: " };
   const v = (chartSel.kind==="week" || chartSel.kind==="month") ? dLabel(chartSel.value) : chartSel.value;
   return (names[chartSel.kind]||"") + v;
@@ -1218,6 +1916,617 @@ function syncSelAll(F){
   $("tblNote").textContent = base + (inView > 0 ? " \u00b7 " + inView + " selected for export" : "");
 }
 $("linkToggle").addEventListener("change", ()=>{ if(!$("linkToggle").checked) chartSel = null; renderTable(); refreshSelectionHighlights(); });
+
+/* =====================================================================
+   Pivot table pane — Excel-style: pick the row field, column field, value
+   and how it is summarized, then layer conditional formatting on top.
+   Works on the same filtered scope as the charts, and cells are "hot"
+   like chart elements: with "Chart click filters list" on, clicking a
+   cell narrows the list to that row/column combination.
+   Columns drag-resize like Excel (double-click a divider to autofit).
+   One model object (pvModel) drives the on-screen table, the PNG, the
+   dashboard snapshot, the XLSX/CSV export and the AI payload, so they
+   can never disagree. Settings persist per user ("pacPivot").
+   ===================================================================== */
+const PV_DIMS = {
+  none:      { label:"(none)" },
+  mill:      { label:"Mill",             get:r=>r.mill || "(blank)" },
+  alloy:     { label:"Alloy",            get:r=>r.alloy || "(blank)" },
+  inspector: { label:"Inspector",        get:r=>r.inspector || "(blank)" },
+  type:      { label:"Inspection type",  get:r=>r.type || "(blank)" },
+  disp:      { label:"Disposition",      get:r=>r.disp || "(blank)" },
+  reason:    { label:"Rejection reason", get:r=>reasonLabel(r) },
+  week:      { label:"Week",    get:r=>r.date ? weekStart(r.date) : "", show:k=>"Wk of " + dLabel(k) },
+  month:     { label:"Month",   get:r=>r.date ? monthStart(r.date) : "", show:k=>dLabel(k) },
+  quarter:   { label:"Quarter", get:r=>r.date ? r.date.slice(0,4) + " Q" + (Math.floor((+r.date.slice(5,7) - 1) / 3) + 1) : "" },
+  year:      { label:"Year",    get:r=>(r.date || "").slice(0,4) }
+};
+const PV_VALS = {
+  rate:    { label:"Rejection rate",          rate:true,         unit:"rate", dir:"bad"  },
+  fInsp:   { label:"Footage inspected (ft)",  get:r=>r.fInsp,    unit:"ft",   dir:"good" },
+  fRecv:   { label:"Footage received (ft)",   get:r=>r.fRecv,    unit:"ft",   dir:"good" },
+  fRej:    { label:"Footage rejected (ft)",   get:r=>r.fRej,     unit:"ft",   dir:"bad"  },
+  fAppr:   { label:"Footage approved (ft)",   get:r=>r.fAppr,    unit:"ft",   dir:"good" },
+  fBore:   { label:"Footage borescoped (ft)", get:r=>r.fBore,    unit:"ft",   dir:"good" },
+  tRej:    { label:"Held footage (ft)",       get:r=>r.tRej,     unit:"ft",   dir:"bad"  },
+  pcsInsp: { label:"Pieces inspected",        get:r=>r.pcsInsp,  unit:"n",    dir:"good" },
+  pcsAcc:  { label:"Pieces accepted",         get:r=>r.pcsAcc,   unit:"n",    dir:"good" },
+  pcsRej:  { label:"Pieces rejected",         get:r=>r.pcsRej,   unit:"n",    dir:"bad"  },
+  subs:    { label:"Submissions",             count:true,        unit:"n",    dir:"good" }
+};
+const PV_CF = [ ["none","None"], ["shade","Shading"], ["scale3","Colour scale: red, yellow, green"],
+                ["scale2","Colour scale: blue, white, red"], ["lights","Traffic lights"], ["flags","Coloured flags"],
+                ["bars","Data bars"], ["outliers","Flag outliers"] ];
+const PV_SHOW = [ ["normal","Values"], ["grand","% of grand total"], ["row","% of row total"], ["col","% of column total"] ];
+const CF_RED = "#F8696B", CF_YEL = "#FFEB84", CF_GRN = "#63BE7B", CF_BLU = "#5A8AC6";
+const CF_I_RED = "#D63A3A", CF_I_AMB = "#F2B01E", CF_I_GRN = "#1E9E4A";
+const PV_DEFAULT = { row:"mill", col:"quarter", val:"rate", agg:"wavg", show:"normal", cf:"scale3",
+                     dir:"bad", tot:true, sort:{ by:"label", dir:1 }, widths:{} };
+let pv = JSON.parse(JSON.stringify(PV_DEFAULT));
+try{
+  const saved = JSON.parse(localStorage.getItem("pacPivot") || "null");
+  if(saved && typeof saved === "object") pv = Object.assign(pv, saved);
+}catch(err){}
+if(!PV_DIMS[pv.row]) pv.row = PV_DEFAULT.row;
+if(!PV_DIMS[pv.col]) pv.col = PV_DEFAULT.col;
+if(!PV_VALS[pv.val]) pv.val = PV_DEFAULT.val;
+if(!PV_CF.some(c => c[0] === pv.cf)) pv.cf = PV_DEFAULT.cf;
+if(!PV_SHOW.some(c => c[0] === pv.show)) pv.show = "normal";
+if(!pv.sort || typeof pv.sort !== "object") pv.sort = { by:"label", dir:1 };
+if(!pv.widths || typeof pv.widths !== "object") pv.widths = {};
+let pvModel = null;
+function pvSave(){ try{ localStorage.setItem("pacPivot", JSON.stringify(pv)); }catch(err){} }
+const escH = v => String(v == null ? "" : v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+function pvAggsFor(vk){
+  const V = PV_VALS[vk];
+  if(V.count) return [["count","Count"]];
+  if(V.rate)  return [["wavg","Rejected \u00f7 inspected"], ["avg","Average of submissions"], ["min","Min"], ["max","Max"], ["count","Count"]];
+  return [["sum","Sum"], ["avg","Average"], ["min","Min"], ["max","Max"], ["std","Std dev"], ["count","Count"]];
+}
+function pvStat(){ return { n:0, sum:0, sq:0, min:Infinity, max:-Infinity, num:0, den:0 }; }
+function pvAdd(s, r, V){
+  if(V.count){ s.n++; return; }
+  let x;
+  if(V.rate){
+    s.num += r.fRej || 0; s.den += r.fInsp || 0;
+    if(!(r.fInsp > 0)) return;                  // a rate needs inspected footage behind it
+    x = r.fRej / r.fInsp;
+  } else x = +V.get(r) || 0;
+  s.n++; s.sum += x; s.sq += x * x;
+  if(x < s.min) s.min = x;
+  if(x > s.max) s.max = x;
+}
+function pvVal(s, agg){
+  if(!s) return null;
+  switch(agg){
+    case "sum":   return s.n ? s.sum : null;
+    case "count": return s.n;
+    case "avg":   return s.n ? s.sum / s.n : null;
+    case "min":   return s.n ? s.min : null;
+    case "max":   return s.n ? s.max : null;
+    case "std":   return s.n > 1 ? Math.sqrt(Math.max(0, (s.sq - s.sum * s.sum / s.n) / (s.n - 1))) : null;
+    case "wavg":  return s.den > 0 ? s.num / s.den : null;
+  }
+  return null;
+}
+function pvUnit(){
+  if(pv.show !== "normal") return "share";
+  if(pv.agg === "count") return "n";
+  return PV_VALS[pv.val].unit;
+}
+function pvFmt(v, unit){
+  if(v == null || !isFinite(v)) return "";
+  if(unit === "rate")  return (100 * v).toFixed(2) + "%";
+  if(unit === "share") return (100 * v).toFixed(1) + "%";
+  if(unit === "n" && Math.abs(v) < 100 && v % 1) return v.toFixed(2);
+  return fmt(v);
+}
+function pvValueTitle(){
+  const V = PV_VALS[pv.val];
+  let t;
+  if(pv.agg === "count") t = V.count ? "Submissions" : (V.rate ? "Submissions with inspected footage" : "Count of submissions");
+  else if(pv.agg === "wavg") t = "Rejection rate (rejected \u00f7 inspected)";
+  else t = { sum:"Sum", avg:"Average", min:"Min", max:"Max", std:"Std dev" }[pv.agg] + " of " +
+           V.label.charAt(0).toLowerCase() + V.label.slice(1);
+  if(pv.show !== "normal") t += " \u2014 " + PV_SHOW.find(x => x[0] === pv.show)[1];
+  return t;
+}
+function pvCfStats(vals){
+  const a = vals.filter(v => v != null && isFinite(v)).sort((x, y) => x - y);
+  if(!a.length) return null;
+  const q = p => { const i = (a.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i); return a[lo] + (a[hi] - a[lo]) * (i - lo); };
+  return { n:a.length, min:a[0], max:a[a.length - 1], q1:q(.25), med:q(.5), q3:q(.75) };
+}
+function pvCfCell(v, st, unit){
+  if(v == null || !isFinite(v) || !st || pv.cf === "none") return null;
+  const good = pv.dir === "good";
+  const span = st.max - st.min;
+  const t = span > 0 ? (v - st.min) / span : 0.5;                         // share of the range
+  const tm = span <= 0 ? 0.5                                              // median-anchored, like Excel's 3-colour scale
+    : v <= st.med ? (st.med > st.min ? 0.5 * (v - st.min) / (st.med - st.min) : 0.5)
+                  : (st.max > st.med ? 0.5 + 0.5 * (v - st.med) / (st.max - st.med) : 0.5);
+  switch(pv.cf){
+    case "shade": {
+      const k = 0.06 + 0.74 * t;
+      return { bg: mixColor(cssVar("--card", "#FFFFFF"), B.steel2, k), fg: k > 0.5 ? "#FFFFFF" : null };
+    }
+    case "scale3": {
+      const g = good ? tm : 1 - tm;                                       // 1 = best
+      return { bg: g < .5 ? mixColor(CF_RED, CF_YEL, g * 2) : mixColor(CF_YEL, CF_GRN, (g - .5) * 2), fg:"#1F2A33" };
+    }
+    case "scale2": {
+      const h = good ? 1 - tm : tm;                                       // 1 = worst (red)
+      return { bg: h < .5 ? mixColor(CF_BLU, "#FFFFFF", h * 2) : mixColor("#FFFFFF", CF_RED, (h - .5) * 2), fg:"#1F2A33" };
+    }
+    case "lights": case "flags": {
+      const band = t >= 2/3 ? 2 : t >= 1/3 ? 1 : 0;                       // Excel's default 67 / 33 split
+      const lvl = good ? band : 2 - band;                                 // 2 = best
+      return { icon: pv.cf === "lights" ? "dot" : "flag", iconColor: [CF_I_RED, CF_I_AMB, CF_I_GRN][lvl],
+               title: ["Bottom", "Middle", "Top"][band] + " third of the range" };
+    }
+    case "bars": {
+      const lo = Math.min(0, st.min);
+      return { bar: st.max > lo ? Math.max(0, Math.min(1, (v - lo) / (st.max - lo))) : 0 };
+    }
+    case "outliers": {
+      if(st.n < 4) return null;
+      const iqr = st.q3 - st.q1, lo = st.q1 - 1.5 * iqr, hi = st.q3 + 1.5 * iqr;
+      if(v <= hi && v >= lo) return null;
+      const loShown = st.min >= 0 ? Math.max(0, lo) : lo;           // no "-7%" fences for values that can't go negative
+      const up = v > hi, bad = good ? !up : up, col = bad ? CF_I_RED : CF_I_GRN;
+      return { out:true, up, outColor:col, bg: mixColor("#FFFFFF", col, 0.14),
+               title: (up ? "Unusually high" : "Unusually low") + " \u2014 outside the typical range of " + pvFmt(loShown, unit) + " to " + pvFmt(hi, unit) };
+    }
+  }
+  return null;
+}
+function pvBuildModel(){
+  const R = PV_DIMS[pv.row], C = PV_DIMS[pv.col], V = PV_VALS[pv.val];
+  const rGet = R.get || (()=>"__all"), cGet = C.get || (()=>"__all");
+  const cells = new Map(), rowT = new Map(), colT = new Map(), grand = pvStat();
+  for(const r of (scopeRows || [])){
+    const a = rGet(r), b = cGet(r);
+    if(a === "" || b === "") continue;                // e.g. no date on a date-based field
+    const k = a + "\u0001" + b;
+    if(!cells.has(k)) cells.set(k, pvStat());
+    if(!rowT.has(a)) rowT.set(a, pvStat());
+    if(!colT.has(b)) colT.set(b, pvStat());
+    pvAdd(cells.get(k), r, V); pvAdd(rowT.get(a), r, V); pvAdd(colT.get(b), r, V); pvAdd(grand, r, V);
+  }
+  const ord = ks => ks.sort((x, y) => String(x).localeCompare(String(y), undefined, { numeric:true }));
+  const rKeys = ord([...rowT.keys()]), cKeys = ord([...colT.keys()]);
+  const agg = pv.agg, show = pv.show;
+  const gv = pvVal(grand, agg);
+  const div = (v, base) => (v == null || !base) ? null : v / base;
+  const cellV = (a, b) => {
+    const v = pvVal(cells.get(a + "\u0001" + b), agg);
+    if(show === "normal" || v == null) return v;
+    if(show === "grand") return div(v, gv);
+    if(show === "row")   return div(v, pvVal(rowT.get(a), agg));
+    return div(v, pvVal(colT.get(b), agg));
+  };
+  const rowTotV = a => { const v = pvVal(rowT.get(a), agg);
+    return show === "normal" ? v : show === "row" ? (v ? 1 : null) : div(v, gv); };
+  const colTotV = b => { const v = pvVal(colT.get(b), agg);
+    return show === "normal" ? v : show === "col" ? (v ? 1 : null) : div(v, gv); };
+  const grandV = show === "normal" ? gv : (gv ? 1 : null);
+  const dispR = k => k === "__all" ? "All submissions" : (R.show ? R.show(k) : k);
+  const dispC = k => C.show ? C.show(k) : k;
+  const hasColDim = pv.col !== "none";
+  const showTotCol = pv.tot && hasColDim;
+  const showTotRow = pv.tot && pv.row !== "none";
+  const valueTitle = pvValueTitle();
+  const unit = pvUnit();
+
+  const body = rKeys.map(a => ({ key:a, text:dispR(a), vals:cKeys.map(b => cellV(a, b)), total:rowTotV(a) }));
+  const sb = pv.sort.by, sd = pv.sort.dir || 1;
+  if(sb === "label"){ if(sd < 0) body.reverse(); }
+  else {
+    const ci = sb === "__total" ? -1 : cKeys.indexOf(sb);
+    if(sb === "__total" || ci >= 0){
+      const get = x => ci < 0 ? x.total : x.vals[ci];
+      body.sort((x, y) => { const p = get(x), q = get(y);
+        if(p == null && q == null) return 0; if(p == null) return 1; if(q == null) return -1; return sd * (p - q); });
+    }
+  }
+  const nCols = (hasColDim ? cKeys.length : 1) + (showTotCol ? 1 : 0);
+  const avail = (($("pvTable") && $("pvTable").parentElement.clientWidth) || 1200) - 214;
+  const defW = Math.max(84, Math.min(150, Math.floor(avail / Math.max(1, nCols))));   // fill the pane when it fits
+  const wOf = (text, d) => { const w = pv.widths[text]; return (w >= 48 && w <= 640) ? w : d; };
+  const corner = pv.row === "none" ? "" : (hasColDim ? R.label + " / " + C.label : R.label);
+  const head = [{ text:corner, sort:"label", w:wOf(corner, 210) }];
+  if(hasColDim) cKeys.forEach(k => { const tx = dispC(k); head.push({ text:tx, sort:k, w:wOf(tx, defW) }); });
+  else if(cKeys.length) head.push({ text:valueTitle, sort:"__all", w:wOf(valueTitle, 230) });
+  if(showTotCol) head.push({ text:"Total", sort:"__total", w:wOf("Total", 124) });
+
+  const st = pvCfStats(body.flatMap(b => b.vals));
+  body.forEach(b => { b.cf = b.vals.map(v => pvCfCell(v, st, unit)); });
+  return { R, C, V, unit, cKeys, hasColDim, showTotCol, showTotRow, head, body, st, valueTitle,
+           totRow:{ vals:cKeys.map(colTotV), total:grandV }, grand:grandV,
+           records:(scopeRows || []).length };
+}
+function pvIconSvg(type, color){
+  if(type === "dot")
+    return `<svg class="ico" width="11" height="11" viewBox="0 0 11 11" aria-hidden="true"><circle cx="5.5" cy="5.5" r="5" fill="${color}"/></svg>`;
+  return `<svg class="ico" width="11" height="12" viewBox="0 0 11 12" aria-hidden="true"><path d="M1.6 .6v10.8" stroke="#4A5A68" stroke-width="1.3" fill="none"/><path d="M2.2 1h8.2L8.3 3.7l2.1 2.7H2.2z" fill="${color}"/></svg>`;
+}
+function pvSelKey(a, b){
+  a = a === "__all" ? null : a; b = b === "__all" ? null : b;
+  if(a == null && b == null) return null;
+  return JSON.stringify([pv.row, a, pv.col, b]);
+}
+function pvCellHtml(v, cf, unit, selKey, extra){
+  let style = "", inner = "", title = "";
+  const cls = "pc" + (extra ? " " + extra : "") + (selKey ? " cell" : "");
+  if(cf){
+    if(cf.bg) style += `background:${cf.bg};`;
+    if(cf.fg) style += `color:${cf.fg};`;
+    if(cf.bar != null) inner += `<span class="dbar" style="width:calc(${(cf.bar * 100).toFixed(1)}% - 4px)"></span>`;
+    if(cf.icon) inner += pvIconSvg(cf.icon, cf.iconColor);
+    if(cf.out) style += `box-shadow:inset 0 0 0 2px ${cf.outColor};`;
+    if(cf.title) title = cf.title;
+  }
+  inner += `<span class="cv">${escH(pvFmt(v, unit))}</span>`;
+  if(cf && cf.out) inner += `<span class="omark" style="color:${cf.outColor}">${cf.up ? "\u25b2" : "\u25bc"}</span>`;
+  return `<td class="${cls}"${style ? ` style="${style}"` : ""}${title ? ` title="${escH(title)}"` : ""}${selKey ? ` data-k="${escH(selKey)}"` : ""}>${inner}</td>`;
+}
+/* Legend line explaining what the current formatting means, in both HTML
+   (on screen) and plain text (PNG export). */
+function pvLegend(m){
+  const st = m.st, u = m.unit, good = pv.dir === "good";
+  if(!st || pv.cf === "none") return { html:"", text:"" };
+  const f = v => pvFmt(v, u);
+  const better = good ? "higher is better" : "lower is better";
+  const t1 = st.min + (st.max - st.min) / 3, t2 = st.min + 2 * (st.max - st.min) / 3;
+  const sw = bg => `<span class="pvsw" style="background:${bg}"></span>`;
+  switch(pv.cf){
+    case "shade":
+      return { html:`${sw(`linear-gradient(90deg, ${mixColor("#FFFFFF", B.steel2, .06)}, ${B.steel2})`)} Darker = higher \u00b7 ${f(st.min)} to ${f(st.max)}`,
+               text:`Darker shading = higher value (${f(st.min)} to ${f(st.max)})` };
+    case "scale3": {
+      const lo = good ? CF_RED : CF_GRN, hi = good ? CF_GRN : CF_RED;
+      return { html:`${sw(`linear-gradient(90deg, ${lo}, ${CF_YEL}, ${hi})`)} ${f(st.min)} \u00b7 median ${f(st.med)} \u00b7 ${f(st.max)} \u2014 green is better (${better})`,
+               text:`Colour scale: min ${f(st.min)}, median ${f(st.med)}, max ${f(st.max)}; green is better (${better})` };
+    }
+    case "scale2": {
+      const lo = good ? CF_RED : CF_BLU, hi = good ? CF_BLU : CF_RED;
+      return { html:`${sw(`linear-gradient(90deg, ${lo}, #FFFFFF, ${hi})`)} ${f(st.min)} \u00b7 median ${f(st.med)} \u00b7 ${f(st.max)} \u2014 blue is better (${better})`,
+               text:`Colour scale: min ${f(st.min)}, median ${f(st.med)}, max ${f(st.max)}; blue is better (${better})` };
+    }
+    case "lights": case "flags": {
+      const type = pv.cf === "lights" ? "dot" : "flag";
+      const topC = good ? CF_I_GRN : CF_I_RED, botC = good ? CF_I_RED : CF_I_GRN;
+      return { html:`${pvIconSvg(type, topC)}${f(t2)} and above ${pvIconSvg(type, CF_I_AMB)}${f(t1)} to ${f(t2)} ${pvIconSvg(type, botC)}below ${f(t1)} \u2014 ${better}`,
+               text:`Top third: ${f(t2)} and above \u00b7 middle: ${f(t1)} to ${f(t2)} \u00b7 bottom: below ${f(t1)} (${better})` };
+    }
+    case "bars":
+      return { html:`${sw("linear-gradient(90deg, color-mix(in srgb, var(--accent) 75%, #fff), color-mix(in srgb, var(--accent) 20%, #fff))")} Bar length is relative to the largest value, ${f(st.max)}`,
+               text:`Bar length is relative to the largest value, ${f(st.max)}` };
+    case "outliers": {
+      if(st.n < 4) return { html:"Outlier flags need at least 4 filled cells.", text:"" };
+      const iqr = st.q3 - st.q1;
+      const n = m.body.reduce((a, b) => a + b.cf.filter(c => c && c.out).length, 0);
+      const lo = st.q1 - 1.5 * iqr;
+      const msg = `${n} cell${n === 1 ? "" : "s"} flagged outside ${f(st.min >= 0 ? Math.max(0, lo) : lo)} to ${f(st.q3 + 1.5 * iqr)} (1.5 \u00d7 interquartile range)`;
+      return { html:`<span class="omark" style="color:${CF_I_RED}">\u25b2\u25bc</span> ${msg} \u2014 red marks the bad direction`, text:msg };
+    }
+  }
+  return { html:"", text:"" };
+}
+function pvSyncControls(){
+  $("pvRow").value = pv.row; $("pvCol").value = pv.col; $("pvVal").value = pv.val;
+  const aggs = pvAggsFor(pv.val);
+  if(!aggs.some(a => a[0] === pv.agg)) pv.agg = aggs[0][0];
+  pvFillSel("pvAgg", aggs); $("pvAgg").value = pv.agg; $("pvAgg").disabled = aggs.length < 2;
+  const additive = pv.agg === "sum" || pv.agg === "count";
+  if(!additive) pv.show = "normal";
+  $("pvShow").value = pv.show; $("pvShow").disabled = !additive;
+  $("pvShow").title = additive ? "" : "Percent-of-total views need Sum or Count";
+  $("pvCf").value = pv.cf;
+  document.querySelectorAll("#pvDir button").forEach(b => b.classList.toggle("on", b.dataset.d === pv.dir));
+  $("pvDirBox").classList.toggle("dim", ["none", "shade", "bars"].includes(pv.cf));
+  $("pvTot").checked = !!pv.tot;
+}
+function pvFillSel(id, pairs){
+  $(id).innerHTML = pairs.map(([k, l]) => `<option value="${escH(k)}">${escH(l)}</option>`).join("");
+}
+function renderPivot(){
+  const tbl = $("pvTable"); if(!tbl) return;
+  pvSyncControls();
+  const m = pvModel = pvBuildModel();
+  const arrow = key => pv.sort.by === key ? `<span class="arr">${pv.sort.dir > 0 ? "\u25b2" : "\u25bc"}</span>` : "";
+  let h = "<colgroup>" + m.head.map(c => `<col style="width:${c.w}px">`).join("") + "</colgroup><thead><tr>";
+  h += m.head.map((c, i) => `<th class="${i ? "num" : "corner"}" data-sort="${escH(c.sort)}" title="${escH(c.text || "Row labels")} \u2014 click to sort">` +
+       `${escH(c.text)}${arrow(c.sort)}<span class="rz" data-i="${i}" title="Drag to resize \u00b7 double-click to fit"></span></th>`).join("");
+  h += "</tr></thead><tbody>";
+  if(!m.body.length){
+    h += `<tr><td class="pvempty" colspan="${m.head.length}">No submissions in the current scope. Widen the date range or clear a filter to fill the pivot.</td></tr>`;
+  }
+  m.body.forEach(b => {
+    h += `<tr><td class="rh" title="${escH(b.text)}">${escH(b.text)}</td>`;
+    b.vals.forEach((v, ci) => { h += pvCellHtml(v, b.cf[ci], m.unit, pvSelKey(b.key, m.cKeys[ci])); });
+    if(m.showTotCol) h += pvCellHtml(b.total, null, m.unit, pvSelKey(b.key, null), "ctot");
+    h += "</tr>";
+  });
+  if(m.showTotRow && m.body.length){
+    h += `<tr class="tot"><td class="rh">Grand total</td>`;
+    m.totRow.vals.forEach((v, ci) => { h += pvCellHtml(v, null, m.unit, pvSelKey(null, m.cKeys[ci])); });
+    if(m.showTotCol) h += pvCellHtml(m.totRow.total, null, m.unit, null, "ctot");
+    h += "</tr>";
+  }
+  h += "</tbody>";
+  tbl.innerHTML = h;
+  tbl.style.width = m.head.reduce((a, c) => a + c.w, 0) + "px";
+  $("pvLegend").innerHTML = pvLegend(m).html;
+  $("pvNote").textContent = m.body.length
+    ? `${fmt(m.body.length)} row${m.body.length === 1 ? "" : "s"}` + (m.hasColDim ? ` \u00d7 ${fmt(m.cKeys.length)} column${m.cKeys.length === 1 ? "" : "s"}` : "") + " \u00b7 " + m.valueTitle
+    : "";
+  pvUpdateLinkable(); pvMarkSel();
+}
+function pvMarkSel(){
+  const t = $("pvTable"); if(!t) return;
+  const k = chartSel && chartSel.kind === "pivot" ? chartSel.value : null;
+  t.querySelectorAll("td.sel").forEach(td => td.classList.remove("sel"));
+  if(k) t.querySelectorAll("td.cell").forEach(td => { if(td.dataset.k === k) td.classList.add("sel"); });
+}
+function pvUpdateLinkable(){ const t = $("pvTable"); if(t) t.classList.toggle("linkable", $("linkToggle").checked); }
+function pvPick(k){
+  if(!k) return;
+  if(chartSel && chartSel.kind === "pivot" && chartSel.value === k) chartSel = null;   // click again to clear
+  else {
+    const [rd, rk, cd, ck] = JSON.parse(k);
+    const part = (dim, key) => PV_DIMS[dim].label + " " + (PV_DIMS[dim].show ? PV_DIMS[dim].show(key) : key);
+    const parts = [];
+    if(rk != null) parts.push(part(rd, rk));
+    if(ck != null) parts.push(part(cd, ck));
+    chartSel = { kind:"pivot", value:k, pv:{ rd, rk, cd, ck }, text:parts.join(", ") };
+  }
+  renderTable(); refreshSelectionHighlights();
+}
+function pvChanged(resetSort){
+  if(resetSort && pv.sort.by !== "label" && pv.sort.by !== "__total") pv.sort = { by:"label", dir:1 };
+  if(chartSel && chartSel.kind === "pivot"){ chartSel = null; renderTable(); }
+  pvSave(); renderPivot();
+}
+function pvAutofit(i){
+  const m = pvModel; if(!m || !m.head[i]) return;
+  const ff = getComputedStyle($("pvTable")).fontFamily;
+  const g = document.createElement("canvas").getContext("2d");
+  g.font = "700 12.5px " + ff;
+  let w = g.measureText(m.head[i].text).width + 34;
+  let texts;
+  if(i === 0){ texts = m.body.map(b => b.text).concat(["Grand total"]); }
+  else if(i <= m.cKeys.length){ texts = m.body.map(b => pvFmt(b.vals[i-1], m.unit)).concat([pvFmt(m.totRow.vals[i-1], m.unit)]); }
+  else { texts = m.body.map(b => pvFmt(b.total, m.unit)).concat([pvFmt(m.totRow.total, m.unit)]); }
+  g.font = "700 12.5px " + ff;
+  texts.forEach(t => { w = Math.max(w, g.measureText(t).width + (i ? 46 : 28)); });
+  w = Math.max(48, Math.min(640, Math.ceil(w)));
+  pv.widths[m.head[i].text] = w; pvSave(); renderPivot();
+}
+function pvExportRows(){
+  const m = pvModel;
+  const pctU = m.unit === "rate" || m.unit === "share";
+  const num = v => (v == null || !isFinite(v)) ? "" : pctU ? +(100 * v).toFixed(3) : +(+v).toFixed(2);
+  const header = m.head.map(h => h.text);
+  header[0] = (header[0] ? header[0] + " \u2014 " : "") + m.valueTitle + (pctU ? " (%)" : "");
+  const out = m.body.map(b => [b.text, ...b.vals.map(num), ...(m.showTotCol ? [num(b.total)] : [])]);
+  if(m.showTotRow && m.body.length)
+    out.push(["Grand total", ...m.totRow.vals.map(num), ...(m.showTotCol ? [num(m.totRow.total)] : [])]);
+  return { header, out };
+}
+function pvExport(kind){
+  $("pvExpPanel").style.display = "none";
+  if(!pvModel || !pvModel.body.length) return alert("Nothing to export \u2014 the pivot is empty for the current scope.");
+  const { header, out } = pvExportRows();
+  const cols = header.map((h, i) => [h, r => r[i]]);
+  const base = "PAC_Pivot_" + stampDate();
+  if(kind === "csv") dlBlob(base + ".csv", new Blob([buildCsv(out, cols)], { type:"text/csv;charset=utf-8" }));
+  else dlBlob(base + ".xlsx", new Blob([buildXlsxBytes(out, cols, "Pivot")],
+         { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+}
+function pvDrawIcon(g, type, color, x, cy){
+  g.save();
+  if(type === "dot"){ g.fillStyle = color; g.beginPath(); g.arc(x + 5.5, cy, 5, 0, 2 * Math.PI); g.fill(); }
+  else {
+    g.strokeStyle = "#4A5A68"; g.lineWidth = 1.3; g.beginPath(); g.moveTo(x + 1.6, cy - 6); g.lineTo(x + 1.6, cy + 6); g.stroke();
+    g.fillStyle = color; g.beginPath(); g.moveTo(x + 2.2, cy - 5.5); g.lineTo(x + 10.4, cy - 5.5); g.lineTo(x + 8.3, cy - 2.8);
+    g.lineTo(x + 10.4, cy - 0.1); g.lineTo(x + 2.2, cy - 0.1); g.closePath(); g.fill();
+  }
+  g.restore();
+}
+/* The pivot as an image. bare = no title/scope block (used inside the
+   full-dashboard snapshot, which draws its own card title). */
+function pivotPngCanvas(bare, maxRows, fitW){
+  const m0 = pvModel; if(!m0 || !m0.body.length) return null;
+  let m = m0;
+  if(fitW){                                              // stretch value columns to fill a target width
+    const tw0 = m0.head.reduce((a, c) => a + c.w, 0), extra = fitW - 36 - tw0;
+    if(extra > 0 && m0.head.length > 1){
+      const add = extra / (m0.head.length - 1);
+      m = Object.assign({}, m0, { head: m0.head.map((c, i) => i ? Object.assign({}, c, { w: c.w + add }) : c) });
+    }
+  }
+  maxRows = maxRows || 300;
+  const S = 2, RH = 24, HH = 30, PAD = 18;
+  const rowsAll = m.body.slice(0, maxRows).map(b => ({ text:b.text, vals:b.vals, cf:b.cf, total:b.total }));
+  const cut = m.body.length - rowsAll.length;
+  if(m.showTotRow) rowsAll.push({ text:"Grand total", vals:m.totRow.vals, cf:null, total:m.totRow.total, tot:true });
+  const tw = m.head.reduce((a, c) => a + c.w, 0);
+  const W = Math.max(tw + PAD * 2, bare ? 0 : 560);
+  const scope = bare ? [] : wrapCanvasText(aiScopeSummary(), "9.5px Arial", W - PAD * 2, 2);
+  const titleH = bare ? 0 : 34 + scope.length * 13 + 6;
+  const leg = pvLegend(m).text;
+  const footH = (leg ? 20 : 0) + (cut > 0 ? 16 : 0);
+  const H = PAD + titleH + HH + rowsAll.length * RH + footH + PAD;
+  const cv = document.createElement("canvas"); cv.width = W * S; cv.height = H * S;
+  const g = cv.getContext("2d"); g.scale(S, S);
+  const steel = cssVar("--steel", "#1B4965"), ink = cssVar("--ink", "#212529"), muted = cssVar("--muted", "#6C7A89");
+  g.fillStyle = "#FFFFFF"; g.fillRect(0, 0, W, H);
+  let y = PAD;
+  if(!bare){
+    g.fillStyle = steel; g.font = "700 15px Arial"; g.textBaseline = "alphabetic";
+    g.fillText("Pivot Table \u2014 " + m.valueTitle, PAD, y + 14);
+    const stamp = CONFIG.clientName + " \u00b7 " + stampDate();
+    g.fillStyle = muted; g.font = "10px Arial";
+    g.fillText(stamp, W - PAD - g.measureText(stamp).width, y + 14);
+    g.font = "9.5px Arial";
+    scope.forEach((ln, i) => g.fillText((i === 0 ? "Showing: " : "") + ln, PAD, y + 30 + i * 13));
+    y += titleH;
+  }
+  let x = PAD;
+  g.textBaseline = "middle";
+  m.head.forEach((c, i) => {
+    g.fillStyle = steel; g.fillRect(x, y, c.w, HH);
+    if(i){ g.fillStyle = "rgba(255,255,255,.25)"; g.fillRect(x, y + 6, 1, HH - 12); }
+    g.save(); g.beginPath(); g.rect(x + 6, y, c.w - 12, HH); g.clip();
+    g.fillStyle = "#FFFFFF"; g.font = "700 12px Arial";
+    g.textAlign = i ? "right" : "left"; g.fillText(c.text, i ? x + c.w - 8 : x + 8, y + HH / 2);
+    g.restore();
+    x += c.w;
+  });
+  y += HH;
+  const totBg = mixColor("#FFFFFF", steel, 0.08);
+  rowsAll.forEach(r => {
+    x = PAD;
+    const vals = [null, ...r.vals, ...(m.showTotCol ? [r.total] : [])];
+    m.head.forEach((c, i) => {
+      const cf = (i > 0 && i <= r.vals.length && r.cf) ? r.cf[i - 1] : null;
+      const isTot = r.tot || (m.showTotCol && i === m.head.length - 1);
+      g.fillStyle = (cf && cf.bg) || (isTot ? totBg : "#FFFFFF");
+      g.fillRect(x, y, c.w, RH);
+      if(cf && cf.bar != null){
+        g.fillStyle = mixColor("#FFFFFF", cssVar("--accent", "#62B6CB"), 0.55);
+        g.fillRect(x + 2, y + 4, Math.max(0, (c.w - 4) * cf.bar), RH - 8);
+      }
+      g.fillStyle = "#E6ECF0"; g.fillRect(x, y + RH - 1, c.w, 1);
+      if(cf && cf.out){ g.strokeStyle = cf.outColor; g.lineWidth = 2; g.strokeRect(x + 1, y + 1, c.w - 2, RH - 2); }
+      if(cf && cf.icon) pvDrawIcon(g, cf.icon, cf.iconColor, x + 7, y + RH / 2);
+      g.save(); g.beginPath(); g.rect(x + 4, y, c.w - 8, RH); g.clip();
+      g.fillStyle = (cf && cf.fg) || ink;
+      g.font = (i === 0 || isTot ? "700 " : "400 ") + "12px Arial";
+      if(i === 0){ g.textAlign = "left"; g.fillText(r.text, x + 8, y + RH / 2); }
+      else {
+        g.textAlign = "right";
+        const right = x + c.w - (cf && cf.out ? 20 : 8);
+        g.fillText(pvFmt(vals[i], m.unit), right, y + RH / 2);
+        if(cf && cf.out){ g.fillStyle = cf.outColor; g.font = "700 9px Arial"; g.fillText(cf.up ? "\u25b2" : "\u25bc", x + c.w - 7, y + RH / 2); }
+      }
+      g.restore();
+      x += c.w;
+    });
+    if(r.tot){ g.fillStyle = steel; g.fillRect(PAD, y, tw, 2); }
+    y += RH;
+  });
+  g.fillStyle = muted; g.font = "11px Arial"; g.textAlign = "left";
+  if(cut > 0){ y += 12; g.fillText(`+ ${fmt(cut)} more rows not shown \u2014 export to Excel for the full table`, PAD, y); }
+  if(leg){ y += 16; g.fillText(leg, PAD, y); }
+  return cv;
+}
+function pvAiData(){
+  const m = pvModel || pvBuildModel();
+  const RL = 40, CL = 24;
+  const cols = m.head.slice(1).map(h => h.text);
+  const r4 = v => (v == null || !isFinite(v)) ? null : +(+v).toFixed(4);
+  return {
+    rowField: m.R.label, columnField: m.hasColDim ? m.C.label : null, value: m.valueTitle,
+    valueUnit: m.unit === "rate" ? "fraction (0.05 = 5%)" : m.unit === "share" ? "share of total (fraction)" : m.unit === "ft" ? "feet" : "count",
+    conditionalFormatting: PV_CF.find(c => c[0] === pv.cf)[1], higherIsBetter: pv.dir === "good",
+    table: m.body.slice(0, RL).map(b => {
+      const o = { row:b.text };
+      b.vals.slice(0, CL).forEach((v, i) => { o[cols[i]] = r4(v); });
+      if(m.showTotCol) o.Total = r4(b.total);
+      return o;
+    }),
+    rowsOmitted: Math.max(0, m.body.length - RL), columnsOmitted: Math.max(0, m.cKeys.length - CL),
+    grandTotal: r4(m.grand),
+    outliersFlagged: m.body.flatMap(b => b.cf.map((c, i) => c && c.out
+      ? { row:b.text, column:cols[i], value:r4(b.vals[i]), direction: c.up ? "high" : "low" } : null).filter(Boolean)).slice(0, 20)
+  };
+}
+function pvSig(){ return JSON.stringify([pv.row, pv.col, pv.val, pv.agg, pv.show]); }
+(function initPivot(){
+  const tbl = $("pvTable"); if(!tbl) return;
+  const dims = Object.entries(PV_DIMS).map(([k, d]) => [k, d.label]);
+  pvFillSel("pvRow", dims); pvFillSel("pvCol", dims);
+  pvFillSel("pvVal", Object.entries(PV_VALS).map(([k, v]) => [k, v.label]));
+  pvFillSel("pvCf", PV_CF); pvFillSel("pvShow", PV_SHOW);
+
+  $("pvRow").addEventListener("change", ()=>{
+    const v = $("pvRow").value;
+    if(v !== "none" && v === pv.col) pv.col = pv.row;          // same field in both: swap, like Excel moving it
+    pv.row = v; pvChanged(true);
+  });
+  $("pvCol").addEventListener("change", ()=>{
+    const v = $("pvCol").value;
+    if(v !== "none" && v === pv.row) pv.row = pv.col;
+    pv.col = v; pvChanged(true);
+  });
+  $("pvVal").addEventListener("change", ()=>{ pv.val = $("pvVal").value; pv.dir = PV_VALS[pv.val].dir; pvChanged(false); });
+  $("pvAgg").addEventListener("change", ()=>{ pv.agg = $("pvAgg").value; pvChanged(false); });
+  $("pvShow").addEventListener("change", ()=>{ pv.show = $("pvShow").value; pvChanged(false); });
+  $("pvCf").addEventListener("change", ()=>{ pv.cf = $("pvCf").value; pvSave(); renderPivot(); });
+  document.querySelectorAll("#pvDir button").forEach(b => b.addEventListener("click", ()=>{
+    pv.dir = b.dataset.d; pvSave(); renderPivot();
+  }));
+  $("pvTot").addEventListener("change", ()=>{ pv.tot = $("pvTot").checked; pvSave(); renderPivot(); });
+  $("pvSwap").addEventListener("click", ()=>{
+    const r = pv.row; pv.row = pv.col; pv.col = r; pvChanged(true);
+  });
+  $("pvReset").addEventListener("click", ()=>{
+    pv = JSON.parse(JSON.stringify(PV_DEFAULT)); pvChanged(false);
+  });
+  $("linkToggle").addEventListener("change", pvUpdateLinkable);
+
+  /* Excel-style column resizing: drag a header divider; double-click to autofit. */
+  let drag = null, justDragged = false;
+  tbl.addEventListener("pointerdown", e=>{
+    const rz = e.target.closest(".rz"); if(!rz || !pvModel) return;
+    e.preventDefault(); e.stopPropagation();
+    const i = +rz.dataset.i;
+    drag = { i, col:tbl.querySelectorAll("col")[i], x:e.clientX, w:pvModel.head[i].w, rz };
+    rz.classList.add("on");
+    try{ rz.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  tbl.addEventListener("pointermove", e=>{
+    if(!drag) return;
+    const w = Math.max(48, Math.min(640, Math.round(drag.w + e.clientX - drag.x)));
+    if(drag.col) drag.col.style.width = w + "px";
+    pvModel.head[drag.i].w = w;
+    tbl.style.width = pvModel.head.reduce((a, c) => a + c.w, 0) + "px";
+  });
+  const endDrag = ()=>{
+    if(!drag) return;
+    drag.rz.classList.remove("on");
+    pv.widths[pvModel.head[drag.i].text] = pvModel.head[drag.i].w; pvSave();
+    drag = null; justDragged = true; setTimeout(()=>{ justDragged = false; }, 0);
+  };
+  tbl.addEventListener("pointerup", endDrag);
+  tbl.addEventListener("pointercancel", endDrag);
+  tbl.addEventListener("dblclick", e=>{
+    const rz = e.target.closest(".rz"); if(!rz) return;
+    e.preventDefault(); pvAutofit(+rz.dataset.i);
+  });
+  tbl.addEventListener("click", e=>{
+    if(justDragged || e.target.closest(".rz")) return;
+    const th = e.target.closest("th");
+    if(th){
+      const k = th.dataset.sort;
+      if(pv.sort.by === k) pv.sort.dir = -pv.sort.dir;
+      else pv.sort = { by:k, dir: k === "label" ? 1 : -1 };       // values sort largest first, like Excel's "Sort Largest to Smallest"
+      pvSave(); renderPivot(); return;
+    }
+    const td = e.target.closest("td.cell");
+    if(td && $("linkToggle").checked) pvPick(td.dataset.k);
+  });
+
+  $("pvExpBtn").addEventListener("click", ()=>{
+    const p = $("pvExpPanel"); p.style.display = p.style.display === "block" ? "none" : "block";
+  });
+  document.querySelectorAll("#pvExpPanel .ms-opt").forEach(el => el.addEventListener("click", ()=>pvExport(el.dataset.fmt)));
+  $("pvPng").addEventListener("click", ()=>
+    openPngPop($("pvPng"), ()=>pivotPngCanvas(false), "PAC_Pivot_" + stampDate() + ".png"));
+})();
 
 /* ---------- view preferences: color scheme + text size ---------- */
 const THEMES = {
@@ -1399,11 +2708,12 @@ function dlBlob(name, blob){
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
 }
-function buildCsv(rowsIn){
+function buildCsv(rowsIn, cols){
+  cols = cols || EXPORT_COLS;
   const esc = v => { v = (v===null||v===undefined) ? "" : String(v);
     return /[",\n\r]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v; };
-  const lines = [ EXPORT_COLS.map(c=>esc(c[0])).join(",") ];
-  for(const r of rowsIn) lines.push(EXPORT_COLS.map(c=>esc(c[1](r))).join(","));
+  const lines = [ cols.map(c=>esc(c[0])).join(",") ];
+  for(const r of rowsIn) lines.push(cols.map(c=>esc(c[1](r))).join(","));
   return "\uFEFF" + lines.join("\r\n");   // BOM so Excel opens UTF-8 correctly
 }
 /* --- minimal XLSX writer: OOXML parts in a store-only ZIP, no libraries --- */
@@ -1447,7 +2757,8 @@ function zipStore(files){   // files: [name, Uint8Array]
 }
 function colLetter(i){ let sfx = ""; i++; while(i>0){ const m=(i-1)%26; sfx=String.fromCharCode(65+m)+sfx; i=Math.floor((i-1)/26); } return sfx; }
 function xmlEsc(v){ return String(v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function buildXlsxBytes(rowsIn){
+function buildXlsxBytes(rowsIn, cols, sheetName){
+  cols = cols || EXPORT_COLS; sheetName = sheetName || "Submissions";
   const enc = new TextEncoder();
   let sheet = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
     '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>';
@@ -1463,8 +2774,8 @@ function buildXlsxBytes(rowsIn){
     });
     return x + "</row>";
   };
-  sheet += rowXml(EXPORT_COLS.map(c=>c[0]), 1, true);
-  rowsIn.forEach((r, i)=>{ sheet += rowXml(EXPORT_COLS.map(c=>c[1](r)), i+2, false); });
+  sheet += rowXml(cols.map(c=>c[0]), 1, true);
+  rowsIn.forEach((r, i)=>{ sheet += rowXml(cols.map(c=>c[1](r)), i+2, false); });
   sheet += "</sheetData></worksheet>";
   const files = [
     ["[Content_Types].xml", enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
@@ -1479,7 +2790,7 @@ function buildXlsxBytes(rowsIn){
     ["xl/workbook.xml", enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
       '<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ' +
       'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">' +
-      '<sheets><sheet name="Submissions" sheetId="1" r:id="rId1"/></sheets></workbook>')],
+      '<sheets><sheet name="' + xmlEsc(sheetName) + '" sheetId="1" r:id="rId1"/></sheets></workbook>')],
     ["xl/_rels/workbook.xml.rels", enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
       '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
       '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>')],
@@ -1912,7 +3223,10 @@ function dashboardCanvas(){
   for(let r = 0; r < rows; r++) rowH.push(Math.max(items[r*2]?items[r*2].h:0, items[r*2+1]?items[r*2+1].h:0) + 46);
   const headH = 120;
   const kpiH = kpi ? Math.round((W - M*2) * (kpi.height / kpi.width)) : 0;
-  const H = headH + kpiH + 24 + rowH.reduce((a,b)=>a+b+22,0) + 56;
+  const pvc = pivotPngCanvas(true, 40, W - M*2 + 4);   // table spans card inset 16px each side
+  const pvScale = pvc ? Math.min(1, (W - M*2 + 4) / (pvc.width / 2)) : 1;
+  const pvH = pvc ? Math.round(pvc.height / 2 * pvScale) + 50 : 0;
+  const H = headH + kpiH + 24 + rowH.reduce((a,b)=>a+b+22,0) + (pvc ? pvH + 22 : 0) + 56;
   const cv = document.createElement("canvas");
   cv.width = W * S; cv.height = H * S;
   const g = cv.getContext("2d"); g.scale(S, S);
@@ -1939,6 +3253,13 @@ function dashboardCanvas(){
       g.drawImage(it.src, x + 10, y + 38, colW - 20, it.h - 8);
     }
     y += rowH[r] + 22;
+  }
+  if(pvc){
+    roundRect(g, M, y, W - M*2, pvH - 8, 12); g.fillStyle = "#FFFFFF"; g.fill();
+    g.fillStyle = cssVar("--steel", "#1B4965"); g.font = "700 15px Arial"; g.textAlign = "left"; g.textBaseline = "alphabetic";
+    g.fillText("Pivot Table \u2014 " + pvModel.valueTitle, M + 16, y + 26);
+    g.drawImage(pvc, M + 16 - 18 * pvScale, y + 34, pvc.width / 2 * pvScale, pvc.height / 2 * pvScale);
+    y += pvH + 22;
   }
   g.fillStyle = cssVar("--muted", "#6C7A89"); g.font = "600 12px Arial";
   g.fillText("Powered by Alpha TransForm \u00b7 " + CONFIG.clientName + " \u00b7 " + stampDate(), M, H - 22);
@@ -1995,6 +3316,13 @@ const AI_TILES = {
     guidance:"If hiddenBelowFt is non-null, the person has chosen to hide mills with less inspected footage than that value - mention this filter is active when it materially affects the picture (e.g. a small but concerning mill could be hidden), but do not treat it as a data quality problem.",
     data:()=>({ mills: (AGG.mills||[]).map(m=>({mill:m[0], inspected:Math.round(m[1].fInsp), rejected:Math.round(m[1].fRej), ratePct: m[1].fInsp? +(100*m[1].fRej/m[1].fInsp).toFixed(2):0})),
     hiddenBelowFt: millMinFt > 0 ? millMinFt : null }) },
+  pivot:     { get title(){ return "Pivot Table \u2014 " + pvValueTitle(); },
+    get guidance(){
+      let g = "This tile is a pivot table the person laid out themselves (rowField / columnField / value). Describe the most important patterns across rows and columns: the largest and smallest cells, rows or columns that stand apart from the rest, and any cells in outliersFlagged. A null cell means no submissions for that combination, not zero. If rowsOmitted or columnsOmitted is above zero, say the analysis covers only the rows and columns shown.";
+      if(pv.row === "inspector" || pv.col === "inspector")
+        g += " " + AI_TILES.chInsp.guidance;
+      return g; },
+    data:()=>pvAiData() },
   chAlloy:   { title:"Alloy Rejections",        data:()=>({ heldFootageByAlloy: (AGG.alloys||[]).map(a=>({alloy:a[0], heldFt:Math.round(a[1].tRej)})) }) }
 };
 function aiScopeSummary(){
@@ -2350,7 +3678,7 @@ function aiFilterSig(){
            $("fDisp").value, $("fType").value, rateTarget ].join("|");
 }
 function aiRequestCached(tileKey){
-  const key = tileKey + "\u0001" + aiFilterSig();
+  const key = tileKey + "\u0001" + aiFilterSig() + (tileKey === "pivot" ? "\u0001" + pvSig() : "");
   if(aiCache.has(key)) return aiCache.get(key);
   const p = aiRequest(tileKey).catch(err => { aiCache.delete(key); throw err; });   // failed calls aren't cached
   aiCache.set(key, p);
@@ -2427,7 +3755,7 @@ function aiClean(txt, maps){
 }
 document.querySelectorAll(".aibtn").forEach(b=>{
   const png = b.nextElementSibling;                       // adjacent pngbtn identifies the tile
-  const key = png && png.dataset.chart ? png.dataset.chart : "kpi";
+  const key = png && (png.dataset.ai || png.dataset.chart) ? (png.dataset.ai || png.dataset.chart) : "kpi";
   b.addEventListener("click", ()=>aiAssess(key));
   b.addEventListener("mouseenter", ()=>{                  // prefetch: the request is in flight before the click
     if(rows.length) try{ aiRequestCached(key); }catch(err){}
@@ -2891,6 +4219,7 @@ async function startDemo(){
   if(demoRunning) return;
   demoRunning = true; demoStop = false;
   demoScaffold();
+  demoTypeStash = paneTypes; paneTypes = {};                 // narration assumes the default chart types
   try{
     await ensureVoices();                                    // voice list loads async in some browsers
     const t0 = Date.now();                                   // wait for the live data to land
@@ -2899,7 +4228,10 @@ async function startDemo(){
        narration from the first sentence. */
     demoResetState();
     await runDemo();
-  } finally { demoRunning = false; }
+  } finally {
+    demoRunning = false;
+    if(demoTypeStash){ paneTypes = demoTypeStash; demoTypeStash = null; drawAllPanes(); refreshSelectionHighlights(); }
+  }
 }
 /* Full reset to the dashboard's opening state - filters, sort, selection,
    chart linking and target - so a demo never narrates the wrong numbers. */
