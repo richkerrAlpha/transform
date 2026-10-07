@@ -431,6 +431,16 @@ tbody tr.expanded{background:#EAF0F5}
   box-shadow:0 0 0 4px var(--accent), 0 0 0 10px rgba(0,0,0,.28), 0 18px 40px rgba(0,0,0,.3) !important;
   border-radius:var(--radius);
 }
+.demohole{position:fixed;z-index:126;pointer-events:none;border-radius:12px;opacity:0;
+  box-shadow:0 0 0 4px var(--accent),0 10px 34px rgba(0,0,0,.35);transition:opacity .3s ease}
+.demohole.on{opacity:1}
+/* four panels frame the lit box; plain rectangles render reliably where a
+   page-sized box-shadow does not */
+.demodim{position:fixed;z-index:125;pointer-events:none;background:rgba(8,18,28,.58);
+  opacity:0;transition:opacity .3s ease}
+.demodim.on{opacity:1}
+/* a modal already dims the page behind it, so dim much less */
+.demodim.modal{background:rgba(8,18,28,.2)}
 .demoveil{position:fixed;inset:0;background:rgba(8,18,28,.55);z-index:50;opacity:0;
   pointer-events:none;transition:opacity .35s ease}
 .demoveil.on{opacity:1}
@@ -932,6 +942,21 @@ body.demoing .aimodal,body.demoing .mapmodal{padding-bottom:120px}
   content:"";width:4px;height:13px;border-radius:2px;background:var(--accent);flex:0 0 4px;
 }
 .recsec > h3 i{font-style:normal;font-size:13px;line-height:1;margin-right:1px}
+.recsv{padding:12px 14px 14px;border-top:1px solid #E1E8EE}
+.recsv:empty{display:none}
+.recsvshot{display:block;position:relative;max-width:640px;aspect-ratio:2/1;border-radius:8px;
+  overflow:hidden;background:#DDE5EC;border:1px solid #C6D3DE}
+.recsvshot img{display:block;width:100%;height:100%;object-fit:cover}
+.recsvshot .svbadge{position:absolute;right:8px;bottom:8px;background:rgba(0,39,76,.88);color:#fff;
+  font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:6px}
+.recsvshot:hover .svbadge{background:var(--ink)}
+.recsvshot:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.recsvph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:#5B6E80;font-size:12.5px;text-align:center;padding:16px}
+.recsvcap{margin-top:6px;font-size:11.5px;color:var(--muted)}
+.recsvlink{display:inline-block;border:1px solid var(--line);border-radius:7px;padding:7px 12px;
+  font-size:12.5px;font-weight:700;color:var(--ink);text-decoration:none;background:#fff}
+.recsvlink:hover{border-color:var(--ink)}
 .recgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;padding:0}
 .recgrid > div{
   padding:9px 13px 11px;border-right:1px solid #DCE5EC;border-bottom:1px solid #DCE5EC;
@@ -4553,18 +4578,39 @@ function setVoice(name) { voiceKey = name || ""; save("voice", voiceKey); }
 function setPace(key) { speakPace = SPEAK_PACES[key] ? key : "easy"; save("pace", speakPace); }
 function paceRate() { return SPEAK_PACES[speakPace] || 0.92; }
 
-/* Sentence-sized pieces, merged up to a length the engine handles reliably. */
+/* Rewrites for the ear only - the caption on screen is left alone. Acronyms a
+   voice would spell out or mangle are said in full. */
+const SPEECH_SAY = [
+  [/\bVAWA\b/g, "Violence Against Women Act"]
+];
+function speechText(text) {
+  let t = String(text);
+  SPEECH_SAY.forEach(([re, say]) => { t = t.replace(re, say); });
+  return t;
+}
+
+/* Sentence-sized pieces, merged up to a length the engine handles reliably.
+   A colon introducing a list ("such as:") is a hard break: most voices run
+   straight through a colon, so the list blurs into the lead-in. Ending the
+   utterance there buys a real pause before the first item. */
 function chunkSpeech(text) {
-  const bits = String(text).replace(/\s+/g, " ").trim().match(/[^.!?]+[.!?]*/g) || [];
+  const clean = speechText(text).replace(/\s+/g, " ").trim();
   const out = [];
-  bits.forEach(b => {
-    b = b.trim();
-    if (!b) return;
-    const last = out[out.length - 1];
-    if (last && last.length + b.length < 170) out[out.length - 1] = last + " " + b;
-    else out.push(b);
+  clean.split(/:\s+/).forEach((seg, si, all) => {
+    const bits = seg.match(/[^.!?]+[.!?]*/g) || [];
+    let first = true;
+    bits.forEach(b => {
+      b = b.trim();
+      if (!b) return;
+      const last = out[out.length - 1];
+      if (!first || si === 0) {
+        if (last && !last.endsWith(":") && last.length + b.length < 170) { out[out.length - 1] = last + " " + b; first = false; return; }
+      }
+      out.push(b); first = false;
+    });
+    if (si < all.length - 1 && out.length) out[out.length - 1] += ":";
   });
-  return out.length ? out : [String(text)];
+  return out.length ? out : [speechText(text)];
 }
 
 function cancelSpeech() {
@@ -6008,6 +6054,67 @@ function incidentCardHtml() {
     '<button class="mapall" data-inopen>Open incident report</button></div>';
 }
 
+/* ---------- Street View snapshot in the incident report ----------
+   A still from the Street View Static API, aimed at the incident from the
+   nearest panorama, wrapped in a link that opens the live view in Google Maps.
+   The panorama and heading come from the JavaScript API (already loaded for
+   the in-map pane), so the shot faces the spot rather than up the road. Needs
+   the Street View Static API enabled on the same key; if it is not, the
+   section says so and keeps the link. No key at all: just the link. */
+async function recStreetShot(r) {
+  const box = document.getElementById("recSvShot");
+  if (!box) return;
+  const loc = recordLocation(r);
+  if (!loc || (loc.offsite && loc.precision !== "gps")) { box.innerHTML = ""; return; }
+  const href = gSv(loc.lat, loc.lng);
+  const what = loc.precision === "gps" ? "the GPS fix captured at the scene"
+    : loc.precision === "building" ? loc.building + " (approximate building position)"
+    : loc.campus + " (campus location only)";
+  const key = svKey();
+  if (!key) {
+    box.innerHTML = '<a class="recsvlink" href="' + href + '" target="_blank" rel="noopener">' +
+      "View this location in Google Street View</a>";
+    return;
+  }
+  box.innerHTML = '<a class="recsvshot" href="' + href + '" target="_blank" rel="noopener" ' +
+    'title="Open this location in Google Street View">' +
+    '<div class="recsvph">Loading Street View&hellip;</div><span class="svbadge">Open in Street View</span></a>' +
+    '<div class="recsvcap">Nearest Google Street View to ' + esc(what) + ". Click to explore.</div>";
+  const id = r.id;
+  const stillHere = () => openRec === id && document.getElementById("recSvShot") === box;
+  const ph = () => box.querySelector(".recsvph");
+  try {
+    const lib = await svLibs();
+    if (!svSvc) svSvc = new lib.sv.StreetViewService();
+    let data = null;
+    for (const radius of [60, 150]) {
+      try {
+        const out = await svSvc.getPanorama({ location: { lat: loc.lat, lng: loc.lng }, radius: radius,
+          preference: lib.sv.StreetViewPreference.NEAREST, source: lib.sv.StreetViewSource.OUTDOOR });
+        data = out && out.data; if (data) break;
+      } catch (e) { /* none at this radius */ }
+    }
+    if (!stillHere()) return;
+    if (!data || !data.location) {
+      if (ph()) ph().textContent = "Google has no street-level imagery near this location.";
+      return;
+    }
+    const at = { lat: data.location.latLng.lat(), lng: data.location.latLng.lng() };
+    const heading = svMetres(at, loc) > 8 ? Math.round(svBearing(at, loc)) : 0;
+    const img = new Image();
+    img.alt = "Google Street View near " + what;
+    img.onload = () => { if (!stillHere()) return; const p = ph(); if (p) p.remove();
+      box.querySelector(".recsvshot").prepend(img); };
+    img.onerror = () => { if (stillHere() && ph()) ph().textContent =
+      "Snapshot unavailable. Enable the Street View Static API on this key to show it here."; };
+    img.src = "https://maps.googleapis.com/maps/api/streetview?size=640x320&pano=" +
+      encodeURIComponent(data.location.pano) + "&heading=" + heading + "&pitch=0&fov=80&key=" +
+      encodeURIComponent(key);
+  } catch (e) {
+    if (stillHere() && ph()) ph().textContent = "Street View could not be loaded: " + (e.message || e);
+  }
+}
+
 function openMapForRecord(r) {
   const loc = recordLocation(r);
   if (!loc) return;
@@ -6061,7 +6168,7 @@ function drawCampusPins(fit) {
     const marker = L.marker([geo.lat, geo.lng], {
       icon: L.divIcon({ className: "pinwrap", html: html, iconSize: [size, size],
                         iconAnchor: [size / 2, size / 2] }),
-      title: name + " - " + n + " report" + (n === 1 ? "" : "s") + " (click to zoom in)",
+      title: hoverDetails ? name + " - " + n + " report" + (n === 1 ? "" : "s") + " (click to zoom in)" : "",
       keyboard: true
     });
     marker.on("click", () => {
@@ -6121,7 +6228,7 @@ function drawBuildingPins(fit) {
     const marker = L.marker([p.lat, p.lng], {
       icon: L.divIcon({ className: "pinwrap blabelwrap", html: html, iconSize: [size, size],
                         iconAnchor: [size / 2, size / 2] }),
-      title: p.name + " - " + n + " report" + (n === 1 ? "" : "s") +
+      title: !hoverDetails ? "" : p.name + " - " + n + " report" + (n === 1 ? "" : "s") +
              (p.approx ? " (approximate position - no coordinates on file)" : ""),
       keyboard: true
     });
@@ -10987,7 +11094,8 @@ function paintRecord(r) {
       f("Victim type", esc(r.victimType || "")) +
       f("Suspect known", bool(r.suspectKnown, "good", "neutral")) +
     "</div></div>" +
-    '<div class="recsec"><h3><i>\uD83D\uDCCD</i>Location</h3><div class="recgrid">' + loc + "</div></div>" +
+    '<div class="recsec"><h3><i>\uD83D\uDCCD</i>Location</h3><div class="recgrid">' + loc + "</div>" +
+      '<div class="recsv" id="recSvShot"></div></div>' +
     '<div class="recsec"><h3><i>\u23F1\uFE0F</i>Timing</h3><div class="recgrid">' +
       f("Incident date", fmtDate(r.incidentDate)) +
       f("Incident time", esc(r.incidentTime)) +
@@ -11026,6 +11134,7 @@ function paintRecord(r) {
       esc(r.narrative || "No narrative recorded.") + "</div></div>" +
     signatureBlock(r);
   paintSignatures(r);
+  recStreetShot(r);
 
   const i = recIndex();
   document.getElementById("recPos").textContent =
@@ -11684,42 +11793,43 @@ const SCRIPT = [
   { el: "filters", cap: "The filter bar drives everything below it. Watch the period menu: I am selecting this year, and the date pickers fill themselves in.",
     act: () => demoPeriod("thisYear") },
   { el: "kpis", cap: "Every tile and every chart recalculated the moment that period was applied. Setting your own dates in the two pickers does the same thing and switches the menu to a custom range.",
-    act: () => demoPeriod("all") },
-  { el: "filters", cap: "Campus, location, geography, offense group, and offense are all multi-select. I am opening the campus list and choosing Downriver and Eastern.",
+    after: () => demoPeriod("all") },
+  { el: "filters", cap: "Several filters are multi-select, such as: campus, location, geography, offense group, and offense. I am opening the campus list and choosing Downriver and Eastern.",
     act: () => demoPickCampuses(["Downriver Campus", "Eastern Campus"]) },
   { el: "filters", cap: "The Campus Location list has narrowed to just those two campuses' buildings and lots. Select a non-campus geography and it collapses to Off-Campus, because non-campus incidents have no district building. Clearing the filters now.",
-    act: () => demoClearFilters() },
-  { el: "assess", cap: "The assessment panel reads whatever selection you have made. The alerts at the top are rules-based and always present: late filings, missing bias categories, serious offenses with no timely warning. Below them, the AI narrative explains what a Department of Education reviewer would look at first." },
-  { el: "kpis", cap: "Eight compliance tiles. Reports filed, criminal offenses, VAWA offenses, and hate crimes are the counts that roll straight into your Annual Security Report. Each tile carries an information icon that opens the arithmetic behind the number." },
-  { el: "kpis", cap: "The right-hand tiles are the ones that get institutions in trouble: timely warnings issued, average days from incident to filing, same-day reporting rate, and how often police were notified. These are the numbers a program review asks about." },
-  { el: "card-cat", cap: "Offenses by category, coloured by group. Note that larceny, simple assault, intimidation, and vandalism appear here only when bias-motivated, which is exactly how the statute treats them." },
-  { el: "card-geo", cap: "Clery geography. Every report is tagged On-Campus, On-Campus Student Housing, Non-Campus Property, or Public Property, because the statute requires counts reported separately by location. As a commuter district, WCCCD has no student housing, so that slice stays empty." },
-  { el: "card-trend", cap: "The reporting trend tracks all reports against VAWA offenses and timely warnings, by year, quarter, month or week. A spike in reports with a flat warning line is exactly what an auditor would want explained." },
+    act: () => demoOpenList("location"),
+    after: () => demoClearFilters() },
+  { el: "assess", cap: "The assessment panel reads whatever selection you have made. The alerts at the top are rules-based and always present. They flag problems such as: late filings, missing bias categories, and serious offenses with no timely warning. Below them, the AI narrative explains what a Department of Education reviewer would look at first." },
+  { el: "kpis", cap: "Eight compliance tiles. The first four are counts that roll straight into your Annual Security Report, such as: reports filed, criminal offenses, VAWA offenses, and hate crimes. Each tile carries an information icon that opens the arithmetic behind the number." },
+  { el: "kpis", cap: "The right-hand tiles are the ones that get institutions in trouble, such as: timely warnings issued, average days from incident to filing, same-day reporting rate, and how often police were notified. These are the numbers a program review asks about." },
+  { el: "card-cat", cap: "Offenses by category, coloured by group. Some offenses appear here only when bias-motivated, such as: larceny, simple assault, intimidation, and vandalism. That is exactly how the statute treats them." },
+  { el: "card-geo", cap: "Clery geography. The statute requires counts reported separately by location, so every report is tagged with a geography, such as: On-Campus, On-Campus Student Housing, Non-Campus Property, or Public Property. As a commuter district, WCCCD has no student housing, so that slice stays empty." },
+  { el: "card-trend", cap: "The reporting trend tracks all reports against VAWA offenses and timely warnings. It groups them by period, such as: year, quarter, month, or week. A spike in reports with a flat warning line is exactly what an auditor would want explained." },
   { el: "card-campus", cap: "Reports by campus, stacked by geography, across all six locations. Each campus needs its own statistics disclosure, and this is that view." },
   { el: "card-bias", cap: "Hate crime bias categories. When a Campus Security Authority flags a report as bias-motivated, the form forces a category, and those land here for the hate crime tables." },
   { el: "card-lag", cap: "Reporting lag, in days between the incident and the filing. I am clicking the over-thirty-days bar now.",
     act: () => demoSelect("chartLag", "Over 30 days") },
   { el: "card-log", cap: "That bar is now a filter on the whole dashboard, not just the list. The tiles recalculated, the other charts recalculated, and a removable chip appeared. I am adding a second one from the geography chart.",
-    act: () => demoSelect("chartGeo", "On-Campus") },
+    act: () => demoSelectBest("chartGeo") },
   { el: "selstrip", cap: "Two chips, two filters, and they stack with anything set in the panel above. Note the lag chart still shows all five of its bars with the others dimmed, because a chart never filters itself out of view. Clearing them now.",
-    act: () => { resetFilters(true); } },
+    after: () => { closeAllPops(); clearSelection(true); resetFilters(true); } },
   { el: "card-pivot", cap: "The pivot table cross-tabulates any two fields, the way an Excel pivot does. Here it is campuses against offense groups, largest first, with traffic lights: red cells are the worst third. Click a cell and it becomes a filter like any chart element, and each column edge drags to resize.",
     act: () => { closeAllPops(); pvDemo(); } },
   { el: "card-log", cap: "The log is one row per incident. A camera badge means the Campus Security Authority attached photos, and a pin means they captured a GPS fix on the device at the scene. Opening one now.",
-    act: () => demoOpenRow() },
-  { el: "recModal", cap: "The full report opens as its own card. Four tiles across the top carry the things a reviewer checks first, colour-coded: the offense group, the reporting delay, whether a timely warning was issued, and whether police were notified. Below them, the report itself in labelled sections, with any photographs the Campus Security Authority attached.",
+    after: () => demoOpenRow() },
+  { el: "recModal", cap: "The full report opens as its own card. Four colour-coded tiles across the top carry the things a reviewer checks first, such as: the offense group, the reporting delay, whether a timely warning was issued, and whether police were notified. Below them, the report itself in labelled sections, with any photographs the Campus Security Authority attached.",
+    act: () => { if (!document.getElementById("recModal").classList.contains("on")) demoOpenRow(); } },
+  { el: "recModal", cap: "Previous and Next walk the filtered set without going back to the table. It exports as a PNG or a PDF you can send, and AI review assesses this one incident on its own, checking things such as: whether the offense classification fits the narrative, whether the Clery geography is defensible, and whether the timely warning decision holds up.",
     act: () => {} },
-  { el: "recModal", cap: "Previous and Next walk the filtered set without going back to the table. It exports as a PNG or a PDF you can send, and AI review assesses this one incident on its own: whether the offense classification fits the narrative, whether the Clery geography is defensible, and whether the timely warning decision holds up.",
-    act: () => {} },
-  { el: "card-log", cap: "For an off-campus incident the location block carries either that GPS fix or a typed street address or landmark, because a non-campus report has no district building to name. The log's own export menu writes an Excel workbook, CSV, tab delimited, or JSON of exactly the rows on screen.",
+  { el: "card-log", cap: "For an off-campus incident the location block carries either that GPS fix or a typed street address or landmark, because a non-campus report has no district building to name. The log's own export menu writes exactly the rows on screen, in formats such as: an Excel workbook, CSV, tab delimited, or JSON.",
     act: () => { closeRecord(); demoOpenMenu("btnLogExport", "logExportMenu"); } },
   { el: "mapModal", cap: "Under the campus filter is an incident map. I am opening it now: one pin per campus, sized and numbered by how many reports match the current filters.",
     act: () => { closeAllPops(); openMap(); } },
   { el: "mapModal", cap: "Clicking a campus pin zooms into it and filters the dashboard to that campus. Every building, lot and street frontage gets its own pin, and clicking one narrows further. Show all campuses backs out and clears the filter.",
     act: () => demoFocusCampus("Curtis L. Ivery Downtown Campus") },
-  { el: "aiModal", cap: "Every chart and the tile row carry an AI button. It opens an assessment that leads with a severity flag, red, amber or green, so you get the verdict before reading a word. Quick take is the ten-second version, Detailed is the full read, the speaker button reads it aloud, and it exports as a PNG for a board report.",
+  { el: "aiModal", cap: "Every chart and the tile row carry an AI button. It opens an assessment that leads with a severity flag, such as: red, amber, or green. You get the verdict before reading a word. Quick take is the ten-second version, Detailed is the full read, the speaker button reads it aloud, and it exports as a PNG for a board report.",
     act: () => demoOpenAi("chartLag") },
-  { el: "topbar", cap: "Finally, Export Dashboard produces a PNG of the whole board, a print-ready PDF, or a CSV. The theme picker holds a dozen institutional palettes plus Detroit and Toledo team colours, and the voice menu beside it sets who narrates this tour. Hover details switches the breakdown cards on and off, and the music menu plays an ambient soundtrack generated right in the browser. That is the tour. Switch to Live Data whenever your TransForm feed is ready.",
+  { el: "topbar", cap: "Finally, Export Dashboard produces formats such as: a PNG of the whole board, a print-ready PDF, or a CSV. The theme picker holds a dozen institutional palettes plus Detroit and Toledo team colours, and the voice menu beside it sets who narrates this tour. Hover details switches the breakdown cards on and off, and the music menu plays an ambient soundtrack generated right in the browser. That is the tour. Switch to Live Data whenever your TransForm feed is ready.",
     act: () => demoReset() }
 ];
 
@@ -11745,6 +11855,36 @@ function demoPickCampuses(names) {
   const c2 = MS.campus;
   c2.pop.classList.add("open");
   c2.btn.setAttribute("aria-expanded", "true");
+}
+
+/* Show the Campus Location list the caption is describing. */
+function demoOpenList(id) {
+  const c = MS[id];
+  if (!c) return;
+  closeAllPops();
+  c.pop.classList.add("open");
+  c.btn.setAttribute("aria-expanded", "true");
+}
+
+/* Add a chart chip, choosing the value from that chart that leaves the most
+   behind - and still some hate crimes, so the bias chart and hate crime tile
+   are not narrated while empty. */
+function demoSelectBest(chartId) {
+  closeAllPops();
+  const key = CHART_FILTER_KEY[chartId];
+  const ch = charts[chartId];
+  if (!key || !ch) return;
+  let best = null;
+  ch.data.labels.forEach(v => {
+    if (F[key].has(v)) return;
+    F[key].add(v);
+    const rows = passing(null);
+    F[key].delete(v);
+    if (!rows) return;
+    const score = rows.length + (rows.some(r => r.hateCrime) ? 100000 : 0);
+    if (!best || score > best.score) best = { v: v, score: score };
+  });
+  if (best) toggleSelect(chartId, best.v);
 }
 
 function demoClearFilters() {
@@ -11804,17 +11944,92 @@ function demoReset() {
 
 let demoIdx = 0, demoTimer = null, demoPaused = false, demoOn = false;
 
+/* ---------- spotlight ----------
+   A cut-out overlay rather than lifting the target above a veil. Lifting with
+   z-index fails whenever the target sits inside something that makes its own
+   stacking context, gets clipped by an overflow:hidden parent, or breaks a
+   sticky header - which is why the brightening came and went. The cut-out is a
+   fixed ring drawn over the target's on-screen box, with a huge shadow that
+   dims everything else, and it follows the target every frame through
+   scrolling, re-renders and modals opening. Open menus inside the target are
+   folded into the lit area so a dropdown the tour opens is never dimmed. */
+const SPOT_INNER = { mapModal: ".mapbox", recModal: ".reccard", aiModal: ".aicard" };
+const SPOT_FALLBACK = { selstrip: "card-log" };
+let spotId = null, spotRaf = 0;
+
+function spotTarget(id) {
+  let el = document.getElementById(id);
+  if (el && SPOT_INNER[id]) el = el.querySelector(SPOT_INNER[id]) || el;
+  const usable = e => e && !e.hidden && e.getClientRects().length && e.getBoundingClientRect().height > 4;
+  if (!usable(el) && SPOT_FALLBACK[id]) el = document.getElementById(SPOT_FALLBACK[id]);
+  return usable(el) ? el : null;
+}
+
+function spotFrame() {
+  spotRaf = 0;
+  const hole = document.getElementById("demohole");
+  if (!hole || !demoOn || !spotId) return;
+  const el = spotTarget(spotId);
+  const dims = [...document.querySelectorAll(".demodim")];
+  if (!el) { hole.classList.remove("on"); dims.forEach(d => d.classList.remove("on"));
+    spotRaf = requestAnimationFrame(spotFrame); return; }
+  let r = el.getBoundingClientRect();
+  let x1 = r.left, y1 = r.top, x2 = r.right, y2 = r.bottom;
+  el.querySelectorAll(".open, .msp.open, [aria-expanded='true'] + *").forEach(o => {
+    const q = o.getBoundingClientRect();
+    if (q.width && q.height) { x1 = Math.min(x1, q.left); y1 = Math.min(y1, q.top);
+      x2 = Math.max(x2, q.right); y2 = Math.max(y2, q.bottom); }
+  });
+  const pad = 6, bar = (document.getElementById("demobar") || {}).offsetHeight || 0;
+  x1 = Math.max(4, x1 - pad); y1 = Math.max(4, y1 - pad);
+  x2 = Math.min(innerWidth - 4, x2 + pad); y2 = Math.min(innerHeight - bar - 4, y2 + pad);
+  hole.style.left = x1 + "px"; hole.style.top = y1 + "px";
+  hole.style.width = Math.max(0, x2 - x1) + "px"; hole.style.height = Math.max(0, y2 - y1) + "px";
+  const W = innerWidth, H = innerHeight, m = !!SPOT_INNER[spotId];
+  const boxes = [[0, 0, W, y1], [0, y2, W, H - y2], [0, y1, x1, y2 - y1], [x2, y1, W - x2, y2 - y1]];
+  dims.forEach((d, i) => {
+    const b = boxes[i];
+    d.style.left = b[0] + "px"; d.style.top = b[1] + "px";
+    d.style.width = Math.max(0, b[2]) + "px"; d.style.height = Math.max(0, b[3]) + "px";
+    d.classList.toggle("modal", m); d.classList.add("on");
+  });
+  hole.classList.add("on");
+  spotRaf = requestAnimationFrame(spotFrame);
+}
+
 function spotlight(id) {
-  document.querySelectorAll(".spot").forEach(e => e.classList.remove("spot"));
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.add("spot");
-  if (el.scrollIntoView) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  let hole = document.getElementById("demohole");
+  if (!hole) { hole = document.createElement("div"); hole.id = "demohole"; hole.className = "demohole";
+    document.body.appendChild(hole);
+    for (let k = 0; k < 4; k++) { const d = document.createElement("div"); d.className = "demodim";
+      document.body.appendChild(d); } }
+  spotId = id;
+  const el = spotTarget(id);
+  if (el && el.scrollIntoView && !SPOT_INNER[id]) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  if (!spotRaf) spotRaf = requestAnimationFrame(spotFrame);
+}
+
+function spotOff() {
+  spotId = null;
+  if (spotRaf) cancelAnimationFrame(spotRaf); spotRaf = 0;
+  const hole = document.getElementById("demohole");
+  if (hole) hole.classList.remove("on");
+  document.querySelectorAll(".demodim").forEach(d => d.classList.remove("on"));
 }
 
 function speak(text, done) { narrate(text, done); }
 
+/* A step's `after` runs once its caption has been read - or when the step is
+   left early - so a "clearing them now" happens at the end of the sentence,
+   not before the viewer has seen what is being cleared. */
+let demoAfterPending = null;
+function runDemoAfter() {
+  const f = demoAfterPending; demoAfterPending = null;
+  if (f) { try { f(); } catch (e) { console.error("demo after-action failed", e); } }
+}
+
 function showStep(i) {
+  runDemoAfter();
   demoIdx = Math.max(0, Math.min(SCRIPT.length - 1, i));
   const s = SCRIPT[demoIdx];
   document.getElementById("demoStep").textContent = (demoIdx + 1) + " / " + SCRIPT.length;
@@ -11831,12 +12046,14 @@ function showStep(i) {
     setTimeout(() => { if (demoOn && demoIdx === i) spotlight(s.el); }, s.act ? 160 : 0);
   }, s.act ? 60 : 0);
   clearTimeout(demoTimer);
+  demoAfterPending = s.after || null;
   if (!demoPaused) {
     const started = demoIdx;
     speak(s.cap, () => {
       /* Only advance if the tour is still on this step - a click on Next or
          Back while the caption was being read cancels the pending advance. */
       if (!demoOn || demoPaused || demoIdx !== started) return;
+      if (demoAfterPending) { runDemoAfter(); }
       demoTimer = setTimeout(() => {
         if (!demoOn || demoPaused || demoIdx !== started) return;
         if (demoIdx < SCRIPT.length - 1) showStep(demoIdx + 1); else stopDemo();
@@ -11848,21 +12065,26 @@ function showStep(i) {
 let pvBeforeDemo = null;
 function startDemo() {
   pvBeforeDemo = JSON.stringify(PV);
+  /* Start from the whole data set. A campus picked on the map, a chart chip or
+     a period left over from earlier would otherwise thin out every panel the
+     tour talks about, and some would be narrated while showing nothing. */
+  try { aiClose(); lbClose(); closeRecord(); closeMap(); closeAllPops(); } catch (e) {}
+  try { clearSelection(true); } catch (e) {}
+  resetFilters(true);
   demoOn = true; demoPaused = false; demoIdx = 0;
   document.body.classList.add("demoing");
-  document.getElementById("demoveil").classList.add("on");
   document.getElementById("demobar").classList.add("on");
   document.getElementById("demoPause").textContent = "Pause";
   showStep(0);
 }
 
 function stopDemo(silent) {
-  demoOn = false; clearTimeout(demoTimer);
+  demoOn = false; clearTimeout(demoTimer); demoAfterPending = null;
   cancelSpeech();
   document.body.classList.remove("demoing");
   try { demoReset(); } catch (e) {}
   pvBeforeDemo = null;
-  document.querySelectorAll(".spot").forEach(e => e.classList.remove("spot"));
+  spotOff();
   document.getElementById("demoveil").classList.remove("on");
   document.getElementById("demobar").classList.remove("on");
   document.getElementById("demoprog").style.width = "0";
@@ -12091,6 +12313,7 @@ function init() {
   hovT.addEventListener("change", () => {
     hoverDetails = hovT.checked; save("hover", hoverDetails ? "1" : "0"); click();
     if (!hoverDetails) hideCard();
+    if (leafMap && document.getElementById("mapModal").classList.contains("on")) drawMarkers(false);
   });
   try { initMusic(); } catch (e) { console.error("music menu failed", e); }
   try { initPivot(); } catch (e) { console.error("pivot init failed", e); }
@@ -12177,13 +12400,32 @@ function init() {
   loadPack().then(() => { renderLog(); showPackBtn(); });
   document.getElementById("btnAssess").addEventListener("click", () => { click(); runAssess(true); });
 
-  /* KPI info cards */
+  /* KPI info cards. Hovering anywhere on a tile shows its card, the same as
+     hovering a bar or slice, and only while Hover details is on. Clicking the
+     "i" is a deliberate request, so it shows the card either way. */
+  const kpiIdx = el => {
+    const t = el && el.closest(".kpi");
+    const b = t ? t.querySelector("[data-kpi]") : el && el.closest("[data-kpi]");
+    return b ? +b.dataset.kpi : null;
+  };
+  let kpiShown = null;
   document.getElementById("kpis").addEventListener("mouseover", e => {
-    const b = e.target.closest("[data-kpi]");
-    if (b) showCard(kpiCard(+b.dataset.kpi), e.clientX, e.clientY);
+    const i = kpiIdx(e.target);
+    if (i === null || !hoverDetails) return;
+    if (i !== kpiShown) { kpiShown = i; showCard(kpiCard(i), e.clientX, e.clientY); }
   });
   document.getElementById("kpis").addEventListener("mouseout", e => {
-    if (e.target.closest("[data-kpi]")) hideCard();
+    const to = e.relatedTarget;
+    if (kpiIdx(to) === kpiShown && kpiShown !== null) return;   // still on the same tile
+    kpiShown = null; hideCard();
+  });
+  document.getElementById("kpis").addEventListener("click", e => {
+    const b = e.target.closest("[data-kpi]");
+    if (!b) return;
+    e.stopPropagation();
+    const r = b.getBoundingClientRect();
+    kpiShown = +b.dataset.kpi;
+    showCard(kpiCard(kpiShown), r.left, r.bottom);
   });
   document.getElementById("kpis").addEventListener("focusin", e => {
     const b = e.target.closest("[data-kpi]");
