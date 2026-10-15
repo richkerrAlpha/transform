@@ -29,8 +29,8 @@
   },
   "No Shipping Op Test_sections": [
     {"section": 1, "label": "OP 10 Initial Inspection", "type": "Sign-Off", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 2, "label": "OP 20 Production", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 3, "label": "OP 30 Over Inspect", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 2, "label": "OP 15A", "type": "4150 Process OP 15A", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 3, "label": "OP 15B", "type": "4150 Process OP 15B", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 4, "label": "Tip Hole Section", "type": "Standard Form-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 5, "label": "Test new cleaning op type", "type": "4150 Process Cleaning OP", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 6, "label": "Shipping Tip Hole", "type": "Shipping-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": ""},
