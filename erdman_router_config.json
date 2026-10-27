@@ -34,7 +34,7 @@
   },
   "No Shipping Op Test_sections": [
     {"section": 1, "label": "Shipping Tip Hole", "type": "Shipping-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": ""},
-    {"section": 2, "label": "Test OP", "type": "Shipping-Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 2, "label": "Tesing Shipping OP", "type": "Shipping-Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 3, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 4, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 5, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
