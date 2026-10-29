@@ -12,10 +12,11 @@
     "4150 Process OP 15A": {"inspector_name": "true", "inspector_name_label": "Operator Name", "shift": "true", "date": "true", "complete": "true", "qty_accepted": "false", "qty_tagged": "false", "qty_total": "false", "qty_mrb": "false", "qty_misc": "false", "hours": "false", "serial_number": "false", "tip_hole": "false", "ship_tip_hole": "false", "ceramic_parts": "true", "good_to_run": "true", "hole_counts": "false", "unmarked": "false", "not_processed": "false", "conforming": "false", "non_conforming": "false", "cust_text1": "false", "cust_text2": "false", "cust_text3": "false", "cust_text4": "false", "cust_text5": "false", "cust_num1": "false", "cust_num2": "false", "cust_num3": "false", "cust_num4": "false", "cust_num5": "false", "cust_list1": "false", "cust_list2": "false", "cust_list3": "false", "cust_date1": "false", "cust_date2": "false", "cust_yn1": "false", "cust_yn2": "false", "cust_yn3": "false"},
     "4150 Process OP 15B": {"inspector_name": "true", "inspector_name_label": "Operator Name", "shift": "true", "date": "true", "complete": "true", "qty_accepted": "false", "qty_tagged": "false", "qty_total": "false", "qty_mrb": "false", "qty_misc": "false", "hours": "false", "serial_number": "false", "tip_hole": "false", "ship_tip_hole": "false", "ceramic_parts": "false", "good_to_run": "false", "hole_counts": "true", "unmarked": "true", "not_processed": "false", "conforming": "false", "non_conforming": "false", "cust_text1": "false", "cust_text2": "false", "cust_text3": "false", "cust_text4": "false", "cust_text5": "false", "cust_num1": "false", "cust_num2": "false", "cust_num3": "false", "cust_num4": "false", "cust_num5": "false", "cust_list1": "false", "cust_list2": "false", "cust_list3": "false", "cust_date1": "false", "cust_date2": "false", "cust_yn1": "false", "cust_yn2": "false", "cust_yn3": "false"},
     "4150 Process Cleaning OP": {"inspector_name": "true", "inspector_name_label": "Operator Name", "shift": "true", "date": "true", "complete": "true", "qty_accepted": "false", "qty_tagged": "false", "qty_total": "false", "qty_mrb": "false", "qty_misc": "false", "hours": "false", "serial_number": "false", "tip_hole": "false", "ship_tip_hole": "false", "ceramic_parts": "false", "good_to_run": "false", "hole_counts": "false", "unmarked": "false", "not_processed": "true", "conforming": "true", "non_conforming": "true", "cust_text1": "false", "cust_text2": "false", "cust_text3": "false", "cust_text4": "false", "cust_text5": "false", "cust_num1": "false", "cust_num2": "false", "cust_num3": "false", "cust_num4": "false", "cust_num5": "false", "cust_list1": "false", "cust_list2": "false", "cust_list3": "false", "cust_date1": "false", "cust_date2": "false", "cust_yn1": "false", "cust_yn2": "false", "cust_yn3": "false"},
-    "Steves Op": {"inspector_name": "true", "inspector_name_label": "Operator Name", "shift": "true", "date": "true", "complete": "true", "qty_accepted": "false", "qty_tagged": "false", "qty_total": "false", "qty_mrb": "false", "qty_misc": "false", "hours": "false", "serial_number": "false", "tip_hole": "false", "ship_tip_hole": "false", "ceramic_parts": "false", "good_to_run": "false", "hole_counts": "false", "unmarked": "false", "not_processed": "false", "conforming": "false", "non_conforming": "false", "cust_text1": "false", "cust_text2": "false", "cust_text3": "false", "cust_text4": "false", "cust_text5": "false", "cust_num1": "false", "cust_num2": "false", "cust_num3": "false", "cust_num4": "false", "cust_num5": "false", "cust_list1": "false", "cust_list2": "false", "cust_list3": "false", "cust_date1": "false", "cust_date2": "false", "cust_yn1": "false", "cust_yn2": "false", "cust_yn3": "false"}
+    "Steves Op": {"inspector_name": "true", "inspector_name_label": "Operator Name", "shift": "true", "date": "true", "complete": "true", "qty_accepted": "false", "qty_tagged": "false", "qty_total": "false", "qty_mrb": "false", "qty_misc": "false", "hours": "false", "serial_number": "false", "tip_hole": "false", "ship_tip_hole": "false", "ceramic_parts": "false", "good_to_run": "false", "hole_counts": "false", "unmarked": "false", "not_processed": "false", "conforming": "false", "non_conforming": "false", "cust_text1": "false", "cust_text2": "true", "cust_text3": "false", "cust_text4": "false", "cust_text5": "false", "cust_num1": "false", "cust_num2": "false", "cust_num3": "false", "cust_num4": "false", "cust_num5": "false", "cust_list1": "false", "cust_list2": "false", "cust_list3": "false", "cust_date1": "false", "cust_date2": "false", "cust_yn1": "false", "cust_yn2": "false", "cust_yn3": "false"}
   },
   "custom_fields": {
-    "cust_text1": {"label": "Steve's Field", "type": "text", "list": "", "required": "false"}
+    "cust_text1": {"label": "Steve's Field", "type": "text", "list": "", "required": "false"},
+    "cust_text2": {"label": "Test", "type": "text", "list": "", "required": "false"}
   },
   "lists": {},
   "No Shipping Op Test_info": {
@@ -37,7 +38,7 @@
     {"section": 4, "label": "Tip Hole Section", "type": "Standard Form-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 5, "label": "Test new cleaning op type", "type": "4150 Process Cleaning OP", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 6, "label": "Shipping Tip Hole", "type": "Shipping-Tip Hole Repair", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 7, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 7, "label": "Test OP", "type": "Steves Op", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 8, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 9, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 10, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
@@ -75,7 +76,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2040A (8131)_info": {
     "customer": "Howmet Whitehall/Hampton",
@@ -134,7 +140,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2040A (8781)_info": {
     "customer": "Howmet Whitehall/Hampton",
@@ -193,7 +204,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2040A (8967)_info": {
     "customer": "Howmet Whitehall/Hampton",
@@ -252,7 +268,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2040A (1576)_info": {
     "customer": "Howmet Whitehall/Hampton",
@@ -311,7 +332,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2040B (8132)_info": {
     "customer": "Howmet Whitehall/Hampton",
@@ -370,7 +396,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2040B (8782)_info": {
     "customer": "Howmet Whitehall/Hampton",
@@ -429,7 +460,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2040B (8968)_info": {
     "customer": "Howmet Whitehall/Hampton",
@@ -488,7 +524,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2040B (1577)_info": {
     "customer": "Howmet Whitehall/Hampton",
@@ -547,7 +588,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2753_LSG_info": {
     "customer": "Howmet",
@@ -606,7 +652,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2753_Round_Howmet_info": {
     "customer": "Howmet",
@@ -665,7 +716,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4035AD_info": {
     "customer": "Unison",
@@ -724,7 +780,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4150_PCC_info": {
     "customer": "PCC Airfoils - SMP",
@@ -783,7 +844,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4189_info": {
     "customer": "Unison",
@@ -842,7 +908,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4197_info": {
     "customer": "CPP Euclid",
@@ -901,7 +972,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4318_info": {
     "customer": "Unison",
@@ -960,7 +1036,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4485AO (4522)_info": {
     "customer": "CPP Euclid",
@@ -1019,7 +1100,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4485AO (4541)_info": {
     "customer": "CPP Euclid",
@@ -1078,7 +1164,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4485AO (4506)_info": {
     "customer": "CPP Euclid",
@@ -1137,7 +1228,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4496AO (4540)_info": {
     "customer": "CPP Euclid",
@@ -1196,7 +1292,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4496AO (4530)_info": {
     "customer": "CPP Euclid",
@@ -1255,7 +1356,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4496AO (4522)_info": {
     "customer": "CPP Euclid",
@@ -1314,7 +1420,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4518_CPP_info": {
     "customer": "CPP Euclid",
@@ -1373,7 +1484,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4257 (4523)_info": {
     "customer": "CPP - Euclid",
@@ -1432,7 +1548,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4257 (4531)_info": {
     "customer": "CPP - Euclid",
@@ -1491,7 +1612,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4257GR (4523)_info": {
     "customer": "CPP - Euclid",
@@ -1550,7 +1676,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "4257GR (4531)_info": {
     "customer": "CPP - Euclid",
@@ -1609,7 +1740,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "1815_info": {
     "customer": "PCC Airfoils - SMP",
@@ -1668,7 +1804,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "1176B_info": {
     "customer": "Howmet Whitehall Casting",
@@ -1727,7 +1868,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "1970_info": {
     "customer": "PCC Airfoils - Minerva",
@@ -1786,7 +1932,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2035A_info": {
     "customer": "Howmet Whitehall Casting",
@@ -1845,7 +1996,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2035B_info": {
     "customer": "Howmet Whitehall Casting",
@@ -1904,7 +2060,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2303_info": {
     "customer": "Howmet",
@@ -1963,7 +2124,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2703_info": {
     "customer": "Howmet",
@@ -2022,7 +2188,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2720_info": {
     "customer": "Howmet",
@@ -2081,7 +2252,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2727_info": {
     "customer": "Howmet",
@@ -2140,7 +2316,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2735 (20463)_info": {
     "customer": "PCC Airfoils",
@@ -2199,7 +2380,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2735 (20464)_info": {
     "customer": "PCC Airfoils",
@@ -2258,7 +2444,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2795 (20417)_info": {
     "customer": "PCC Airfoils - SMP",
@@ -2317,7 +2508,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "2795 (20427)_info": {
     "customer": "PCC Airfoils - SMP",
@@ -2376,7 +2572,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3030_info": {
     "customer": "PCC Aifoils",
@@ -2435,7 +2636,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3094 (20383)_info": {
     "customer": "PCC Airfoils - SMP",
@@ -2494,7 +2700,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3094 (20384)_info": {
     "customer": "PCC Airfoils - SMP",
@@ -2553,7 +2764,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3094B_info": {
     "customer": "PCC Airfoils - SMP",
@@ -2612,7 +2828,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3094C_info": {
     "customer": "PCC Airfoils - SMP",
@@ -2671,7 +2892,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3128B (8502)_info": {
     "customer": "Howmet Whitehall Plant 3",
@@ -2730,7 +2956,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3128B (8843)_info": {
     "customer": "Howmet Whitehall Plant 3",
@@ -2789,7 +3020,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3130_info": {
     "customer": "Howmet Dover Casting",
@@ -2848,7 +3084,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3150C_info": {
     "customer": "PCC Airfoils - SMP",
@@ -2907,7 +3148,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3213A (9316)_info": {
     "customer": "PCC Airfoils - Minerva",
@@ -2966,7 +3212,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3213A (9446)_info": {
     "customer": "PCC Airfoils - SMP",
@@ -3025,7 +3276,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3213B (9317)_info": {
     "customer": "PCC Airfoils - Minerva",
@@ -3084,7 +3340,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3213B (9447)_info": {
     "customer": "PCC Airfoils - Minerva",
@@ -3143,7 +3404,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3213C (9318)_info": {
     "customer": "PCC Airfoils - Minerva",
@@ -3202,7 +3468,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3213C (9448)_info": {
     "customer": "PCC Airfoils - Minerva",
@@ -3261,7 +3532,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3320E_info": {
     "customer": "PCC Airfoils - SMP",
@@ -3320,7 +3596,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3561_info": {
     "customer": "PCC Airfoils - SMP",
@@ -3379,7 +3660,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3725 (8560)_info": {
     "customer": "Howmet Whitehall Casting Plant 10",
@@ -3438,7 +3724,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3725 (8708)_info": {
     "customer": "Howmet Whitehall Casting Plant 10",
@@ -3497,7 +3788,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3725 (8723)_info": {
     "customer": "Howmet Whitehall Casting Plant 10",
@@ -3556,7 +3852,12 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ],
   "3725 (8801)_info": {
     "customer": "Howmet Whitehall Casting",
@@ -3615,6 +3916,11 @@
     {"section": 42, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 43, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 44, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
+    {"section": 45, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 46, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 47, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 48, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 49, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 50, "label": "", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""}
   ]
 }
