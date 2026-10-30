@@ -32,8 +32,8 @@
     "expedite": "No"
   },
   "No Shipping Op Test_sections": [
-    {"section": 1, "label": "OP 10 Initial Inspection", "type": "Sign-Off", "visible": "false", "machine_number": "false", "sub_type": ""},
-    {"section": 2, "label": "OP 20 Production", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
+    {"section": 1, "label": "OP 10 WEDM", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
+    {"section": 2, "label": "OP 20 FEEDER HOLE", "type": "Standard Operation", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 3, "label": "OP 30 Over Inspect", "type": "Standard Operation", "visible": "false", "machine_number": "false", "sub_type": ""},
     {"section": 4, "label": "Tip Hole Section", "type": "Standard Form-Tip Hole Repair", "visible": "true", "machine_number": "false", "sub_type": ""},
     {"section": 5, "label": "Test new cleaning op type", "type": "4150 Process Cleaning OP", "visible": "false", "machine_number": "false", "sub_type": ""},
