@@ -587,6 +587,60 @@ tbody tr:hover td{background:var(--hover)}
 [data-skin=comic] header .hdr-toggle,[data-skin=comic] .poweredby,[data-skin=comic] .mnote{color:#111}
 [data-skin=comic] .poweredby img{filter:none}
 
+/* ---- v3.71: movable / resizable panels ---- */
+.grid{position:relative}
+.grid > .card[data-pane]{grid-column:span var(--span,12);position:relative;transition:box-shadow .15s,outline-color .15s}
+.lgMove{border:0;background:transparent;color:var(--muted);cursor:grab;width:18px;height:22px;padding:0;margin:0 4px 0 -6px;
+  display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;opacity:.35;border-radius:5px;touch-action:none}
+.lgMove svg{width:16px;height:16px}
+.card:hover .lgMove,.lgMove:focus-visible{opacity:1}
+.lgMove:hover{background:var(--hover);color:var(--steel)}
+.lgSize{position:absolute;right:3px;bottom:3px;width:16px;height:16px;cursor:nwse-resize;opacity:.35;touch-action:none;z-index:5;
+  background:linear-gradient(135deg,transparent 0 45%,var(--muted) 45% 52%,transparent 52% 64%,var(--muted) 64% 71%,transparent 71% 83%,var(--muted) 83% 90%,transparent 90%)}
+.card:hover .lgSize{opacity:.9}
+.lgDragging{opacity:.45;outline:2px dashed var(--accent);outline-offset:2px}
+.lgDropL{box-shadow:inset 5px 0 0 var(--accent),var(--shadow)!important}
+.lgDropR{box-shadow:inset -5px 0 0 var(--accent),var(--shadow)!important}
+.lgSizing{outline:2px solid var(--accent);outline-offset:2px}
+.lgGhost{position:fixed;z-index:2000;pointer-events:none;background:var(--steel);color:#fff;font-size:12px;font-weight:700;padding:6px 10px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.lgBadge{position:fixed;z-index:2000;pointer-events:none;background:var(--ink);color:var(--card);font-size:11.5px;font-weight:800;padding:4px 9px;border-radius:6px;display:none}
+.lgBadge.on{display:block}
+.lgGuide{position:absolute;inset:0;display:none;grid-template-columns:repeat(12,1fr);gap:inherit;pointer-events:none;z-index:4}
+.lgGuide span{background:color-mix(in srgb, var(--accent) 10%, transparent);border-left:1px dashed color-mix(in srgb, var(--accent) 55%, transparent);border-right:1px dashed color-mix(in srgb, var(--accent) 55%, transparent)}
+.lgShowGuide > .lgGuide{display:grid}
+body.lgBusy{user-select:none;cursor:grabbing}
+body.lgResize{cursor:nwse-resize}
+.lgFlash > .card{animation:lgFlash .6s ease}
+@keyframes lgFlash{40%{outline:2px solid var(--accent);outline-offset:3px}}
+@media(max-width:980px){ .grid > .card[data-pane]{grid-column:span 12} .lgMove,.lgSize{display:none} }
+
+/* ---- KPI info icon + hover card ---- */
+.kpi .ktop{position:relative}
+.kinfo{margin-left:auto;flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--muted);background:transparent;color:var(--muted);
+  font:italic 800 11px/1 Georgia,serif;cursor:help;display:grid;place-items:center;padding:0;opacity:.75;transition:.15s}
+.kinfo:hover,.kinfo:focus-visible{opacity:1;border-color:var(--steel2);color:#fff;background:var(--steel2)}
+#kInfoCard{position:fixed;z-index:1500;width:320px;max-width:calc(100vw - 20px);background:var(--card);color:var(--ink);border:1px solid var(--line);
+  border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.28);padding:12px 14px;font-size:12.5px;line-height:1.5;display:none;font-family:var(--font-body)}
+#kInfoCard.on{display:block;animation:kiIn .16s ease}
+@keyframes kiIn{from{opacity:0;transform:translateY(-4px)}}
+#kInfoCard .kih{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+#kInfoCard .kih .kico{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;color:var(--steel2);background:color-mix(in srgb, var(--steel2) 14%, transparent)}
+#kInfoCard .kih .kico svg{width:15px;height:15px}
+#kInfoCard .kih b{font-size:13.5px;flex:1;font-family:var(--font-head)}
+#kInfoCard .kist{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:999px;color:#fff;white-space:nowrap}
+#kInfoCard .kist.st-good{background:var(--st-good)} #kInfoCard .kist.st-watch{background:var(--st-watch)}
+#kInfoCard .kist.st-action{background:var(--st-action)} #kInfoCard .kist.st-info{background:transparent;color:var(--muted);border:1px dashed var(--line)}
+#kInfoCard p{margin:0 0 4px} #kInfoCard ul{margin:0 0 4px;padding-left:18px}
+#kInfoCard .kisec{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-top:8px}
+#kInfoCard .kiset{color:var(--steel2);font-weight:700}
+#kInfoCard .kifoot{margin-top:8px;padding-top:6px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
+
+/* ---- native dropdown lists: options inherit the header's white text, but Windows paints the list white.
+        Give every option/optgroup the theme's own card + ink colours so the text is always readable ---- */
+select option,select optgroup{background-color:var(--card);color:var(--ink)}
+select optgroup{font-weight:800;font-style:normal;color:var(--muted)}
+select option:checked{background-color:var(--steel);color:#fff}
+
 </style>
 <body>
 <script>
@@ -598,7 +652,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.70",
+  version: "3.71",
   updated: "Nov 17, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the AI (Claude) key lives ONLY in the proxy's Script Properties, never in this file.
@@ -2858,6 +2912,7 @@ function applyTheme(key, redraw){
   document.body.style.backgroundPosition = t.texPos || "";
   root.dataset.skin = t.skin || "plain";
   root.dataset.dark = t.dark ? "1" : "0";
+  root.style.colorScheme = t.dark ? "dark" : "light";   // native dropdowns, date pickers and scrollbars follow the theme
   loadThemeFonts(key, t);
   B.steel = t.steel; B.steel2 = t.steel2; B.accent = t.accent;
   B.series = [t.steel, t.accent, B.red, B.green, "#E9C46A", "#7B2CBF", "#F4845F",
@@ -3048,12 +3103,23 @@ function renderKpiTiles(m){
   $("kpis").innerHTML = KPI_DEFS.map(d => {
     const st = m.lots ? kpiState(d.k, val[d.k]) : "info";
     const b = lbl[st];
-    return '<div class="kpi st-' + st + '" data-k="' + d.k + '"><div class="ktop"><span class="kico">' + ICONS[d.ico] + '</span><h4>' + d.t + '</h4></div>' +
+    return '<div class="kpi st-' + st + '" data-k="' + d.k + '" data-st="' + st + '"><div class="ktop"><span class="kico">' + ICONS[d.ico] + '</span><h4>' + d.t + '</h4>' +
+      '<button type="button" class="kinfo" aria-label="About ' + d.t + '" data-k="' + d.k + '">i</button></div>' +
       '<div class="v">' + disp[d.k][0] + '<span class="u">' + disp[d.k][1] + '</span></div>' +
       '<div class="kfoot"><span class="kbadge">' + (b[0] ? ICONS[b[0]] : "") + b[1] + '</span>' +
       '<span class="ktgt" title="' + tgtText(d.k, d.unit) + ' \u2014 click to change">' + tgtText(d.k, d.unit) + '</span></div></div>';
   }).join("");
   $("kpis").querySelectorAll(".ktgt").forEach(el => el.addEventListener("click", () => openTargets("kpi:" + el.closest(".kpi").dataset.k)));
+  KPI_LAST = m;
+  $("kpis").querySelectorAll(".kinfo").forEach(b => {
+    b.addEventListener("mouseenter", () => showKpiInfo(b));
+    b.addEventListener("focus", () => showKpiInfo(b));
+    b.addEventListener("mouseleave", hideKpiInfo);
+    b.addEventListener("blur", hideKpiInfo);
+    b.addEventListener("click", e => { e.stopPropagation(); const c = $("kInfoCard");
+      if(kiPinned && c && c.classList.contains("on") && c.dataset.k === b.dataset.k){ kiPinned = false; hideKpiInfo(true); }
+      else { showKpiInfo(b); kiPinned = true; } });
+  });
 }
 
 /* ---- the Targets dialog ---- */
@@ -3147,6 +3213,77 @@ function saveTargetsFromDialog(){
   // keep the dialog's Monthly Good level in step when someone uses the chart's own spin control
   $("tgtSpin").addEventListener("change", () => { const p = PT.chMonthly; if(p && p.watch < rateTarget * 100){ p.watch = +(rateTarget * 150).toFixed(2); saveTargets(); render(); } });
 })();
+
+/* ---- KPI info cards: what each tile means, how it is calculated, and what it shows right now ---- */
+let KPI_LAST = null;
+function kpiInfo(k, m){
+  const n = m.lots, ft = v => fmt(Math.round(v)) + " ft", p = (a, b) => b ? pct(a / b) : "—";
+  const SRC = "Footage is pro-rated by pieces: QuantityFeet × (pieces in that group ÷ PiecesReceived), summed over every submission in the current filters.";
+  const I = {
+    recv:{ what:"Total length of tube received on the inspection forms in the current filters.",
+      how:"Sum of <b>QuantityFeet</b> across all submissions.",
+      now:[ft(m.recv) + " across " + fmt(n) + " submission" + (n === 1 ? "" : "s"), n ? "Average " + ft(m.recv / n) + " per submission" : ""] },
+    insp:{ what:"Footage covered by the dimensional (OD / wall) inspection.",
+      how:"QuantityFeet × <b>PCInspectedDimTolerances</b> ÷ PiecesReceived, per submission. " + SRC,
+      now:[ft(m.insp) + " inspected", p(m.insp, m.recv) + " of the footage received"] },
+    rej:{ what:"Footage rejected during inspection.",
+      how:"QuantityFeet × <b>PiecesRejected</b> ÷ PiecesReceived, per submission.",
+      now:[ft(m.rej) + " rejected", p(m.rej, m.insp) + " of the inspected footage"] },
+    appr:{ what:"Inspected footage that passed.",
+      how:"Footage Inspected − Footage Rejected.",
+      now:[ft(m.appr) + " approved", p(m.appr, m.insp) + " of the inspected footage"] },
+    rate:{ what:"Share of the inspected footage that was rejected — the headline quality measure.",
+      how:"Footage Rejected ÷ Footage Inspected.",
+      now:[ft(m.rej) + " rejected ÷ " + ft(m.insp) + " inspected = " + pct(m.rate / 100)] },
+    cov:{ what:"How much of what arrived was actually inspected.",
+      how:"Footage Inspected ÷ Footage Received.",
+      now:[ft(m.insp) + " inspected ÷ " + ft(m.recv) + " received = " + pct(m.cov / 100)] },
+    bore:{ what:"Footage given a borescope (inside-diameter) inspection.",
+      how:"QuantityFeet × <b>PCInspectedBorescope</b> ÷ PiecesReceived, per submission.",
+      now:[ft(m.bore) + " borescoped", p(m.bore, m.recv) + " of the footage received"] },
+    held:{ what:"Submissions whose disposition is <b>Hold</b> rather than Release.",
+      how:"Count of submissions with HoldRelease = Hold. The target is judged on the share of submissions held.",
+      now:[fmt(m.held) + " of " + fmt(n) + " submissions on hold (" + p(m.held, n) + ")"] }
+  };
+  return I[k];
+}
+function showKpiInfo(btn){
+  clearTimeout(kiHideT);
+  if(!KPI_LAST) return;
+  const k = btn.dataset.k, d = KPI_DEFS.find(x => x.k === k), info = kpiInfo(k, KPI_LAST), tile = btn.closest(".kpi");
+  const st = tile.dataset.st, t = KT[k] || { dir:"none" };
+  const stTxt = { good:"✓ Good", watch:"! Watch", action:"✕ Action", info:"No target set" }[st];
+  const op = t.dir === "lower" ? "≤" : "≥", u = d.unit === "ft" ? " ft" : "%";
+  const rule = t.dir === "none" ? "No target is set for this tile, so it is shown for information only."
+    : "Good when " + op + " " + fmtTgt(t.good) + u + ", Watch when " + op + " " + fmtTgt(t.watch) + u + ", otherwise Action" +
+      (t.dir === "lower" ? " (lower is better)." : " (higher is better).");
+  let c = $("kInfoCard");
+  if(!c){ c = document.createElement("div"); c.id = "kInfoCard"; c.setAttribute("role", "tooltip"); document.body.appendChild(c);
+    document.addEventListener("click", e => { if(!e.target.closest("#kInfoCard,.kinfo")) hideKpiInfo(true); });
+    window.addEventListener("scroll", () => hideKpiInfo(true), { passive:true });
+    document.addEventListener("keydown", e => { if(e.key === "Escape") hideKpiInfo(true); }); }
+  c.dataset.k = k;
+  c.innerHTML = '<div class="kih"><span class="kico">' + ICONS[d.ico] + '</span><b>' + d.t + '</b><span class="kist st-' + st + '">' + stTxt + '</span></div>' +
+    '<p>' + info.what + '</p>' +
+    '<div class="kisec">How it’s calculated</div><p>' + info.how + '</p>' +
+    '<div class="kisec">Right now</div><ul>' + info.now.filter(Boolean).map(x => '<li>' + x + '</li>').join("") + '</ul>' +
+    '<div class="kisec">Target</div><p>' + rule + ' <a href="#" class="kiset">Change target</a></p>' +
+    '<div class="kifoot">Reflects the filters currently applied.</div>';
+  c.querySelector(".kiset").addEventListener("click", e => { e.preventDefault(); hideKpiInfo(true); openTargets("kpi:" + k); });
+  c.classList.add("on");
+  const r = btn.getBoundingClientRect(), w = c.offsetWidth, h = c.offsetHeight;
+  let x = Math.min(window.innerWidth - w - 10, Math.max(10, r.left + r.width / 2 - w / 2));
+  let y = r.bottom + 8; if(y + h > window.innerHeight - 10) y = Math.max(10, r.top - h - 8);
+  c.style.left = x + "px"; c.style.top = y + "px";
+}
+let kiHideT = null, kiPinned = false;
+function hideKpiInfo(force){
+  if(kiPinned && force !== true) return;
+  clearTimeout(kiHideT);
+  kiHideT = setTimeout(() => { const c = $("kInfoCard"); if(c && (force === true || !c.matches(":hover"))){ c.classList.remove("on"); kiPinned = false; } }, force === true ? 0 : 250);
+}
+document.addEventListener("mouseover", e => { if(e.target.closest && e.target.closest("#kInfoCard")) clearTimeout(kiHideT); });
+document.addEventListener("mouseout", e => { if(e.target.closest && e.target.closest("#kInfoCard") && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("#kInfoCard,.kinfo"))) hideKpiInfo(); });
 
 /* ---------- v3.70: background music (generated live in the browser — no audio files, no licensing) ---------- */
 const MUSIC = (function(){
@@ -3267,6 +3404,165 @@ function setQaGlow(n){
   l.title = n > 0 ? (n + " quality alert" + (n > 1 ? "s" : "") + " waiting \u2014 tick to show the banner") : "Show or hide the Quality Alert banner";
 }
 $("qaToggle").addEventListener("change", ()=>setQaGlow(+($("qaLblCnt").textContent || 0)));
+
+/* ---------- v3.71: movable / resizable panels on a 12-column snap grid + Auto layout ---------- */
+const LAYOUT = (function(){
+  const KEY = "pacLayout", MINW = 3, MINH = 160, MAXH = 900, STEP = 20;
+  const grid = document.querySelector(".wrap .grid");
+  if(!grid) return null;
+  const idOf = c => c.id === "pivotCard" ? "pivot" : c.querySelector("#tbody") ? "table" :
+                   (c.querySelector("canvas[id]") || {}).id || null;
+  const cards = [...grid.children].filter(c => c.classList.contains("card"));
+  const DEF = { order:[], w:{}, h:{} };
+  cards.forEach(c => {
+    const id = idOf(c); if(!id) return; c.dataset.pane = id; DEF.order.push(id);
+    const m = [12, 8, 7, 6, 4].find(n => c.classList.contains("c" + n));
+    DEF.w[id] = c.classList.contains("c8") ? 8 : (m || 12);
+  });
+  const pane = id => grid.querySelector('.card[data-pane="' + id + '"]');
+  const body = c => c.querySelector(".chartbox") || c.querySelector(".pvscroll") || c.querySelector(".tscroll");
+  const isChart = c => !!c.querySelector(".chartbox");
+  // default heights come from the stylesheet, measured once
+  DEF.order.forEach(id => { const c = pane(id), b = body(c);
+    DEF.h[id] = !b ? 300 : isChart(c) ? (Math.round(b.getBoundingClientRect().height) || 300) : (parseFloat(getComputedStyle(b).maxHeight) || 520); });
+  let L = clone(DEF);
+  function clone(o){ return JSON.parse(JSON.stringify(o)); }
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY) || "null");
+    if(s && Array.isArray(s.order)){
+      const known = s.order.filter(id => DEF.order.includes(id));
+      DEF.order.forEach(id => { if(!known.includes(id)) known.push(id); });
+      L = { order:known, w:Object.assign({}, DEF.w, s.w), h:Object.assign({}, s.h) };
+    }
+  }catch(err){}
+  const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(L)); }catch(err){} };
+
+  function apply(){
+    L.order.forEach(id => { const c = pane(id); if(c) grid.appendChild(c); });
+    L.order.forEach(id => {
+      const c = pane(id); if(!c) return;
+      c.style.setProperty("--span", L.w[id] || 12);
+      const b = body(c); if(!b) return;
+      if(L.h[id] && L.h[id] !== DEF.h[id]){ if(isChart(c)) b.style.height = L.h[id] + "px"; else b.style.maxHeight = L.h[id] + "px"; }
+      else { b.style.height = ""; b.style.maxHeight = ""; }
+    });
+  }
+  // rows as the browser will pack them (12 columns, in order)
+  function rows(widths){
+    const out = []; let cur = [], used = 0;
+    L.order.forEach(id => { const w = widths[id] || 12; if(used + w > 12 && cur.length){ out.push(cur); cur = []; used = 0; } cur.push(id); used += w; });
+    if(cur.length) out.push(cur); return out;
+  }
+  // after one pane changes width, its row-mates share what is left so the row stays full,
+  // and every pane in the row takes the same height
+  function settle(id, oldW){
+    const before = rows(Object.assign({}, L.w, { [id]:oldW })).find(r => r.includes(id)) || [id];
+    const mates = before.filter(x => x !== id), left = 12 - L.w[id];
+    if(mates.length && left >= MINW * Math.min(mates.length, 1)){
+      const fit = mates.slice(0, Math.max(1, Math.floor(left / MINW)));
+      const tot = fit.reduce((a, m) => a + (L.w[m] || 1), 0); let given = 0;
+      fit.forEach((m, i) => {
+        const w = i === fit.length - 1 ? left - given : Math.max(MINW, Math.round(left * (L.w[m] || 1) / tot));
+        L.w[m] = Math.max(MINW, w); given += L.w[m];
+      });
+    }
+    equalizeRow(id);
+  }
+  function equalizeRow(id){
+    const row = rows(L.w).find(r => r.includes(id)) || [id];
+    const h = L.h[id] || DEF.h[id];
+    row.forEach(m => { if(m !== id && isChart(pane(m)) && isChart(pane(id))) L.h[m] = h; });
+  }
+
+  /* ---- UI: grip to move, corner to resize ---- */
+  const guide = document.createElement("div"); guide.className = "lgGuide";
+  guide.innerHTML = Array.from({ length:12 }, () => "<span></span>").join("");
+  grid.appendChild(guide);
+  const badge = document.createElement("div"); badge.className = "lgBadge"; document.body.appendChild(badge);
+  const MOVE_ICO = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>';
+  L.order.forEach(id => {
+    const c = pane(id), h3 = c.querySelector("h3");
+    const g = document.createElement("button"); g.type = "button"; g.className = "lgMove"; g.innerHTML = MOVE_ICO;
+    g.title = "Drag to move this panel"; g.setAttribute("aria-label", "Move panel");
+    const ts = h3.querySelector(":scope > span") || h3; ts.insertBefore(g, ts.firstChild);
+    g.addEventListener("pointerdown", e => startMove(e, c));
+    const r = document.createElement("div"); r.className = "lgSize"; r.title = "Drag to resize (snaps to the 12-column grid). Double-click to reset this panel.";
+    c.appendChild(r);
+    r.addEventListener("pointerdown", e => startSize(e, c));
+    r.addEventListener("dblclick", () => { const old = L.w[id]; L.w[id] = DEF.w[id]; delete L.h[id]; settle(id, old); apply(); save(); });
+  });
+  const narrow = () => window.innerWidth <= 980;
+  function showBadge(e, txt){ badge.textContent = txt; badge.style.left = (e.clientX + 14) + "px"; badge.style.top = (e.clientY + 14) + "px"; badge.classList.add("on"); }
+
+  function startMove(e, c){
+    if(narrow() || e.button) return; e.preventDefault();
+    const id = c.dataset.pane; let target = null, after = false;
+    c.classList.add("lgDragging"); document.body.classList.add("lgBusy");
+    const ghost = document.createElement("div"); ghost.className = "lgGhost";
+    ghost.textContent = (c.querySelector("h3 > span") || c.querySelector("h3")).textContent.trim().split("\n")[0].slice(0, 48);
+    document.body.appendChild(ghost);
+    const mv = ev => {
+      ghost.style.left = (ev.clientX + 12) + "px"; ghost.style.top = (ev.clientY + 12) + "px";
+      grid.querySelectorAll(".lgDropL,.lgDropR").forEach(x => x.classList.remove("lgDropL", "lgDropR"));
+      const el = document.elementFromPoint(ev.clientX, ev.clientY), t = el && el.closest(".card[data-pane]");
+      target = t && t !== c ? t : null;
+      if(target){ const r = target.getBoundingClientRect(); after = ev.clientX > r.left + r.width / 2;
+        target.classList.add(after ? "lgDropR" : "lgDropL"); }
+    };
+    const up = () => {
+      document.removeEventListener("pointermove", mv); document.removeEventListener("pointerup", up);
+      ghost.remove(); c.classList.remove("lgDragging"); document.body.classList.remove("lgBusy");
+      grid.querySelectorAll(".lgDropL,.lgDropR").forEach(x => x.classList.remove("lgDropL", "lgDropR"));
+      if(!target) return;
+      const tid = target.dataset.pane;
+      L.order.splice(L.order.indexOf(id), 1);
+      L.order.splice(L.order.indexOf(tid) + (after ? 1 : 0), 0, id);
+      apply(); save(); tone && tone();
+    };
+    document.addEventListener("pointermove", mv); document.addEventListener("pointerup", up);
+    mv(e);
+  }
+  function startSize(e, c){
+    if(narrow() || e.button) return; e.preventDefault(); e.stopPropagation();
+    const id = c.dataset.pane, b = body(c), gw = grid.getBoundingClientRect().width;
+    const gap = parseFloat(getComputedStyle(grid).columnGap) || 14, colU = (gw + gap) / 12;
+    const x0 = e.clientX, y0 = e.clientY, w0 = L.w[id] || 12, h0 = b ? b.getBoundingClientRect().height : 300;
+    grid.classList.add("lgShowGuide"); c.classList.add("lgSizing"); document.body.classList.add("lgBusy", "lgResize");
+    const mv = ev => {
+      const w = Math.min(12, Math.max(MINW, Math.round(w0 + (ev.clientX - x0) / colU)));
+      const h = Math.min(MAXH, Math.max(MINH, Math.round((h0 + ev.clientY - y0) / STEP) * STEP));
+      L.w[id] = w; L.h[id] = h; c.style.setProperty("--span", w);
+      if(b){ if(isChart(c)) b.style.height = h + "px"; else b.style.maxHeight = h + "px"; }
+      showBadge(ev, w + " / 12 columns · " + h + " px");
+    };
+    const up = () => {
+      document.removeEventListener("pointermove", mv); document.removeEventListener("pointerup", up);
+      grid.classList.remove("lgShowGuide"); c.classList.remove("lgSizing"); document.body.classList.remove("lgBusy", "lgResize");
+      badge.classList.remove("on");
+      settle(id, w0); apply(); save();
+    };
+    document.addEventListener("pointermove", mv); document.addEventListener("pointerup", up);
+  }
+  const tone = typeof window.clickTone === "function" ? window.clickTone : null;
+  function reset(){
+    L = clone(DEF); try{ localStorage.removeItem(KEY); }catch(err){}
+    apply();
+    grid.classList.add("lgFlash"); setTimeout(() => grid.classList.remove("lgFlash"), 700);
+  }
+  apply();
+  return { reset, apply, get state(){ return clone(L); }, DEF };
+})();
+(function addAutoLayoutButton(){
+  const pngBtn = $("dashPngBtn"); if(!pngBtn || !LAYOUT) return;
+  const grp = pngBtn.closest(".hdr-group");
+  const b = document.createElement("button"); b.type = "button"; b.className = "hdr-btn"; b.id = "autoLayoutBtn";
+  b.innerHTML = '<span style="display:inline-block;width:13px;height:13px;vertical-align:-2px;margin-right:5px">' + ICONS.grid + '</span>Auto layout';
+  b.title = "Put every panel back to its default size and position";
+  b.addEventListener("click", () => LAYOUT.reset());
+  const wrap = document.createElement("span"); wrap.className = "hdr-group"; wrap.appendChild(b);
+  const div = document.createElement("span"); div.className = "hdr-div";
+  grp.parentNode.insertBefore(wrap, grp); grp.parentNode.insertBefore(div, grp);
+})();
 
 /* ---------- export (XLSX / CSV / JSON) ---------- */
 const EXPORT_COLS = [
