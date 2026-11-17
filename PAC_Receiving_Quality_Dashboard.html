@@ -350,8 +350,244 @@ table.pvt{width:auto;table-layout:fixed;border-collapse:separate;border-spacing:
 .pvt .omark{font-size:9px;margin-left:4px;position:relative;z-index:1}
 .pvt td.pvempty{text-align:left;color:var(--muted);font-style:italic;padding:18px 14px;white-space:normal}
 @media(max-width:760px){ .pvbar .pvf{width:calc(50% - 7px)} .pvbar select{min-width:0;width:100%} .pvbar .pvsep{display:none} }
+/* =====================================================================
+   v3.70 additions (Nov 2026): left filter rail, KPI flags + targets,
+   full-skin themes, icons, background music, alert glow, tighter margins
+   ===================================================================== */
+:root{ --field:#FFFFFF; --line:#CBD5DD; --hover:#EDF4F8; --hdr-bg:linear-gradient(135deg,var(--steel) 0%,var(--steel2) 100%);
+  --st-good:#198038; --st-watch:#D98E04; --st-action:#C1121F; --st-info:#8D99AE;
+  --font-body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; --font-head:var(--font-body); }
+body{font-family:var(--font-body);background-color:var(--bg);background-image:var(--tex,none);background-attachment:fixed}
+header{background:var(--hdr-bg);padding:14px 18px;gap:10px}
+.htitle,.card h3,.kpi h4,#aiCard h4,.fside .fhd{font-family:var(--font-head)}
+
+/* ---- 8. use the full width: no centred max-width column, slimmer gutters ---- */
+.wrap{max-width:none;margin:0;padding:14px 16px 40px;flex:1;min-width:0;container-type:inline-size}
+#qaBanner{margin:0 0 14px}
+.grid{gap:14px}
+.card{padding:16px}
+
+/* ---- 6. filters as a collapsible LEFT rail ---- */
+.layout{display:flex;align-items:flex-start}
+.fside{flex:none;width:270px;position:sticky;top:0;align-self:flex-start;z-index:60;background:var(--card);
+  box-shadow:var(--shadow);border-right:1px solid var(--line);min-height:100vh;transition:width .22s ease}
+.fside #filterToggle{position:static;box-shadow:none;padding:12px 14px;border-left:4px solid transparent;border-bottom:1px solid var(--line)}
+.fside .filters{position:static;top:auto;box-shadow:none;padding:12px 14px 22px;flex-direction:column;flex-wrap:nowrap;
+  align-items:stretch;gap:13px;background:transparent}
+.fside .filters label{width:100%}
+.fside .filters input,.fside .filters select{width:100%;min-width:0}
+.fside .filters .msel,.fside .filters .msel-btn{width:100%}
+.fside .msel-panel{min-width:240px}
+.fside .dategroup{flex-direction:column;align-items:stretch;gap:10px;padding:10px 10px 12px}
+.fside #customDates,.fside #periodBox{flex-direction:column}
+.fside .perdates{padding:0;white-space:normal}
+.fside #btnReset{width:100%;margin-top:4px}
+.fside.collapsed{width:46px}
+.fside.collapsed #filterToggle{flex-direction:column;align-items:center;padding:14px 0;gap:12px;border-bottom:0}
+.fside.collapsed #filterToggle .ftLeft{flex-direction:column;gap:12px}
+.fside.collapsed .ftText{writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:1px}
+.fside.collapsed .ftChev{transform:rotate(-90deg)}
+.fside:not(.collapsed) .ftChev{transform:rotate(90deg)}
+.fside .ftIcon svg{width:17px;height:17px;display:block}
+@media(max-width:760px){
+  .layout{display:block}
+  .fside{position:static;width:auto;min-height:0;border-right:0}
+  .fside.collapsed{width:auto}
+  .fside.collapsed #filterToggle{flex-direction:row;padding:11px 16px}
+  .fside.collapsed #filterToggle .ftLeft{flex-direction:row}
+  .fside.collapsed .ftText{writing-mode:horizontal-tb;transform:none}
+}
+
+/* ---- 4. icons ---- */
+.ficon{display:inline-flex;vertical-align:-3px;margin-right:6px;color:var(--steel2)}
+.ficon svg,.kico svg,.ticon svg{width:15px;height:15px;display:block}
+.filters label{flex-direction:column}
+.filters .flab{display:flex;align-items:center}
+.ticon{display:inline-flex;vertical-align:-2px;margin-right:7px;color:var(--accent)}
+
+/* ---- 1. KPI tiles: Good / Watch / Action flags ---- */
+.kpi{border-top:4px solid var(--st-info);min-height:118px;padding:12px 14px 11px;gap:6px}
+.kpi .ktop{display:flex;align-items:flex-start;gap:8px}
+.kpi .kico{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;
+  color:var(--kc,var(--st-info));background:color-mix(in srgb, var(--kc,var(--st-info)) 14%, transparent)}
+.kpi h4{margin:2px 0 0;line-height:1.25}
+.kpi .kfoot{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-height:20px}
+.kpis > .kpi{container-type:inline-size}
+.kpi .v{font-size:clamp(14px,13.5cqi,24px)}
+.kpirow{flex-direction:column;gap:8px}
+.kpirow .kpiActions{align-self:flex-end;order:-1;margin-top:0}
+.kpirow .kpis{width:100%}
+.kpi .ktgt{font-size:10.5px;max-width:100%;color:var(--muted);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.kpi .ktgt:hover{color:var(--steel2);text-decoration:underline}
+.kbadge{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:800;letter-spacing:.3px;text-transform:uppercase;
+  padding:2px 8px 2px 5px;border-radius:999px;color:#fff;background:var(--kc);flex:none;animation:kbIn .5s cubic-bezier(.2,1.4,.4,1) both}
+.kbadge svg{width:12px;height:12px}
+.kpi.st-good{--kc:var(--st-good);border-top-color:var(--st-good)}
+.kpi.st-watch{--kc:var(--st-watch);border-top-color:var(--st-watch)}
+.kpi.st-action{--kc:var(--st-action);border-top-color:var(--st-action)}
+.kpi.st-info{--kc:var(--st-info)}
+.kpi.st-info .kbadge{background:transparent;color:var(--muted);border:1px dashed var(--line);font-weight:700}
+@keyframes kbIn{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes kAction{0%,100%{box-shadow:var(--shadow),0 0 0 0 color-mix(in srgb, var(--st-action) 55%, transparent)}
+  50%{box-shadow:var(--shadow),0 0 0 7px color-mix(in srgb, var(--st-action) 0%, transparent)}}
+@keyframes kWatch{0%,100%{box-shadow:var(--shadow)}50%{box-shadow:var(--shadow),0 0 16px 2px color-mix(in srgb, var(--st-watch) 45%, transparent)}}
+@keyframes kIco{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+.kpi.st-action{animation:kAction 1.8s ease-out infinite}
+.kpi.st-action .kico{animation:kIco 1.8s ease-in-out infinite}
+.kpi.st-watch{animation:kWatch 3s ease-in-out infinite}
+.kpi.st-good .kbadge svg path{stroke-dasharray:20;stroke-dashoffset:20;animation:kDraw .7s .25s ease forwards}
+@keyframes kDraw{to{stroke-dashoffset:0}}
+.kpi:hover{animation-play-state:paused}
+@container (max-width:1260px){ .kpis{grid-template-columns:repeat(4,minmax(0,1fr))} }
+@container (max-width:560px){ .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} }
+
+/* ---- 2. targets dialog + per-panel target button ---- */
+.tgtbtn{background:var(--card);border:1.5px solid var(--accent);color:var(--steel);border-radius:7px;cursor:pointer;
+  font-size:11px;font-weight:800;padding:5px 9px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;transition:.15s}
+.tgtbtn:hover{background:var(--accent);color:#fff}
+.tgtbtn svg{width:13px;height:13px}
+#tgModal{display:none;position:fixed;inset:0;background:rgba(10,20,30,.55);z-index:930;align-items:center;justify-content:center;padding:20px}
+#tgModal.on{display:flex}
+#tgBox{background:var(--card);color:var(--ink);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.35);width:min(860px,100%);max-height:88vh;overflow:auto;padding:20px 24px}
+#tgBox h4{font-size:18px;color:var(--steel);margin:0 0 4px;font-family:var(--font-head)}
+#tgBox .tgsub{font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.5}
+#tgBox h5{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:16px 0 6px}
+.tgt-table{width:100%;border-collapse:collapse;font-size:13px}
+.tgt-table th{background:transparent;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px;padding:6px 8px;border-bottom:1px solid var(--line);position:static}
+.tgt-table td{padding:6px 8px;border-bottom:1px solid var(--line)}
+.tgt-table tr.hl td{background:color-mix(in srgb, var(--accent) 18%, transparent)}
+.tgt-table select,.tgt-table input{border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:7px;padding:5px 7px;font-size:12.5px}
+.tgt-table input{width:86px}
+.tgt-table input:disabled{opacity:.4}
+.tgt-table .tname{font-weight:700;display:flex;align-items:center;gap:7px}
+.tgt-table .tunit{color:var(--muted);font-size:11.5px}
+.tgdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:0}
+#tgErr{color:var(--st-action);font-weight:700;font-size:12.5px;min-height:18px;margin-top:10px}
+.tgrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px}
+.tgrow button{border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer}
+.tgrow button.primary{background:var(--steel);color:#fff;border-color:var(--steel)}
+
+/* ---- 5. background music ---- */
+.musicbox{display:inline-flex;align-items:center;gap:6px}
+.musicbox .hdr-sel{max-width:160px}
+.musicbox input[type=range]{width:74px;accent-color:var(--accent);cursor:pointer}
+.musicbox .mnote{font-size:15px;line-height:1}
+.musicbox.playing .mnote{animation:mBob 1s ease-in-out infinite}
+@keyframes mBob{50%{transform:translateY(-3px) rotate(-8deg)}}
+
+/* ---- 7. Quality Alerts toggle glows when alerts are waiting ---- */
+.hdr-toggle .qacnt{display:none;background:#FF4D4F;color:#fff;border-radius:999px;font-size:10.5px;font-weight:800;padding:1px 7px;margin-left:2px}
+.hdr-toggle.has-alerts .qacnt{display:inline-block}
+.hdr-toggle.has-alerts{border-radius:8px;padding:4px 8px;margin:-4px -8px;animation:qaGlow 1.6s ease-in-out infinite}
+.hdr-toggle.has-alerts.on{animation:none}
+@keyframes qaGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,90,90,0);text-shadow:none;background:transparent}
+  50%{box-shadow:0 0 14px 3px rgba(255,90,90,.75);text-shadow:0 0 8px rgba(255,200,200,.9);background:rgba(255,77,79,.22)}}
+
+/* ---- theme-aware form controls (lets dark skins work) ---- */
+.filters input,.filters select,.msel-btn,.msel-panel,.seg button,.pvbar select,.pvbtn,.tgtspin,#aiCard button,#aiVoiceSel,
+.pngpop,#thead .frow input,.demoFakeDD{background-color:var(--field);color:var(--ink);border-color:var(--line)}
+.seg button.on,#aiCard .seg button.on{background:var(--steel);color:#fff}
+.msel-panel .ms-opt{color:var(--ink)}
+.msel-panel .ms-opt:hover,.pngpop button:hover{background:var(--hover)}
+.pngpop button{color:var(--ink)}
+.dategroup{background:color-mix(in srgb, var(--field) 70%, var(--bg));border-color:var(--line)}
+td{border-bottom-color:var(--line)}
+tbody tr:hover td{background:var(--hover)}
+.aibtn,.pngbtn,.ctype{background-color:var(--card)}
+
+/* ======================= skins ======================= */
+[data-dark="1"] tbody tr.rowhold td{background:rgba(193,18,31,.20)}
+[data-dark="1"] tbody tr.rowrelease td{background:rgba(25,128,56,.18)}
+[data-dark="1"] tbody tr.rowhold:hover td,[data-dark="1"] tbody tr.rowrelease:hover td{background:var(--hover)}
+[data-dark="1"] .qaHead{background:rgba(193,18,31,.22);border-color:rgba(255,120,120,.35);color:#FFB3B3}
+[data-dark="1"] .qaList{background:rgba(193,18,31,.10);border-color:rgba(255,120,120,.35)}
+[data-dark="1"] .qaText{color:var(--ink)} [data-dark="1"] .qaText b{color:#FF9A9A}
+[data-dark="1"] .qaItem{border-top-color:rgba(255,120,120,.2)}
+[data-dark="1"] .qaBtn{background:var(--field);color:#FFB3B3;border-color:rgba(255,120,120,.4)}
+[data-dark="1"] .pill.hold{background:rgba(193,18,31,.25);color:#FF9A9A}
+[data-dark="1"] .pill.release{background:rgba(25,128,56,.25);color:#7EE0A0}
+[data-dark="1"] .pvt td.rh{background:var(--card)}
+[data-dark="1"] .selchip{background:var(--field)}
+[data-dark="1"] .card h3,[data-dark="1"] .kpi .v,[data-dark="1"] #filterToggle .ftText,[data-dark="1"] #aiCard h4,[data-dark="1"] #tgBox h4{color:var(--ink)}
+[data-dark="1"] .tilescope,[data-dark="1"] #aiScope{background:color-mix(in srgb, var(--accent) 14%, var(--card));color:var(--ink)}
+[data-dark="1"] .msel-btn{background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23A3ACB8'/%3E%3C/svg%3E")}
+[data-dark="1"] .logocard{background:#fff}
+[data-dark="1"] input[type=date]{color-scheme:dark}
+
+/* High Contrast */
+[data-skin=contrast] .card,[data-skin=contrast] .kpi,[data-skin=contrast] .fside{border:2px solid #000;box-shadow:none}
+[data-skin=contrast] .kpi:hover{transform:none}
+[data-skin=contrast] :focus-visible{outline:3px solid #0033cc;outline-offset:2px}
+/* Hazard Stripe */
+[data-skin=hazard] .htitle{background:#111;color:#F5B800;padding:4px 12px;border-radius:4px;display:inline-block}
+[data-skin=hazard] header .sub,[data-skin=hazard] .verline{background:#111;display:inline-block;padding:1px 8px;border-radius:3px}
+[data-skin=hazard] .card,[data-skin=hazard] .kpi{border:2px solid #222}
+[data-skin=hazard] .kpi{border-top-width:8px}
+[data-skin=hazard] .card h3,[data-skin=hazard] .kpi h4{text-transform:uppercase;letter-spacing:.06em}
+/* Blueprint */
+[data-skin=blueprint] .card,[data-skin=blueprint] .kpi,[data-skin=blueprint] .fside{border:1px dashed rgba(255,255,255,.55);box-shadow:none}
+[data-skin=blueprint] .card h3,[data-skin=blueprint] .kpi h4{text-transform:uppercase;letter-spacing:.08em}
+[data-skin=blueprint] header{border-bottom:1px dashed rgba(255,255,255,.6)}
+/* riveted metal: Steel Mill */
+[data-skin=rivet] .card,[data-skin=rivet] .kpi{background-image:radial-gradient(circle at 9px 9px,#8a9097 2.5px,transparent 3.5px),radial-gradient(circle at calc(100% - 9px) 9px,#8a9097 2.5px,transparent 3.5px),radial-gradient(circle at 9px calc(100% - 9px),#8a9097 2.5px,transparent 3.5px),radial-gradient(circle at calc(100% - 9px) calc(100% - 9px),#8a9097 2.5px,transparent 3.5px);border:1px solid #55595f}
+[data-skin=rivet] .card h3,[data-skin=rivet] .kpi h4,[data-skin=rivet] .htitle{text-transform:uppercase;letter-spacing:.05em}
+/* craft: coffee & flavor */
+[data-skin=craft] .card,[data-skin=craft] .kpi{box-shadow:0 4px 18px rgba(80,40,10,.10)}
+[data-skin=craft] .card h3{font-size:16px}
+[data-skin=craft] .htitle{font-size:32px}
+/* Command Console (LCARS-style) */
+[data-skin=lcars] body{text-transform:none}
+[data-skin=lcars] .card,[data-skin=lcars] .kpi{border:0;border-left:22px solid var(--tile,#FF9C33);border-top:9px solid var(--tile,#FF9C33);border-radius:32px 0 0 0;box-shadow:none}
+[data-skin=lcars] .kpi{border-left-width:12px;border-top-width:8px;border-radius:22px 0 0 0;border-top-color:var(--kc,#FF9C33);border-left-color:var(--kc,#FF9C33)}
+[data-skin=lcars] .card h3,[data-skin=lcars] .kpi h4,[data-skin=lcars] .htitle,[data-skin=lcars] .hdr-btn,[data-skin=lcars] .btn{text-transform:uppercase;letter-spacing:.06em}
+[data-skin=lcars] .card h3{color:var(--tile,#FF9C33);font-size:17px}
+[data-skin=lcars] header{border-top:14px solid #FF9C33;border-left:120px solid #CC99CC;border-radius:44px 0 0 0;margin:8px 0 0 8px}
+[data-skin=lcars] .hdr-btn,[data-skin=lcars] .btn,[data-skin=lcars] .demobtn{border-radius:999px;background:#CC99CC;color:#000;border:0}
+[data-skin=lcars] .grid > .card:nth-child(6n+1){--tile:#FF9C33} [data-skin=lcars] .grid > .card:nth-child(6n+2){--tile:#CC99CC}
+[data-skin=lcars] .grid > .card:nth-child(6n+3){--tile:#9999FF} [data-skin=lcars] .grid > .card:nth-child(6n+4){--tile:#FF6655}
+[data-skin=lcars] .grid > .card:nth-child(6n+5){--tile:#FFCC66} [data-skin=lcars] .grid > .card:nth-child(6n+6){--tile:#66CCDD}
+/* Phosphor Terminal */
+[data-skin=phosphor] body{font-size:16px;text-shadow:0 0 4px rgba(51,255,102,.4)}
+[data-skin=phosphor] body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 3px)}
+[data-skin=phosphor] .card,[data-skin=phosphor] .kpi,[data-skin=phosphor] .fside{border:1px solid #1B7A3A;border-radius:0;box-shadow:none}
+[data-skin=phosphor] .card h3 > span:first-child::before{content:"> "}
+[data-skin=phosphor] .kpi .v{text-shadow:0 0 10px #33FF66}
+/* Starship Bridge */
+[data-skin=starship] body::before{content:"";position:fixed;inset:-50%;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(1px 1px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 120px 80px,#cfe0ff,transparent),radial-gradient(1.5px 1.5px at 200px 160px,#fff,transparent),radial-gradient(1px 1px at 260px 40px,#9fb8ff,transparent),radial-gradient(1px 1px at 60px 220px,#fff,transparent),radial-gradient(1.5px 1.5px at 300px 260px,#dfe8ff,transparent);
+  background-size:320px 300px;animation:sDrift 160s linear infinite;opacity:.85}
+@keyframes sDrift{to{transform:translate(320px,300px)}}
+[data-skin=starship] .card,[data-skin=starship] .kpi,[data-skin=starship] .fside{background:rgba(18,28,58,.72);backdrop-filter:blur(8px);border:1px solid rgba(140,170,255,.22)}
+[data-skin=starship] .card{position:relative}
+[data-skin=starship] .card::after{content:"";position:absolute;top:0;left:14px;right:14px;height:2px;background:linear-gradient(90deg,transparent,#5AA9FF,#55E0E0,transparent)}
+/* Neon Grid */
+[data-skin=neon] .card,[data-skin=neon] .kpi{border:1px solid transparent;box-shadow:0 0 0 1px #FF2BD6,0 0 20px -6px #FF2BD6}
+[data-skin=neon] .grid > .card:nth-child(even){box-shadow:0 0 0 1px #22E6FF,0 0 20px -6px #22E6FF}
+[data-skin=neon] .htitle{text-shadow:0 0 6px #FF2BD6,0 0 18px #FF2BD6;color:#fff}
+[data-skin=neon] .card h3{text-shadow:0 0 8px rgba(34,230,255,.6)}
+/* Comic Panel */
+[data-skin=comic] .card,[data-skin=comic] .kpi,[data-skin=comic] .fside{border:3px solid #111;box-shadow:6px 6px 0 #111;border-radius:4px}
+[data-skin=comic] .kpi{border-top-width:10px}
+[data-skin=comic] .card h3 > span:first-child{background:#FFD400;border:2px solid #111;padding:2px 10px;transform:rotate(-1.2deg);box-shadow:3px 3px 0 #111;font-size:18px;letter-spacing:.04em}
+[data-skin=comic] .htitle{font-size:40px;letter-spacing:.04em;color:#111}
+[data-skin=comic] header .sub,[data-skin=comic] .verline{color:#111}
+/* Prime Time 90s */
+[data-skin=nineties] .card,[data-skin=nineties] .kpi{border:3px solid #2B2B2B;border-radius:22px;box-shadow:5px 5px 0 var(--tile,#7B3FA0)}
+[data-skin=nineties] .grid > .card:nth-child(4n+1){--tile:#16A6A6} [data-skin=nineties] .grid > .card:nth-child(4n+2){--tile:#E0218A}
+[data-skin=nineties] .grid > .card:nth-child(4n+3){--tile:#F2B705} [data-skin=nineties] .grid > .card:nth-child(4n+4){--tile:#7B3FA0}
+[data-skin=nineties] .card h3 > span:first-child{text-decoration:underline wavy #E0218A;text-underline-offset:5px}
+[data-skin=nineties] .htitle{text-shadow:3px 3px 0 #7B3FA0;color:#fff}
+[data-skin=nineties] .hdr-btn,[data-skin=nineties] .btn,[data-skin=nineties] .demobtn,[data-skin=nineties] .hdr-sel{border-radius:999px}
+@media (prefers-reduced-motion:reduce){ .kpi,.kpi .kico,.kbadge,.hdr-toggle,[data-skin=starship] body::before,.musicbox .mnote{animation:none!important} }
+
+/* light / striped header skins: keep header controls readable */
+[data-skin=hazard] header .hdr-btn,[data-skin=hazard] header .btn,[data-skin=hazard] header .demobtn,[data-skin=hazard] header .hdr-sel,
+[data-skin=comic] header .hdr-btn,[data-skin=comic] header .btn,[data-skin=comic] header .demobtn,[data-skin=comic] header .hdr-sel{background:#111;color:#fff;border-color:#111}
+[data-skin=hazard] header .hdr-toggle,[data-skin=hazard] .poweredby,[data-skin=hazard] .musicbox{background:#111;color:#fff;padding:4px 8px;border-radius:6px}
+[data-skin=comic] header .hdr-toggle,[data-skin=comic] .poweredby,[data-skin=comic] .mnote{color:#111}
+[data-skin=comic] .poweredby img{filter:none}
+
 </style>
-</head>
 <body>
 <script>
 /* ============================ CLIENT CONFIG ============================
@@ -362,10 +598,10 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.60",
-  updated: "Sep 17, 2026",
+  version: "3.70",
+  updated: "Nov 17, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
-  // the Gemini key lives ONLY in the proxy's Script Properties, never in this file.
+  // the AI (Claude) key lives ONLY in the proxy's Script Properties, never in this file.
   // Default quality target: monthly rejection rate above this fraction is flagged red
   // on the Monthly Rejection Rate chart and drives the Rejection Rate KPI card color.
   // Users can adjust it live via the spin control on that chart (saved per user).
@@ -426,8 +662,8 @@ const DATA = [];
         <button class="hdr-btn" id="dashPdfBtn" title="Save the entire dashboard as a PDF">&#8681; PDF</button>
       </span>
       <span class="hdr-div"></span>
-      <label class="hdr-toggle" title="Show or hide the Quality Alert banner on load">
-        <input type="checkbox" id="qaToggle" checked> Quality Alerts</label>
+      <label class="hdr-toggle" id="qaLbl" title="Show or hide the Quality Alert banner">
+        <input type="checkbox" id="qaToggle"> Quality Alerts <span class="qacnt" id="qaLblCnt"></span></label>
       <select id="themeSel" class="hdr-sel" title="Color scheme"></select>
       <select id="fontSel" class="hdr-sel" title="Text size">
         <option value="s">Aa Small</option>
@@ -439,6 +675,8 @@ const DATA = [];
   </div>
 </header>
 
+<div class="layout">
+<aside class="fside" id="fside">
 <button type="button" id="filterToggle" aria-expanded="false" aria-controls="filterPanel">
   <span class="ftLeft"><span class="ftIcon">&#9881;</span><span class="ftText" id="ftText">Show Filters</span><span class="ftChev">&#9660;</span></span>
   <span class="ftBadge" id="ftBadge"></span>
@@ -510,6 +748,7 @@ const DATA = [];
   <label>Type <select id="fType"></select></label>
   <button class="reset" id="btnReset">Reset</button>
 </div>
+</aside>
 
 <div class="wrap">
   <div id="qaBanner"><div class="qaHead"><span>&#9888; Quality Alert</span><span class="qaCount" id="qaCount"></span></div>
@@ -522,7 +761,7 @@ const DATA = [];
   <div class="grid">
     <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
     <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
-    <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">red above <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5"> % target</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
+    <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">good &le; <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5" title="Good level for the monthly rejection rate"> %</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
     <div class="card c6"><h3><span>Inspector Volume</span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Volume" data-title="Inspector Volume" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
     <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small style="display:inline-flex;align-items:center;gap:5px">top by inspected footage &#183; hide under <input type="number" id="millMinSpin" class="tgtspin" min="0" step="100" title="Mills with less inspected footage than this are hidden from the chart"> ft</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
     <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
@@ -562,6 +801,7 @@ const DATA = [];
       <thead id="thead"></thead>
       <tbody id="tbody"></tbody></table></div></div>
   </div>
+</div>
 </div>
 <footer id="foot"></footer>
 
@@ -1018,7 +1258,7 @@ function bCatBars(d, series, o){
   }));
   const vAxis = o.horiz ? "x" : "y", cAxis = o.horiz ? "y" : "x";
   const scales = {};
-  scales[vAxis] = { beginAtZero:true, stacked:!!o.stack, ticks: tickFor(o.pct ? "rate" : unit), ...(o.pct ? { max:1 } : {}) };
+  scales[vAxis] = { beginAtZero:true, stacked:!!o.stack, ticks: tickFor(o.pct ? "rate" : unit), ...(o.pct ? { max:1 } : {}), ...(o.ref && o.ref.value != null ? { suggestedMax:o.ref.value * 1.2 } : {}) };
   scales[cAxis] = { stacked:!!o.stack };
   const ext = { bar3d:!!o.three };
   if(o.ref) ext.refLine = Object.assign({ scale:vAxis }, o.ref);
@@ -1096,6 +1336,7 @@ function bCombo(d, bar, line, o){
     cfg:{ type:"bar", data:{ labels:d.labels, $ext:ext, datasets:[
         { type:"line", label:line.label, yAxisID:"y1", data:line.data, _unit:line.unit,
           borderColor:B.red, backgroundColor:B.red, tension:.3, pointRadius:4,
+          ...(line.pointColors ? { pointBackgroundColor:line.pointColors, pointBorderColor:line.pointColors, pointRadius:6 } : {}),
           ...(line.unit === "rate" ? { labelText:line.data.map(v => pct(v)) } : {}) },
         { type:"bar", label:bar.label, yAxisID:"y", data:bar.data, _unit:bar.unit,
           backgroundColor:bar.color + "CC", borderRadius:5 } ] },
@@ -1246,17 +1487,19 @@ function monthlyDefault(d, three){
   return { cfg:{ type:"bar",
     data:{ labels:d.labels, $ext:{ bar3d:!!three },
       datasets:[
-        { type:"line", label:"Target", data:d.labels.map(()=>TGT),
-          borderColor:B.red, borderWidth:1.5, borderDash:[6,5], pointRadius:0, fill:false },
+        { type:"line", label:"Good", data:d.labels.map(()=>TGT),
+          borderColor:B.green, borderWidth:1.5, borderDash:[6,5], pointRadius:0, fill:false },
+        { type:"line", label:"Watch", data:d.labels.map(()=>d.watch),
+          borderColor:"#D98E04", borderWidth:1.5, borderDash:[3,4], pointRadius:0, fill:false },
         { type:"bar", label:"Rejection rate", data:moRates,
-          backgroundColor: moRates.map(v=>v > TGT ? B.red+"CC" : B.steel+"CC"),
+          backgroundColor: d.rate.colors,
           borderRadius: three ? 0 : 5 } ]},
     options:{ responsive:true, maintainAspectRatio:false, ...(three ? pad3d : {}),
       scales:{ y:{ beginAtZero:true, ticks:{ callback:v=>(100*v).toFixed(0)+"%" } } },
       plugins:{ legend:{ display:false },
         tooltip:{ filter:c=>c.dataset.type!=="line",
-          callbacks:{ label:c=>pct(c.parsed.y) + (c.parsed.y > TGT ? "  \u26a0 above target" : "") } } }}},
-    keys:d.keys, hi:[1] };
+          callbacks:{ label:c=>pct(c.parsed.y) + "  \u2014 " + ({good:"Good",watch:"Watch",action:"Action"})[rateState(c.parsed.y,"chMonthly")] } } }}},
+    keys:d.keys, hi:[2] };
 }
 function reasonsDefault(d){
   return { cfg:{ type:"doughnut",
@@ -1272,7 +1515,8 @@ function inspDefault(d){
     data:{ labels:d.labels,
       datasets:[
         { type:"line", label:"Rejection rate", yAxisID:"y1", data:d.rate.data,
-          borderColor:B.red, backgroundColor:B.red, tension:.3, pointRadius:4 },
+          borderColor:B.red, backgroundColor:B.red, tension:.3, pointRadius:6,
+          pointBackgroundColor:d.rate.pointColors, pointBorderColor:d.rate.pointColors },
         { type:"bar", label:"Inspected (ft)", yAxisID:"y",
           data:d.ins.data, backgroundColor:B.steel+"CC", borderRadius:5 } ]},
     options:{ responsive:true, maintainAspectRatio:false,
@@ -1348,7 +1592,7 @@ const PANES = {
       }
       return reasonsDefault(d); } },
   chInsp: { kind:"inspector", def:"combo",
-    types:[ ["combo","Combo: footage + rate",G_CB], ["column","Clustered column",G_CB], ["column3d","3-D column",G_CB],
+    types:[ ["combo","Combo: footage + rate",G_CB], ["rate","Rejection rate vs target",G_CB], ["column","Clustered column",G_CB], ["column3d","3-D column",G_CB],
             ["stack","Stacked column",G_CB], ["pct","100% stacked column",G_CB], ["bar","Clustered bar",G_CB],
             ["pie","Pie: share of inspected ft",G_PW], ["doughnut","Doughnut: share of inspected ft",G_PW],
             ["treemap","Treemap: inspected ft",G_PW],
@@ -1365,11 +1609,13 @@ const PANES = {
         case "treemap":  return bTreemap(d, I);
         case "scatter":  return bScatter(d, I, d.rate);
         case "pareto":   return bPareto(d, I);
+        case "rate":     return bCatBars(d, [d.rate], { ref:tgtRef("chInsp") });
       }
       return inspDefault(d); } },
   chMills: { kind:"mill", def:"bar",
     types:[ ["bar","Clustered bar",G_CB], ["bar3d","3-D bar",G_CB], ["stackBar","Stacked bar",G_CB], ["pctBar","100% stacked bar",G_CB],
             ["column","Clustered column",G_CB], ["column3d","3-D column",G_CB], ["combo","Combo: footage + rate",G_CB],
+            ["rateBar","Rejection rate vs target",G_CB],
             ["treemap","Treemap: inspected ft",G_PW],
             ["scatter","Scatter: footage vs rate",G_RL], ["bubble","Bubble: size = rejected ft",G_RL],
             ["pareto","Pareto: rejected ft",G_AN] ],
@@ -1380,7 +1626,8 @@ const PANES = {
         case "pctBar":   return bCatBars(d, [A, R], { horiz:true, stack:true, pct:true });
         case "column":   return bCatBars(d, [I, R]);
         case "column3d": return bCatBars(d, [I, R], { three:true });
-        case "combo":    return bCombo(d, I, d.rate);
+        case "combo":    return bCombo(d, I, d.rate, { ref:tgtRef("chMills") });
+        case "rateBar":  return bCatBars(d, [d.rate], { horiz:true, ref:tgtRef("chMills") });
         case "treemap":  return bTreemap(d, I);
         case "scatter":  return bScatter(d, I, d.rate);
         case "bubble":   return bScatter(d, I, d.rate, R);
@@ -1474,16 +1721,8 @@ function render(){
     footageBorescoped:Math.round(bore), trueRejectedHeldFt:Math.round(trej),
     submissionsOnHold:held, submissions:S.length,
     rejectionRatePct: insp? +(100*rej/insp).toFixed(2) : 0 };
-  $("kpis").innerHTML = [
-    ["Footage Received", fmt(recv), "ft", ""],
-    ["Footage Inspected", fmt(insp), "ft", ""],
-    ["Footage Rejected", fmt(rej), "ft", "alert"],
-    ["Footage Approved", fmt(appr), "ft", "good"],
-    ["Rejection Rate", pct(insp?rej/insp:0), "", rej/Math.max(insp,1)>rateTarget?"alert":"good"],
-    ["Inspection Coverage", pct(recv?insp/recv:0), "", ""],
-    ["Footage Borescoped", fmt(bore), "ft", ""],
-    ["Held Lots", fmt(held), "of "+fmt(S.length), held? "alert":"good"],
-  ].map(([t,v,u,cls])=>`<div class="kpi ${cls}"><h4>${t}</h4><div class="v">${v}<span class="u">${u}</span></div></div>`).join("");
+  renderKpiTiles({ recv, insp, rej, appr, bore, held, lots:S.length,
+    rate: insp ? 100*rej/insp : 0, cov: recv ? 100*insp/recv : 0, heldPct: S.length ? 100*held/S.length : 0 });
 
   /* weekly */
   const wk = [...groupSum(S, r=>weekStart(r.date), ["fInsp","fRej"])].sort((a,b)=>a[0].localeCompare(b[0]));
@@ -1503,10 +1742,8 @@ function render(){
   const mo = [...groupSum(S, r=>monthStart(r.date), ["fInsp","fRej"])].sort((a,b)=>a[0].localeCompare(b[0]));
   AGG.monthly = mo;
   const moRates = mo.map(m=>m[1].fInsp? m[1].fRej/m[1].fInsp:0);
-  PANE_DATA.chMonthly = { keys:mo.map(m=>m[0]), labels:mo.map(m=>dLabel(m[0])), tgt:TGT,
-    rate: ser("Rejection rate", moRates, "rate", B.steel, {
-      colors: moRates.map(v=>v > TGT ? B.red+"CC" : B.steel+"CC"),
-      pointColors: moRates.map(v=>v > TGT ? B.red : B.steel) }),
+  PANE_DATA.chMonthly = { keys:mo.map(m=>m[0]), labels:mo.map(m=>dLabel(m[0])), tgt:TGT, watch:panelTgt("chMonthly").watch,
+    rate: ser("Rejection rate", moRates, "rate", B.steel, rateColors(moRates, "chMonthly")),
     ins: ser("Inspected (ft)", mo.map(m=>m[1].fInsp), "ft", B.steel),
     rej: ser("Rejected (ft)",  mo.map(m=>m[1].fRej),  "ft", B.red) };
 
@@ -1526,7 +1763,7 @@ function render(){
     ins: ser("Inspected (ft)", ins.map(x=>x[1].fInsp), "ft", B.steel),
     rej: ser("Rejected (ft)",  ins.map(x=>x[1].fRej),  "ft", B.red),
     appr:ser("Approved (ft)",  ins.map(x=>x[1].fInsp - x[1].fRej), "ft", B.green),
-    rate:ser("Rejection rate", ins.map(x=>x[1].fInsp? x[1].fRej/x[1].fInsp:0), "rate", B.red) };
+    rate:ser("Rejection rate", ins.map(x=>x[1].fInsp? x[1].fRej/x[1].fInsp:0), "rate", B.red, rateColors(ins.map(x=>x[1].fInsp? x[1].fRej/x[1].fInsp:0), "chInsp")) };
 
   /* mills — top 14, with an opt-in "hide under Nft" threshold so a
      long tail of near-zero mills doesn't crowd out the ones that matter. Off
@@ -1539,7 +1776,7 @@ function render(){
     ins: ser("Inspected (ft)", mi.map(x=>x[1].fInsp), "ft", B.accent),
     rej: ser("Rejected (ft)",  mi.map(x=>x[1].fRej),  "ft", B.red),
     appr:ser("Approved (ft)",  mi.map(x=>x[1].fInsp - x[1].fRej), "ft", B.green),
-    rate:ser("Rejection rate", mi.map(x=>x[1].fInsp? x[1].fRej/x[1].fInsp:0), "rate", B.red) };
+    rate:ser("Rejection rate", mi.map(x=>x[1].fInsp? x[1].fRej/x[1].fInsp:0), "rate", B.red, rateColors(mi.map(x=>x[1].fInsp? x[1].fRej/x[1].fInsp:0), "chMills")) };
 
   /* alloys — true rejected */
   const al = AGG.alloys = [...groupSum(S.filter(r=>r.tRej>0), r=>r.alloy, ["tRej"])].sort((a,b)=>b[1].tRej-a[1].tRej);
@@ -2528,34 +2765,106 @@ function pvSig(){ return JSON.stringify([pv.row, pv.col, pv.val, pv.agg, pv.show
     openPngPop($("pvPng"), ()=>pivotPngCanvas(false), "PAC_Pivot_" + stampDate() + ".png"));
 })();
 
-/* ---------- view preferences: color scheme + text size ---------- */
+/* ---------- view preferences: themes (full skins) + text size ---------- */
+const DARK_UI = { field:"#232830", line:"#3A424D", hover:"#2C333D" };
 const THEMES = {
-  steel:  { label:"PAC Theme",       steel:"#1B4965", steel2:"#2C6E8F", accent:"#62B6CB", bg:"#F1F5F8", card:"#FFFFFF", ink:"#212529", muted:"#6C7A89" },
-  slate:  { label:"Slate & Emerald", steel:"#3D484D", steel2:"#54646B", accent:"#26A554", bg:"#F2F4F4", card:"#FFFFFF", ink:"#22282B", muted:"#6F7E86" },
-  navy:   { label:"Navy & Gold",     steel:"#14213D", steel2:"#2A3E66", accent:"#E9C46A", bg:"#F5F4F0", card:"#FFFFFF", ink:"#1B2430", muted:"#6E7887" },
-  claret: { label:"Claret & Gold",   steel:"#6D1A2E", steel2:"#8C2F44", accent:"#C9A227", bg:"#F6F3F2", card:"#FFFFFF", ink:"#2A2226", muted:"#7C6E73" },
-  gold:   { label:"Black & Gold",        steel:"#1A1A1A", steel2:"#3A3A3A", accent:"#CFB53B", bg:"#F4F2EC", card:"#FFFFFF", ink:"#1A1A1A", muted:"#6E6A5E" },
-  salmon: { label:"Pink & Green", steel:"#4E8A38", steel2:"#6AA653", accent:"#F4A0A6", bg:"#F3F8F0", card:"#FFFFFF", ink:"#2E3A2B", muted:"#7F9479" },
-  purple: { label:"Purple & Gold",           steel:"#4B2E83", steel2:"#6A4BA6", accent:"#D4AF37", bg:"#F5F3F8", card:"#FFFFFF", ink:"#241A38", muted:"#77708A" },
-  maroon: { label:"Maroon & Off White",      steel:"#5E1224", steel2:"#7E2438", accent:"#C7B8A5", bg:"#F7F4EF", card:"#FFFDF8", ink:"#2E1B21", muted:"#83717A" },
-  blueor: { label:"Blue & Orange",           steel:"#1D5FA8", steel2:"#3B7BC4", accent:"#F28C28", bg:"#F1F5F9", card:"#FFFFFF", ink:"#1C2A3A", muted:"#6D7C8D" },
-  redblk: { label:"Red & Black",             steel:"#B01018", steel2:"#D22B33", accent:"#1F1F1F", bg:"#F6F2F1", card:"#FFFFFF", ink:"#1F1F1F", muted:"#7C6F70" },
-  astros: { label:"Astros",   steel:"#002D62", steel2:"#1A4A8A", accent:"#EB6E1F", bg:"#F2F4F8", card:"#FFFFFF", ink:"#14213A", muted:"#68738A" },
-  rockets:{ label:"Rockets",  steel:"#CE1141", steel2:"#E23A63", accent:"#C4CED4", bg:"#F7F2F3", card:"#FFFFFF", ink:"#26191D", muted:"#84707A" },
-  texans: { label:"Texans",   steel:"#03202F", steel2:"#1B3D50", accent:"#A71930", bg:"#F1F4F6", card:"#FFFFFF", ink:"#0E1B23", muted:"#66757F" },
-  dynamo: { label:"Dynamo FC",steel:"#E86100", steel2:"#F57F26", accent:"#1F1F1F", bg:"#FBF5F0", card:"#FFFFFF", ink:"#2B2015", muted:"#8C7B6C" },
-  comets: { label:"Comets",   steel:"#002B5C", steel2:"#1D4B85", accent:"#E31837", bg:"#F2F4F8", card:"#FFFFFF", ink:"#131E33", muted:"#6A7488" }
+  /* PAC Stainless — built from the logo colours */
+  steel:  { group:"PAC Stainless", label:"PAC Theme", steel:"#1B4965", steel2:"#2C6E8F", accent:"#62B6CB", bg:"#F1F5F8", card:"#FFFFFF", ink:"#212529", muted:"#6C7A89" },
+  /* full design skins: frames, header, tiles, buttons, textures and fonts */
+  graphite:{ group:"Institutional", label:"Graphite Night", dark:1, skin:"plain", steel:"#3987E5", steel2:"#2A5FA8", accent:"#5AA9FF", bg:"#111317", card:"#1B1E23", ink:"#EEF1F5", muted:"#A3ACB8",
+    hdr:"linear-gradient(135deg,#1B1E23,#2A3038)" },
+  contrast:{ group:"Institutional", label:"High Contrast", skin:"contrast", steel:"#000000", steel2:"#222222", accent:"#0033CC", bg:"#FFFFFF", card:"#FFFFFF", ink:"#000000", muted:"#222222",
+    line:"#000000", hdr:"#000000" },
+  slate:  { group:"Institutional", label:"Slate & Emerald", steel:"#3D484D", steel2:"#54646B", accent:"#26A554", bg:"#F2F4F4", card:"#FFFFFF", ink:"#22282B", muted:"#6F7E86" },
+  hazard: { group:"Shop Floor", label:"Hazard Stripe", skin:"hazard", steel:"#222222", steel2:"#444444", accent:"#E0A800", bg:"#E7E5DF", card:"#FFFFFF", ink:"#111111", muted:"#555555",
+    hdr:"repeating-linear-gradient(-45deg,#F5B800 0 22px,#111 22px 44px)", tex:"radial-gradient(rgba(0,0,0,.05) 1px,transparent 1.4px)", texSize:"7px 7px",
+    fonts:["Saira Stencil One","Barlow:wght@400;600;700;800"], head:"'Saira Stencil One','Barlow',sans-serif", body:"'Barlow',system-ui,sans-serif" },
+  blueprint:{ group:"Shop Floor", label:"Blueprint", dark:1, skin:"blueprint", steel:"#2F74C0", steel2:"#1D5A9A", accent:"#FFD27A", bg:"#0F3D6E", card:"#11467E", ink:"#F2F8FF", muted:"#B9D3F0",
+    field:"#0F3D6E", line:"rgba(255,255,255,.35)", hover:"#1A5592", hdr:"transparent",
+    tex:"linear-gradient(rgba(255,255,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.09) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px)",
+    texSize:"100px 100px,100px 100px,20px 20px,20px 20px", fonts:["IBM Plex Mono:wght@400;500;600;700"], body:"'IBM Plex Mono',monospace" },
+  steelmill:{ group:"Shop Floor", label:"Steel Mill", dark:1, skin:"rivet", steel:"#E8681A", steel2:"#B84E10", accent:"#FFB000", bg:"#2B2E33", card:"#363A40", ink:"#F1F1F1", muted:"#B5B9BE",
+    field:"#2B2E33", line:"#55595F", hover:"#41464D", hdr:"linear-gradient(180deg,#5B6068,#3B3F45)",
+    tex:"repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)", fonts:["Oswald:wght@500;600;700"], head:"'Oswald',sans-serif" },
+  espresso:{ group:"Coffee & Flavor", label:"Espresso Night", dark:1, skin:"craft", steel:"#C8894A", steel2:"#8F5A3A", accent:"#E2B77D", bg:"#1B120D", card:"#2A1C15", ink:"#F3E7DA", muted:"#C4AD96",
+    field:"#21160F", line:"#4A3426", hover:"#35241A", hdr:"linear-gradient(90deg,#2A1C15,#4A2F1E)", fonts:["Playfair Display:wght@600;700;800"], head:"'Playfair Display',serif" },
+  irish:  { group:"Coffee & Flavor", label:"Irish Creme", skin:"craft", steel:"#1F6B45", steel2:"#2F8A5C", accent:"#C39A62", bg:"#F5EDE0", card:"#FFFAF2", ink:"#2E2015", muted:"#6A5544", line:"#E2D2B8", hover:"#F3E8D6",
+    fonts:["Playfair Display:wght@600;700;800"], head:"'Playfair Display',serif" },
+  siesta: { group:"Coffee & Flavor", label:"Spanish Siesta", skin:"craft", steel:"#C2502A", steel2:"#E08A3C", accent:"#2F6F8F", bg:"#F6E6D3", card:"#FFF8EF", ink:"#3A1F12", muted:"#7A5640", line:"#E3C3A0", hover:"#F6E3CC",
+    tex:"linear-gradient(45deg,rgba(194,80,42,.06) 25%,transparent 25%,transparent 75%,rgba(194,80,42,.06) 75%),linear-gradient(45deg,rgba(194,80,42,.06) 25%,transparent 25%,transparent 75%,rgba(194,80,42,.06) 75%)",
+    texSize:"40px 40px,40px 40px", texPos:"0 0,20px 20px", fonts:["Playfair Display:wght@600;700;800"], head:"'Playfair Display',serif" },
+  sicilian:{ group:"Coffee & Flavor", label:"Sicilian Lemon", skin:"craft", steel:"#1F4FB4", steel2:"#3A6FD4", accent:"#E8B800", bg:"#FFFBEA", card:"#FFFFFF", ink:"#14213D", muted:"#4A5878", line:"#D9E3F2", hover:"#FFF6CC",
+    fonts:["Cormorant Garamond:wght@600;700"], head:"'Cormorant Garamond',serif" },
+  cotton: { group:"Coffee & Flavor", label:"Egyptian Cotton", skin:"craft", steel:"#2C6E7F", steel2:"#4F8A8B", accent:"#C9A24B", bg:"#F7F4EE", card:"#FFFDF9", ink:"#2B2A26", muted:"#6F6A5E", line:"#E6DFD0", hover:"#F3EFE6",
+    tex:"repeating-linear-gradient(0deg,rgba(0,0,0,.022) 0 1px,transparent 1px 4px),repeating-linear-gradient(90deg,rgba(0,0,0,.022) 0 1px,transparent 1px 4px)",
+    fonts:["Cormorant Garamond:wght@600;700"], head:"'Cormorant Garamond',serif" },
+  lcars:  { group:"Sci-Fi Consoles", label:"Command Console", dark:1, skin:"lcars", steel:"#E07F1F", steel2:"#9966CC", accent:"#9999FF", bg:"#000000", card:"#0B0B0F", ink:"#F7E2C6", muted:"#E8B07A",
+    field:"#16121E", line:"#3A2E46", hover:"#1E1828", hdr:"#000000", fonts:["Antonio:wght@400;600;700"], head:"'Antonio',sans-serif", body:"'Antonio',sans-serif" },
+  phosphor:{ group:"Sci-Fi Consoles", label:"Phosphor Terminal", dark:1, skin:"phosphor", steel:"#1F9A4A", steel2:"#0F5A2A", accent:"#33FF66", bg:"#020A03", card:"#04140A", ink:"#7DFF9B", muted:"#4FD474",
+    field:"#031008", line:"#1B7A3A", hover:"#062010", hdr:"#04140A", tex:"radial-gradient(ellipse at center,rgba(51,255,102,.07),transparent 70%)", fonts:["VT323"], body:"'VT323',monospace" },
+  starship:{ group:"Sci-Fi Consoles", label:"Starship Bridge", dark:1, skin:"starship", steel:"#3A7BD5", steel2:"#2A4F9A", accent:"#55E0E0", bg:"#050A1A", card:"#121C3A", ink:"#E8EEFF", muted:"#B4C2E8",
+    field:"#0E1630", line:"rgba(140,170,255,.28)", hover:"#1A2650", hdr:"rgba(18,28,58,.75)", tex:"radial-gradient(ellipse at 70% -10%,rgba(90,169,255,.18),transparent 55%)" },
+  neon:   { group:"Sci-Fi Consoles", label:"Neon Grid", dark:1, skin:"neon", steel:"#C41FA8", steel2:"#6A1FC4", accent:"#22E6FF", bg:"#0B0420", card:"#160A33", ink:"#FBE9FF", muted:"#D7B6FF",
+    field:"#12072A", line:"#4A2A7A", hover:"#22104A", hdr:"linear-gradient(90deg,#160A33,#2A0A4A)",
+    tex:"linear-gradient(rgba(255,43,214,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(34,230,255,.08) 1px,transparent 1px)", texSize:"44px 44px,44px 44px",
+    fonts:["Audiowide"], head:"'Audiowide',sans-serif" },
+  comic:  { group:"Retro & Pop", label:"Comic Panel", skin:"comic", steel:"#1D5FD6", steel2:"#E2231A", accent:"#E2231A", bg:"#FFF8E1", card:"#FFFFFF", ink:"#111111", muted:"#444444", line:"#111111",
+    hdr:"#FFD400", tex:"radial-gradient(rgba(0,0,0,.09) 1px,transparent 1.6px)", texSize:"8px 8px",
+    fonts:["Bangers","Comic Neue:wght@400;700"], head:"'Bangers',cursive", body:"'Comic Neue',system-ui,sans-serif" },
+  nineties:{ group:"Retro & Pop", label:"Prime Time 90s", skin:"nineties", steel:"#7B3FA0", steel2:"#E0218A", accent:"#16A6A6", bg:"#FFF6E5", card:"#FFFFFF", ink:"#2B2B2B", muted:"#666666",
+    hdr:"linear-gradient(180deg,#F2B705 0 50%,#E0218A 50%)",
+    tex:"url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cpath d='M10 30 q10-12 20 0 t20 0' stroke='%2316a6a6' stroke-width='3' fill='none' opacity='.35'/%3E%3Ccircle cx='120' cy='40' r='8' stroke='%23e0218a' stroke-width='3' fill='none' opacity='.35'/%3E%3Cpath d='M60 120 l12-20 l12 20z' stroke='%23f2b705' stroke-width='3' fill='none' opacity='.45'/%3E%3C/svg%3E\")",
+    fonts:["Fredoka:wght@400;500;600;700"], body:"'Fredoka',system-ui,sans-serif" },
+  /* Houston — local team colours (colours only, no logos) */
+  astros: { group:"Houston", label:"Astros",   steel:"#002D62", steel2:"#1A4A8A", accent:"#EB6E1F", bg:"#F2F4F8", card:"#FFFFFF", ink:"#14213A", muted:"#68738A" },
+  rockets:{ group:"Houston", label:"Rockets",  steel:"#CE1141", steel2:"#E23A63", accent:"#C4CED4", bg:"#F7F2F3", card:"#FFFFFF", ink:"#26191D", muted:"#84707A" },
+  texans: { group:"Houston", label:"Texans",   steel:"#03202F", steel2:"#1B3D50", accent:"#A71930", bg:"#F1F4F6", card:"#FFFFFF", ink:"#0E1B23", muted:"#66757F" },
+  dynamo: { group:"Houston", label:"Dynamo FC",steel:"#E86100", steel2:"#F57F26", accent:"#1F1F1F", bg:"#FBF5F0", card:"#FFFFFF", ink:"#2B2015", muted:"#8C7B6C" },
+  comets: { group:"Houston", label:"Comets",   steel:"#002B5C", steel2:"#1D4B85", accent:"#E31837", bg:"#F2F4F8", card:"#FFFFFF", ink:"#131E33", muted:"#6A7488" },
+  /* classic colour schemes (kept so saved choices still work) */
+  navy:   { group:"Classic colours", label:"Navy & Gold",     steel:"#14213D", steel2:"#2A3E66", accent:"#E9C46A", bg:"#F5F4F0", card:"#FFFFFF", ink:"#1B2430", muted:"#6E7887" },
+  claret: { group:"Classic colours", label:"Claret & Gold",   steel:"#6D1A2E", steel2:"#8C2F44", accent:"#C9A227", bg:"#F6F3F2", card:"#FFFFFF", ink:"#2A2226", muted:"#7C6E73" },
+  gold:   { group:"Classic colours", label:"Black & Gold",    steel:"#1A1A1A", steel2:"#3A3A3A", accent:"#CFB53B", bg:"#F4F2EC", card:"#FFFFFF", ink:"#1A1A1A", muted:"#6E6A5E" },
+  salmon: { group:"Classic colours", label:"Pink & Green",    steel:"#4E8A38", steel2:"#6AA653", accent:"#F4A0A6", bg:"#F3F8F0", card:"#FFFFFF", ink:"#2E3A2B", muted:"#7F9479" },
+  purple: { group:"Classic colours", label:"Purple & Gold",   steel:"#4B2E83", steel2:"#6A4BA6", accent:"#D4AF37", bg:"#F5F3F8", card:"#FFFFFF", ink:"#241A38", muted:"#77708A" },
+  maroon: { group:"Classic colours", label:"Maroon & Off White", steel:"#5E1224", steel2:"#7E2438", accent:"#C7B8A5", bg:"#F7F4EF", card:"#FFFDF8", ink:"#2E1B21", muted:"#83717A" },
+  blueor: { group:"Classic colours", label:"Blue & Orange",   steel:"#1D5FA8", steel2:"#3B7BC4", accent:"#F28C28", bg:"#F1F5F9", card:"#FFFFFF", ink:"#1C2A3A", muted:"#6D7C8D" },
+  redblk: { group:"Classic colours", label:"Red & Black",     steel:"#B01018", steel2:"#D22B33", accent:"#1F1F1F", bg:"#F6F2F1", card:"#FFFFFF", ink:"#1F1F1F", muted:"#7C6F70" }
 };
 const FONTS = { s:"90%", m:"100%", l:"112%" };
+const THEME_VARS = ["--steel","--steel2","--accent","--bg","--card","--ink","--muted","--field","--line","--hover","--hdr-bg","--tex","--font-head","--font-body"];
+function loadThemeFonts(key, t){
+  if(!t.fonts || document.getElementById("gf-" + key)) return;
+  const l = document.createElement("link"); l.id = "gf-" + key; l.rel = "stylesheet";
+  l.href = "https://fonts.googleapis.com/css2?" + t.fonts.map(f => "family=" + f.replace(/ /g, "+")).join("&") + "&display=swap";
+  document.head.appendChild(l);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if(rows && rows.length) render(); });
+}
 function applyTheme(key, redraw){
-  const t = THEMES[key] || THEMES.steel;
-  const rs = document.documentElement.style;
+  const t = THEMES[key] || THEMES.steel, root = document.documentElement, rs = root.style;
+  THEME_VARS.forEach(v => rs.removeProperty(v));
   rs.setProperty("--steel", t.steel); rs.setProperty("--steel2", t.steel2);
   rs.setProperty("--accent", t.accent); rs.setProperty("--bg", t.bg);
   rs.setProperty("--card", t.card); rs.setProperty("--ink", t.ink); rs.setProperty("--muted", t.muted);
+  const ui = t.dark ? DARK_UI : {};
+  if(t.field || ui.field) rs.setProperty("--field", t.field || ui.field);
+  if(t.line || ui.line)   rs.setProperty("--line", t.line || ui.line);
+  if(t.hover || ui.hover) rs.setProperty("--hover", t.hover || ui.hover);
+  if(t.hdr)  rs.setProperty("--hdr-bg", t.hdr);
+  if(t.tex)  rs.setProperty("--tex", t.tex);
+  if(t.head) rs.setProperty("--font-head", t.head);
+  if(t.body){ rs.setProperty("--font-body", t.body); if(!t.head) rs.setProperty("--font-head", t.body); }
+  document.body.style.backgroundSize = t.texSize || "";
+  document.body.style.backgroundPosition = t.texPos || "";
+  root.dataset.skin = t.skin || "plain";
+  root.dataset.dark = t.dark ? "1" : "0";
+  loadThemeFonts(key, t);
   B.steel = t.steel; B.steel2 = t.steel2; B.accent = t.accent;
   B.series = [t.steel, t.accent, B.red, B.green, "#E9C46A", "#7B2CBF", "#F4845F",
               t.steel2, "#8D99AE", "#40916C", "#B5838D", "#5E60CE", "#D62828", "#606C38"];
+  Chart.defaults.color = t.dark ? "#C9D1DA" : "#4A5A68";
+  Chart.defaults.borderColor = t.dark ? "rgba(255,255,255,.10)" : "rgba(0,0,0,.10)";
+  if(t.body && /VT323|Antonio/.test(t.body)) Chart.defaults.font.family = t.body; else Chart.defaults.font.family = "'Segoe UI',Roboto,Arial,sans-serif";
   try{ localStorage.setItem("pacTheme", key); }catch(err){}
   if(redraw) render();
 }
@@ -2565,10 +2874,12 @@ function applyFont(key, redraw){
   if(redraw) render();
 }
 (function initPrefs(){
-  const ts = $("themeSel");
-  for(const k in THEMES){
-    const o = document.createElement("option");
-    o.value = k; o.textContent = THEMES[k].label; ts.appendChild(o);
+  const ts = $("themeSel"), groups = {};
+  for(const k in THEMES){ const g = THEMES[k].group || "Themes"; (groups[g] = groups[g] || []).push(k); }
+  for(const g in groups){
+    const og = document.createElement("optgroup"); og.label = g;
+    groups[g].forEach(k => { const o = document.createElement("option"); o.value = k; o.textContent = THEMES[k].label; og.appendChild(o); });
+    ts.appendChild(og);
   }
   let th = "steel", fo = "m";
   try{
@@ -2622,6 +2933,340 @@ $("tgtSpin").addEventListener("change", ()=>{
   render();
   scanQualityAlerts();   // target moved, so what counts as an outlier may have changed
 });
+
+/* ---------- v3.70: line icons (24x24, stroke = currentColor) ---------- */
+const ICONS = (function(){
+  const s = d => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  return {
+    calendar: s('<rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><path d="M7.5 13.5h2M11 13.5h2M14.5 13.5h2M7.5 17h2M11 17h2"/>'),
+    factory:  s('<path d="M3 20.5V10l5 3.2V10l5 3.2V6.5h3.2l1.3-3h2l.9 17z"/><path d="M3 20.5h18"/><path d="M7 17h2M12 17h2"/>'),
+    user:     s('<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-3.8 4.1-5.5 7.5-5.5s6.3 1.7 7.5 5.5"/>'),
+    users:    s('<circle cx="9" cy="8.5" r="3.5"/><path d="M2.5 20c1-3.2 3.4-4.8 6.5-4.8s5.5 1.6 6.5 4.8"/><path d="M16 5.2a3.4 3.4 0 0 1 0 6.6M18 15.4c1.8.6 3 2.1 3.5 4.6"/>'),
+    alloy:    s('<path d="M12 2.5l8.3 4.75v9.5L12 21.5l-8.3-4.75v-9.5z"/><circle cx="12" cy="12" r="3.2"/>'),
+    alert:    s('<path d="M10.3 3.8L2.4 17.6A2 2 0 0 0 4.1 20.6h15.8a2 2 0 0 0 1.7-3L13.7 3.8a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17.2v.1"/>'),
+    flag:     s('<path d="M4.5 21V4"/><path d="M4.5 4.5c3-1.8 6 1.8 9 0s5-1 6 0v9c-1-1-3-1.8-6 0s-6-1.8-9 0"/>'),
+    tag:      s('<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.6" cy="7.6" r="1.4"/>'),
+    filter:   s('<path d="M3 4.5h18l-7 8.3v6l-4 2v-8z"/>'),
+    chev:     s('<path d="M9 6l6 6-6 6"/>'),
+    truck:    s('<path d="M2.5 6.5h11v9h-11zM13.5 9.5h4.2l3 3.2v2.8h-7.2"/><circle cx="6.5" cy="17.5" r="2"/><circle cx="17" cy="17.5" r="2"/>'),
+    search:   s('<circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5l5 5"/>'),
+    xcircle:  s('<circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/>'),
+    ccircle:  s('<circle cx="12" cy="12" r="9"/><path d="M8 12.3l2.8 2.8L16.2 9.5"/>'),
+    percent:  s('<path d="M19 5L5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/>'),
+    layers:   s('<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>'),
+    scope:    s('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3"/><path d="M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4"/>'),
+    pause:    s('<rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M10 8.5v7M14 8.5v7"/>'),
+    target:   s('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>'),
+    bars:     s('<path d="M4 20.5h16"/><rect x="5" y="11" width="3" height="7"/><rect x="10.5" y="6" width="3" height="12"/><rect x="16" y="13" width="3" height="5"/>'),
+    pie:      s('<path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/>'),
+    trend:    s('<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>'),
+    grid:     s('<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>'),
+    list:     s('<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.8" cy="6" r="1"/><circle cx="3.8" cy="12" r="1"/><circle cx="3.8" cy="18" r="1"/>'),
+    check:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    bang:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M12 5v9M12 19.2v.1"/></svg>',
+    cross:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></svg>',
+    note:     s('<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>')
+  };
+})();
+(function decorateWithIcons(){
+  // filter labels (first text node of each label in the rail)
+  const map = { "Date Range":"calendar", "Mill":"factory", "Inspector":"user", "Alloy":"alloy",
+                "Rejection Reason":"alert", "Disposition":"flag", "Type":"tag" };
+  document.querySelectorAll("#filterPanel label").forEach(lab => {
+    const tn = [...lab.childNodes].find(n => n.nodeType === 3 && n.textContent.trim());
+    if(!tn) return; const key = tn.textContent.trim(); if(!map[key]) return;
+    const span = document.createElement("span"); span.className = "flab";
+    span.innerHTML = '<span class="ficon">' + ICONS[map[key]] + '</span>' + key;
+    lab.replaceChild(span, tn);
+  });
+  const ft = document.querySelector("#filterToggle .ftIcon"); if(ft) ft.innerHTML = ICONS.filter;
+  const ch = document.querySelector("#filterToggle .ftChev"); if(ch) ch.innerHTML = '<span style="width:12px;height:12px;display:block">' + ICONS.chev + '</span>';
+  // panel titles
+  const pmap = { chWeekly:"bars", chReasons:"pie", chMonthly:"trend", chInsp:"users", chMills:"factory", chAlloy:"alloy" };
+  for(const id in pmap){
+    const c = document.getElementById(id); const h = c && c.closest(".card") && c.closest(".card").querySelector("h3 > span");
+    if(h) h.insertAdjacentHTML("afterbegin", '<span class="ticon">' + ICONS[pmap[id]] + '</span>');
+  }
+  const pv = document.querySelector("#pivotCard h3 > span"); if(pv) pv.insertAdjacentHTML("afterbegin", '<span class="ticon">' + ICONS.grid + '</span>');
+  const tb = document.querySelector("#tblNote"); if(tb){ const h = tb.closest("span"); if(h) h.insertAdjacentHTML("afterbegin", '<span class="ticon">' + ICONS.list + '</span>'); }
+})();
+
+/* ---------- v3.70: user-set targets (KPI tiles + rate panels) ---------- */
+const KPI_DEFS = [
+  { k:"recv", t:"Footage Received",    ico:"truck",   unit:"ft" },
+  { k:"insp", t:"Footage Inspected",   ico:"search",  unit:"ft" },
+  { k:"rej",  t:"Footage Rejected",    ico:"xcircle", unit:"ft" },
+  { k:"appr", t:"Footage Approved",    ico:"ccircle", unit:"ft" },
+  { k:"rate", t:"Rejection Rate",      ico:"percent", unit:"%" },
+  { k:"cov",  t:"Inspection Coverage", ico:"layers",  unit:"%" },
+  { k:"bore", t:"Footage Borescoped",  ico:"scope",   unit:"ft" },
+  { k:"held", t:"Held Lots",           ico:"pause",   unit:"% of lots" }
+];
+const KPI_TGT_DEFAULT = {
+  recv:{dir:"none"}, insp:{dir:"none"}, rej:{dir:"none"}, appr:{dir:"none"}, bore:{dir:"none"},
+  rate:{dir:"lower", good:5, watch:7.5}, cov:{dir:"higher", good:60, watch:40}, held:{dir:"lower", good:25, watch:40}
+};
+const PANEL_TGT_DEF = [
+  { k:"chMonthly", t:"Monthly Rejection Rate", ico:"trend",   watch:7.5 },     // Good level = the chart's own target spin
+  { k:"chInsp",    t:"Inspector Volume (rejection rate)", ico:"users", good:5, watch:7.5 },
+  { k:"chMills",   t:"Vendor / Mill Performance (rejection rate)", ico:"factory", good:5, watch:7.5 }
+];
+let KT = JSON.parse(JSON.stringify(KPI_TGT_DEFAULT)), PT = {};
+PANEL_TGT_DEF.forEach(p => PT[p.k] = { good:p.good, watch:p.watch });
+try{
+  const s = JSON.parse(localStorage.getItem("pacTargets") || "null");
+  if(s && s.kpi) for(const k in s.kpi) if(KT[k]) KT[k] = s.kpi[k];
+  if(s && s.panel) for(const k in s.panel) if(PT[k]) PT[k] = s.panel[k];
+}catch(err){}
+function saveTargets(){ try{ localStorage.setItem("pacTargets", JSON.stringify({ kpi:KT, panel:PT })); }catch(err){} }
+function panelTgt(k){                       // thresholds as FRACTIONS for chart colouring
+  const p = PT[k] || {};
+  const good = k === "chMonthly" ? rateTarget : (p.good / 100);
+  return { good, watch: Math.max(good, (p.watch != null ? p.watch : p.good * 1.5) / 100) };
+}
+function tgtRef(k){ const t = panelTgt(k); return { value:t.good, color:B.green, label:"Good \u2264 " + pct(t.good) }; }
+function rateState(v, k){ const t = panelTgt(k); return v <= t.good ? "good" : v <= t.watch ? "watch" : "action"; }
+function stateHex(st){ return st === "good" ? (B.green || "#198038") : st === "watch" ? "#D98E04" : (B.red || "#C1121F"); }
+function rateColors(vals, k){ return { colors: vals.map(v => stateHex(rateState(v, k)) + "CC"), pointColors: vals.map(v => stateHex(rateState(v, k))) }; }
+function kpiState(k, v){
+  const t = KT[k]; if(!t || t.dir === "none" || v == null || !isFinite(v)) return "info";
+  if(t.dir === "lower") return v <= t.good ? "good" : v <= t.watch ? "watch" : "action";
+  return v >= t.good ? "good" : v >= t.watch ? "watch" : "action";
+}
+function tgtText(k, unit){
+  const t = KT[k]; if(!t || t.dir === "none") return "+ Set a target";
+  const op = t.dir === "lower" ? "≤" : "≥", u = unit === "%" || unit === "% of lots" ? "%" : " " + unit;
+  return "Target " + op + " " + fmtTgt(t.good) + u + " · watch " + op + " " + fmtTgt(t.watch);
+}
+function fmtTgt(n){ return Math.abs(n) >= 1000 ? fmt(n) : String(+(+n).toFixed(2)); }
+function renderKpiTiles(m){
+  // m = { recv, insp, rej, appr, rate(%), cov(%), bore, held, heldPct(%), lots }
+  const val = { recv:m.recv, insp:m.insp, rej:m.rej, appr:m.appr, rate:m.rate, cov:m.cov, bore:m.bore, held:m.heldPct };
+  const disp = { recv:[fmt(m.recv),"ft"], insp:[fmt(m.insp),"ft"], rej:[fmt(m.rej),"ft"], appr:[fmt(m.appr),"ft"],
+    rate:[pct(m.rate/100),""], cov:[pct(m.cov/100),""], bore:[fmt(m.bore),"ft"], held:[fmt(m.held),"of " + fmt(m.lots)] };
+  const lbl = { good:["check","Good"], watch:["bang","Watch"], action:["cross","Action"], info:[null,"Info"] };
+  $("kpis").innerHTML = KPI_DEFS.map(d => {
+    const st = m.lots ? kpiState(d.k, val[d.k]) : "info";
+    const b = lbl[st];
+    return '<div class="kpi st-' + st + '" data-k="' + d.k + '"><div class="ktop"><span class="kico">' + ICONS[d.ico] + '</span><h4>' + d.t + '</h4></div>' +
+      '<div class="v">' + disp[d.k][0] + '<span class="u">' + disp[d.k][1] + '</span></div>' +
+      '<div class="kfoot"><span class="kbadge">' + (b[0] ? ICONS[b[0]] : "") + b[1] + '</span>' +
+      '<span class="ktgt" title="' + tgtText(d.k, d.unit) + ' \u2014 click to change">' + tgtText(d.k, d.unit) + '</span></div></div>';
+  }).join("");
+  $("kpis").querySelectorAll(".ktgt").forEach(el => el.addEventListener("click", () => openTargets("kpi:" + el.closest(".kpi").dataset.k)));
+}
+
+/* ---- the Targets dialog ---- */
+function openTargets(focus){
+  let m = $("tgModal");
+  if(!m){
+    m = document.createElement("div"); m.id = "tgModal";
+    m.innerHTML = '<div id="tgBox" role="dialog" aria-modal="true" aria-labelledby="tgTitle"><h4 id="tgTitle">🎯 Targets &amp; thresholds</h4>' +
+      '<div class="tgsub">Set what counts as <b style="color:var(--st-good)">Good</b>, <b style="color:var(--st-watch)">Watch</b> and <b style="color:var(--st-action)">Action</b>. ' +
+      'Anything worse than the Watch level is flagged Action. Targets are saved in this browser, so each person keeps their own.</div>' +
+      '<h5>KPI tiles</h5><table class="tgt-table"><thead><tr><th>KPI</th><th>Better when</th><th>Good</th><th>Watch</th><th>Unit</th></tr></thead><tbody id="tgK"></tbody></table>' +
+      '<h5>Chart panels — rejection rate per bar / point</h5><table class="tgt-table"><thead><tr><th>Panel</th><th>Better when</th><th>Good ≤</th><th>Watch ≤</th><th>Unit</th></tr></thead><tbody id="tgP"></tbody></table>' +
+      '<div id="tgErr"></div><div class="tgrow"><button type="button" id="tgDefaults">Reset to defaults</button>' +
+      '<span style="display:flex;gap:8px"><button type="button" id="tgCancel">Cancel</button><button type="button" class="primary" id="tgSave">Save targets</button></span></div></div>';
+    document.body.appendChild(m);
+    m.addEventListener("click", e => { if(e.target === m) closeTargets(); });
+    $("tgCancel").addEventListener("click", closeTargets);
+    $("tgSave").addEventListener("click", saveTargetsFromDialog);
+    $("tgDefaults").addEventListener("click", () => fillTargetDialog(true));
+    document.addEventListener("keydown", e => { if(e.key === "Escape" && m.classList.contains("on")) closeTargets(); });
+  }
+  fillTargetDialog(false);
+  $("tgErr").textContent = "";
+  m.classList.add("on");
+  if(focus){
+    const row = m.querySelector('[data-row="' + focus + '"]');
+    if(row){ row.classList.add("hl"); row.scrollIntoView({ block:"center" }); const inp = row.querySelector("input:not(:disabled),select"); if(inp) inp.focus(); }
+  }
+}
+function closeTargets(){ const m = $("tgModal"); if(m) m.classList.remove("on"); }
+function fillTargetDialog(defaults){
+  const K = defaults ? KPI_TGT_DEFAULT : KT;
+  $("tgK").innerHTML = KPI_DEFS.map(d => {
+    const t = K[d.k] || { dir:"none" }, off = t.dir === "none";
+    return '<tr data-row="kpi:' + d.k + '"><td><span class="tname"><span class="ficon">' + ICONS[d.ico] + '</span>' + d.t + '</span></td>' +
+      '<td><select data-f="dir"><option value="none"' + (off?" selected":"") + '>No target</option><option value="lower"' + (t.dir==="lower"?" selected":"") + '>Lower is better</option><option value="higher"' + (t.dir==="higher"?" selected":"") + '>Higher is better</option></select></td>' +
+      '<td><input type="number" step="any" data-f="good" value="' + (t.good != null ? t.good : "") + '"' + (off?" disabled":"") + '></td>' +
+      '<td><input type="number" step="any" data-f="watch" value="' + (t.watch != null ? t.watch : "") + '"' + (off?" disabled":"") + '></td>' +
+      '<td class="tunit">' + d.unit + '</td></tr>';
+  }).join("");
+  $("tgP").innerHTML = PANEL_TGT_DEF.map(d => {
+    const p = defaults ? { good:d.good, watch:d.watch } : PT[d.k];
+    const good = d.k === "chMonthly" ? (defaults ? CONFIG.rejectionRateTarget * 100 : +(rateTarget * 100).toFixed(2)) : p.good;
+    return '<tr data-row="panel:' + d.k + '"><td><span class="tname"><span class="ficon">' + ICONS[d.ico] + '</span>' + d.t + '</span></td><td class="tunit">Lower is better</td>' +
+      '<td><input type="number" step="any" min="0" max="100" data-f="good" value="' + good + '"></td>' +
+      '<td><input type="number" step="any" min="0" max="100" data-f="watch" value="' + p.watch + '"></td><td class="tunit">% rejected</td></tr>';
+  }).join("");
+  $("tgK").querySelectorAll('select[data-f="dir"]').forEach(sel => sel.addEventListener("change", () => {
+    const tr = sel.closest("tr"), off = sel.value === "none";
+    tr.querySelectorAll("input").forEach(i => i.disabled = off);
+  }));
+}
+function saveTargetsFromDialog(){
+  const err = $("tgErr"); err.textContent = "";
+  const nk = {}, np = {};
+  for(const tr of $("tgK").querySelectorAll("tr")){
+    const k = tr.dataset.row.split(":")[1], name = tr.querySelector(".tname").textContent;
+    const dir = tr.querySelector('[data-f="dir"]').value;
+    if(dir === "none"){ nk[k] = { dir }; continue; }
+    const g = parseFloat(tr.querySelector('[data-f="good"]').value), w = parseFloat(tr.querySelector('[data-f="watch"]').value);
+    if(!isFinite(g) || !isFinite(w)){ err.textContent = name + ": enter both a Good and a Watch level."; return; }
+    if(dir === "lower" && w < g){ err.textContent = name + ": with lower-is-better, Watch must be at or above Good."; return; }
+    if(dir === "higher" && w > g){ err.textContent = name + ": with higher-is-better, Watch must be at or below Good."; return; }
+    nk[k] = { dir, good:g, watch:w };
+  }
+  for(const tr of $("tgP").querySelectorAll("tr")){
+    const k = tr.dataset.row.split(":")[1], name = tr.querySelector(".tname").textContent;
+    const g = parseFloat(tr.querySelector('[data-f="good"]').value), w = parseFloat(tr.querySelector('[data-f="watch"]').value);
+    if(!isFinite(g) || !isFinite(w) || g < 0 || w > 100){ err.textContent = name + ": enter percentages between 0 and 100."; return; }
+    if(w < g){ err.textContent = name + ": Watch must be at or above Good."; return; }
+    if(k === "chMonthly" && g > 50){ err.textContent = name + ": the Good level can be at most 50%."; return; }
+    np[k] = { good:g, watch:w };
+  }
+  KT = nk; PT = np; saveTargets();
+  // the Monthly chart's Good level IS the existing rejection-rate target (spin control + quality alerts)
+  rateTarget = np.chMonthly.good / 100;
+  try{ localStorage.setItem("pacTarget", rateTarget); }catch(err2){}
+  $("tgtSpin").value = np.chMonthly.good;
+  closeTargets(); render(); scanQualityAlerts();
+}
+(function wireTargetButtons(){
+  const mk = (focus, title) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "tgtbtn"; b.title = title;
+    b.innerHTML = ICONS.target + "Targets"; b.addEventListener("click", () => openTargets(focus)); return b;
+  };
+  const ka = document.querySelector(".kpiActions"); if(ka) ka.prepend(mk("kpi:rate", "Set Good / Watch / Action levels for the KPI tiles"));
+  [["chMonthly","panel:chMonthly"],["chInsp","panel:chInsp"],["chMills","panel:chMills"]].forEach(([id, f]) => {
+    const card = document.getElementById(id) && document.getElementById(id).closest(".card");
+    const tb = card && card.querySelector(".tilebtns"); if(tb) tb.prepend(mk(f, "Set Good / Watch levels for this panel"));
+  });
+  // keep the dialog's Monthly Good level in step when someone uses the chart's own spin control
+  $("tgtSpin").addEventListener("change", () => { const p = PT.chMonthly; if(p && p.watch < rateTarget * 100){ p.watch = +(rateTarget * 150).toFixed(2); saveTargets(); render(); } });
+})();
+
+/* ---------- v3.70: background music (generated live in the browser — no audio files, no licensing) ---------- */
+const MUSIC = (function(){
+  const SCENES = {
+    lofi:   { label:"Lo-fi Shop Floor", bpm:76,  swing:.12, prog:[[57,60,64,67],[53,57,60,64],[55,59,62,65],[52,55,59,62]], bass:true, drums:"lofi",  lead:"keys" },
+    jazz:   { label:"Coffeehouse Jazz", bpm:96,  swing:.2,  prog:[[50,53,57,60],[55,59,62,65],[48,52,55,59],[45,48,52,55]], bass:"walk", drums:"brush", lead:"keys" },
+    bossa:  { label:"Bossa Café",  bpm:118, swing:0,   prog:[[52,55,59,62],[57,60,64,67],[50,53,57,60],[55,59,62,65]], bass:"bossa", drums:"shaker", lead:"pluck" },
+    ambient:{ label:"Ambient Steel",    bpm:60,  swing:0,   prog:[[48,55,60,64],[45,52,57,60],[41,48,53,57],[43,50,55,59]], bass:false, drums:null, lead:"pad" },
+    rain:   { label:"Rainy Window",     bpm:66,  swing:0,   prog:[[52,59,64,67],[48,55,60,64],[45,52,57,60],[47,54,59,62]], bass:false, drums:null, lead:"drops", rain:true },
+    space:  { label:"Deep Space",       bpm:50,  swing:0,   prog:[[38,45,50,57],[36,43,48,55],[41,48,53,60],[40,47,52,59]], bass:false, drums:null, lead:"shimmer" }
+  };
+  let ctx = null, master = null, verb = null, scene = null, timer = null, step = 0, nextT = 0, rainSrc = null, vol = 0.5;
+  const hz = n => 440 * Math.pow(2, (n - 69) / 12);
+  function init(){
+    if(ctx) return;
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3;
+    master = ctx.createGain(); master.gain.value = 0;
+    verb = ctx.createConvolver();
+    const len = ctx.sampleRate * 2.8, ir = ctx.createBuffer(2, len, ctx.sampleRate);
+    for(let c = 0; c < 2; c++){ const d = ir.getChannelData(c); for(let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+    verb.buffer = ir;
+    const wet = ctx.createGain(); wet.gain.value = .32; verb.connect(wet); wet.connect(master);
+    master.connect(comp); comp.connect(ctx.destination);
+  }
+  function out(node, dry){ const g = ctx.createGain(); g.gain.value = dry == null ? .8 : dry; node.connect(g); g.connect(master); node.connect(verb); }
+  function noiseBuf(sec){ const b = ctx.createBuffer(1, ctx.sampleRate * sec, ctx.sampleRate), d = b.getChannelData(0); for(let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; return b; }
+  let NB = null;
+  function tone(n, t, dur, type, peak, cutoff, atk){
+    const o = ctx.createOscillator(), o2 = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    o.type = type; o2.type = type; o.frequency.value = hz(n); o2.frequency.value = hz(n); o2.detune.value = 7;
+    f.type = "lowpass"; f.frequency.value = cutoff || 1800; f.Q.value = .5;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + (atk || .012));
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(f); o2.connect(f); f.connect(g); out(g);
+    o.start(t); o2.start(t); o.stop(t + dur + .05); o2.stop(t + dur + .05);
+  }
+  function noiseHit(t, dur, freq, peak, type){
+    const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = NB; f.type = type || "highpass"; f.frequency.value = freq;
+    g.gain.setValueAtTime(peak, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f); f.connect(g); out(g, .6); s.start(t, Math.random() * 1.5); s.stop(t + dur + .02);
+  }
+  function kick(t){ const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(42, t + .18);
+    g.gain.setValueAtTime(.55, t); g.gain.exponentialRampToValueAtTime(0.0001, t + .32); o.connect(g); g.connect(master); o.start(t); o.stop(t + .35); }
+  function startRain(){
+    const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = noiseBuf(4); s.loop = true; f.type = "bandpass"; f.frequency.value = 2400; f.Q.value = .4; g.gain.value = .05;
+    s.connect(f); f.connect(g); g.connect(master); s.start(); rainSrc = s;
+  }
+  function tick(){
+    const sp = 60 / scene.bpm / 2;                       // eighth notes
+    while(nextT < ctx.currentTime + .25){
+      const t = nextT + ((step % 2) ? sp * scene.swing : 0), bar = Math.floor(step / 8), pos = step % 8;
+      const ch = scene.prog[bar % scene.prog.length], r = Math.random();
+      // harmony
+      if(scene.lead === "keys"){ if(pos === 0 || (pos === 5 && r < .5)) ch.forEach((n, i) => tone(n + 12 * (i > 1 ? 0 : 0), t + i * .012, sp * 6, "triangle", .05, 1600)); }
+      if(scene.lead === "pluck"){ if([0,3,6].includes(pos) || (pos === 4 && r < .5)) ch.forEach((n, i) => tone(n + 12, t + i * .01, sp * 2.2, "triangle", .045, 2600)); }
+      if(scene.lead === "pad" && pos === 0) ch.forEach(n => tone(n, t, sp * 16, "sawtooth", .022, 700, 1.4));
+      if(scene.lead === "shimmer"){ if(pos === 0) ch.forEach(n => tone(n, t, sp * 16, "sine", .03, 900, 2)); if(r < .35) tone(ch[Math.floor(r * 12) % 4] + 24, t, sp * 4, "sine", .02, 4000, .3); }
+      if(scene.lead === "drops"){ if(pos === 0) ch.forEach(n => tone(n, t, sp * 14, "sine", .025, 800, 1)); if(r < .3) tone(ch[Math.floor(r * 13) % 4] + 12, t, sp * 5, "triangle", .04, 2200); }
+      // bass
+      if(scene.bass === true && (pos === 0 || pos === 5)) tone(ch[0] - 12, t, sp * 2.5, "sine", .16, 400);
+      if(scene.bass === "walk" && pos % 2 === 0) tone(ch[[0,1,2,3][pos / 2]] - 24 + (pos === 6 ? 1 : 0), t, sp * 1.8, "triangle", .14, 500);
+      if(scene.bass === "bossa" && (pos === 0 || pos === 3 || pos === 4 || pos === 7)) tone((pos < 4 ? ch[0] : ch[2]) - 12, t, sp * 1.6, "sine", .15, 450);
+      // drums
+      if(scene.drums === "lofi"){ if(pos === 0 || pos === 5) kick(t); if(pos === 4) noiseHit(t, .18, 1800, .14, "bandpass"); noiseHit(t, .05, 7000, pos % 2 ? .03 : .05); }
+      if(scene.drums === "brush"){ noiseHit(t, .12, 5000, pos % 2 ? .025 : .04); if(pos === 2 || pos === 6) noiseHit(t, .2, 2500, .05, "bandpass"); }
+      if(scene.drums === "shaker"){ noiseHit(t, .06, 8000, [0,3,4,7].includes(pos) ? .05 : .025); if(pos === 0) kick(t); }
+      nextT += sp; step++;
+    }
+  }
+  function play(key){
+    stop();
+    if(!SCENES[key]) return;
+    init(); if(ctx.state === "suspended") ctx.resume();
+    NB = NB || noiseBuf(2);
+    scene = SCENES[key]; step = 0; nextT = ctx.currentTime + .1;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setValueAtTime(0, ctx.currentTime); master.gain.linearRampToValueAtTime(vol * .9, ctx.currentTime + 2);
+    if(scene.rain) startRain();
+    timer = setInterval(tick, 90); tick();
+  }
+  function stop(){
+    if(timer){ clearInterval(timer); timer = null; }
+    if(rainSrc){ try{ rainSrc.stop(); }catch(e){} rainSrc = null; }
+    if(master && ctx){ master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(0, ctx.currentTime); }
+    scene = null;
+  }
+  function setVolume(v){ vol = v; if(master && scene) master.gain.setTargetAtTime(vol * .9, ctx.currentTime, .1); }
+  return { SCENES, play, stop, setVolume, get playing(){ return !!scene; } };
+})();
+(function initMusic(){
+  const anchor = $("fontSel"); if(!anchor) return;
+  const box = document.createElement("span"); box.className = "musicbox"; box.title = "Background music";
+  box.innerHTML = '<span class="mnote">♫</span><select id="musicSel" class="hdr-sel" aria-label="Background music"><option value="off">Music: Off</option>' +
+    Object.keys(MUSIC.SCENES).map(k => '<option value="' + k + '">' + MUSIC.SCENES[k].label + '</option>').join("") + '</select>' +
+    '<input type="range" id="musicVol" min="0" max="1" step="0.05" aria-label="Music volume" title="Volume">';
+  anchor.after(box);
+  const sel = $("musicSel"), vol = $("musicVol");
+  let saved = "off", v = .5;
+  try{ saved = localStorage.getItem("pacMusic") || "off"; v = parseFloat(localStorage.getItem("pacMusicVol")); if(!isFinite(v)) v = .5; }catch(e){}
+  sel.value = MUSIC.SCENES[saved] ? saved : "off"; vol.value = v; MUSIC.setVolume(v);
+  const go = () => { if(sel.value === "off"){ MUSIC.stop(); box.classList.remove("playing"); } else { MUSIC.play(sel.value); box.classList.add("playing"); } };
+  sel.addEventListener("change", () => { try{ localStorage.setItem("pacMusic", sel.value); }catch(e){} go(); });
+  vol.addEventListener("input", () => { MUSIC.setVolume(+vol.value); try{ localStorage.setItem("pacMusicVol", vol.value); }catch(e){} });
+  // browsers only allow sound after a click, so a saved choice starts on the first click anywhere
+  if(sel.value !== "off"){
+    const first = () => { document.removeEventListener("pointerdown", first, true); if(!MUSIC.playing) go(); };
+    document.addEventListener("pointerdown", first, true);
+  }
+})();
+
+function setQaGlow(n){
+  const l = $("qaLbl"); if(!l) return;
+  l.classList.toggle("has-alerts", n > 0); l.classList.toggle("on", qaEnabled());
+  $("qaLblCnt").textContent = n > 0 ? String(n) : "";
+  l.title = n > 0 ? (n + " quality alert" + (n > 1 ? "s" : "") + " waiting \u2014 tick to show the banner") : "Show or hide the Quality Alert banner";
+}
+$("qaToggle").addEventListener("change", ()=>setQaGlow(+($("qaLblCnt").textContent || 0)));
 
 /* ---------- export (XLSX / CSV / JSON) ---------- */
 const EXPORT_COLS = [
@@ -2900,6 +3545,12 @@ function kpisPngCanvas(){
     const vEl = card.querySelector(".v");
     const value = vEl ? vEl.childNodes[0].textContent : "";
     const unit = (card.querySelector(".u") || {}).textContent || "";
+    const badge = card.querySelector(".kbadge");
+    if(badge && !card.classList.contains("st-info")){
+      g.font = "800 " + 10 * S + "px Arial"; const bt = badge.textContent.toUpperCase(), bw = g.measureText(bt).width + 16 * S;
+      g.fillStyle = getComputedStyle(badge).backgroundColor; roundRect(g, x + W - bw - 12 * S, y + 14 * S, bw, 18 * S, 9 * S); g.fill();
+      g.fillStyle = "#FFFFFF"; g.fillText(bt, x + W - bw - 4 * S, y + 27 * S);
+    }
     g.fillStyle = cssVar("--muted", "#6C7A89");
     g.font = "700 " + 11 * S + "px Arial";
     g.fillText(label.toUpperCase(), x + 16 * S, y + 30 * S);
@@ -3002,8 +3653,8 @@ const QA_OUTLIER_RATIO = 1.8;
 const QA_STORE_KEY = "pacQaResolved";
 const QA_ENABLED_KEY = "pacQaEnabled";
 function qaEnabled(){
-  try{ const v = localStorage.getItem(QA_ENABLED_KEY); return v === null ? true : v === "1"; }
-  catch(err){ return true; }
+  try{ return localStorage.getItem("pacQaEnabled") === "1"; }   // off unless the user turned it on (key literal: this runs before QA_ENABLED_KEY is defined)
+  catch(err){ return false; }
 }
 
 function qaResolvedSet(){
@@ -3044,8 +3695,8 @@ function scanQualityAlerts(){
   const box = $("qaBanner"), list = $("qaList"), count = $("qaCount"), rlink = $("qaResolvedLink");
   if(window.QA_DEBUG) console.log("[QA] scanQualityAlerts: rows=" + rows.length + " enabled=" + qaEnabled() +
     " boxFound=" + !!box + " boxShowingBefore=" + (box && box.classList.contains("show")));
-  if(!box || !rows.length) { if(box) box.classList.remove("show"); return; }
-  if(!qaEnabled()){ box.classList.remove("show"); return; }
+  if(!box || !rows.length) { if(box) box.classList.remove("show"); setQaGlow(0); return; }
+  const qaOn = qaEnabled();
 
   const mo = [...groupSum(rows, r=>monthStart(r.date), ["fInsp","fRej"])]
     .filter(m => m[1].fInsp > 0)
@@ -3069,6 +3720,8 @@ function scanQualityAlerts(){
   const resolved = qaResolvedSet();
   const active = found.filter(a => !resolved.has(a.id));
   const dismissed = found.filter(a => resolved.has(a.id));
+  setQaGlow(active.length);
+  if(!qaOn){ box.classList.remove("show"); return; }
   if(window.QA_DEBUG) console.log("[QA] found=" + found.length + " active=" + active.length +
     " dismissed=" + dismissed.length + " resolvedIds=" + JSON.stringify([...resolved]));
 
@@ -3851,7 +4504,10 @@ function setFilterPanelOpen(open){
   panel.classList.toggle("open", open);
   btn.classList.toggle("open", open);
   btn.setAttribute("aria-expanded", open ? "true" : "false");
-  if(txt) txt.textContent = open ? "Hide Filters" : "Show Filters";
+  if(txt) txt.textContent = open ? "Filters" : "Filters";
+  const side = $("fside"); if(side) side.classList.toggle("collapsed", !open);
+  btn.title = open ? "Hide the filter pane" : "Show the filter pane";
+  try{ localStorage.setItem("pacFilterOpen", open ? "1" : "0"); }catch(err){}
 }
 (function initFilterToggle(){
   const btn = $("filterToggle");
@@ -3862,7 +4518,8 @@ function setFilterPanelOpen(open){
   // Desktop keeps today's behaviour (panel visible on load); a phone-width
   // screen starts collapsed, since that was the actual complaint. 760px
   // matches the CSS breakpoint above.
-  setFilterPanelOpen(window.innerWidth > 760);
+  let fo = null; try{ fo = localStorage.getItem("pacFilterOpen"); }catch(err){}
+  setFilterPanelOpen(fo === null ? window.innerWidth > 760 : fo === "1");
 })();
 function demoClearHi(){ document.querySelectorAll(".demo-hi").forEach(e=>e.classList.remove("demo-hi")); }
 
