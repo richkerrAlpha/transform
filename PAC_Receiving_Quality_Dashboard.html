@@ -641,6 +641,25 @@ select option,select optgroup{background-color:var(--card);color:var(--ink)}
 select optgroup{font-weight:800;font-style:normal;color:var(--muted)}
 select option:checked{background-color:var(--steel);color:#fff}
 
+.tgtread{display:inline-flex;align-items:center;gap:3px;cursor:pointer;color:var(--muted);font-weight:600;white-space:nowrap}
+.tgtread:hover{color:var(--steel2);text-decoration:underline}
+.demoFlash{outline:3px solid var(--accent);outline-offset:1px}
+
+/* ---- v3.73 skins: console corner brackets, retro LED readouts ---- */
+[data-skin=console] .card,[data-skin=console] .kpi{border-radius:6px;background-image:
+  linear-gradient(var(--accent),var(--accent)),linear-gradient(var(--accent),var(--accent)),
+  linear-gradient(var(--accent),var(--accent)),linear-gradient(var(--accent),var(--accent));
+  background-size:18px 2px,2px 18px,18px 2px,2px 18px;background-repeat:no-repeat;
+  background-position:0 0,0 0,100% 100%,100% 100%}
+[data-skin=console] .card h3,[data-skin=console] .kpi h4{text-transform:uppercase;letter-spacing:.08em}
+[data-skin=console] .htitle{letter-spacing:.04em}
+[data-skin=retro] .card,[data-skin=retro] .kpi{box-shadow:inset 0 2px 10px rgba(0,0,0,.65),0 1px 0 rgba(255,255,255,.06)}
+[data-skin=retro] .kpi .v{color:var(--kc,#39FF6A);font-style:italic;text-shadow:0 0 10px var(--kc,#39FF6A)}
+[data-skin=retro] .kpi.st-info .v{color:#FFB020;text-shadow:0 0 10px #FFB020}
+[data-skin=retro] .card h3,[data-skin=retro] .kpi h4{text-transform:uppercase;letter-spacing:.06em}
+[data-skin=retro] header .hdr-btn,[data-skin=retro] header .btn,[data-skin=retro] header .demobtn{background:linear-gradient(180deg,#C9CED4,#8D939A);color:#111;border-color:#555}
+[data-skin=retro] header{border-bottom:3px solid #FF9F1A}
+
 </style>
 <body>
 <script>
@@ -652,7 +671,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.71",
+  version: "3.73",
   updated: "Nov 17, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the AI (Claude) key lives ONLY in the proxy's Script Properties, never in this file.
@@ -815,7 +834,7 @@ const DATA = [];
   <div class="grid">
     <div class="card c8"><h3><span>Weekly Footage — Inspected vs Rejected <small id="wkNote"></small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chWeekly" data-name="Weekly_Footage" data-title="Weekly Footage — Inspected vs Rejected" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chWeekly"></canvas></div></div>
     <div class="card c4"><h3><span>Rejection Reasons <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chReasons" data-name="Rejection_Reasons" data-title="Rejection Reasons (held footage)" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chReasons"></canvas></div></div>
-    <div class="card c6"><h3><span>Monthly Rejection Rate <small style="display:inline-flex;align-items:center;gap:5px">good &le; <input type="number" id="tgtSpin" class="tgtspin" min="0" max="50" step="0.5" title="Good level for the monthly rejection rate"> %</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
+    <div class="card c6"><h3><span>Monthly Rejection Rate <small id="moTgtTxt" class="tgtread" title="Targets are set in the Targets card"></small><input type="hidden" id="tgtSpin"></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMonthly" data-name="Monthly_Rejection_Rate" data-title="Monthly Rejection Rate" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chMonthly"></canvas></div></div>
     <div class="card c6"><h3><span>Inspector Volume</span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chInsp" data-name="Inspector_Volume" data-title="Inspector Volume" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox"><canvas id="chInsp"></canvas></div></div>
     <div class="card c7 c8"><h3><span>Vendor / Mill Performance <small style="display:inline-flex;align-items:center;gap:5px">top by inspected footage &#183; hide under <input type="number" id="millMinSpin" class="tgtspin" min="0" step="100" title="Mills with less inspected footage than this are hidden from the chart"> ft</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chMills" data-name="Mill_Performance" data-title="Vendor / Mill Performance" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chMills"></canvas></div></div>
     <div class="card c4"><h3><span>Alloy — True Rejected <small>held footage</small></span><span class="tilebtns"><button class="aibtn" title="AI assessment of this tile">&#10024; AI</button><button class="pngbtn" data-chart="chAlloy" data-name="Alloy_True_Rejected" data-title="Alloy — True Rejected (held footage)" title="Copy or save as PNG"><svg viewBox="0 0 30 16" width="29" height="16" aria-hidden="true"><rect x="1" y="1" width="17" height="14" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="6.2" cy="5.6" r="1.7" fill="currentColor"/><path d="M2.6 13 L7.6 8.2 L11 11 L13.6 8.8 L16.4 13 Z" fill="currentColor"/><path d="M24.5 3 L24.5 11.6 M21.4 8.8 L24.5 12 L27.6 8.8" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span></h3><div class="chartbox tall"><canvas id="chAlloy"></canvas></div></div>
@@ -2862,6 +2881,16 @@ const THEMES = {
     field:"#12072A", line:"#4A2A7A", hover:"#22104A", hdr:"linear-gradient(90deg,#160A33,#2A0A4A)",
     tex:"linear-gradient(rgba(255,43,214,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(34,230,255,.08) 1px,transparent 1px)", texSize:"44px 44px,44px 44px",
     fonts:["Audiowide"], head:"'Audiowide',sans-serif" },
+  holo:   { group:"Sci-Fi Consoles", label:"Holo Command", dark:1, skin:"console", steel:"#1B8FB3", steel2:"#0E5F7A", accent:"#3FE0FF", bg:"#06141F", card:"#0B2333", ink:"#E4FBFF", muted:"#9FDCEC",
+    field:"#081B28", line:"rgba(80,220,255,.32)", hover:"#0F2E44", hdr:"linear-gradient(90deg,#06141F,#0B2E44)", tex:"radial-gradient(ellipse at 50% -20%,rgba(63,224,255,.16),transparent 60%)",
+    fonts:["Exo 2:wght@500;600;700"], head:"'Exo 2',sans-serif" },
+  orbital:{ group:"Sci-Fi Consoles", label:"Orbital Station", skin:"console", steel:"#1F6FD1", steel2:"#3F8BE8", accent:"#FF5A1F", bg:"#E9EEF3", card:"#FFFFFF", ink:"#0F1B26", muted:"#465868", line:"#C9D4DE", hover:"#EEF3F7",
+    hdr:"linear-gradient(90deg,#0F1B26,#2A3B4C)", fonts:["Rajdhani:wght@500;600;700"], head:"'Rajdhani',sans-serif" },
+  tactical:{ group:"Sci-Fi Consoles", label:"Tactical Survey", dark:1, skin:"console", steel:"#6B7F2A", steel2:"#4A5A1E", accent:"#D6A400", bg:"#0D130C", card:"#121A10", ink:"#E2F0C8", muted:"#A9C08A",
+    field:"#0F160D", line:"#3D5A2F", hover:"#1A2616", hdr:"linear-gradient(90deg,#121A10,#1F2B18)",
+    tex:"repeating-radial-gradient(circle at 30% 40%,transparent 0 22px,rgba(160,200,120,.05) 22px 23px)", fonts:["Share Tech Mono"], body:"'Share Tech Mono',monospace" },
+  shiftops:{ group:"Sci-Fi Consoles", label:"Shift Ops", dark:1, skin:"console", steel:"#E08E00", steel2:"#9A6200", accent:"#3FB6FF", bg:"#14171C", card:"#1C2027", ink:"#EEF1F5", muted:"#B7C0CC",
+    field:"#181C22", line:"#343B47", hover:"#262C35", hdr:"linear-gradient(90deg,#1C2027,#2A3038)", fonts:["Barlow Condensed:wght@500;600;700"], head:"'Barlow Condensed',sans-serif" },
   comic:  { group:"Retro & Pop", label:"Comic Panel", skin:"comic", steel:"#1D5FD6", steel2:"#E2231A", accent:"#E2231A", bg:"#FFF8E1", card:"#FFFFFF", ink:"#111111", muted:"#444444", line:"#111111",
     hdr:"#FFD400", tex:"radial-gradient(rgba(0,0,0,.09) 1px,transparent 1.6px)", texSize:"8px 8px",
     fonts:["Bangers","Comic Neue:wght@400;700"], head:"'Bangers',cursive", body:"'Comic Neue',system-ui,sans-serif" },
@@ -2869,6 +2898,15 @@ const THEMES = {
     hdr:"linear-gradient(180deg,#F2B705 0 50%,#E0218A 50%)",
     tex:"url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cpath d='M10 30 q10-12 20 0 t20 0' stroke='%2316a6a6' stroke-width='3' fill='none' opacity='.35'/%3E%3Ccircle cx='120' cy='40' r='8' stroke='%23e0218a' stroke-width='3' fill='none' opacity='.35'/%3E%3Cpath d='M60 120 l12-20 l12 20z' stroke='%23f2b705' stroke-width='3' fill='none' opacity='.45'/%3E%3C/svg%3E\")",
     fonts:["Fredoka:wght@400;500;600;700"], body:"'Fredoka',system-ui,sans-serif" },
+  retro:  { group:"Retro & Pop", label:"Retro Dashboard", dark:1, skin:"retro", steel:"#4A5058", steel2:"#2E3238", accent:"#FF9F1A", bg:"#16171A", card:"#1F2125", ink:"#E9EAEC", muted:"#A8ACB2",
+    field:"#18191C", line:"#3A3D43", hover:"#2A2D32", hdr:"repeating-linear-gradient(90deg,#3B3F45 0 2px,#4A4F56 2px 4px)", fonts:["Orbitron:wght@600;700;800"], head:"'Orbitron',sans-serif" },
+  brazil: { group:"Coffee & Flavor", label:"Brazilian Coffee", skin:"craft", steel:"#3B2414", steel2:"#00843D", accent:"#E6B800", bg:"#F2E8DC", card:"#FFFAF3", ink:"#2A1A10", muted:"#6E5440", line:"#DCC6A8", hover:"#EFE2D0",
+    hdr:"linear-gradient(180deg,#3B2414 0 86%,#00843D 86% 93%,#E6B800 93%)", fonts:["Lora:wght@600;700"], head:"'Lora',serif" },
+  latte:  { group:"Coffee & Flavor", label:"Latte", skin:"craft", steel:"#7A5230", steel2:"#A0703F", accent:"#E8C9A0", bg:"#F4ECE2", card:"#FFFDF9", ink:"#3A2A1E", muted:"#7E6A58", line:"#E5D6C3", hover:"#F1E6D8",
+    tex:"radial-gradient(ellipse at 15% 0%,rgba(160,112,63,.10),transparent 55%)", fonts:["Playfair Display:wght@600;700;800"], head:"'Playfair Display',serif" },
+  viking: { group:"Coffee & Flavor", label:"Viking Ship", dark:1, skin:"rivet", steel:"#8A5A2B", steel2:"#5A3A1C", accent:"#B8862E", bg:"#1D1813", card:"#2A221B", ink:"#EFE4D2", muted:"#CDBB9F",
+    field:"#221B15", line:"#5A4A38", hover:"#332920", hdr:"linear-gradient(180deg,#3A2A1C,#24190F)",
+    tex:"repeating-linear-gradient(90deg,rgba(255,220,170,.025) 0 2px,transparent 2px 9px,rgba(0,0,0,.08) 9px 10px,transparent 10px 23px)", fonts:["Cinzel:wght@600;700"], head:"'Cinzel',serif" },
   /* Houston — local team colours (colours only, no logos) */
   astros: { group:"Houston", label:"Astros",   steel:"#002D62", steel2:"#1A4A8A", accent:"#EB6E1F", bg:"#F2F4F8", card:"#FFFFFF", ink:"#14213A", muted:"#68738A" },
   rockets:{ group:"Houston", label:"Rockets",  steel:"#CE1141", steel2:"#E23A63", accent:"#C4CED4", bg:"#F7F2F3", card:"#FFFFFF", ink:"#26191D", muted:"#84707A" },
@@ -3110,7 +3148,7 @@ function renderKpiTiles(m){
       '<span class="ktgt" title="' + tgtText(d.k, d.unit) + ' \u2014 click to change">' + tgtText(d.k, d.unit) + '</span></div></div>';
   }).join("");
   $("kpis").querySelectorAll(".ktgt").forEach(el => el.addEventListener("click", () => openTargets("kpi:" + el.closest(".kpi").dataset.k)));
-  KPI_LAST = m;
+  KPI_LAST = m; if(typeof updateMonthlyTargetText === "function") updateMonthlyTargetText();
   $("kpis").querySelectorAll(".kinfo").forEach(b => {
     b.addEventListener("mouseenter", () => showKpiInfo(b));
     b.addEventListener("focus", () => showKpiInfo(b));
@@ -3285,6 +3323,26 @@ function hideKpiInfo(force){
 document.addEventListener("mouseover", e => { if(e.target.closest && e.target.closest("#kInfoCard")) clearTimeout(kiHideT); });
 document.addEventListener("mouseout", e => { if(e.target.closest && e.target.closest("#kInfoCard") && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("#kInfoCard,.kinfo"))) hideKpiInfo(); });
 
+/* Monthly panel shows its Good / Watch levels read-only; clicking opens the Targets card */
+function updateMonthlyTargetText(){
+  const el = $("moTgtTxt"); if(!el) return;
+  const t = panelTgt("chMonthly");
+  el.innerHTML = '<span class="tgdot" style="background:var(--st-good)"></span>Good ≤ ' + pct(t.good) +
+                 ' <span class="tgdot" style="background:var(--st-watch);margin-left:6px"></span>Watch ≤ ' + pct(t.watch);
+}
+(function(){ const el = $("moTgtTxt"); if(el){ el.addEventListener("click", () => openTargets("panel:chMonthly")); updateMonthlyTargetText(); } })();
+/* demo: change the Monthly Good level through the Targets card so viewers see where targets are set */
+async function demoSetTarget(v){
+  openTargets("panel:chMonthly");
+  await new Promise(r => setTimeout(r, 900));
+  const inp = document.querySelector('tr[data-row="panel:chMonthly"] [data-f="good"]');
+  if(inp){ inp.value = v; inp.classList.add("demoFlash"); }
+  const w = document.querySelector('tr[data-row="panel:chMonthly"] [data-f="watch"]');
+  if(w && parseFloat(w.value) < v) w.value = +(v * 1.5).toFixed(1);
+  await new Promise(r => setTimeout(r, 1300));
+  saveTargetsFromDialog();
+}
+
 /* ---------- v3.70: background music (generated live in the browser — no audio files, no licensing) ---------- */
 const MUSIC = (function(){
   const SCENES = {
@@ -3293,7 +3351,20 @@ const MUSIC = (function(){
     bossa:  { label:"Bossa Café",  bpm:118, swing:0,   prog:[[52,55,59,62],[57,60,64,67],[50,53,57,60],[55,59,62,65]], bass:"bossa", drums:"shaker", lead:"pluck" },
     ambient:{ label:"Ambient Steel",    bpm:60,  swing:0,   prog:[[48,55,60,64],[45,52,57,60],[41,48,53,57],[43,50,55,59]], bass:false, drums:null, lead:"pad" },
     rain:   { label:"Rainy Window",     bpm:66,  swing:0,   prog:[[52,59,64,67],[48,55,60,64],[45,52,57,60],[47,54,59,62]], bass:false, drums:null, lead:"drops", rain:true },
-    space:  { label:"Deep Space",       bpm:50,  swing:0,   prog:[[38,45,50,57],[36,43,48,55],[41,48,53,60],[40,47,52,59]], bass:false, drums:null, lead:"shimmer" }
+    space:  { label:"Deep Space",       bpm:50,  swing:0,   prog:[[38,45,50,57],[36,43,48,55],[41,48,53,60],[40,47,52,59]], bass:false, drums:null, lead:"shimmer" },
+    /* club grooves: 16th-note grid (div:4) with their own pattern functions */
+    warehouse:{ label:"The Warehouse (Chicago house)", bpm:122, swing:.06, div:4,
+      prog:[[57,60,64,67],[62,65,69,72],[60,64,67,71],[59,62,65,69]], fn:"house" },
+    institute:{ label:"The Music Institute (Detroit techno)", bpm:128, swing:0, div:4,
+      prog:[[45,48,52,55],[45,48,52,55],[43,46,50,53],[41,45,48,52]], fn:"techno" },
+    studio54:{ label:"Studio 54 (disco)", bpm:118, swing:0, div:4,
+      prog:[[57,60,64,67],[50,53,57,60],[55,59,62,65],[52,56,59,62]], fn:"disco" },
+    synthwave:{ label:"Midnight Synthwave", bpm:100, swing:0, div:4,
+      prog:[[45,52,57,60],[41,48,53,57],[48,55,60,64],[43,50,55,59]], fn:"synthwave" },
+    quietstorm:{ label:"Quiet Storm (slow R&B)", bpm:68, swing:.15, div:2,
+      prog:[[53,57,60,64],[52,55,59,62],[50,53,57,60],[55,59,62,65]], fn:"quietstorm" },
+    gospel:{ label:"Sunday Organ", bpm:84, swing:.18, div:2,
+      prog:[[48,52,55,60],[53,57,60,65],[48,52,55,60],[55,59,62,67]], fn:"gospel" }
   };
   let ctx = null, master = null, verb = null, scene = null, timer = null, step = 0, nextT = 0, rainSrc = null, vol = 0.5;
   const hz = n => 440 * Math.pow(2, (n - 69) / 12);
@@ -3327,18 +3398,70 @@ const MUSIC = (function(){
     g.gain.setValueAtTime(peak, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
     s.connect(f); f.connect(g); out(g, .6); s.start(t, Math.random() * 1.5); s.stop(t + dur + .02);
   }
-  function kick(t){ const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(42, t + .18);
-    g.gain.setValueAtTime(.55, t); g.gain.exponentialRampToValueAtTime(0.0001, t + .32); o.connect(g); g.connect(master); o.start(t); o.stop(t + .35); }
+  function kick(t, lv){ const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(42, t + .18);
+    g.gain.setValueAtTime(lv || .55, t); g.gain.exponentialRampToValueAtTime(0.0001, t + .32); o.connect(g); g.connect(master); o.start(t); o.stop(t + .35); }
+  const hat  = (t, lv) => noiseHit(t, .045, 8000, lv || .03);
+  const ohat = (t, lv) => noiseHit(t, .22, 7000, lv || .05);
+  function clap(t, lv){ [0, .011, .023].forEach(d => noiseHit(t + d, d === .023 ? .16 : .03, 1400, lv || .14, "bandpass")); }
+  /* groove patterns for the club scenes — pos is the 16th-note position in the bar (0-15) */
+  const GROOVES = {
+    house(t, pos, ch, sp, r){                          // Chicago warehouse: 4-on-the-floor, offbeat open hat, piano stabs
+      if(pos % 4 === 0) kick(t, .8);
+      if(pos % 4 === 2) ohat(t, .06); else if(pos % 2) hat(t, .025);
+      if(pos === 4 || pos === 12) clap(t, .13);
+      if([0, 3, 6, 10, 13].includes(pos)) ch.forEach((n, i) => tone(n + 12, t + i * .004, sp * 1.5, "square", .022, 2400));
+      if([0, 3, 7, 8, 11, 14].includes(pos)) tone(ch[0] - 24 + (pos === 7 || pos === 14 ? 12 : 0), t, sp * 1.2, "sawtooth", .085, 320);
+    },
+    techno(t, pos, ch, sp, r){                         // Detroit: driving kick, 16th hats, minor synth stabs, string pad
+      if(pos % 4 === 0) kick(t, .85);
+      hat(t, pos % 4 === 2 ? .045 : .02); if(pos % 4 === 2) ohat(t, .03);
+      if(pos === 4 || pos === 12) clap(t, .08);
+      const cut = 900 + 700 * (0.5 + 0.5 * Math.sin(step / 24));
+      if([2, 7, 10, 13].includes(pos)) ch.forEach(n => tone(n + 12, t, sp * 1.1, "sawtooth", .02, cut));
+      if(pos % 4 === 2 || pos % 4 === 3) tone(ch[0] - 24, t, sp * .8, "sawtooth", .075, 300);
+      if(pos === 0 && (Math.floor(step / 16) % 2 === 0)) ch.forEach(n => tone(n, t, sp * 30, "sawtooth", .008, 1400, .8));
+    },
+    disco(t, pos, ch, sp, r){                          // Studio 54: octave bass, open hats, string swells, chicken-scratch guitar
+      if(pos % 4 === 0) kick(t, .7);
+      if(pos % 4 === 2) ohat(t, .07); else hat(t, .018);
+      if(pos === 4 || pos === 12) clap(t, .12);
+      if(pos % 2 === 0) tone(ch[0] - 24 + (pos % 4 === 2 ? 12 : 0), t, sp * 1.4, "square", .07, 520);
+      if(pos === 0) ch.forEach(n => tone(n + 12, t, sp * 14, "sawtooth", .012, 2200, .35));
+      if(pos % 2 === 1){ noiseHit(t, .03, 3200, .02, "bandpass"); tone(ch[2] + 12, t, sp * .35, "square", .01, 2600); }
+    },
+    synthwave(t, pos, ch, sp, r){                      // 80s night drive: gated snare, 16th arpeggio, 8th bass
+      if(pos === 0 || pos === 8 || pos === 10) kick(t, .7);
+      if(pos === 4 || pos === 12) clap(t, .16);
+      if(pos % 2) hat(t, .02);
+      tone(ch[pos % 4] + 12 + (pos >= 8 ? 12 : 0), t, sp * .9, "sawtooth", .018, 1900);
+      if(pos % 2 === 0) tone(ch[0] - 24, t, sp * 1.8, "sawtooth", .06, 380);
+      if(pos === 0) ch.forEach(n => tone(n, t, sp * 15, "triangle", .018, 1200, .4));
+    },
+    quietstorm(t, pos, ch, sp, r){                     // slow R&B: Rhodes chords, soft kick and rim, round bass
+      if(pos === 0 || (pos === 5 && r < .6)) ch.forEach((n, i) => tone(n, t + i * .015, sp * 7, "sine", .045, 1400));
+      if(pos === 0 || pos === 3) kick(t, .35);
+      if(pos === 2 || pos === 6) noiseHit(t, .06, 2600, .06, "bandpass");
+      if(pos % 2 === 1) hat(t, .012);
+      if(pos === 0 || pos === 3 || pos === 6) tone(ch[0] - 12 + (pos === 6 ? 7 : 0), t, sp * 2, "sine", .14, 420);
+    },
+    gospel(t, pos, ch, sp, r){                         // Sunday organ: drawbar chords, walking bass, tambourine
+      if(pos === 0 || pos === 3 || pos === 4 || pos === 7) ch.forEach(n => { tone(n, t, sp * 1.8, "sine", .03, 3000); tone(n + 12, t, sp * 1.8, "square", .008, 2400); });
+      tone(ch[[0, 2, 1, 3, 0, 2, 3, 1][pos]] - 24, t, sp * .9, "triangle", .12, 500);
+      if(pos % 2 === 1) noiseHit(t, .08, 6500, .03); if(pos === 2 || pos === 6) clap(t, .09);
+      if(pos === 0) kick(t, .4);
+    }
+  };
   function startRain(){
     const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
     s.buffer = noiseBuf(4); s.loop = true; f.type = "bandpass"; f.frequency.value = 2400; f.Q.value = .4; g.gain.value = .05;
     s.connect(f); f.connect(g); g.connect(master); s.start(); rainSrc = s;
   }
   function tick(){
-    const sp = 60 / scene.bpm / 2;                       // eighth notes
+    const div = scene.div || 2, per = div * 4, sp = 60 / scene.bpm / div;   // eighths (div 2) or sixteenths (div 4)
     while(nextT < ctx.currentTime + .25){
-      const t = nextT + ((step % 2) ? sp * scene.swing : 0), bar = Math.floor(step / 8), pos = step % 8;
+      const t = nextT + ((step % 2) ? sp * scene.swing : 0), bar = Math.floor(step / per), pos = step % per;
       const ch = scene.prog[bar % scene.prog.length], r = Math.random();
+      if(scene.fn){ GROOVES[scene.fn](t, pos, ch, sp, r); nextT += sp; step++; continue; }
       // harmony
       if(scene.lead === "keys"){ if(pos === 0 || (pos === 5 && r < .5)) ch.forEach((n, i) => tone(n + 12 * (i > 1 ? 0 : 0), t + i * .012, sp * 6, "triangle", .05, 1600)); }
       if(scene.lead === "pluck"){ if([0,3,6].includes(pos) || (pos === 4 && r < .5)) ch.forEach((n, i) => tone(n + 12, t + i * .01, sp * 2.2, "triangle", .045, 2600)); }
@@ -3380,7 +3503,9 @@ const MUSIC = (function(){
   const anchor = $("fontSel"); if(!anchor) return;
   const box = document.createElement("span"); box.className = "musicbox"; box.title = "Background music";
   box.innerHTML = '<span class="mnote">♫</span><select id="musicSel" class="hdr-sel" aria-label="Background music"><option value="off">Music: Off</option>' +
-    Object.keys(MUSIC.SCENES).map(k => '<option value="' + k + '">' + MUSIC.SCENES[k].label + '</option>').join("") + '</select>' +
+    ['<optgroup label="Chill">', ...["lofi","jazz","bossa","quietstorm","gospel"].map(k => '<option value="' + k + '">' + MUSIC.SCENES[k].label + '</option>'), '</optgroup>',
+     '<optgroup label="Ambient">', ...["ambient","rain","space"].map(k => '<option value="' + k + '">' + MUSIC.SCENES[k].label + '</option>'), '</optgroup>',
+     '<optgroup label="Club grooves">', ...["warehouse","institute","studio54","synthwave"].map(k => '<option value="' + k + '">' + MUSIC.SCENES[k].label + '</option>'), '</optgroup>'].join("") + '</select>' +
     '<input type="range" id="musicVol" min="0" max="1" step="0.05" aria-label="Music volume" title="Volume">';
   anchor.after(box);
   const sel = $("musicSel"), vol = $("musicVol");
@@ -5048,9 +5173,9 @@ async function runDemo(){
       say:"Beside it, rejection reasons by held footage. This answers what is actually going wrong, rather than just how much." },
     { run: async ()=>{ await demoPoint(chartCard("chMonthly")); demoHi(chartCard("chMonthly")); },
       say:"Then the monthly rejection rate. This is exactly what that alert at the top was pointing to." },
-    { run:()=>demoSet($("tgtSpin"), 3),
-      say:"The quality target is yours to set. Drop it to three percent, and every month that now breaches the tighter standard turns red immediately. Across the bars, the target line, and the rejection rate metric above." },
-    { run:()=>demoSet($("tgtSpin"), 5),
+    { run:()=>demoSetTarget(3),
+      say:"Every target lives in one place, the Targets card. Drop the monthly good level to three percent, and every month that breaches the tighter standard changes colour immediately. Across the bars, the target lines, and the rejection rate tile above." },
+    { run:()=>demoSetTarget(5),
       say:"Back to five percent. July twenty twenty six still stands out dramatically, at over twenty percent, exactly as the banner flagged. Is quality really five times worse? Or is something off in the data?" },
     { run: async ()=>{ const b = chartCard("chMonthly").querySelector(".aibtn"); await demoPoint(b); },
       say:"Every tile has a built in AI analyst. One click, and the dashboard reads the July data for itself. Listen." },
