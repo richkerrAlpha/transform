@@ -660,6 +660,114 @@ select option:checked{background-color:var(--steel);color:#fff}
 [data-skin=retro] header .hdr-btn,[data-skin=retro] header .btn,[data-skin=retro] header .demobtn{background:linear-gradient(180deg,#C9CED4,#8D939A);color:#111;border-color:#555}
 [data-skin=retro] header{border-bottom:3px solid #FF9F1A}
 
+/* ---- v3.74: chart clicks filter the dashboard ---- */
+.fside .xfmode{border-top:1px dashed var(--line);padding-top:12px;margin-top:2px}
+#xfToast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);z-index:1600;background:var(--ink);color:var(--card);
+  padding:10px 16px;border-radius:10px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:.25s;text-align:center}
+#xfToast.on{opacity:1;transform:translate(-50%,0)}
+#xfToast .xfhint{display:block;font-size:11px;opacity:.7;margin-top:2px}
+
+/* ---- v3.75 Houston Radio Culture skins ---- */
+/* candy paint: glossy sheen on panels, chrome title */
+[data-skin=candy] .card,[data-skin=candy] .kpi{background-image:linear-gradient(160deg,rgba(255,255,255,.08),transparent 38%);border:1px solid var(--line)}
+[data-skin=candy] .htitle{background:linear-gradient(180deg,#FFFFFF 0%,#E3E6EC 48%,#9AA0AA 52%,#F2F4F7 100%);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.03em}
+[data-skin=candy] header{box-shadow:inset 0 -2px 0 rgba(255,255,255,.22)}
+[data-skin=candy] .card h3,[data-skin=candy] .kpi h4{letter-spacing:.05em}
+/* FM dial: tuning scale + needle under the header, glowing amber readouts */
+[data-skin=dial] header{padding-bottom:34px}
+[data-skin=dial] header::after{content:"";position:absolute;left:18px;right:18px;bottom:8px;height:16px;border-radius:3px;
+  background:linear-gradient(90deg,transparent calc(62% - 1px),#FF3B30 calc(62% - 1px) calc(62% + 1px),transparent calc(62% + 1px)),
+    repeating-linear-gradient(90deg,rgba(255,179,71,.85) 0 1px,transparent 1px 60px),
+    repeating-linear-gradient(90deg,rgba(255,179,71,.45) 0 1px,transparent 1px 12px),
+    linear-gradient(180deg,rgba(255,179,71,.10),rgba(255,179,71,.02));
+  background-size:100% 100%,100% 100%,100% 55%,100% 100%;background-repeat:no-repeat;background-position:0 0,0 0,0 100%,0 0;
+  box-shadow:0 0 14px rgba(255,179,71,.25),inset 0 0 0 1px rgba(255,179,71,.35)}
+[data-skin=dial] .kpi .v{text-shadow:0 0 12px rgba(255,179,71,.55);font-family:'Share Tech Mono',monospace}
+[data-skin=dial] .card,[data-skin=dial] .kpi{border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,220,170,.06),0 6px 18px rgba(0,0,0,.35)}
+/* papel picado: scalloped paper-flag strip under the header */
+[data-skin=papel] header{margin-bottom:16px}
+[data-skin=papel] header::after{content:"";position:absolute;left:0;right:0;bottom:-16px;height:16px;
+  background:linear-gradient(90deg,#B3123B 0 16.6%,#F2A900 0 33.3%,#0C7C59 0 50%,#E0542C 0 66.6%,#3A6EA5 0 83.3%,#C2185B 0);
+  -webkit-mask:radial-gradient(circle at 12px 0,#000 11px,transparent 12px) 0 0/24px 16px repeat-x;
+          mask:radial-gradient(circle at 12px 0,#000 11px,transparent 12px) 0 0/24px 16px repeat-x}
+[data-skin=papel] .card,[data-skin=papel] .kpi{box-shadow:0 4px 16px rgba(120,40,20,.10)}
+/* dark themes: panel tool buttons use the light ink colour so they stay readable whatever the brand colour */
+[data-dark="1"] .aibtn,[data-dark="1"] .pngbtn,[data-dark="1"] .ctype,[data-dark="1"] .tgtbtn,[data-dark="1"] .pvbtn{color:var(--ink);border-color:var(--accent)}
+[data-dark="1"] .tgtbtn:hover,[data-dark="1"] .aibtn:hover{color:#111}
+
+/* ---- v3.76: record -> mock inspection form ---- */
+tbody tr.reclink{cursor:pointer}
+#recModal{display:none;position:fixed;inset:0;z-index:940;background:rgba(10,18,28,.62);align-items:center;justify-content:center;padding:18px}
+#recModal.on{display:flex}
+#recWrap{width:min(460px,100%);max-height:94vh;display:flex;flex-direction:column}
+.rf-bar{display:flex;align-items:center;gap:8px;color:#fff;font-size:12.5px;font-weight:700;margin-bottom:8px}
+.rf-bar button{border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;border-radius:8px;width:32px;height:30px;font-size:17px;cursor:pointer}
+.rf-bar button:hover{background:rgba(255,255,255,.28)}
+#recBody{overflow:auto;border-radius:30px;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.rf-phone{background:var(--bg);border:10px solid #111;border-radius:30px;overflow:hidden;color:var(--ink);font-family:var(--font-body)}
+.rf-top{background:var(--hdr-bg);color:#fff;padding:14px 14px 10px}
+.rf-app{display:flex;align-items:center;gap:10px}
+.rf-app b{display:block;font-size:15px;font-family:var(--font-head)} .rf-app small{opacity:.8;font-size:11px}
+.rf-app .pill{margin-left:auto}
+.rf-logo{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.18);display:grid;place-items:center}
+.rf-logo svg{width:18px;height:18px}
+.rf-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;margin-top:9px;opacity:.92}
+.rf-meta span{display:inline-flex;align-items:center;gap:4px} .rf-meta svg{width:13px;height:13px}
+.rf-body{padding:10px 10px 14px;display:flex;flex-direction:column;gap:10px}
+.rf-sec{background:var(--card);border-radius:14px;padding:10px 12px 12px;box-shadow:0 1px 3px rgba(0,0,0,.08);border:1px solid var(--line)}
+.rf-sh{display:flex;align-items:center;font-weight:800;font-size:12.5px;color:var(--steel2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;cursor:default}
+details.rf-sec summary{cursor:pointer;list-style:none} details.rf-sec summary::-webkit-details-marker{display:none}
+.rf-f{margin-top:7px}
+.rf-lab{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:3px}
+.rf-in{border:1px solid var(--line);background:var(--field);border-radius:9px;padding:8px 10px;font-size:13.5px;min-height:36px;word-break:break-word}
+.rf-num{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.rf-empty{color:var(--muted)}
+.rf-obj{font-size:12px;line-height:1.5}
+.rf-btns{display:flex;gap:6px}
+.rf-btn{flex:1;text-align:center;padding:8px;border-radius:9px;border:1px solid var(--line);background:var(--field);font-weight:700;font-size:13px;color:var(--muted)}
+.rf-btn.on.hold{background:#C1121F;border-color:#C1121F;color:#fff}
+.rf-btn.on.rel{background:#198038;border-color:#198038;color:#fff}
+.rf-chips{display:flex;flex-wrap:wrap;gap:5px}
+.rf-chips span{background:var(--field);border:1px solid var(--line);border-radius:7px;padding:3px 8px;font-size:12px;font-variant-numeric:tabular-nums}
+.rf-grid{border:1px solid var(--line);border-radius:9px;overflow:auto;max-height:240px}
+.rf-grid table{width:100%;border-collapse:collapse;font-size:11.5px}
+.rf-grid th{position:static;background:var(--steel);color:#fff;padding:5px 6px;font-size:10.5px}
+.rf-grid td{padding:4px 6px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+.rf-grid td.rf-n{color:var(--muted);text-align:center}
+.rf-more{font-size:11px;color:var(--muted);padding:4px 8px}
+.rf-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.rf-photos figure{margin:0;position:relative;border-radius:10px;overflow:hidden;background:var(--field);border:1px solid var(--line);aspect-ratio:1;cursor:zoom-in}
+.rf-photos img{width:100%;height:100%;object-fit:cover;display:block}
+.rf-photos figcaption{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;font-size:10px;padding:10px 6px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rf-nophoto{display:none;position:absolute;inset:0;place-items:center;text-align:center;font-size:11px;color:var(--muted);padding:6px}
+.rf-photos figure.bad{cursor:default} .rf-photos figure.bad img{display:none} .rf-photos figure.bad .rf-nophoto{display:grid}
+.rf-note{font-size:12.5px;color:var(--muted);line-height:1.5}
+.rf-submit{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;color:#198038;padding:4px}
+.rf-submit svg{width:14px;height:14px}
+#recLight{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:950;align-items:center;justify-content:center;flex-direction:column;cursor:zoom-out}
+#recLight.on{display:flex} #recLight img{max-width:92vw;max-height:84vh;border-radius:8px}
+#recLightCap{color:#fff;margin-top:10px;font-size:14px;font-weight:700}
+
+/* ---- v3.76: Export to PowerPoint dialog ---- */
+#pptModal{display:none;position:fixed;inset:0;background:rgba(10,20,30,.55);z-index:930;align-items:center;justify-content:center;padding:20px}
+#pptModal.on{display:flex}
+#pptBox{background:var(--card);color:var(--ink);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.35);width:min(720px,100%);max-height:90vh;overflow:auto;padding:20px 24px}
+#pptBox h4{font-size:18px;color:var(--steel);margin:0 0 4px;font-family:var(--font-head);display:flex;align-items:center}
+[data-dark="1"] #pptBox h4{color:var(--ink)}
+#pptBox h5{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:14px 0 6px}
+.pptgrid{display:grid;grid-template-columns:1fr 1fr;gap:2px 14px}
+.pptopt{display:flex;align-items:flex-start;gap:7px;font-size:13px;margin:3px 0;cursor:pointer;line-height:1.35}
+.pptopt input{margin-top:2px;accent-color:var(--steel)}
+.pptrow{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:13px;margin-top:4px}
+.pptrow label{display:flex;align-items:center;gap:6px}
+.pptrow select{border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:7px;padding:5px 7px;font-size:12.5px}
+#pptProg{display:none;margin-top:14px} #pptProg.on{display:block}
+.pptbar{height:8px;border-radius:99px;background:var(--hover);overflow:hidden}
+.pptbar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--steel),var(--accent));transition:width .3s}
+#pptStep{font-size:12.5px;color:var(--muted);margin-top:6px}
+#pptErr{font-size:12.5px;font-weight:600;color:var(--st-action);margin-top:10px;line-height:1.5}
+#pptBox .tgsub{font-size:12.5px;color:var(--muted);margin-bottom:6px;line-height:1.5}
+
 </style>
 <body>
 <script>
@@ -671,7 +779,7 @@ const CONFIG = {
   clientName: "PAC Stainless",
   title: "Receiving Quality Dashboard",
   // Bump these with every published change — shown subtly in the header.
-  version: "3.73",
+  version: "3.80",
   updated: "Nov 17, 2026",
   // AI insight cards are relayed through the same GAS proxy (api.proxyUrl);
   // the AI (Claude) key lives ONLY in the proxy's Script Properties, never in this file.
@@ -2068,6 +2176,7 @@ function hook(id, kind, keys){
     if(!$("linkToggle").checked) return;
     const v = keys[idx];
     if(v == null) return;                                 // e.g. a waterfall's Total bar
+    if(CLICK_MODE === "dash" && crossFilter(kind, v)) return;   // v3.74: filter the whole dashboard
     chartSel = (chartSel && chartSel.kind===kind && chartSel.value===v) ? null : {kind, value:v};  // click again to clear
     renderTable();
     refreshSelectionHighlights();
@@ -2202,7 +2311,7 @@ function renderTable(){
     const rowcls = isHold(r.disp) ? "rowhold" : (isRelease(r.disp) ? "rowrelease" : "");
     const rid = String(r.id||"").replace(/"/g,"&quot;");
     const ck = exportSel.has(String(r.id)) ? " checked" : "";
-    return `<tr class="${rowcls}"${link}><td class="chkcol"><input type="checkbox" class="rowChk" data-rid="${rid}"${ck} onclick="event.stopPropagation()"></td><td style="white-space:nowrap">${dLabel(r.date)}</td><td>${r.mill||""}</td><td>${r.alloy||""}</td>
+    return `<tr class="${rowcls} reclink" data-rid="${rid}" title="Click to see this submission as the inspector entered it"><td class="chkcol"><input type="checkbox" class="rowChk" data-rid="${rid}"${ck} onclick="event.stopPropagation()"></td><td style="white-space:nowrap">${dLabel(r.date)}</td><td>${r.mill||""}</td><td>${r.alloy||""}</td>
       <td>${r.po||""}</td><td>${r.heat||""}</td><td>${r.inspector||""}</td><td>${r.type||""}</td>
       <td style="text-align:right">${fmt(r.fRecv)}</td><td style="text-align:right">${fmt(r.fInsp)}</td>
       <td style="text-align:right;color:${r.fRej? "var(--red)":"inherit"}">${fmt(r.fRej)}</td>
@@ -2583,6 +2692,7 @@ function pvMarkSel(){
 function pvUpdateLinkable(){ const t = $("pvTable"); if(t) t.classList.toggle("linkable", $("linkToggle").checked); }
 function pvPick(k){
   if(!k) return;
+  if(CLICK_MODE === "dash" && crossFilterPivot(k)) return;   // v3.74: filter the whole dashboard
   if(chartSel && chartSel.kind === "pivot" && chartSel.value === k) chartSel = null;   // click again to clear
   else {
     const [rd, rk, cd, ck] = JSON.parse(k);
@@ -2907,6 +3017,27 @@ const THEMES = {
   viking: { group:"Coffee & Flavor", label:"Viking Ship", dark:1, skin:"rivet", steel:"#8A5A2B", steel2:"#5A3A1C", accent:"#B8862E", bg:"#1D1813", card:"#2A221B", ink:"#EFE4D2", muted:"#CDBB9F",
     field:"#221B15", line:"#5A4A38", hover:"#332920", hdr:"linear-gradient(180deg,#3A2A1C,#24190F)",
     tex:"repeating-linear-gradient(90deg,rgba(255,220,170,.025) 0 2px,transparent 2px 9px,rgba(0,0,0,.08) 9px 10px,transparent 10px 23px)", fonts:["Cinzel:wght@600;700"], head:"'Cinzel',serif" },
+  /* Houston Radio Culture — original looks inspired by the city's radio scene (no station names or logos) */
+  chopped:{ group:"Houston Radio Culture", label:"Chopped & Screwed", dark:1, skin:"candy", steel:"#7B2FBE", steel2:"#4B1C7A", accent:"#C77DFF", bg:"#120A1C", card:"#1D1230", ink:"#F3E8FF", muted:"#C8A8E9",
+    field:"#170E26", line:"#3E2A5C", hover:"#28193F", hdr:"linear-gradient(135deg,#2A1046,#5B1F8F 60%,#2A1046)",
+    tex:"repeating-linear-gradient(0deg,rgba(199,125,255,.05) 0 2px,transparent 2px 14px)", fonts:["Bebas Neue"], head:"'Bebas Neue',sans-serif" },
+  slab:   { group:"Houston Radio Culture", label:"Candy Paint Slab", dark:1, skin:"candy", steel:"#C2185B", steel2:"#7B1FA2", accent:"#FFD54F", bg:"#121214", card:"#1C1C20", ink:"#F5F5F7", muted:"#B9B9C3",
+    field:"#161619", line:"#36363E", hover:"#26262C", hdr:"linear-gradient(120deg,#8E0E3C,#C2185B 35%,#7B1FA2 70%,#2A0E3C)",
+    tex:"radial-gradient(ellipse at 80% -10%,rgba(194,24,91,.16),transparent 55%)", fonts:["Anton"], head:"'Anton',sans-serif" },
+  thirdcoast:{ group:"Houston Radio Culture", label:"Third Coast", dark:1, skin:"plain", steel:"#B8860B", steel2:"#7A5A08", accent:"#FFD700", bg:"#0E0E0E", card:"#18181A", ink:"#F7F1DE", muted:"#C7BFA6",
+    field:"#141414", line:"#33302A", hover:"#24221E", hdr:"linear-gradient(90deg,#0E0E0E,#2B2410 70%,#3A2E0C)", fonts:["Oswald:wght@500;600;700"], head:"'Oswald',sans-serif" },
+  fmdial: { group:"Houston Radio Culture", label:"Late Night FM Dial", dark:1, skin:"dial", steel:"#B5651D", steel2:"#6B3A12", accent:"#FFB347", bg:"#1A120C", card:"#241911", ink:"#FFE9C7", muted:"#D9B48A",
+    field:"#1E150E", line:"#4A3424", hover:"#2F2117",
+    hdr:"repeating-linear-gradient(90deg,rgba(255,220,170,.035) 0 2px,transparent 2px 9px,rgba(0,0,0,.10) 9px 10px,transparent 10px 21px),linear-gradient(180deg,#4A2D17,#2B1A0D)",
+    fonts:["Oswald:wght@500;600;700","Share Tech Mono"], head:"'Oswald',sans-serif" },
+  tejano: { group:"Houston Radio Culture", label:"Tejano Nights", skin:"papel", steel:"#B3123B", steel2:"#0C7C59", accent:"#F2A900", bg:"#FFF7EC", card:"#FFFFFF", ink:"#2B1A12", muted:"#7A5B48", line:"#F0D9C2", hover:"#FFF0DD",
+    hdr:"linear-gradient(90deg,#8E0E2E,#B3123B 45%,#E0542C)", fonts:["Lora:wght@600;700"], head:"'Lora',serif" },
+  bayou:  { group:"Houston Radio Culture", label:"Bayou Blues & Zydeco", dark:1, skin:"plain", steel:"#1F5F8B", steel2:"#123E5C", accent:"#E3B23C", bg:"#0D1A24", card:"#142533", ink:"#EAF2F8", muted:"#A9C1D3",
+    field:"#10202C", line:"#2A4256", hover:"#1B3142", hdr:"linear-gradient(135deg,#0D1A24,#1F5F8B 70%,#2E7A6A)",
+    tex:"radial-gradient(ellipse at 10% 110%,rgba(46,122,106,.20),transparent 50%)", fonts:["Playfair Display:ital,wght@1,600;1,700"], head:"'Playfair Display',serif" },
+  gulfcountry:{ group:"Houston Radio Culture", label:"Gulf Coast Country", skin:"craft", steel:"#2E4A6B", steel2:"#4A6B8A", accent:"#C77B30", bg:"#F3EEE6", card:"#FFFDF8", ink:"#2A2622", muted:"#6F665C", line:"#E2D8C8", hover:"#F1EADF",
+    tex:"repeating-linear-gradient(45deg,rgba(46,74,107,.035) 0 1px,transparent 1px 5px),repeating-linear-gradient(-45deg,rgba(46,74,107,.035) 0 1px,transparent 1px 5px)",
+    fonts:["Rye"], head:"'Rye',serif" },
   /* Houston — local team colours (colours only, no logos) */
   astros: { group:"Houston", label:"Astros",   steel:"#002D62", steel2:"#1A4A8A", accent:"#EB6E1F", bg:"#F2F4F8", card:"#FFFFFF", ink:"#14213A", muted:"#68738A" },
   rockets:{ group:"Houston", label:"Rockets",  steel:"#CE1141", steel2:"#E23A63", accent:"#C4CED4", bg:"#F7F2F3", card:"#FFFFFF", ink:"#26191D", muted:"#84707A" },
@@ -3456,9 +3587,10 @@ const MUSIC = (function(){
     s.buffer = noiseBuf(4); s.loop = true; f.type = "bandpass"; f.frequency.value = 2400; f.Q.value = .4; g.gain.value = .05;
     s.connect(f); f.connect(g); g.connect(master); s.start(); rainSrc = s;
   }
-  function tick(){
+  function tick(horizon){
+    const H = typeof horizon === "number" ? horizon : ctx.currentTime + .25;
     const div = scene.div || 2, per = div * 4, sp = 60 / scene.bpm / div;   // eighths (div 2) or sixteenths (div 4)
-    while(nextT < ctx.currentTime + .25){
+    while(nextT < H){
       const t = nextT + ((step % 2) ? sp * scene.swing : 0), bar = Math.floor(step / per), pos = step % per;
       const ch = scene.prog[bar % scene.prog.length], r = Math.random();
       if(scene.fn){ GROOVES[scene.fn](t, pos, ch, sp, r); nextT += sp; step++; continue; }
@@ -3497,7 +3629,45 @@ const MUSIC = (function(){
     scene = null;
   }
   function setVolume(v){ vol = v; if(master && scene) master.gain.setTargetAtTime(vol * .9, ctx.currentTime, .1); }
-  return { SCENES, play, stop, setVolume, get playing(){ return !!scene; } };
+  /* render a scene to a WAV (mono, base64) offline — used by Export to PowerPoint */
+  async function renderWav(key, seconds, sr){
+    const sc = SCENES[key]; if(!sc) return null;
+    sr = sr || 22050;
+    const live = { ctx, master, verb, scene, step, nextT, NB, rainSrc };
+    const off = new OfflineAudioContext(1, Math.ceil(sr * seconds), sr);
+    try{
+      ctx = off;
+      const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3;
+      master = ctx.createGain();
+      master.gain.setValueAtTime(0, 0); master.gain.linearRampToValueAtTime(.9, 1.2);
+      master.gain.setValueAtTime(.9, Math.max(1.3, seconds - 2.2)); master.gain.linearRampToValueAtTime(0, seconds - .05);
+      verb = ctx.createConvolver();
+      const len = Math.floor(sr * 2.8), ir = ctx.createBuffer(2, len, sr);
+      for(let c = 0; c < 2; c++){ const d = ir.getChannelData(c); for(let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+      verb.buffer = ir;
+      const wet = ctx.createGain(); wet.gain.value = .32; verb.connect(wet); wet.connect(master);
+      master.connect(comp); comp.connect(ctx.destination);
+      NB = noiseBuf(2); scene = sc; step = 0; nextT = .05; rainSrc = null;
+      if(sc.rain){ startRain(); try{ rainSrc.stop(seconds); }catch(e){} }
+      tick(seconds - .6);
+    } finally {
+      ({ ctx, master, verb, scene, step, nextT, NB, rainSrc } = live);   // live playback untouched
+    }
+    const buf = await off.startRendering();
+    return wavBase64(buf.getChannelData(0), sr);
+  }
+  function wavBase64(f32, sr){
+    const n = f32.length, b = new ArrayBuffer(44 + n * 2), v = new DataView(b);
+    const w = (o, s) => { for(let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+    w(0, "RIFF"); v.setUint32(4, 36 + n * 2, true); w(8, "WAVE"); w(12, "fmt "); v.setUint32(16, 16, true);
+    v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true);
+    v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, "data"); v.setUint32(40, n * 2, true);
+    for(let i = 0; i < n; i++){ const s = Math.max(-1, Math.min(1, f32[i])); v.setInt16(44 + i * 2, s < 0 ? s * 0x8000 : s * 0x7FFF, true); }
+    const u8 = new Uint8Array(b); let str = "";
+    for(let i = 0; i < u8.length; i += 0x8000) str += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
+    return btoa(str);
+  }
+  return { SCENES, play, stop, setVolume, renderWav, get playing(){ return !!scene; }, get current(){ return scene; } };
 })();
 (function initMusic(){
   const anchor = $("fontSel"); if(!anchor) return;
@@ -3688,6 +3858,1193 @@ const LAYOUT = (function(){
   const div = document.createElement("span"); div.className = "hdr-div";
   grp.parentNode.insertBefore(wrap, grp); grp.parentNode.insertBefore(div, grp);
 })();
+
+/* ---------- v3.74: chart clicks filter the WHOLE dashboard (cross-filtering) ----------
+   Modes (set in the filter pane, remembered per browser):
+     dash = clicking a bar / slice / point / pivot cell applies it as a dashboard filter (default)
+     list = the original behaviour: it only narrows the Submissions list
+     off  = chart clicks do nothing
+   The original #linkToggle checkbox is kept (hidden) and simply mirrors "not off", so all existing
+   cursor, pivot and highlight code keeps working unchanged. */
+let CLICK_MODE = "dash";
+try{ const v = localStorage.getItem("pacClickMode"); if(v === "dash" || v === "list" || v === "off") CLICK_MODE = v; }catch(err){}
+function syncClickMode(){ const lt = $("linkToggle"); if(lt) lt.checked = CLICK_MODE !== "off"; }
+function setClickMode(v, temporary){
+  CLICK_MODE = v; if(!temporary){ try{ localStorage.setItem("pacClickMode", v); }catch(err){} }
+  const s = $("clickModeSel"); if(s) s.value = v;
+  syncClickMode();
+  if(v !== "list" && chartSel && typeof clearSel === "function") clearSel();   // a list-only selection makes no sense in the other modes
+  const lt = $("linkToggle"); if(lt) lt.dispatchEvent(new Event("change"));
+}
+const XF_PREV = { dates:null };      // date range to go back to when a week/month click is clicked again
+function xfToast(msg){
+  let t = $("xfToast");
+  if(!t){ t = document.createElement("div"); t.id = "xfToast"; document.body.appendChild(t); }
+  t.innerHTML = msg; t.classList.add("on"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("on"), 2600);
+}
+function xfDateRange(kind, v){
+  if(kind === "week"){ const a = new Date(v + "T00:00:00"), b = new Date(a); b.setDate(a.getDate() + 6); return [ymd(a), ymd(b)]; }
+  if(kind === "month"){ const y = +v.slice(0, 4), m = +v.slice(5, 7) - 1; return [ymd(new Date(y, m, 1)), ymd(new Date(y, m + 1, 0))]; }
+  if(kind === "quarter"){ const y = +v.slice(0, 4), q = +v.slice(-1) - 1; return [ymd(new Date(y, q * 3, 1)), ymd(new Date(y, q * 3 + 3, 0))]; }
+  if(kind === "year"){ const y = +v; return [y + "-01-01", y + "-12-31"]; }
+  return null;
+}
+function xfUseCustomDates(){
+  if(dateMode === "custom") return;
+  dateMode = "custom";
+  document.querySelectorAll("#dateSeg button").forEach(x => x.classList.toggle("on", x.dataset.mode === "custom"));
+  $("customDates").style.display = "flex"; $("periodBox").style.display = "none";
+}
+/* apply one clicked value as a dashboard filter; returns a label, or null if this kind can't map to a filter */
+function crossFilterOne(kind, v){
+  if(v == null || v === "" || v === "(blank)") return null;
+  const msKey = { mill:"mill", inspector:"insp", alloy:"alloy", reason:"reason" }[kind];
+  if(msKey){
+    const m = MSEL[msKey]; if(!m || !m.values.includes(v)) return null;
+    const only = m.choice.size === 1 && m.choice.has(v);
+    m.choice = only ? new Set(m.values) : new Set([v]);          // click the same thing again to clear
+    $(m.panel).querySelectorAll(".msChk").forEach(c => c.checked = m.choice.has(c.value));
+    msSyncAll(m); msUpdateBtn(m);
+    const lbl = { mill:"Mill", insp:"Inspector", alloy:"Alloy", reason:"Reason" }[msKey];
+    return only ? lbl + " cleared" : lbl + " = <b>" + v + "</b>";
+  }
+  const sel = { disp:"fDisp", type:"fType" }[kind];
+  if(sel){
+    const s = $(sel); if(![...s.options].some(o => o.value === v)) return null;
+    const clear = s.value === v; s.value = clear ? "All" : v;
+    return (kind === "disp" ? "Disposition" : "Type") + (clear ? " cleared" : " = <b>" + v + "</b>");
+  }
+  const rg = xfDateRange(kind, v);
+  if(rg){
+    const same = $("fFrom").value === rg[0] && $("fTo").value === rg[1];
+    if(same && XF_PREV.dates){
+      const p = XF_PREV.dates; XF_PREV.dates = null;
+      if(p.mode === "period"){ document.querySelector('#dateSeg button[data-mode="period"]').click(); $("fPeriod").value = p.period; setDatesFromPeriod(); }
+      else { $("fFrom").value = p.from; $("fTo").value = p.to; }
+      return "Dates restored";
+    }
+    if(!XF_PREV.dates) XF_PREV.dates = { mode:dateMode, from:$("fFrom").value, to:$("fTo").value, period:$("fPeriod").value };
+    xfUseCustomDates(); $("fFrom").value = rg[0]; $("fTo").value = rg[1];
+    const name = kind === "week" ? "Week of " + dLabel(v) : kind === "month" ? dLabel(v) : v;
+    return "Dates = <b>" + name + "</b>";
+  }
+  return null;
+}
+function crossFilter(kind, v){
+  const msg = crossFilterOne(kind, v); if(!msg) return false;
+  chartSel = null; render(); if(typeof scanQualityAlerts === "function") scanQualityAlerts();
+  xfToast("⧩ Dashboard filtered: " + msg + '<span class="xfhint">Click the same item again to clear · Reset clears all</span>');
+  return true;
+}
+function crossFilterPivot(k){
+  const [rd, rk, cd, ck] = JSON.parse(k), msgs = [];
+  if(rk != null){ const m = crossFilterOne(rd, rk); if(m) msgs.push(m); else return false; }
+  if(ck != null){ const m = crossFilterOne(cd, ck); if(m) msgs.push(m); else if(!msgs.length) return false; }
+  if(!msgs.length) return false;
+  chartSel = null; render(); if(typeof scanQualityAlerts === "function") scanQualityAlerts();
+  xfToast("⧩ Dashboard filtered: " + msgs.join(" · ") + '<span class="xfhint">Click the cell again to clear · Reset clears all</span>');
+  return true;
+}
+(function addClickModeControl(){
+  const reset = $("btnReset"); if(!reset) return;
+  const lab = document.createElement("label"); lab.className = "xfmode";
+  lab.innerHTML = '<span class="flab"><span class="ficon">' + ICONS.target + '</span>Chart clicks</span>' +
+    '<select id="clickModeSel" title="What happens when you click a bar, slice, point or pivot cell">' +
+    '<option value="dash">Filter the whole dashboard</option><option value="list">Filter the list only</option><option value="off">Do nothing</option></select>';
+  reset.parentNode.insertBefore(lab, reset);
+  const s = $("clickModeSel"); s.value = CLICK_MODE;
+  s.addEventListener("change", () => setClickMode(s.value));
+  // the old switch in the list header is replaced by this control
+  const old = $("linkToggle"); if(old){ const sw = old.closest("label"); if(sw) sw.style.display = "none"; }
+  syncClickMode();
+})();
+function savedClickMode(){ try{ const v = localStorage.getItem("pacClickMode"); return (v === "list" || v === "off") ? v : "dash"; }catch(err){ return "dash"; } }
+
+/* ---------- v3.76: click a record -> mock-up of the inspector's entry form, with the real photos ----------
+   The list is built from the slim field set, so the full submission (photo arrays, measurement arrays)
+   is fetched on demand from the proxy: GET <proxyUrl>?record=<forminstanceid>. Until it arrives (or if the
+   proxy hasn't been updated yet) the form shows the fields already loaded. */
+var RAW_BY_ID = new Map();                       // forminstanceid -> raw TransForm record (filled in adoptInstances)
+const REC_FULL = new Map();                      // forminstanceid -> promise of the full record
+const REC_LABELS = {
+  PONumber:"PO number", Heat:"Heat number", ListNumber:"List number", LOTNumber:"Lot number", MillName:"Mill",
+  Alloy:"Alloy", Description:"Description", InspectionType:"Inspection type", Date:"Inspection date",
+  QuantityFeet:"Quantity (ft)", PiecesReceived:"Pieces received", PCInspectedDimTolerances:"Pieces inspected — OD / wall tolerance",
+  PCInspectedBorescope:"Pieces borescoped", PiecesInspected:"Pieces inspected", PiecesAccepted:"Pieces accepted",
+  PiecesRejected:"Pieces rejected", PrimaryRejectionReason:"Primary rejection reason", HoldRelease:"Disposition", Inspector:"Inspector"
+};
+const REC_SECTIONS = [
+  { t:"Receipt",                ico:"truck",   keys:["PONumber","Heat","LOTNumber","ListNumber","MillName","Alloy","Description","InspectionType","Date","QuantityFeet","PiecesReceived"] },
+  { t:"Dimensional — OD & wall", ico:"search", match:/(^|_)(OD|WT)\b|Outer|Diameter|Wall|Dim/i, keys:["PCInspectedDimTolerances"] },
+  { t:"Borescope (ID)",         ico:"scope",   match:/Borescope|\bID\b|Inside/i, keys:["PCInspectedBorescope"] },
+  { t:"Straightness",           ico:"layers",  match:/Straight|Bow|Camber/i },
+  { t:"Visual inspection",      ico:"alert",   match:/Bent|Burr|Surface|Stencil|Visual|Dent|Scratch|Pit/i },
+  { t:"Results & disposition",  ico:"flag",    keys:["PiecesInspected","PiecesAccepted","PiecesRejected","PrimaryRejectionReason","HoldRelease"], match:/Reject|Reason|Hold|Release|Disposition|Note|Comment|Remark/i }
+];
+const isPhotoUrl = s => typeof s === "string" && /^https?:\/\//i.test(s) &&
+  (/\.(jpe?g|png|gif|webp|heic|bmp)(\?|#|$)/i.test(s) || /amazonaws\.com|cloudfront\.net/i.test(s));
+function recHuman(k){ return REC_LABELS[k] || k.replace(/_/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2").replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2").replace(/^./, c => c.toUpperCase()); }
+function recEsc(s){ return String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" })[c]); }
+/* every photo URL anywhere in the record, with the field it came from */
+function recPhotos(obj){
+  const out = [], seen = new Set();
+  (function walk(v, path){
+    if(v == null) return;
+    if(typeof v === "string"){ if(isPhotoUrl(v) && !seen.has(v)){ seen.add(v); out.push({ url:v, field:path[0] || "Photo" }); } return; }
+    if(Array.isArray(v)){ v.forEach(x => walk(x, path)); return; }
+    if(typeof v === "object") for(const k in v) walk(v[k], path.length ? path : [k]);
+  })(obj, []);
+  return out;
+}
+function recHasPhoto(v){ return recPhotos({ x:v }).length > 0; }
+function recFieldHTML(k, v){
+  const lab = '<div class="rf-lab">' + recEsc(recHuman(k)) + '</div>';
+  if(v == null || v === "") return '<div class="rf-f">' + lab + '<div class="rf-in rf-empty">—</div></div>';
+  if(k === "HoldRelease"){
+    const opts = ["Hold","Release"], cur = String(v).trim().toLowerCase();
+    return '<div class="rf-f">' + lab + '<div class="rf-btns">' + opts.map(o => '<span class="rf-btn' + (o.toLowerCase() === cur ? (cur === "hold" ? " on hold" : " on rel") : "") + '">' + o + '</span>').join("") + '</div></div>';
+  }
+  if(Array.isArray(v)){
+    if(!v.length) return '<div class="rf-f">' + lab + '<div class="rf-in rf-empty">—</div></div>';
+    if(v.every(x => x == null || typeof x !== "object"))
+      return '<div class="rf-f">' + lab + '<div class="rf-chips">' + v.map(x => '<span>' + recEsc(x) + '</span>').join("") + '</div></div>';
+    const cols = [...new Set(v.flatMap(o => o && typeof o === "object" ? Object.keys(o).filter(c => !isPhotoUrl(o[c]) && !recHasPhoto(o[c])) : []))].slice(0, 6);
+    const body = v.slice(0, 15).map((o, i) => '<tr><td class="rf-n">' + (i + 1) + '</td>' + cols.map(c => '<td>' + recEsc(o && typeof o[c] === "object" ? JSON.stringify(o[c]) : (o ? o[c] : "")) + '</td>').join("") + '</tr>').join("");
+    return '<div class="rf-f">' + lab + '<div class="rf-grid"><table><thead><tr><th>#</th>' + cols.map(c => '<th>' + recEsc(recHuman(c)) + '</th>').join("") + '</tr></thead><tbody>' + body + '</tbody></table>' +
+      (v.length > 15 ? '<div class="rf-more">+' + (v.length - 15) + ' more rows</div>' : '') + '</div></div>';
+  }
+  if(typeof v === "object") return '<div class="rf-f">' + lab + '<div class="rf-in rf-obj">' + Object.keys(v).map(c => '<div><b>' + recEsc(recHuman(c)) + ':</b> ' + recEsc(typeof v[c] === "object" ? JSON.stringify(v[c]) : v[c]) + '</div>').join("") + '</div></div>';
+  const numeric = typeof v === "number" || /^-?\d+(\.\d+)?$/.test(String(v));
+  return '<div class="rf-f">' + lab + '<div class="rf-in' + (numeric ? " rf-num" : "") + '">' + recEsc(numeric ? fmt(+v) : v) + '</div></div>';
+}
+function recFormHTML(r, raw, state){
+  const fd = raw || {};
+  const keys = Object.keys(fd).filter(k => !k.startsWith("__metadata") && !k.startsWith("wrapper_") && !recHasPhoto(fd[k]));
+  const used = new Set(), secHTML = [];
+  REC_SECTIONS.forEach(s => {
+    const ks = (s.keys || []).filter(k => k in fd || s.t === "Receipt" || s.t === "Results & disposition");
+    keys.forEach(k => { if(s.match && s.match.test(k) && !ks.includes(k) && !used.has(k)) ks.push(k); });
+    const mine = ks.filter(k => !used.has(k) && (k in fd));
+    if(!mine.length) return;
+    mine.forEach(k => used.add(k));
+    secHTML.push('<div class="rf-sec"><div class="rf-sh"><span class="ficon">' + ICONS[s.ico] + '</span>' + s.t + '</div>' + mine.map(k => recFieldHTML(k, fd[k])).join("") + '</div>');
+  });
+  const rest = keys.filter(k => !used.has(k));
+  if(rest.length) secHTML.push('<details class="rf-sec rf-other"><summary class="rf-sh"><span class="ficon">' + ICONS.list + '</span>Other fields (' + rest.length + ')</summary>' + rest.map(k => recFieldHTML(k, fd[k])).join("") + '</details>');
+  const photos = recPhotos(fd);
+  let ph;
+  if(photos.length){
+    ph = '<div class="rf-sec"><div class="rf-sh"><span class="ficon">' + ICONS.scope + '</span>Photos (' + photos.length + ')</div><div class="rf-photos">' +
+      photos.map((p, i) => '<figure data-i="' + i + '"><img loading="lazy" src="' + recEsc(p.url) + '" alt="' + recEsc(recHuman(p.field)) + '" onerror="this.closest(\'figure\').classList.add(\'bad\')">' +
+        '<figcaption>' + recEsc(recHuman(p.field)) + '</figcaption><span class="rf-nophoto">Photo unavailable<br><small>link private or expired</small></span></figure>').join("") + '</div></div>';
+  } else {
+    ph = '<div class="rf-sec"><div class="rf-sh"><span class="ficon">' + ICONS.scope + '</span>Photos</div><div class="rf-note">' +
+      (state === "loading" ? '<span class="ai-spin"></span> Loading photos from TransForm…'
+       : state === "noproxy" ? 'Photos load from the full TransForm record. Update the proxy (adds <code>?record=</code>) to show them here.'
+       : 'No photos were taken on this submission.') + '</div></div>';
+  }
+  const disp = r.disp || fd.HoldRelease || "";
+  const when = r.date ? dLabel(r.date) : "";
+  return '<div class="rf-phone"><div class="rf-top"><div class="rf-app"><span class="rf-logo">' + ICONS.search + '</span><div><b>Incoming Tube Inspection</b><small>PAC Stainless · TransForm</small></div>' +
+      '<span class="pill ' + (isHold(disp) ? "hold" : "release") + '">' + recEsc(disp || "—") + '</span></div>' +
+      '<div class="rf-meta"><span>' + ICONS.user + recEsc(r.inspector || "—") + '</span><span>' + ICONS.calendar + recEsc(when) + '</span><span title="Submission ID">#' + recEsc(String(r.id).slice(-8)) + '</span></div></div>' +
+    '<div class="rf-body">' + secHTML.join("") + ph +
+      '<div class="rf-submit">' + ICONS.check + ' Submitted from the floor' + (r.created ? ' · started ' + recEsc(String(r.created).slice(0, 16).replace("T", " ")) : "") + '</div></div></div>';
+}
+function recFetchFull(id){
+  if(REC_FULL.has(id)) return REC_FULL.get(id);
+  if(!CONFIG.api.proxyUrl) return Promise.reject(new Error("noproxy"));
+  const u = CONFIG.api.proxyUrl + (CONFIG.api.proxyUrl.includes("?") ? "&" : "?") + "record=" + encodeURIComponent(id);
+  const p = fetch(u).then(r => r.json()).then(j => {
+    if(!j || j.error || !j.record) throw new Error((j && j.errorText) || "noproxy");
+    return j.record;
+  });
+  REC_FULL.set(id, p); p.catch(() => REC_FULL.delete(id));
+  return p;
+}
+let recList = [], recIdx = -1;
+function openRecordForm(id){
+  const T = [...$("tbody").querySelectorAll("tr[data-rid]")].map(tr => tr.dataset.rid);
+  recList = T; recIdx = T.indexOf(String(id));
+  let m = $("recModal");
+  if(!m){
+    m = document.createElement("div"); m.id = "recModal";
+    m.innerHTML = '<div id="recWrap"><div class="rf-bar"><button type="button" id="recPrev" title="Previous record">‹</button>' +
+      '<span id="recPos"></span><button type="button" id="recNext" title="Next record">›</button><span style="flex:1"></span>' +
+      '<button type="button" id="recClose" title="Close (Esc)">✕</button></div><div id="recBody"></div></div>' +
+      '<div id="recLight"><img alt=""><div id="recLightCap"></div></div>';
+    document.body.appendChild(m);
+    m.addEventListener("click", e => { if(e.target === m) closeRecordForm(); });
+    $("recClose").addEventListener("click", closeRecordForm);
+    $("recPrev").addEventListener("click", () => recStep(-1));
+    $("recNext").addEventListener("click", () => recStep(1));
+    $("recLight").addEventListener("click", () => $("recLight").classList.remove("on"));
+    document.addEventListener("keydown", e => {
+      if(!m.classList.contains("on")) return;
+      if(e.key === "Escape"){ if($("recLight").classList.contains("on")) $("recLight").classList.remove("on"); else closeRecordForm(); }
+      if(e.key === "ArrowLeft") recStep(-1); if(e.key === "ArrowRight") recStep(1);
+    });
+  }
+  m.classList.add("on");
+  recShow(String(id));
+}
+function recStep(d){ if(!recList.length) return; recIdx = (recIdx + d + recList.length) % recList.length; recShow(recList[recIdx]); }
+function recShow(id){
+  const r = rows.find(x => String(x.id) === id); if(!r) return;
+  const raw = RAW_BY_ID.get(id) || {};
+  $("recPos").textContent = recIdx >= 0 ? "Record " + (recIdx + 1) + " of " + recList.length : "";
+  const draw = (rec, st) => {
+    $("recBody").innerHTML = recFormHTML(r, rec, st);
+    const photos = recPhotos(rec);
+    $("recBody").querySelectorAll(".rf-photos figure").forEach(f => f.addEventListener("click", () => {
+      if(f.classList.contains("bad")) return;
+      const p = photos[+f.dataset.i]; const L = $("recLight");
+      L.querySelector("img").src = p.url; $("recLightCap").textContent = recHuman(p.field); L.classList.add("on");
+    }));
+  };
+  draw(raw, recPhotos(raw).length ? "" : "loading");
+  recFetchFull(id).then(full => { if($("recModal").classList.contains("on") && recList[recIdx] === id || recIdx < 0) draw(Object.assign({}, raw, full), ""); })
+    .catch(err => { if(recList[recIdx] === id && !recPhotos(raw).length) draw(raw, err.message === "noproxy" ? "noproxy" : "none"); });
+}
+function closeRecordForm(){ const m = $("recModal"); if(m) m.classList.remove("on"); }
+$("tbody").addEventListener("click", e => {
+  if(e.target.closest("input,button,a")) return;
+  const tr = e.target.closest("tr[data-rid]"); if(!tr) return;
+  if(CONFIG.submissionBrowserUrl && e.ctrlKey) return;      // ctrl-click keeps the old external browser link
+  openRecordForm(tr.dataset.rid);
+});
+
+/* =====================================================================
+   v3.76: Export to PowerPoint
+   Title slide, KPI slide, one dashboard panel per slide, the pivot as a native table, and a takeaways slide.
+   - explanations: the same Claude assessments as the AI buttons (cached, names tokenized),
+     with a built-in summary if AI is unavailable
+   - theme: colours, fonts (mapped to Office-safe fonts) and dark/light carry over
+   - background music: the active music scene, rendered to audio, plays across all slides
+   - narration avatar: on every slide; narration audio from the proxy (action "tts"),
+     the script is also in the speaker notes; optional auto-advance after narration
+   The record list is never included.
+   ===================================================================== */
+const PPT_LIBS = {
+  pptx: ["https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js",
+         "https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.bundle.js"],
+  zip:  ["https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js",
+         "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"],
+  mp3:  ["https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js",
+         "https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"]
+};
+const PPT_VOICES = [["Kore","Kore — warm, even"],["Aoede","Aoede — bright"],["Leda","Leda — youthful"],
+                    ["Charon","Charon — deep, calm"],["Puck","Puck — upbeat"],["Orus","Orus — firm"]];
+function pptLoad(urls){
+  return new Promise((res, rej) => {
+    let i = 0;
+    const next = () => {
+      if(i >= urls.length) return rej(new Error("Could not load " + urls[0].split("/").pop() + " (check the internet connection)"));
+      const s = document.createElement("script"); s.src = urls[i++]; s.onload = res; s.onerror = () => { s.remove(); next(); };
+      document.head.appendChild(s);
+    };
+    next();
+  });
+}
+const hex = c => {                                       // any CSS colour -> RRGGBB
+  const d = document.createElement("canvas").getContext("2d"); d.fillStyle = "#000"; d.fillStyle = String(c || "#000");
+  const v = d.fillStyle; if(v.startsWith("#")) return v.slice(1).toUpperCase();
+  const m = v.match(/\d+(\.\d+)?/g) || [0, 0, 0]; return m.slice(0, 3).map(n => (+n).toString(16).padStart(2, "0")).join("").toUpperCase();
+};
+function blendOn(css, baseHex){                        // CSS colour (maybe semi-transparent) composited onto a hex base
+  const s = String(css), m = s.match(/[\d.]+/g); if(!m) return baseHex;
+  if(/color\(srgb/.test(s)) for(let i = 0; i < 3; i++) m[i] = +m[i] * 255;          // color-mix() results come back as color(srgb r g b / a)
+  const a = m.length > 3 ? +m[3] : 1, b = [0, 2, 4].map(i => parseInt(baseHex.substr(i, 2), 16));
+  if(a === 0) return baseHex;
+  return [0, 1, 2].map(i => Math.round(+m[i] * a + b[i] * (1 - a)).toString(16).padStart(2, "0")).join("").toUpperCase();
+}
+function pptFonts(t){
+  const pick = f => {
+    f = String(f || "");
+    if(/Playfair|Lora|Cormorant|Cinzel|Rye|Georgia|serif\b/i.test(f) && !/sans-serif/i.test(f)) return "Georgia";
+    if(/Mono|VT323|Share Tech|monospace/i.test(f)) return "Consolas";
+    if(/Oswald|Bebas|Anton|Antonio|Barlow Condensed|Saira/i.test(f)) return "Arial Narrow";
+    if(/Bangers|Comic/i.test(f)) return "Comic Sans MS";
+    if(/Orbitron|Audiowide|Exo|Rajdhani/i.test(f)) return "Bahnschrift";
+    if(/Fredoka/i.test(f)) return "Trebuchet MS";
+    return "Segoe UI";
+  };
+  return { head: pick(t.head || t.body), body: pick(t.body) };
+}
+const mdStrip = s => String(s || "").replace(/\*\*|==|\*/g, "").replace(/^\s*-\s+/gm, "").trim();
+function mdRuns(s, base, accent){                       // **bold** and ==highlight== -> pptx text runs
+  const out = []; String(s || "").split(/(\*\*[^*]+\*\*|==[^=]+==)/).forEach(seg => {
+    if(!seg) return;
+    if(seg.startsWith("**")) out.push({ text:seg.slice(2, -2).replace(/\*/g, ""), options:Object.assign({}, base, { bold:true }) });
+    else if(seg.startsWith("==")) out.push({ text:seg.slice(2, -2).replace(/\*/g, ""), options:Object.assign({}, base, { bold:true, color:accent }) });
+    else out.push({ text:seg.replace(/\*/g, ""), options:Object.assign({}, base) });
+  });
+  return out;
+}
+function aiSections(detailed){                           // "**Assessment**\n- a\n- b ..." -> {Assessment:[..], ...}
+  const out = {}; let cur = "Notes";
+  String(detailed || "").split("\n").forEach(l => {
+    const h = /^\s*\*\*([^*]+)\*\*\s*$/.exec(l);
+    if(h){ cur = h[1].trim(); return; }
+    const b = /^\s*[-•]\s+(.*)/.exec(l); if(b) (out[cur] = out[cur] || []).push(b[1].trim());
+  });
+  return out;
+}
+/* built-in explanation when AI is off or fails */
+function localExplain(id){
+  const d = PANE_DATA[id] || {}, title = (AI_TILES[id] && AI_TILES[id].title) || id, b = [];
+  const ser = Object.values(d).filter(s => s && Array.isArray(s.data) && s.label);
+  ser.slice(0, 3).forEach(s => {
+    const vals = s.data.map(Number); if(!vals.length) return;
+    const iMax = vals.indexOf(Math.max(...vals)), iMin = vals.indexOf(Math.min(...vals)), u = s.unit === "rate" ? pct : v => fmt(Math.round(v));
+    b.push(s.label + ": highest **" + (d.labels || [])[iMax] + "** at " + u(vals[iMax]) + (vals.length > 1 ? ", lowest " + (d.labels || [])[iMin] + " at " + u(vals[iMin]) : "") + ".");
+  });
+  if(id === "chMonthly"){ const t = panelTgt("chMonthly"); b.push("Bars are coloured against the targets: Good ≤ " + pct(t.good) + ", Watch ≤ " + pct(t.watch) + "."); }
+  return { st:"OK", quick: title + " for the selected scope. " + (b[0] ? mdStrip(b[0]) : ""), detailed: "**Assessment**\n" + b.map(x => "- " + x).join("\n") };
+}
+/* chart image with the theme's card colour behind it, at 2x for sharp slides */
+function pptChartImage(id){
+  const ch = charts[id]; if(!ch) return null;
+  const orig = ch.options.devicePixelRatio;
+  ch.options.devicePixelRatio = 2; ch.resize(); ch.update("none");
+  const src = ch.canvas, c = document.createElement("canvas"); c.width = src.width; c.height = src.height;
+  const g = c.getContext("2d"); g.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--card").trim() || "#FFFFFF";
+  g.fillRect(0, 0, c.width, c.height); g.drawImage(src, 0, 0);
+  const out = { data:c.toDataURL("image/png"), ratio: src.width / src.height };
+  ch.options.devicePixelRatio = orig; ch.resize(); ch.update("none");
+  return out;
+}
+/* the narrator avatar: an original illustrated presenter in the theme's colours */
+function pptAvatar(t, size){
+  return new Promise(res => {
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + size + '" height="' + size + '" viewBox="0 0 200 200">' +
+      '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + t.steel + '"/><stop offset="1" stop-color="' + t.steel2 + '"/></linearGradient>' +
+      '<clipPath id="c"><circle cx="100" cy="100" r="88"/></clipPath></defs>' +
+      '<circle cx="100" cy="100" r="97" fill="' + t.accent + '"/><circle cx="100" cy="100" r="88" fill="url(#g)"/>' +
+      '<g clip-path="url(#c)">' +
+      '<path d="M30 200 C34 150 62 132 100 132 C138 132 166 150 170 200 Z" fill="#26323F"/>' +                 // blazer
+      '<path d="M86 132 L100 160 L114 132 Z" fill="#F4F6F8"/>' +                                                 // collar
+      '<path d="M96 140 L100 176 L104 140 Z" fill="' + t.accent + '"/>' +                                        // tie
+      '<rect x="88" y="112" width="24" height="24" rx="8" fill="#D9A47E"/>' +                                   // neck
+      '<ellipse cx="100" cy="88" rx="33" ry="38" fill="#E8B48E"/>' +                                            // face
+      '<path d="M66 86 C62 50 86 38 104 40 C128 42 140 58 134 88 C130 70 120 60 100 60 C82 60 72 70 66 86 Z" fill="#2B2018"/>' +  // hair
+      '<ellipse cx="88" cy="90" rx="3.6" ry="4.4" fill="#2B2018"/><ellipse cx="112" cy="90" rx="3.6" ry="4.4" fill="#2B2018"/>' +
+      '<path d="M88 108 Q100 117 112 108" stroke="#8A3B2E" stroke-width="4" fill="none" stroke-linecap="round"/>' +
+      '<path d="M62 88 C62 52 138 52 138 88" stroke="#1B1F24" stroke-width="6" fill="none"/>' +                // headset band
+      '<rect x="55" y="80" width="13" height="22" rx="6" fill="#1B1F24"/><rect x="132" y="80" width="13" height="22" rx="6" fill="#1B1F24"/>' +
+      '<path d="M62 100 C64 116 74 120 88 118" stroke="#1B1F24" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="90" cy="118" r="4.5" fill="' + t.accent + '"/>' +
+      '</g>' +
+      '<g transform="translate(150 150)"><circle r="24" fill="' + t.accent + '" stroke="#fff" stroke-width="5"/>' +
+      '<path d="M-9 -5 h6 l8 -7 v24 l-8 -7 h-6 z" fill="#fff"/><path d="M4 -6 q6 6 0 12 M8 -10 q11 10 0 20" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/></g></svg>';
+    const img = new Image();
+    img.onload = () => { const c = document.createElement("canvas"); c.width = c.height = size; c.getContext("2d").drawImage(img, 0, 0, size, size); res(c.toDataURL("image/png")); };
+    img.onerror = () => res(null);
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  });
+}
+/* any WAV (base64) -> 44.1 kHz stereo MP3 (base64): the format PowerPoint plays on Windows and Mac */
+async function toMp3(b64){
+  if(!window.lamejs) await pptLoad(PPT_LIBS.mp3);
+  const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0)).buffer;
+  const AC = window.AudioContext || window.webkitAudioContext, ac = new AC();
+  let src; try{ src = await ac.decodeAudioData(bytes); } finally { try{ ac.close(); }catch(e){} }
+  const SR = 44100, off = new OfflineAudioContext(2, Math.ceil(src.duration * SR), SR);
+  const node = off.createBufferSource(); node.buffer = src; node.connect(off.destination); node.start();
+  const buf = await off.startRendering();
+  const toI16 = f => { const o = new Int16Array(f.length); for(let i = 0; i < f.length; i++){ const s = Math.max(-1, Math.min(1, f[i])); o[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; } return o; };
+  const L = toI16(buf.getChannelData(0)), R = toI16(buf.getChannelData(1));
+  const enc = new lamejs.Mp3Encoder(2, SR, 128), parts = [], step = 1152;
+  for(let i = 0; i < L.length; i += step){ const m = enc.encodeBuffer(L.subarray(i, i + step), R.subarray(i, i + step)); if(m.length) parts.push(m); }
+  const end = enc.flush(); if(end.length) parts.push(end);
+  let n = 0; parts.forEach(p => n += p.length); const all = new Uint8Array(n); let o = 0; parts.forEach(p => { all.set(p, o); o += p.length; });
+  let str = ""; for(let i = 0; i < all.length; i += 0x8000) str += String.fromCharCode.apply(null, all.subarray(i, i + 0x8000));
+  return { data:"audio/mpeg;base64," + btoa(str), ms:Math.round(buf.duration * 1000) };
+}
+/* Google's preview voice model allows only a few requests a minute: wait and retry when it says so */
+async function pptTts(text, voice, onWait){
+  for(let attempt = 1; ; attempt++){
+    try{ return await pptTtsOnce(text, voice); }
+    catch(e){
+      const m = String(e.message || e), limited = /429|quota|rate|exhausted|too many/i.test(m);
+      if(!limited || attempt >= 5 || PPT_CANCEL) throw e;
+      const secs = Math.min(65, Math.max(8, parseFloat((/retry in ([\d.]+)s/i.exec(m) || [0, 20 * attempt])[1]) + 2));
+      if(onWait) onWait(secs);
+      await new Promise(r => setTimeout(r, secs * 1000));
+    }
+  }
+}
+async function pptTtsOnce(text, voice){
+  let r, j;
+  try{ r = await fetch(CONFIG.api.proxyUrl, { method:"POST", body: JSON.stringify({ action:"tts", text, voice }) }); }
+  catch(e){ throw new Error("could not reach the Google proxy (" + (e.message || e) + ")"); }
+  const raw = await r.text();
+  try{ j = JSON.parse(raw); }
+  catch(e){ throw new Error("the Google proxy returned a web page instead of data (HTTP " + r.status + "). Check that the deployment is set to 'Anyone' and that a new version was deployed"); }
+  if(!j.audio){
+    const e = String(j.error || "no audio");
+    if(/unknown action/i.test(e)) throw new Error("the Google proxy is an older version: paste the new Code.gs and deploy a new version");
+    throw new Error(e);
+  }
+  return toMp3(j.audio);
+}
+/* the pivot is named for the two fields it compares, e.g. "Inspector & Disposition" */
+function pvSelText(id){ const s = $(id); return s && s.selectedIndex >= 0 ? s.options[s.selectedIndex].text.trim() : ""; }
+function pivotName(){ const r = pvSelText("pvRow"), c = pvSelText("pvCol"); return r && c ? r + " & " + c : r || c || "Pivot table"; }
+function pivotSay(){
+  const r = pvSelText("pvRow"), c = pvSelText("pvCol"), v = pvSelText("pvVal");
+  return (r && c ? r + " compared by " + c.toLowerCase() : "The cross-reference table") + (v ? ", showing " + v.toLowerCase() : "") + ". ";
+}
+function panelTitle(id){ return id === "kpi" ? "Key metrics" : id === "pivot" ? pivotName() : ((AI_TILES[id] && AI_TILES[id].title) || id); }
+/* one dashboard panel per slide, in the dashboard's own order */
+function pptPlan(){
+  const st = LAYOUT ? LAYOUT.state : null;
+  const order = (st ? st.order : ["chWeekly","chReasons","chMonthly","chInsp","chMills","chAlloy","pivot"]).filter(id => id !== "table");
+  return order.map(id => [id]);                         // v3.78: one panel per slide
+}
+/* ---------- the options dialog ---------- */
+function openPptDialog(mode){
+  PPT_MODE = mode === "video" ? "video" : "pptx";
+  if(!rows.length) return alert("Load data first — there is nothing to export yet.");
+  let m = $("pptModal");
+  const curMusic = (MUSIC.current && Object.keys(MUSIC.SCENES).find(k => MUSIC.SCENES[k] === MUSIC.current)) || ($("musicSel") ? $("musicSel").value : "off");
+  if(!m){
+    m = document.createElement("div"); m.id = "pptModal";
+    m.innerHTML = '<div id="pptBox"><h4><span class="ticon">' + ICONS.bars + '</span>Export to PowerPoint</h4>' +
+      '<div class="tgsub">One dashboard panel per slide, with its explanation and narration. The current theme, filters and targets carry over. The record list is not included.</div>' +
+      '<h5>Slides</h5><div id="pptSlides" class="pptgrid"></div>' +
+      '<h5>Explanations</h5><label class="pptopt"><input type="radio" name="pptExp" value="ai" checked> Written by the AI analyst (Claude) — same assessments as the ✨ AI buttons</label>' +
+      '<label class="pptopt"><input type="radio" name="pptExp" value="local"> Built-in summaries (no AI)</label>' +
+      '<h5>Narration avatar</h5><label class="pptopt"><input type="checkbox" id="pptNarr" checked> Add a narrator to every slide that talks through the data</label>' +
+      '<div class="pptrow"><label>Voice <select id="pptVoice">' + PPT_VOICES.map(v => '<option value="' + v[0] + '">' + v[1] + '</option>').join("") + '</select></label>' +
+      '<label class="pptopt" style="margin:0"><input type="checkbox" id="pptAdv"> Advance slides automatically when the narrator finishes (off: click to advance)</label></div>' +
+      '<h5>Background music</h5><div class="pptrow"><label>Music <select id="pptMusic"><option value="off">None</option>' +
+      Object.keys(MUSIC.SCENES).map(k => '<option value="' + k + '">' + MUSIC.SCENES[k].label + '</option>').join("") + '</select></label>' +
+      '<label>Level <select id="pptMusicVol"><option value="18000">Soft</option><option value="30000" selected>Medium</option><option value="55000">Strong</option></select></label></div>' +
+      '<div id="pptProg"><div class="pptbar"><span id="pptBarFill"></span></div><div id="pptStep"></div></div>' +
+      '<div id="pptErr"></div><div class="tgrow"><span id="pptSize" class="tunit"></span>' +
+      '<span style="display:flex;gap:8px"><button type="button" id="pptTestVoice" title="Ask the proxy for a short voice sample and play it">Test voice</button><button type="button" id="pptCancel">Cancel</button><button type="button" class="primary" id="pptGo">Create PowerPoint</button></span></div></div>';
+    document.body.appendChild(m);
+    m.addEventListener("click", e => { if(e.target === m && !PPT_BUSY) m.classList.remove("on"); });
+    $("pptCancel").addEventListener("click", () => { if(PPT_BUSY){ PPT_CANCEL = true; $("pptStep").textContent = "Cancelling…"; } else m.classList.remove("on"); });
+    $("pptGo").addEventListener("click", () => pptRun(PPT_MODE));
+    $("pptTestVoice").addEventListener("click", async () => {
+      const b = $("pptTestVoice"), out = $("pptErr");
+      if(!CONFIG.api.proxyUrl){ out.textContent = "No proxy URL is configured."; return; }
+      b.disabled = true; out.textContent = "Asking the proxy for a voice sample…";
+      try{
+        const a = await pptTts("This is the narration voice for your PowerPoint export.", $("pptVoice").value, s => out.textContent = "Voice service busy, retrying in " + Math.round(s) + " s…");
+        out.innerHTML = '<span style="color:var(--st-good)">Voice OK (' + (a.ms / 1000).toFixed(1) + ' s sample). Playing it now.</span>';
+        new Audio("data:" + a.data).play().catch(() => {});
+      }catch(e){ out.textContent = "Voice test failed: " + (e.message || e); }
+      b.disabled = false;
+    });
+    $("pptNarr").addEventListener("change", () => { $("pptVoice").disabled = $("pptAdv").disabled = !$("pptNarr").checked; });
+  }
+  const plan = pptPlan(), name = panelTitle;
+  $("pptSlides").innerHTML = [["title","Title & scope"],["kpi","Key metrics (KPI tiles)"]].concat(plan.map((g, i) => ["s" + i, g.map(name).join("  +  ")]), [["end","Key takeaways"],["next","Recommended next steps"]])
+    .map(([k, l]) => '<label class="pptopt"><input type="checkbox" data-s="' + k + '" checked> ' + l + '</label>').join("");
+  $("pptMusic").value = MUSIC.SCENES[curMusic] ? curMusic : "off";
+  const vid = PPT_MODE === "video";
+  m.querySelector("h4").lastChild.textContent = vid ? "Export as Video" : "Export to PowerPoint";
+  m.querySelector(".tgsub").textContent = vid
+    ? "An MP4 video of the same slides. Each slide stays on screen for 1.5 × its narration (8 s when there is none). The current theme, filters and music carry over."
+    : "One dashboard panel per slide, with its explanation and narration. The current theme, filters and targets carry over. The record list is not included.";
+  $("pptGo").textContent = vid ? "Create video" : "Create PowerPoint";
+  $("pptAdv").closest("label").style.display = vid ? "none" : "";
+  $("pptErr").textContent = ""; $("pptProg").classList.remove("on"); $("pptGo").disabled = false;
+  if(!CONFIG.api.proxyUrl){ document.querySelector('input[name=pptExp][value=local]').checked = true; }
+  m.classList.add("on");
+}
+let PPT_BUSY = false, PPT_CANCEL = false;
+function pptProgress(p, msg){ $("pptBarFill").style.width = Math.round(p * 100) + "%"; $("pptStep").textContent = msg; }
+async function pool(items, n, fn){ const out = new Array(items.length); let i = 0;
+  await Promise.all(Array.from({ length:Math.min(n, items.length) }, async () => { while(i < items.length){ const k = i++; if(PPT_CANCEL) return; out[k] = await fn(items[k], k); } }));
+  return out; }
+
+async function buildPpt(){ return pptRun(PPT_MODE); }
+let PPT_MODE = "pptx";
+async function pptRun(kind){
+  if(PPT_BUSY) return;
+  PPT_BUSY = true; PPT_CANCEL = false; $("pptGo").disabled = true; $("pptErr").textContent = ""; $("pptProg").classList.add("on");
+  const warn = [];
+  try{
+    const want = new Set([...document.querySelectorAll("#pptSlides input:checked")].map(i => i.dataset.s));
+    const useAI = document.querySelector('input[name=pptExp]:checked').value === "ai" && !!CONFIG.api.proxyUrl;
+    const narr = $("pptNarr").checked, voice = $("pptVoice").value, adv = narr && $("pptAdv").checked;
+    const musicKey = $("pptMusic").value, musicVol = +$("pptMusicVol").value;
+    pptProgress(.03, "Loading the PowerPoint builder…");
+    if(!window.PptxGenJS) await pptLoad(PPT_LIBS.pptx);
+    if(!window.JSZip) await pptLoad(PPT_LIBS.zip);
+    if(!window.lamejs) await pptLoad(PPT_LIBS.mp3);
+
+    const themeKey = $("themeSel").value, T = THEMES[themeKey] || THEMES.steel, F = pptFonts(T);
+    const C = { bg:hex(T.bg), card:hex(T.card), ink:hex(T.ink), muted:hex(T.muted), steel:hex(T.steel), steel2:hex(T.steel2), accent:hex(T.accent),
+                line:hex(getComputedStyle(document.documentElement).getPropertyValue("--line").trim() || "#CBD5DD"),
+                good:"198038", watch:"D98E04", action:"C1121F" };
+    const plan = pptPlan().map((g, i) => ({ key:"s" + i, ids:g })).filter(s => want.has(s.key));
+
+    /* 1. explanations */
+    const tiles = ["kpi"].concat(...plan.map(s => s.ids));
+    pptProgress(.08, useAI ? "Asking the AI analyst for each panel…" : "Writing summaries…");
+    let done = 0;
+    const EXP = {}, aiFails = [];
+    await pool(tiles, 3, async id => {
+      let r = null;
+      if(useAI){ try{ r = await aiRequestCached(id); }catch(e){ aiFails.push((AI_TILES[id] || {}).title || id); } }
+      EXP[id] = r || (id === "kpi" ? { st:"OK", quick:"These tiles summarise footage received, inspected, rejected and approved, plus rejection rate, coverage and held lots, for the selected scope.", detailed:"" } : localExplain(id));
+      pptProgress(.08 + .3 * (++done / tiles.length), "Explanations " + done + " of " + tiles.length + "…");
+    });
+    if(aiFails.length) warn.push("The AI analyst was unavailable for " + (aiFails.length === tiles.length ? "every panel" : aiFails.join(", ")) + ", so built-in summaries were used there.");
+    if(PPT_CANCEL) throw new Error("cancelled");
+
+    /* 2. narration scripts */
+    const scope = aiScopeSummary(), title = (AI_TILES.kpi && "Receiving Quality Review") || "Receiving Quality Review";
+    const K = AGG.kpis || {};
+    const say = {};
+    if(want.has("title")) say.title = "Welcome to the " + CONFIG.clientName + " receiving quality review. This covers " + fmt(K.submissions || 0) +
+      " inspection submissions, " + scope.replace(/\s*·\s*/g, ", ") + ". I'll walk you through the key metrics and each chart.";
+    if(want.has("kpi")) say.kpi = "First, the key metrics. " + mdStrip(EXP.kpi.quick);
+    plan.forEach(s => { say[s.key] = s.ids.map(id => (id === "pivot" ? pivotSay() : ((AI_TILES[id] || {}).title || "") + ". ") + mdStrip(EXP[id].quick)).join(" Next, "); });
+    /* v3.79: next steps gathered from every panel, de-duplicated, 4 per slide on their own slides */
+    const panelName = panelTitle;
+    const nextSteps = [], seenStep = new Set();
+    ["kpi"].concat(plan.map(x => x.ids).flat()).forEach(id => {
+      const e = EXP[id]; if(!e) return;
+      (aiSections(e.detailed)["Recommended next steps"] || []).slice(0, 2).forEach(st => {
+        const key = mdStrip(st).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().slice(0, 48);
+        if(key && !seenStep.has(key) && nextSteps.length < 12){ seenStep.add(key); nextSteps.push({ text:st, from:panelName(id) }); }
+      });
+    });
+    const stepPages = [];
+    if(want.has("next")) for(let i = 0; i < nextSteps.length; i += 4) stepPages.push(nextSteps.slice(i, i + 4));
+    const flagged = ["kpi"].concat(plan.map(x => x.ids).flat()).filter(id => EXP[id] && EXP[id].st && EXP[id].st !== "OK").map(panelName);
+    const lastKey = stepPages.length ? "next" + (stepPages.length - 1) : "end";
+    if(want.has("end")) say.end = "Here are the key takeaways. " + mdStrip(EXP.kpi.quick).split(/(?<=[.!?])\s/)[0] +
+      (flagged.length ? " The areas that need attention are: " + flagged.join(", ") + "." : " No panel is flagged for attention.") +
+      (lastKey === "end" ? " Thanks for watching." : "");
+    stepPages.forEach((pg, i) => {
+      say["next" + i] = (i ? "More recommended next steps. " : "Now the recommended next steps. ") +
+        pg.map((st, j) => "Step " + (i * 4 + j + 1) + ". " + mdStrip(st.text)).join(" ") + (i === stepPages.length - 1 ? " Thanks for watching." : "");
+    });
+
+    /* 3. narration audio */
+    const AUD = {};
+    if(narr){
+      if(!CONFIG.api.proxyUrl) warn.push("No proxy configured, so the narration is in the speaker notes only.");
+      else {
+        const keys = Object.keys(say); done = 0;
+        pptProgress(.4, "Recording the narrator…");
+        let failed = 0, firstErr = "";
+        await pool(keys, 1, async k => {                // one at a time: the voice model is rate-limited
+          try{ AUD[k] = await pptTts(say[k], voice, secs => pptProgress(.4 + .3 * (done / keys.length), "Voice service busy, waiting " + Math.round(secs) + " s (slide " + (done + 1) + " of " + keys.length + ")…")); }
+          catch(e){ failed++; if(!firstErr) firstErr = e.message || String(e); }
+          pptProgress(.4 + .3 * (++done / keys.length), "Narrator: slide " + done + " of " + keys.length + "…");
+        });
+        if(failed) warn.push("Narration recorded for " + (keys.length - failed) + " of " + keys.length + " slides. Voice error: " + firstErr + ". The script is in the speaker notes.");
+      }
+    }
+    if(PPT_CANCEL) throw new Error("cancelled");
+
+    /* 4. music */
+    let MUS = null;
+    if(musicKey !== "off"){
+      pptProgress(.72, "Rendering the background music…");
+      try{ const sc = MUSIC.SCENES[musicKey], bars = Math.max(8, Math.round(75 / (240 / sc.bpm)));
+           const sec = bars * 240 / sc.bpm; MUS = await toMp3(await MUSIC.renderWav(musicKey, sec, 44100)); }
+      catch(e){ warn.push("Background music could not be rendered (" + e.message + ")."); }
+    }
+
+    if(kind === "video"){ await vidBuild({ want, T, F, C, plan, EXP, say, AUD, MUS, musicVol, stepPages, scope, K, warn, title }); return; }
+    /* 5. slides */
+    pptProgress(.8, "Building slides…");
+    const pptx = new PptxGenJS(); pptx.layout = "LAYOUT_WIDE"; pptx.title = title; pptx.company = CONFIG.clientName; pptx.author = "Alpha TransForm dashboard";
+    const W = 13.333, H = 7.5;
+    const avatar = narr ? await pptAvatar(T, 360) : null;
+    const logo = (document.querySelector(".logocard img") || {}).src || null;
+    const blank = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+    const ST = { CRITICAL:["Critical", C.action], WARNING:["Needs attention", C.watch], OK:["Within target", C.good] };
+    let slideNo = 0;
+    const SL = [], newSlide = () => { const s = pptx.addSlide(); SL.push(s); return s; };
+    const frame = (s, heading, sub) => {
+      slideNo++;
+      s.background = { color:C.bg };
+      s.addShape(pptx.ShapeType.rect, { x:0, y:0, w:W, h:.95, fill:{ color:C.steel }, line:{ color:C.steel } });
+      s.addShape(pptx.ShapeType.rect, { x:0, y:.95, w:W, h:.06, fill:{ color:C.accent }, line:{ color:C.accent } });
+      s.addText(heading, { x:.45, y:.12, w:9.6, h:.5, fontFace:F.head, fontSize:24, bold:true, color:"FFFFFF", margin:0 });
+      if(sub) s.addText(sub, { x:.45, y:.58, w:10.5, h:.3, fontFace:F.body, fontSize:11, color:"FFFFFF", transparency:15, margin:0 });
+      if(logo){ s.addShape(pptx.ShapeType.roundRect, { x:W - 1.85, y:.1, w:1.55, h:.76, rectRadius:.08, fill:{ color:"FFFFFF" }, line:{ color:"FFFFFF" } });
+                s.addImage({ data:logo, x:W - 1.78, y:.14, w:1.41, h:.68, sizing:{ type:"contain", w:1.41, h:.68 } }); }
+      s.addText(CONFIG.clientName + " · Receiving Quality Review · " + slideNo, { x:.45, y:H - .38, w:7, h:.25, fontFace:F.body, fontSize:9, color:C.muted, margin:0 });
+    };
+    const meta = [];                                    // per slide: {narr:{ms}, music:bool}
+    const addNarrator = (s, k) => {
+      const a = AUD[k];
+      if(a) s.addMedia({ type:"audio", data:a.data, extn:"mp3", cover:avatar || blank, x:W - 1.45, y:H - 1.55, w:1.15, h:1.15, objectName:"PAC_NARR" });
+      if(avatar) s.addImage({ data:avatar, x:W - 1.45, y:H - 1.55, w:1.15, h:1.15, altText:"Narrator" });
+      if(avatar) s.addText(a ? "🔊 Narrated" : "Narrator notes", { x:W - 2.95, y:H - .62, w:1.45, h:.25, fontFace:F.body, fontSize:9, color:C.muted, align:"right", margin:0 });
+      if(say[k]) s.addNotes(say[k]);
+      return a ? a.ms : 0;
+    };
+    const card = (s, x, y, w, h) => s.addShape(pptx.ShapeType.roundRect, { x, y, w, h, rectRadius:.12, fill:{ color:C.card }, line:{ color:C.line, width:.75 }, shadow:{ type:"outer", blur:4, offset:1.5, angle:90, opacity:.18, color:"000000" } });
+    /* PowerPoint does not shrink text until someone edits it, so size it here:
+       estimate the wrapped height, step the font down to 10 pt, then drop the least important bullets */
+    const bulletBox = (s, x, y, w, h, quick, detailed, st, fsMax) => {
+      const sec = aiSections(detailed), extras = [];
+      [["Assessment", 3], ["Recommended next steps", 2], ["Watch items", 1]].forEach(([nm, n]) => (sec[nm] || []).slice(0, n).forEach(t => extras.push([nm, t])));
+      let q = mdStripKeepEm(quick || "");
+      const plain = t => String(t).replace(/[*=_`#>]/g, "");
+      const est = (fs, ex, qq) => {
+        const cpl = Math.max(12, (w - .2) * 72 / (fs * .46)), lh = fs * 1.2 / 72;
+        const L = (t, ind) => Math.max(1, Math.ceil(plain(t).length / (ind ? cpl - 4 : cpl)));
+        let lines = (st && ST[st]) ? 1 : 0, gaps = 0, last = null;
+        if(qq) lines += L(qq);
+        ex.forEach(([nm, t]) => { if(nm !== last){ lines++; gaps++; last = nm; } lines += L(t, 1); });
+        return lines * lh + gaps * 5 / 72 + .2;
+      };
+      let fs = fsMax, ex = extras.slice();
+      while(est(fs, ex, q) > h){
+        if(fs > 10.5) fs -= .5;
+        else if(ex.length) ex.pop();
+        else if(fs > 10) fs -= .5;
+        else { const cut = q.replace(/\s*[^.!?]+[.!?]?\s*$/, ""); if(!cut || cut === q){ break; } q = cut; }
+      }
+      const p = [];
+      if(st && ST[st]) p.push({ text:"● " + ST[st][0], options:{ color:ST[st][1], bold:true, fontSize:fs, breakLine:true } });
+      if(q) p.push(...para(mdRuns(q, { color:C.ink, fontSize:fs }, C.accent)));
+      ["Assessment", "Watch items", "Recommended next steps"].forEach(nm => {
+        const b = ex.filter(e => e[0] === nm).map(e => e[1]); if(!b.length) return;
+        p.push({ text:nm, options:{ bold:true, color:C.steel2 === C.card ? C.accent : C.muted, fontSize:fs, breakLine:true, paraSpaceBefore:5 } });
+        b.forEach(t => p.push(...para(mdRuns(t, { color:C.ink, fontSize:fs }, C.accent), { bullet:{ indent:12 } })));
+      });
+      s.addText(p.length ? p : [{ text:"" }], { x, y, w, h, fontFace:F.body, valign:"top", margin:6, fit:"shrink", paraSpaceAfter:2 });
+    };
+    /* one paragraph: paragraph options (bullet, spacing) on the first run, line break after the last */
+    function para(runs, popt){
+      if(!runs.length) return [];
+      if(popt){ const o = Object.assign({}, runs[0].options); delete o.bold; delete o.color;
+                runs.unshift({ text:"\u200B", options:Object.assign(o, popt) }); }   // bullet lives on a plain lead-in run
+      const L = runs.length - 1; runs[L] = { text:runs[L].text, options:Object.assign({}, runs[L].options, { breakLine:true }) };
+      return runs;
+    }
+    function mdStripKeepEm(s){ return String(s || "").replace(/(^|[^*])\*([^*]+)\*(?!\*)/g, "$1$2"); }
+
+    if(want.has("title")){
+      const s = newSlide(); slideNo++;
+      s.background = { color:C.steel };
+      s.addShape(pptx.ShapeType.rect, { x:0, y:5.35, w:W, h:.08, fill:{ color:C.accent }, line:{ color:C.accent } });
+      if(logo){ s.addShape(pptx.ShapeType.roundRect, { x:.7, y:.6, w:2.9, h:1.5, rectRadius:.12, fill:{ color:"FFFFFF" }, line:{ color:"FFFFFF" } });
+                s.addImage({ data:logo, x:.85, y:.7, w:2.6, h:1.3, sizing:{ type:"contain", w:2.6, h:1.3 } }); }
+      s.addText("Receiving Quality Review", { x:.7, y:2.35, w:10.5, h:1, fontFace:F.head, fontSize:44, bold:true, color:"FFFFFF", margin:0 });
+      s.addText(CONFIG.clientName + " · incoming tube inspection", { x:.7, y:3.3, w:10, h:.5, fontFace:F.body, fontSize:20, color:C.accent, margin:0 });
+      s.addText(scope, { x:.7, y:3.95, w:10.5, h:.9, fontFace:F.body, fontSize:14, color:"FFFFFF", valign:"top", margin:0 });
+      s.addText(adv ? "Slides move on by themselves after the narration. Click, or press → / Space, to go ahead sooner." : "Click, or press → / Space, to go to the next slide. Use ◀ ▶ at the bottom of each slide to move back and forth.",
+        { x:.7, y:6.35, w:11, h:.4, fontFace:F.body, fontSize:13, bold:true, color:C.accent, margin:0 });
+      s.addText("Generated " + new Date().toLocaleDateString(undefined, { year:"numeric", month:"long", day:"numeric" }) + " from Alpha TransForm · " + fmt(K.submissions || 0) + " submissions", { x:.7, y:5.6, w:10, h:.4, fontFace:F.body, fontSize:12, color:"FFFFFF", transparency:20, margin:0 });
+      if(MUS) s.addMedia({ type:"audio", data:MUS.data, extn:"mp3", cover:blank, x:-.6, y:H - .4, w:.3, h:.3, objectName:"PAC_MUSIC" });
+      meta.push({ k:"title", narr:addNarrator(s, "title"), music:!!MUS });
+    }
+    if(want.has("kpi")){
+      const s = newSlide(); frame(s, "Key metrics", scope);
+      const tiles = [...document.querySelectorAll("#kpis .kpi")];
+      tiles.forEach((el, i) => {
+        const col = i % 4, row = Math.floor(i / 4), x = .45 + col * 3.13, y = 1.3 + row * 1.72, w = 2.95, h = 1.55;
+        const stc = el.classList.contains("st-good") ? C.good : el.classList.contains("st-watch") ? C.watch : el.classList.contains("st-action") ? C.action : C.muted;
+        card(s, x, y, w, h);
+        s.addShape(pptx.ShapeType.rect, { x:x + .02, y, w:w - .04, h:.08, fill:{ color:stc }, line:{ color:stc } });
+        s.addText((el.querySelector("h4") || {}).textContent || "", { x:x + .15, y:y + .15, w:w - .3, h:.3, fontFace:F.body, fontSize:10.5, bold:true, color:C.muted, margin:0 });
+        const v = el.querySelector(".v"), val = v ? v.childNodes[0].textContent : "", u = (el.querySelector(".u") || {}).textContent || "";
+        s.addText([{ text:val, options:{ fontSize:26, bold:true, color:C.ink } }, { text:u ? "  " + u : "", options:{ fontSize:12, color:C.muted } }], { x:x + .15, y:y + .48, w:w - .3, h:.55, fontFace:F.head, margin:0 });
+        const badge = (el.querySelector(".kbadge") || {}).textContent || "";
+        if(!el.classList.contains("st-info")) s.addText(badge.toUpperCase(), { x:x + .15, y:y + 1.08, w:1, h:.26, fontFace:F.body, fontSize:9, bold:true, color:"FFFFFF", fill:{ color:stc }, align:"center", margin:0, rectRadius:.06, shape:pptx.ShapeType.roundRect });
+        s.addText((el.querySelector(".ktgt") || {}).textContent || "", { x:x + (el.classList.contains("st-info") ? .15 : 1.22), y:y + 1.08, w:w - 1.35, h:.26, fontFace:F.body, fontSize:8.5, color:C.muted, margin:0 });
+      });
+      card(s, .45, 4.85, W - 2.4, 2.1);
+      bulletBox(s, .55, 4.9, W - 2.6, 2.0, EXP.kpi.quick, EXP.kpi.detailed, EXP.kpi.st, 12);
+      meta.push({ k:"kpi", narr:addNarrator(s, "kpi") });
+    }
+    for(const sl of plan){
+      if(PPT_CANCEL) throw new Error("cancelled");
+      const s = newSlide();
+      const names = sl.ids.map(panelTitle);
+      frame(s, names.join("  &  "), scope);
+      if(sl.ids[0] === "pivot"){
+        const tb = $("pvTable"), rowsEl = tb ? [...tb.querySelectorAll("tr")].slice(0, 16) : [];
+        const data = rowsEl.map((tr, ri) => [...tr.children].slice(0, 9).map(td => {
+          const cs = getComputedStyle(td);
+          const total = ri === rowsEl.length - 1 && /total/i.test(tr.textContent) || /total/i.test(tb.rows[0] && tb.rows[0].cells[[...tr.children].indexOf(td)] ? tb.rows[0].cells[[...tr.children].indexOf(td)].textContent : "");
+          return { text:td.textContent.trim(), options:{ bold:ri === 0 || td.tagName === "TH" || total, color:ri === 0 ? "FFFFFF" : C.ink,
+            fill:{ color:ri === 0 ? C.steel : blendOn(cs.backgroundColor, C.card) }, fontSize:10, align:td.tagName === "TH" && ri ? "left" : "center" } };
+        }));
+        if(data.length) s.addTable(data, { x:.45, y:1.3, w:7.9, fontFace:F.body, border:{ type:"solid", color:C.line, pt:.5 }, autoPage:false, rowH:.3 });
+        card(s, 8.6, 1.3, 4.3, 4.5); bulletBox(s, 8.7, 1.38, 4.1, 4.34, EXP.pivot.quick, EXP.pivot.detailed, EXP.pivot.st, 14);
+      } else if(sl.ids.length === 1){
+        const id = sl.ids[0], img = pptChartImage(id);
+        card(s, .45, 1.3, 7.95, 5.45);
+        if(img){ const bw = 7.75, bh = 5.25, w = Math.min(bw, bh * img.ratio), h = w / img.ratio; s.addImage({ data:img.data, x:.55 + (bw - w) / 2, y:1.4 + (bh - h) / 2, w, h }); }
+        card(s, 8.6, 1.3, 4.3, 4.5); bulletBox(s, 8.7, 1.38, 4.1, 4.34, EXP[id].quick, EXP[id].detailed, EXP[id].st, 14);
+      } else {
+        sl.ids.forEach((id, i) => {
+          const x = .45 + i * 6.3, img = pptChartImage(id);
+          card(s, x, 1.3, 6.1, 3.35);
+          if(img){ const bw = 5.9, bh = 3.15, w = Math.min(bw, bh * img.ratio), h = w / img.ratio; s.addImage({ data:img.data, x:x + .1 + (bw - w) / 2, y:1.4 + (bh - h) / 2, w, h }); }
+          card(s, x, 4.8, i ? 6.1 - 1.7 : 6.1, 2.15);
+          bulletBox(s, x + .08, 4.84, (i ? 6.1 - 1.7 : 6.1) - .16, 2.07, EXP[id].quick, EXP[id].detailed.split("**Watch items**")[0], EXP[id].st, 10.5);
+        });
+      }
+      meta.push({ k:sl.key, narr:addNarrator(s, sl.key) });
+    }
+    if(want.has("end")){
+      const s = newSlide(); frame(s, "Key takeaways", scope);
+      const p = [];
+      [["kpi"]].concat(plan.map(x => x.ids)).flat().forEach(id => {
+        const e = EXP[id]; if(!e) return;
+        const nm = panelTitle(id);
+        p.push(...para([{ text:nm + ": ", options:{ bold:true, color:(ST[e.st] || ST.OK)[1], fontSize:13 } }].concat(mdRuns(mdStripKeepEm(e.quick).split(/(?<=\.)\s/)[0], { color:C.ink, fontSize:13 }, C.accent)), { bullet:{ indent:14 }, paraSpaceAfter:4 }));
+      });
+      card(s, .45, 1.3, W - 2.4, 5.6); s.addText(p, { x:.6, y:1.4, w:W - 2.7, h:5.4, fontFace:F.body, valign:"top", fit:"shrink", paraSpaceAfter:4 });
+      meta.push({ k:"end", narr:addNarrator(s, "end") });
+    }
+    /* recommended next steps: their own slide(s), one card per step */
+    for(let pi = 0; pi < stepPages.length; pi++){
+      const s = newSlide();
+      frame(s, "Recommended next steps" + (stepPages.length > 1 ? " (" + (pi + 1) + " of " + stepPages.length + ")" : ""), scope);
+      const rowH = 1.12, gap = .14, x = .45, w = W - 2.3;
+      stepPages[pi].forEach((st, j) => {
+        const y = 1.3 + j * (rowH + gap), n = pi * 4 + j + 1;
+        card(s, x, y, w, rowH);
+        s.addShape(pptx.ShapeType.ellipse, { x:x + .2, y:y + (rowH - .62) / 2, w:.62, h:.62, fill:{ color:C.accent }, line:{ color:C.accent } });
+        s.addText(String(n), { x:x + .2, y:y + (rowH - .62) / 2, w:.62, h:.62, align:"center", valign:"middle", fontFace:F.head, fontSize:18, bold:true, color:"FFFFFF", margin:0 });
+        const tw = w - 1.2, plainLen = mdStrip(st.text).length;
+        let fs = 16; while(fs > 11 && Math.ceil(plainLen / ((tw - .1) * 72 / (fs * .46))) * fs * 1.2 / 72 > rowH - .42) fs -= .5;
+        s.addText(para(mdRuns(mdStripKeepEm(st.text), { color:C.ink, fontSize:fs }, C.accent)), { x:x + 1, y:y + .06, w:tw, h:rowH - .36, fontFace:F.body, valign:"middle", margin:2 });
+        s.addText("From: " + st.from, { x:x + 1, y:y + rowH - .32, w:tw, h:.24, fontFace:F.body, fontSize:10, italic:true, color:C.muted, margin:2 });
+      });
+      meta.push({ k:"next" + pi, narr:addNarrator(s, "next" + pi) });
+    }
+
+    /* back / forward buttons (work in slide show) */
+    const navPrev = pptNavButton(C, -1), navNext = pptNavButton(C, 1);
+    SL.forEach((s, i) => {
+      const y = H - .55, sz = .42;
+      if(i > 0) s.addImage({ data:navPrev, x:8.0, y, w:sz, h:sz, altText:"Previous slide", hyperlink:{ slide:i, tooltip:"Previous slide" } });
+      if(i < SL.length - 1) s.addImage({ data:navNext, x:8.55, y, w:sz, h:sz, altText:"Next slide", hyperlink:{ slide:i + 2, tooltip:"Next slide" } });
+    });
+    /* 6. package + add autoplay timing (narration on each slide, music across all slides) */
+    pptProgress(.9, "Packaging the file…");
+    const buf = await pptx.write({ outputType:"arraybuffer" });
+    let zip = await JSZip.loadAsync(buf);
+    const nSlides = meta.length;
+    for(let i = 0; i < nSlides; i++){
+      const path = "ppt/slides/slide" + (i + 1) + ".xml", f = zip.file(path); if(!f) continue;
+      let xml = pptUniqueIds(await f.async("string"));
+      const media = [];
+      const re = /<p:pic>[\s\S]*?<p:cNvPr id="(\d+)" name="(PAC_MUSIC|PAC_NARR)"[\s\S]*?<\/p:pic>/g; let mm;
+      while((mm = re.exec(xml))) media.push({ id:mm[1], kind:mm[2] });
+      const mt = meta[i];
+      const items = media.map(x => x.kind === "PAC_MUSIC" ? { id:x.id, ms:MUS ? MUS.ms : 60000, vol:musicVol, loop:true, across:nSlides }
+                                                         : { id:x.id, ms:mt.narr || 30000, vol:100000 });
+      const advMs = adv ? (mt.narr ? mt.narr + 1500 : 7000) : 0;
+      xml = pptAudioTags(pptFixParas(xml)).replace("</p:sld>", pptOrderIds(pptTimingXml(items, advMs)) + "</p:sld>");
+      zip.file(path, xml);
+    }
+    /* copy files only (no folder entries: they upset OneDrive/SharePoint viewers) */
+    const flat = new JSZip();
+    for(const n of Object.keys(zip.files)){ const e = zip.files[n]; if(!e.dir) flat.file(n, await e.async("uint8array"), { createFolders:false }); }
+    zip = flat;
+    const blob = await zip.generateAsync({ type:"blob", mimeType:"application/vnd.openxmlformats-officedocument.presentationml.presentation", compression:"DEFLATE" });
+    pptProgress(1, "Done — " + nSlides + " slides, " + (blob.size / 1048576).toFixed(1) + " MB");
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = "PAC_Receiving_Quality_Review_" + new Date().toISOString().slice(0, 10) + ".pptx";
+    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+    window.__lastPpt = blob;
+    $("pptErr").innerHTML = warn.length ? '<span style="color:var(--st-watch)">' + warn.map(recEsc).join("<br>") + '</span>' : "";
+  }catch(err){
+    if(String(err.message) === "cancelled"){ pptProgress(0, "Cancelled."); }
+    else { $("pptErr").textContent = (kind === "video" ? "Could not create the video: " : "Could not create the PowerPoint: ") + (err.message || err); console.error(err); }
+  }finally{
+    PPT_BUSY = false; PPT_CANCEL = false; $("pptGo").disabled = false;
+  }
+}
+function pptNavButton(C, dir){
+  const c = document.createElement("canvas"); c.width = c.height = 96; const g = c.getContext("2d");
+  g.fillStyle = "#" + C.accent; g.beginPath(); g.arc(48, 48, 46, 0, Math.PI * 2); g.fill();
+  g.fillStyle = "#FFFFFF"; g.beginPath();
+  if(dir > 0){ g.moveTo(38, 26); g.lineTo(68, 48); g.lineTo(38, 70); } else { g.moveTo(58, 26); g.lineTo(28, 48); g.lineTo(58, 70); }
+  g.closePath(); g.fill();
+  return c.toDataURL("image/png");
+}
+/* PptxGenJS can give two shapes on a slide the same id (e.g. an image and the audio object).
+   PowerPoint treats that as damage, and its repair strips the autoplay, so renumber every shape. */
+function pptUniqueIds(xml){
+  let n = 1;
+  return xml.replace(/<p:cNvPr id="\d+"/g, () => '<p:cNvPr id="' + (n++) + '"');
+}
+/* PptxGenJS writes a paragraph-properties block before EVERY run; the file format allows one,
+   first in the paragraph. Keep the first, drop the rest (avoids PowerPoint "repair" prompts and
+   lets bullets render everywhere). */
+function pptFixParas(xml){
+  const PPR = /<a:pPr\b[^>]*?(?:\/>|>[\s\S]*?<\/a:pPr>)/g;
+  return xml.replace(/<a:p>([\s\S]*?)<\/a:p>/g, (m, inner) => {
+    const head = /^<a:pPr\b[^>]*?(?:\/>|>[\s\S]*?<\/a:pPr>)/.exec(inner), h = head ? head[0] : "";
+    return "<a:p>" + h + inner.slice(h.length).replace(PPR, "") + "</a:p>";
+  });
+}
+/* PowerPoint slide timing: start every media item automatically when the slide opens;
+   music keeps playing across slides and loops; optional auto-advance */
+/* PptxGenJS marks embedded audio as a video file; PowerPoint expects audioFile for .mp3 */
+function pptAudioTags(xml){
+  return xml.replace(/(<p:cNvPr id="\d+" name="PAC_(?:MUSIC|NARR)"[\s\S]*?)<a:videoFile /g, "$1<a:audioFile ");
+}
+/* timing node ids must run 1,2,3… in document order */
+function pptOrderIds(x){
+  const map = {}; let n = 1;
+  x = x.replace(/<p:cTn id="(\d+)"/g, (m, id) => { map[id] = n; return '<p:cTn id="' + (n++) + '"'; });
+  return x.replace(/<p:tn val="(\d+)"/g, (m, id) => '<p:tn val="' + (map[id] || id) + '"');
+}
+function pptTimingXml(items, advMs){
+  let out = advMs ? '<p:transition spd="med" advTm="' + advMs + '"><p:fade/></p:transition>' : "";
+  if(!items.length) return out;
+  let id = 3;
+  const calls = items.map((m, i) => { const a = ++id, b = ++id;
+    return '<p:par><p:cTn id="' + a + '" presetID="1" presetClass="mediacall" presetSubtype="0" fill="hold" nodeType="' + (i ? "withEffect" : "afterEffect") + '">' +
+      '<p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst><p:cmd type="call" cmd="playFrom(0.0)"><p:cBhvr>' +
+      '<p:cTn id="' + b + '" dur="' + Math.max(1000, m.ms) + '" fill="hold"/><p:tgtEl><p:spTgt spid="' + m.id + '"/></p:tgtEl></p:cBhvr></p:cmd></p:childTnLst></p:cTn></p:par>'; }).join("");
+  const nodes = items.map(m => { const a = ++id;
+    return '<p:audio><p:cMediaNode vol="' + m.vol + '"' + (m.across ? ' numSld="' + Math.max(1, m.across) + '"' : "") + '><p:cTn id="' + a + '"' + (m.loop ? ' repeatCount="indefinite"' : "") + ' fill="hold" display="0">' +
+      '<p:stCondLst><p:cond delay="indefinite"/></p:stCondLst>' + (m.loop ? '' : '<p:endCondLst><p:cond evt="onStopAudio" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:endCondLst>') +
+      '</p:cTn><p:tgtEl><p:spTgt spid="' + m.id + '"/></p:tgtEl></p:cMediaNode></p:audio>'; }).join("");
+  return out + '<p:timing><p:tnLst><p:par><p:cTn id="1" dur="indefinite" restart="never" nodeType="tmRoot"><p:childTnLst>' +
+    '<p:seq concurrent="1" nextAc="seek"><p:cTn id="2" dur="indefinite" nodeType="mainSeq"><p:childTnLst>' +
+    '<p:par><p:cTn id="3" fill="hold"><p:stCondLst><p:cond delay="indefinite"/><p:cond evt="onBegin" delay="0"><p:tn val="2"/></p:cond></p:stCondLst><p:childTnLst>' +
+    '<p:par><p:cTn id="' + (++id) + '" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst>' + calls + '</p:childTnLst></p:cTn></p:par>' +
+    '</p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn>' +
+    '<p:prevCondLst><p:cond evt="onPrev" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:prevCondLst>' +
+    '<p:nextCondLst><p:cond evt="onNext" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:nextCondLst></p:seq>' +
+    nodes + '</p:childTnLst></p:cTn></p:par></p:tnLst></p:timing>';
+}
+(function addPptButton(){
+  const pdf = $("dashPdfBtn"); if(!pdf) return;
+  const b = document.createElement("button"); b.type = "button"; b.className = "hdr-btn"; b.id = "pptBtn";
+  b.innerHTML = '<span style="display:inline-block;width:13px;height:13px;vertical-align:-2px;margin-right:5px">' + ICONS.bars + '</span>Export to PowerPoint';
+  b.title = "Create a narrated PowerPoint of this dashboard (theme, filters and music carry over)";
+  b.addEventListener("click", () => openPptDialog("pptx"));
+  pdf.after(b);
+  const v = document.createElement("button"); v.type = "button"; v.className = "hdr-btn"; v.id = "vidBtn";
+  v.innerHTML = '<span style="display:inline-block;width:13px;height:13px;vertical-align:-2px;margin-right:5px"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="2" y="5" width="14" height="14" rx="2"/><path d="M16 10l6-3v10l-6-3z"/></svg></span>Export as Video';
+  v.title = "Create a narrated MP4 video of this dashboard";
+  v.addEventListener("click", () => openPptDialog("video"));
+  b.after(v);
+})();
+
+/* =====================================================================
+   v3.80: Export as Video (MP4)
+   The same slides as Export to PowerPoint, drawn in the browser at 1920×1080 and encoded
+   with the browser's own video encoder (WebCodecs) into an MP4.
+   - each slide stays on screen for 1.5 × its narration (8 s minimum when there is none)
+   - narration starts half a second into the slide; background music plays under the whole video
+   - soft cross-fade between slides; the narrator's ring pulses while she speaks
+   ===================================================================== */
+const VID_LIBS = { mux:["https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.1/build/mp4-muxer.js",
+                        "https://unpkg.com/mp4-muxer@5.2.1/build/mp4-muxer.js"] };
+const VW = 1920, VH = 1080, VS = VW / 13.333, VFPS = 10, VSR = 48000, VFADE = .5, VLEAD = .5;
+
+function vImg(src){ return new Promise(res => { if(!src) return res(null); const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; }); }
+function vRuns(s, color){
+  const out = []; String(s || "").split(/(\*\*[^*]+\*\*|==[^=]+==)/).forEach(seg => {
+    if(!seg) return;
+    if(seg.startsWith("**")) out.push({ t:seg.slice(2, -2).replace(/\*/g, ""), b:1, c:color });
+    else if(seg.startsWith("==")) out.push({ t:seg.slice(2, -2).replace(/\*/g, ""), b:1, a:1 });
+    else out.push({ t:seg.replace(/\*/g, ""), c:color });
+  });
+  return out;
+}
+/* word-wrap rich paragraphs; sizes are in points (1 pt = 2 px at 1920 wide) */
+function vLayout(g, paras, w, k, face, accent){
+  const lines = []; let y = 0;
+  for(const p of paras){
+    const fs = p.fs * 2 * k, lh = fs * 1.28, ind = p.bullet ? fs * 1.15 : 0;
+    y += (p.before || 0) * 2 * k;
+    let line = [], x = ind, first = true;
+    const push = () => { lines.push({ y:y + fs * .95, items:line, bullet:first && p.bullet ? { fs, color:p.color } : null }); first = false; y += lh; line = []; x = ind; };
+    for(const r of p.runs){
+      const font = ((r.b || p.bold) ? "700 " : "400 ") + (p.italic ? "italic " : "") + fs.toFixed(1) + "px " + face;
+      g.font = font;
+      for(const wd of String(r.t).split(/(\s+)/)){
+        if(!wd) continue;
+        const sp = /^\s+$/.test(wd);
+        if(sp && x === ind) continue;
+        const ww = g.measureText(sp ? " " : wd).width;
+        if(!sp && x + ww > w && x > ind) push();
+        line.push({ x, t:sp ? " " : wd, font, color:r.a ? accent : (r.c || p.color) }); x += ww;
+      }
+    }
+    push(); y += (p.after || 0) * 2 * k;
+  }
+  return { lines, h:y };
+}
+function vText(g, paras, x, y, w, h, face, accent, kMin){
+  let k = 1, L = vLayout(g, paras, w, k, face, accent);
+  while(L.h > h && k > (kMin || .55)){ k -= .04; L = vLayout(g, paras, w, k, face, accent); }
+  g.save(); g.beginPath(); g.rect(x, y, w, h + 4); g.clip(); g.textBaseline = "alphabetic";
+  L.lines.forEach(l => {
+    if(l.bullet){ g.font = "700 " + l.bullet.fs + "px " + face; g.fillStyle = l.bullet.color; g.fillText("•", x + 2, y + l.y); }
+    l.items.forEach(it => { g.font = it.font; g.fillStyle = it.color; g.fillText(it.t, x + it.x, y + l.y); });
+  });
+  g.restore();
+  return L.h;
+}
+
+async function vidBuild(x){
+  const { want, T, C, plan, EXP, say, AUD, MUS, musicVol, stepPages, scope, K, warn } = x;
+  if(!("VideoEncoder" in window) || !("AudioEncoder" in window) || !("VideoFrame" in window))
+    throw new Error("this browser cannot make videos. Use a current version of Chrome or Edge");
+  pptProgress(.74, "Loading the video encoder…");
+  if(!window.Mp4Muxer) await pptLoad(VID_LIBS.mux);
+
+  let vcfg = null;
+  for(const codec of ["avc1.640028", "avc1.4d0028", "avc1.42e028", "avc1.42001f"]){
+    const cfg = { codec, width:VW, height:VH, bitrate:3000000, framerate:VFPS, avc:{ format:"avc" } };
+    try{ if((await VideoEncoder.isConfigSupported(cfg)).supported){ vcfg = cfg; break; } }catch(e){}
+  }
+  if(!vcfg) throw new Error("this browser has no H.264 video encoder");
+  let acfg = null, acodec = null;
+  for(const [codec, m] of [["mp4a.40.2", "aac"], ["opus", "opus"]]){
+    const cfg = { codec, sampleRate:VSR, numberOfChannels:2, bitrate:128000 };
+    try{ if((await AudioEncoder.isConfigSupported(cfg)).supported){ acfg = cfg; acodec = m; break; } }catch(e){}
+  }
+  if(!acfg) throw new Error("this browser has no audio encoder for MP4");
+
+  await document.fonts.ready;
+  const FB = T.body || "Segoe UI, Arial, sans-serif", FH = T.head || FB;
+  const col = h => "#" + h, P = v => v * VS, W = 13.333, H = 7.5;
+  const ST = { CRITICAL:["Critical", col(C.action)], WARNING:["Needs attention", col(C.watch)], OK:["Within target", col(C.good)] };
+  const logo = await vImg((document.querySelector(".logocard img") || {}).src || null);
+  const avatar = await vImg(await pptAvatar(T, 360));
+
+  /* ---- slide list (same order and keys as the PowerPoint) ---- */
+  const slides = [];
+  if(want.has("title")) slides.push({ k:"title", kind:"title" });
+  if(want.has("kpi")) slides.push({ k:"kpi", kind:"kpi" });
+  plan.forEach(sl => slides.push({ k:sl.key, kind:"panel", id:sl.ids[0] }));
+  if(want.has("end")) slides.push({ k:"end", kind:"end" });
+  stepPages.forEach((pg, i) => slides.push({ k:"next" + i, kind:"next", page:pg, pi:i }));
+  if(!slides.length) throw new Error("no slides selected");
+
+  /* ---- narration audio, timings ---- */
+  pptProgress(.76, "Timing the slides…");
+  const AC = window.AudioContext || window.webkitAudioContext, ac = new AC();
+  const decode = async d => { const b64 = String(d).split(",")[1]; const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0)).buffer; return ac.decodeAudioData(bytes); };
+  let t = 0;
+  for(const s of slides){
+    s.buf = AUD[s.k] ? await decode(AUD[s.k].data).catch(() => null) : null;
+    const narr = s.buf ? s.buf.duration : 0;
+    s.t0 = t; s.dur = Math.max(8, narr * 1.5); t += s.dur;
+    if(s.buf){                                        // loudness per video frame, for the speaking ring
+      const ch = s.buf.getChannelData(0), per = Math.floor(s.buf.sampleRate / VFPS), n = Math.ceil(ch.length / per), env = new Float32Array(n);
+      for(let i = 0; i < n; i++){ let sum = 0; const a = i * per, b = Math.min(ch.length, a + per); for(let j = a; j < b; j += 4) sum += ch[j] * ch[j]; env[i] = Math.sqrt(sum / Math.max(1, (b - a) / 4)); }
+      let mx = 0; env.forEach(v => mx = Math.max(mx, v)); if(mx) for(let i = 0; i < n; i++) env[i] /= mx;
+      s.env = env;
+    }
+  }
+  const total = t;
+  const mus = MUS ? await decode(MUS.data).catch(() => null) : null;
+  try{ ac.close(); }catch(e){}
+
+  /* ---- audio mix ---- */
+  pptProgress(.78, "Mixing narration and music…");
+  const off = new OfflineAudioContext(2, Math.ceil(total * VSR), VSR);
+  slides.forEach(s => { if(!s.buf) return; const n = off.createBufferSource(); n.buffer = s.buf; n.connect(off.destination); n.start(s.t0 + VLEAD); });
+  if(mus){
+    const n = off.createBufferSource(), gn = off.createGain(); n.buffer = mus; n.loop = true;
+    const lvl = Math.min(.6, (musicVol || 30000) / 100000);
+    gn.gain.setValueAtTime(lvl, 0); gn.gain.setValueAtTime(lvl, Math.max(0, total - 2.5)); gn.gain.linearRampToValueAtTime(0, total);
+    n.connect(gn); gn.connect(off.destination); n.start(0); n.stop(total);
+  }
+  const mix = await off.startRendering();
+
+  /* ---- encoders ---- */
+  const muxer = new Mp4Muxer.Muxer({ target:new Mp4Muxer.ArrayBufferTarget(), fastStart:"in-memory", firstTimestampBehavior:"offset",
+    video:{ codec:"avc", width:VW, height:VH, frameRate:VFPS }, audio:{ codec:acodec, numberOfChannels:2, sampleRate:VSR } });
+  let encErr = null;
+  const ve = new VideoEncoder({ output:(c, m) => muxer.addVideoChunk(c, m), error:e => encErr = e });
+  const ae = new AudioEncoder({ output:(c, m) => muxer.addAudioChunk(c, m), error:e => encErr = e });
+  ve.configure(vcfg); ae.configure(acfg);
+
+  pptProgress(.8, "Encoding the sound track…");
+  const L = mix.getChannelData(0), R = mix.getChannelData(1), step = VSR / 10;
+  for(let i = 0; i < L.length; i += step){
+    const n = Math.min(step, L.length - i), data = new Float32Array(n * 2);
+    data.set(L.subarray(i, i + n), 0); data.set(R.subarray(i, i + n), n);
+    const ad = new AudioData({ format:"f32-planar", sampleRate:VSR, numberOfFrames:n, numberOfChannels:2, timestamp:Math.round(i / VSR * 1e6), data });
+    ae.encode(ad); ad.close();
+    if(ae.encodeQueueSize > 20) await new Promise(r => setTimeout(r, 0));
+  }
+  await ae.flush();
+  if(encErr) throw encErr;
+
+  /* ---- slide painter ---- */
+  const mk = () => { const c = document.createElement("canvas"); c.width = VW; c.height = VH; return c; };
+  const card = (g, x, y, w, h) => {
+    g.save(); g.shadowColor = "rgba(0,0,0,.18)"; g.shadowBlur = 10; g.shadowOffsetY = 3;
+    g.fillStyle = col(C.card); g.beginPath(); g.roundRect(P(x), P(y), P(w), P(h), P(.12)); g.fill(); g.restore();
+    g.strokeStyle = col(C.line); g.lineWidth = 1.5; g.beginPath(); g.roundRect(P(x), P(y), P(w), P(h), P(.12)); g.stroke();
+  };
+  const drawLogo = (g, x, y, w, h, pad) => {
+    if(!logo) return;
+    g.fillStyle = "#FFFFFF"; g.beginPath(); g.roundRect(P(x), P(y), P(w), P(h), P(.08)); g.fill();
+    const bw = P(w - pad * 2), bh = P(h - pad * 2), r = Math.min(bw / logo.width, bh / logo.height), lw = logo.width * r, lh = logo.height * r;
+    g.drawImage(logo, P(x + pad) + (bw - lw) / 2, P(y + pad) + (bh - lh) / 2, lw, lh);
+  };
+  const frame = (g, heading, n) => {
+    g.fillStyle = col(C.bg); g.fillRect(0, 0, VW, VH);
+    g.fillStyle = col(C.steel); g.fillRect(0, 0, VW, P(.95));
+    g.fillStyle = col(C.accent); g.fillRect(0, P(.95), VW, P(.06));
+    g.fillStyle = "#FFFFFF"; g.textBaseline = "alphabetic";
+    g.font = "700 48px " + FH; g.fillText(heading, P(.45), P(.52));
+    g.globalAlpha = .85; g.font = "400 22px " + FB; g.fillText(scope, P(.45), P(.82)); g.globalAlpha = 1;
+    drawLogo(g, W - 1.85, .1, 1.55, .76, .07);
+    g.fillStyle = col(C.muted); g.font = "400 18px " + FB; g.fillText(CONFIG.clientName + " · Receiving Quality Review · " + n, P(.45), P(H - .18));
+  };
+  const narrator = (g, s) => {
+    if(!avatar) return;
+    const x = P(W - 1.45), y = P(H - 1.55), sz = P(1.15);
+    g.drawImage(avatar, x, y, sz, sz);
+  };
+  const expParas = (e, fs) => {
+    const p = [], sec = aiSections(e.detailed);
+    if(e.st && ST[e.st]) p.push({ fs, color:ST[e.st][1], bold:1, runs:[{ t:"● " + ST[e.st][0] }], after:2 });
+    if(e.quick) p.push({ fs, color:col(C.ink), runs:vRuns(e.quick), after:3 });
+    [["Assessment", 3], ["Watch items", 1], ["Recommended next steps", 2]].forEach(([nm, n]) => {
+      const b = (sec[nm] || []).slice(0, n); if(!b.length) return;
+      p.push({ fs:fs - 1, color:col(C.muted), bold:1, runs:[{ t:nm }], before:5, after:1 });
+      b.forEach(tx => p.push({ fs:fs - 1, color:col(C.ink), bullet:1, runs:vRuns(tx), after:2 }));
+    });
+    return p;
+  };
+  const explain = (g, e) => { card(g, 8.6, 1.3, 4.3, 4.5); vText(g, expParas(e, 15), P(8.75), P(1.42), P(4.0), P(4.25), FB, col(C.accent)); };
+
+  async function paint(s, n){
+    const c = mk(), g = c.getContext("2d");
+    if(s.kind === "title"){
+      g.fillStyle = col(C.steel); g.fillRect(0, 0, VW, VH);
+      g.fillStyle = col(C.accent); g.fillRect(0, P(5.35), VW, P(.08));
+      drawLogo(g, .7, .6, 2.9, 1.5, .12);
+      g.fillStyle = "#FFFFFF"; g.font = "700 88px " + FH; g.fillText("Receiving Quality Review", P(.7), P(3.15));
+      g.fillStyle = col(C.accent); g.font = "400 40px " + FB; g.fillText(CONFIG.clientName + " · incoming tube inspection", P(.7), P(3.7));
+      g.fillStyle = "#FFFFFF"; vText(g, [{ fs:14, color:"#FFFFFF", runs:[{ t:scope }] }], P(.7), P(3.95), P(10.5), P(.9), FB, col(C.accent));
+      g.globalAlpha = .8; g.font = "400 24px " + FB;
+      g.fillText("Generated " + new Date().toLocaleDateString(undefined, { year:"numeric", month:"long", day:"numeric" }) + " from Alpha TransForm · " + fmt(K.submissions || 0) + " submissions", P(.7), P(5.9));
+      g.globalAlpha = 1;
+    } else if(s.kind === "kpi"){
+      frame(g, "Key metrics", n);
+      [...document.querySelectorAll("#kpis .kpi")].forEach((el, i) => {
+        const cx = .45 + (i % 4) * 3.13, cy = 1.3 + Math.floor(i / 4) * 1.72, w = 2.95, h = 1.55;
+        const stc = el.classList.contains("st-good") ? C.good : el.classList.contains("st-watch") ? C.watch : el.classList.contains("st-action") ? C.action : C.muted;
+        card(g, cx, cy, w, h);
+        g.fillStyle = col(stc); g.fillRect(P(cx + .02), P(cy), P(w - .04), P(.08));
+        g.fillStyle = col(C.muted); g.font = "700 21px " + FB; g.fillText((el.querySelector("h4") || {}).textContent || "", P(cx + .15), P(cy + .38));
+        const v = el.querySelector(".v"), val = v ? v.childNodes[0].textContent : "", u = (el.querySelector(".u") || {}).textContent || "";
+        g.fillStyle = col(C.ink); g.font = "700 52px " + FH; g.fillText(val, P(cx + .15), P(cy + .95));
+        const vw = g.measureText(val).width; g.fillStyle = col(C.muted); g.font = "400 24px " + FB; if(u) g.fillText(u, P(cx + .15) + vw + 10, P(cy + .95));
+        const badge = ((el.querySelector(".kbadge") || {}).textContent || "").toUpperCase(), info = el.classList.contains("st-info");
+        if(!info && badge){ g.fillStyle = col(stc); g.beginPath(); g.roundRect(P(cx + .15), P(cy + 1.08), P(1), P(.26), P(.06)); g.fill();
+          g.fillStyle = "#FFFFFF"; g.font = "700 18px " + FB; g.textAlign = "center"; g.fillText(badge, P(cx + .65), P(cy + 1.27)); g.textAlign = "left"; }
+        g.fillStyle = col(C.muted); g.font = "400 17px " + FB; g.fillText((el.querySelector(".ktgt") || {}).textContent || "", P(cx + (info ? .15 : 1.22)), P(cy + 1.27));
+      });
+      card(g, .45, 4.85, W - 2.4, 2.1);
+      vText(g, expParas(EXP.kpi, 13), P(.6), P(4.95), P(W - 2.7), P(1.9), FB, col(C.accent));
+    } else if(s.kind === "panel"){
+      frame(g, panelTitle(s.id), n);
+      if(s.id === "pivot"){
+        const tb = $("pvTable"), rowsEl = tb ? [...tb.querySelectorAll("tr")].slice(0, 16) : [];
+        const grid = rowsEl.map(tr => [...tr.children].slice(0, 9));
+        if(grid.length){
+          const nc = Math.max(...grid.map(r => r.length)), tw = P(7.9), rh = P(.3);
+          g.font = "700 20px " + FB;
+          const need = Array.from({ length:nc }, (_, ci) => Math.max(40, ...grid.map(r => r[ci] ? g.measureText(r[ci].textContent.trim()).width + 20 : 0)));
+          const sum = need.reduce((a, b) => a + b, 0), cw = need.map(v => v / sum * tw);
+          grid.forEach((r, ri) => { let cx = P(.45); const cy = P(1.3) + ri * rh;
+            r.forEach((td, ci) => {
+              const bg = ri === 0 ? C.steel : blendOn(getComputedStyle(td).backgroundColor, C.card);
+              g.fillStyle = col(bg); g.fillRect(cx, cy, cw[ci], rh); g.strokeStyle = col(C.line); g.lineWidth = 1; g.strokeRect(cx, cy, cw[ci], rh);
+              const head = ri === 0 || td.tagName === "TH" || /total/i.test(r[0].textContent);
+              g.fillStyle = ri === 0 ? "#FFFFFF" : col(C.ink); g.font = (head ? "700 " : "400 ") + "19px " + FB;
+              const txt = td.textContent.trim(), left = td.tagName === "TH" && ri;
+              g.textAlign = left ? "left" : "center"; g.fillText(txt, left ? cx + 8 : cx + cw[ci] / 2, cy + rh * .68, cw[ci] - 8); g.textAlign = "left";
+              cx += cw[ci];
+            }); });
+        }
+      } else {
+        const img = pptChartImage(s.id), im = img ? await vImg(img.data) : null;
+        card(g, .45, 1.3, 7.95, 5.45);
+        if(im){ const bw = 7.75, bh = 5.25, w = Math.min(bw, bh * img.ratio), h = w / img.ratio; g.drawImage(im, P(.55 + (bw - w) / 2), P(1.4 + (bh - h) / 2), P(w), P(h)); }
+      }
+      explain(g, EXP[s.id]);
+    } else if(s.kind === "end"){
+      frame(g, "Key takeaways", n);
+      const p = [];
+      ["kpi"].concat(plan.map(q => q.ids).flat()).forEach(id => {
+        const e = EXP[id]; if(!e) return;
+        p.push({ fs:15, color:col(C.ink), bullet:1, after:5,
+                 runs:[{ t:panelTitle(id) + ": ", b:1, c:(ST[e.st] || ST.OK)[1] }].concat(vRuns(String(e.quick || "").split(/(?<=\.)\s/)[0])) });
+      });
+      card(g, .45, 1.3, W - 2.4, 5.6); vText(g, p, P(.65), P(1.45), P(W - 2.8), P(5.3), FB, col(C.accent));
+    } else if(s.kind === "next"){
+      frame(g, "Recommended next steps" + (stepPages.length > 1 ? " (" + (s.pi + 1) + " of " + stepPages.length + ")" : ""), n);
+      const rowH = 1.12, gap = .14, x0 = .45, w = W - 2.3;
+      s.page.forEach((st, j) => {
+        const y = 1.3 + j * (rowH + gap), num = s.pi * 4 + j + 1;
+        card(g, x0, y, w, rowH);
+        g.fillStyle = col(C.accent); g.beginPath(); g.arc(P(x0 + .51), P(y + rowH / 2), P(.31), 0, Math.PI * 2); g.fill();
+        g.fillStyle = "#FFFFFF"; g.font = "700 36px " + FH; g.textAlign = "center"; g.fillText(String(num), P(x0 + .51), P(y + rowH / 2) + 13); g.textAlign = "left";
+        vText(g, [{ fs:16, color:col(C.ink), runs:vRuns(st.text) }], P(x0 + 1), P(y + .12), P(w - 1.2), P(rowH - .45), FB, col(C.accent));
+        g.fillStyle = col(C.muted); g.font = "italic 400 20px " + FB; g.fillText("From: " + st.from, P(x0 + 1), P(y + rowH - .13));
+      });
+    }
+    narrator(g, s);
+    return c;
+  }
+
+  /* ---- video frames ---- */
+  const out = mk(), og = out.getContext("2d");
+  const nFrames = Math.ceil(total * VFPS);
+  let cur = -1, curC = null, prevC = null;
+  for(let f = 0; f < nFrames; f++){
+    if(PPT_CANCEL){ try{ ve.close(); ae.close(); }catch(e){} throw new Error("cancelled"); }
+    if(encErr) throw encErr;
+    const tt = f / VFPS;
+    let i = slides.findIndex(s => tt < s.t0 + s.dur); if(i < 0) i = slides.length - 1;
+    if(i !== cur){ prevC = curC; cur = i; curC = await paint(slides[i], i + 1); }
+    const s = slides[i], lt = tt - s.t0;
+    og.globalAlpha = 1;
+    if(prevC && lt < VFADE){ og.drawImage(prevC, 0, 0); og.globalAlpha = lt / VFADE; }
+    og.drawImage(curC, 0, 0); og.globalAlpha = 1;
+    if(s.env && avatar){                                  // speaking ring
+      const ei = Math.floor((lt - VLEAD) * VFPS), lv = ei >= 0 && ei < s.env.length ? s.env[ei] : 0;
+      if(lv > .06){
+        const cx = P(W - 1.45 + .575), cy = P(H - 1.55 + .575), r = P(.575) + 6 + lv * 16;
+        og.strokeStyle = col(C.accent); og.globalAlpha = .35 + lv * .5; og.lineWidth = 4 + lv * 8;
+        og.beginPath(); og.arc(cx, cy, r, 0, Math.PI * 2); og.stroke(); og.globalAlpha = 1;
+      }
+    }
+    const vf = new VideoFrame(out, { timestamp:Math.round(tt * 1e6), duration:Math.round(1e6 / VFPS) });
+    ve.encode(vf, { keyFrame:f % (VFPS * 2) === 0 }); vf.close();
+    while(ve.encodeQueueSize > 6) await new Promise(r => setTimeout(r, 2));
+    if(f % 10 === 0) pptProgress(.82 + .16 * (f / nFrames), "Encoding video: " + Math.round(tt) + " of " + Math.round(total) + " s…");
+  }
+  await ve.flush();
+  if(encErr) throw encErr;
+  muxer.finalize();
+  const blob = new Blob([muxer.target.buffer], { type:"video/mp4" });
+  const mm = Math.floor(total / 60), ss = Math.round(total % 60);
+  pptProgress(1, "Done — " + slides.length + " slides, " + mm + ":" + String(ss).padStart(2, "0") + " min, " + (blob.size / 1048576).toFixed(1) + " MB");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = "PAC_Receiving_Quality_Review_" + new Date().toISOString().slice(0, 10) + ".mp4";
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+  window.__lastVideo = blob;
+  if(!slides.some(s => s.buf)) warn.push("No narration voice was available, so each slide shows for 8 seconds without a narrator.");
+  $("pptErr").innerHTML = warn.length ? '<span style="color:var(--st-watch)">' + warn.map(recEsc).join("<br>") + '</span>' : "";
+}
 
 /* ---------- export (XLSX / CSV / JSON) ---------- */
 const EXPORT_COLS = [
@@ -4051,7 +5408,8 @@ function transformInstance(inst){
     tRej: isHold(disp) ? (fRej > 0 ? fRej : qty) : 0 };
 }
 function adoptInstances(list){
-  rows = list.map(transformInstance).filter(r=>r.id);
+  RAW_BY_ID = new Map();
+  rows = list.map(i => { const r = transformInstance(i); if(r.id) RAW_BY_ID.set(String(r.id), i); return r; }).filter(r=>r.id);
   buildFilters(); render(); scanQualityAlerts();
   // Defensive: if anything about the first paint after a large synchronous
   // re-render (KPIs + 6 charts + table, all in the same tick) causes the
@@ -5217,8 +6575,8 @@ async function runDemo(){
       say:"And rejections by alloy, so a material specific problem cannot hide inside the overall number." },
 
     /* ===== THE TABLE ===== */
-    { run: async ()=>{ await demoClick($("linkToggle")); },
-      say:"Now let's verify the assistant's suspicion ourselves. Chart linking is switched on." },
+    { run: async ()=>{ await demoClick($("clickModeSel")); setClickMode("list", true); },
+      say:"Now let's verify the assistant's suspicion ourselves. Chart clicks normally filter the whole dashboard. For this check, we'll set them to filter just the submission list." },
     { run: async ()=>{ await demoClickBar("chMonthly", "Jul");
                        chartSel = {kind:"month", value:"2026-07"}; renderTable(); refreshSelectionHighlights();
                        await pause(280);
@@ -5308,6 +6666,7 @@ async function startDemo(){
     await runDemo();
   } finally {
     demoRunning = false;
+    if(typeof setClickMode === "function") setClickMode(savedClickMode(), true);   // back to the viewer's own chart-click mode
     if(demoTypeStash){ paneTypes = demoTypeStash; demoTypeStash = null; drawAllPanes(); refreshSelectionHighlights(); }
   }
 }
@@ -5318,7 +6677,7 @@ async function startDemo(){
    filter and the period preset untouched. */
 function resetAllFilters(){
   chartSel = null; tSort = {key:null, dir:-1}; tFilt = {}; exportSel = new Set();
-  const lt = $("linkToggle"); if(lt) lt.checked = false;
+  if(typeof syncClickMode === "function"){ syncClickMode(); XF_PREV.dates = null; }
   for(const key in MSEL){                     // re-tick every checkbox list
     const m = MSEL[key];
     m.choice = new Set(m.values);
@@ -5337,6 +6696,7 @@ function demoResetState(){
   try{
     setFilterPanelOpen(true);          // demo needs the panel visible, phone or not
     resetAllFilters();
+    if(typeof setClickMode === "function") setClickMode(savedClickMode(), true);   // undo the demo's temporary list-only mode
     const t = $("tgtSpin");
     if(t){ t.value = parseFloat((CONFIG.rejectionRateTarget*100).toFixed(1)); t.dispatchEvent(new Event("change")); }
     scanQualityAlerts();
