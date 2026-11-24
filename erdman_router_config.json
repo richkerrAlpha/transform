@@ -17,7 +17,7 @@
   },
   "custom_fields": {
     "cust_text1": {"label": "Hole #", "type": "text", "list": "", "required": "true"},
-    "cust_list1": {"label": "Inspector Name", "type": "dropdown", "list": "ROSTER", "required": "true"}
+    "cust_list1": {"label": "Inspector Name", "type": "dropdown", "list": "ROSTER", "required": "false"}
   },
   "lists": {},
   "No Shipping Op Test_info": {
